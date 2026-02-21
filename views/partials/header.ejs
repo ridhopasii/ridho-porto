@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= locals.title ? `${locals.title} | ${profile?.fullName || 'Portfolio' }` : (profile?.fullName
+            || 'Hafidz Humaidi' ) + ' | ' + (profile?.title || 'Web Developer' ) %>
+    </title>
+    <meta name="description"
+        content="<%= locals.metaDescription || (profile?.bio ? profile.bio.substring(0, 150) + '...' : `Portfolio of ${profile?.fullName} - ${profile?.title}`) %>">
+    <meta name="keywords" content="portfolio, web developer, <%= profile?.fullName %>, coding, projects">
+    <meta name="author" content="<%= profile?.fullName %>">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<%= locals.title || (profile?.fullName + ' | ' + profile?.title) %>">
+    <meta property="og:description"
+        content="<%= locals.metaDescription || (profile?.bio ? profile.bio.substring(0, 150) + '...' : `Portfolio of ${profile?.fullName} - ${profile?.title}`) %>">
+    <meta property="og:image" content="<%= locals.ogImage || profile?.heroImage || '' %>">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="<%= locals.title || (profile?.fullName + ' | ' + profile?.title) %>">
+    <meta property="twitter:description"
+        content="<%= locals.metaDescription || (profile?.bio ? profile.bio.substring(0, 150) + '...' : `Portfolio of ${profile?.fullName} - ${profile?.title}`) %>">
+    <meta property="twitter:image" content="<%= locals.ogImage || profile?.heroImage || '' %>">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'outfit': ['Outfit', 'sans-serif'],
+                        'jakarta': ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#0a0a0a',
+                        'secondary': '#111111',
+                        'accent': '#14b8a6', // Teal color
+                        'accent-light': '#5eead4',
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Gradient Background */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 20% 20%, rgba(20, 184, 166, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%), radial-gradient(ellipse at 60% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%), #0a0a0a;
+            z-index: -1;
+            transition: background 0.3s ease;
+        }
+
+        /* Noise Texture */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Navigation */
+        .nav-scrolled {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Typing Animation */
+        .typing-text::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+            color: #14b8a6;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Highlight Underline */
+        .highlight-text {
+            position: relative;
+            display: inline-block;
+        }
+
+        .highlight-text::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #14b8a6, #5eead4);
+            border-radius: 2px;
+        }
+
+        /* Profile Card Glow */
+        .profile-card {
+            position: relative;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.3), rgba(99, 102, 241, 0.2));
+            border-radius: 24px;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+            color: #0a0a0a;
+            font-weight: 600;
+            padding: 14px 28px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(20, 184, 166, 0.3);
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-weight: 500;
+            padding: 14px 28px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            border-color: #14b8a6;
+            background: rgba(20, 184, 166, 0.1);
+        }
+
+        /* Social Icons */
+        .social-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: rgba(20, 184, 166, 0.1);
+            color: #14b8a6;
+            transform: translateY(-2px);
+        }
+
+        /* Tech Card */
+        .tech-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .tech-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(20, 184, 166, 0.3);
+            transform: translateY(-4px);
+        }
+
+        /* Project Card */
+        .project-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .project-card:hover {
+            border-color: rgba(20, 184, 166, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-image {
+            aspect-ratio: 16/10;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Contact Card */
+        .contact-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(20, 184, 166, 0.3);
+        }
+
+        /* Form Input */
+        .form-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: #ffffff;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #14b8a6;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .form-input::placeholder {
+            color: #6b7280;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #14b8a6;
+        }
+
+        /* Selection */
+        ::selection {
+            background: rgba(20, 184, 166, 0.3);
+            color: #ffffff;
+        }
+
+        /* Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Light Mode Styles */
+        html.light-mode body {
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        html.light-mode .gradient-bg {
+            background: radial-gradient(ellipse at 20% 20%, rgba(20, 184, 166, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+                #ffffff;
+        }
+
+        html.light-mode .nav-scrolled {
+            background: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        html.light-mode .text-white {
+            color: #0f172a !important;
+        }
+
+        html.light-mode .text-gray-400 {
+            color: #64748b !important;
+        }
+
+        html.light-mode .hover\:text-white:hover {
+            color: #0f172a !important;
+        }
+
+        html.light-mode .bg-white\/5 {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        html.light-mode .bg-white\/10 {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        html.light-mode .border-white\/5 {
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        html.light-mode .border-white\/10 {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        html.light-mode .project-card,
+        html.light-mode .tech-card,
+        html.light-mode .contact-card {
+            background: #ffffff;
+            border-color: #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        html.light-mode .form-input {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+
+        html.light-mode .form-input::placeholder {
+            color: #94a3b8;
+        }
+
+        html.light-mode ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        html.light-mode ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+            const darkIcon = document.querySelector('.dark-icon');
+            const lightIcon = document.querySelector('.light-icon');
+
+            // Check saved theme
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            applyTheme(savedTheme);
+
+            function applyTheme(theme) {
+                if (theme === 'light') {
+                    html.classList.add('light-mode');
+                    if (darkIcon) darkIcon.classList.remove('hidden');
+                    if (lightIcon) lightIcon.classList.add('hidden');
+                } else {
+                    html.classList.remove('light-mode');
+                    if (darkIcon) darkIcon.classList.add('hidden');
+                    if (lightIcon) lightIcon.classList.remove('hidden');
+                }
+                localStorage.setItem('theme', theme);
+            }
+
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const currentTheme = localStorage.getItem('theme') || 'dark';
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    applyTheme(newTheme);
+                });
+            }
+
+            // Mobile Menu Toggle
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileBtn && mobileMenu) {
+                mobileBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    const icon = mobileBtn.querySelector('i');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        icon.setAttribute('data-lucide', 'menu');
+                    } else {
+                        icon.setAttribute('data-lucide', 'x');
+                    }
+                    lucide.createIcons();
+                });
+
+                // Close menu when clicking links
+                const links = mobileMenu.querySelectorAll('a');
+                links.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        const icon = mobileBtn.querySelector('i');
+                        icon.setAttribute('data-lucide', 'menu');
+                        lucide.createIcons();
+                    });
+                });
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <a href="#beranda"
+        class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-accent text-primary px-3 py-1 rounded">Lewati
+        ke konten</a>
+    <!-- Background -->
+    <div class="gradient-bg"></div>
+    <div class="noise-overlay"></div>
+
+    <!-- Global Loader -->
+    <div id="global-loader"
+        class="fixed inset-0 z-[60] flex items-center justify-center bg-primary transition-opacity duration-500">
+        <div class="relative flex flex-col items-center gap-4">
+            <div class="w-16 h-16 border-4 border-white/10 border-t-accent rounded-full animate-spin"></div>
+            <span class="font-outfit font-medium text-gray-400 animate-pulse">Loading...</span>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('global-loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 500);
+        });
+    </script>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="/admin/login" class="flex items-center gap-2" aria-label="Masuk ke halaman Admin">
+                    <span class="font-outfit font-bold text-2xl">Ridhopasii<span class="text-accent">.</span></span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="/#beranda"
+                        class="px-5 py-2.5 rounded-lg text-sm font-medium text-accent transition-all">Beranda</a>
+                    <a href="/#tentang"
+                        class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all">Tentang</a>
+                    <a href="/#proyek"
+                        class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all">Proyek</a>
+                    <a href="/#kontak"
+                        class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all">Kontak</a>
+                    <a href="/blog"
+                        class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all">Blog</a>
+                    <% if (locals.user) { %>
+                        <a href="/admin/dashboard"
+                            class="px-5 py-2.5 rounded-lg text-sm font-medium text-teal-400 hover:text-teal-300 transition-all">Dashboard</a>
+                        <% } %>
+                </div>
+
+                <!-- Right Side -->
+                <div class="flex items-center gap-4">
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle"
+                        class="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all"
+                        aria-label="Toggle Theme">
+                        <i data-lucide="moon" class="w-5 h-5 hidden dark-icon"></i>
+                        <i data-lucide="sun" class="w-5 h-5 light-icon"></i>
+                    </button>
+
+                    <button
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all">
+                        <i data-lucide="globe" class="w-4 h-4"></i>
+                        <span>ID</span>
+                    </button>
+
+                    <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-white/5 transition-all">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-secondary/95 backdrop-blur-xl border-t border-white/5">
+            <div class="px-6 py-4 space-y-1">
+                <a href="/#beranda" class="block px-4 py-3 rounded-lg text-accent font-medium">Beranda</a>
+                <a href="/#tentang"
+                    class="block px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">Tentang</a>
+                <a href="/#proyek"
+                    class="block px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">Proyek</a>
+                <a href="/#kontak"
+                    class="block px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">Kontak</a>
+                <a href="/blog"
+                    class="block px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">Blog</a>
+            </div>
+        </div>
+    </nav>

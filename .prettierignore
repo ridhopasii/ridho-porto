@@ -1,0 +1,10 @@
+node_modules/
+coverage/
+dist/
+build/
+*.min.js
+public/
+prisma/
+logs/
+package-lock.json
+.kiro/

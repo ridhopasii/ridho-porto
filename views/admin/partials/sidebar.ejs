@@ -1,0 +1,65 @@
+<!-- Sidebar -->
+<aside class="w-64 border-r border-white/10 p-6 flex flex-col fixed h-full bg-[#0a0a0a]">
+    <div class="mb-8">
+        <h1 class="font-outfit font-bold text-2xl">Admin<span class="text-teal-500">.</span></h1>
+    </div>
+
+    <nav class="space-y-1 flex-1">
+        <a href="/admin/dashboard" class="sidebar-link <%= path === '/admin/dashboard' ? 'active' : '' %>">
+            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+            Dashboard
+        </a>
+        <a href="/admin/projects" class="sidebar-link <%= path.startsWith('/admin/projects') ? 'active' : '' %>">
+            <i data-lucide="folder-kanban" class="w-5 h-5"></i>
+            <span>Projects</span>
+        </a>
+        <a href="/admin/services" class="sidebar-link <%= path.startsWith('/admin/services') ? 'active' : '' %>">
+            <i data-lucide="zap" class="w-5 h-5"></i>
+            <span>Services</span>
+        </a>
+        <a href="/admin/articles" class="sidebar-link <%= path.startsWith('/admin/articles') ? 'active' : '' %>">
+            <i data-lucide="file-text" class="w-5 h-5"></i>
+            <span>Articles</span>
+        </a>
+        <a href="/admin/experience" class="sidebar-link <%= path === '/admin/experience' ? 'active' : '' %>">
+            <i data-lucide="briefcase" class="w-5 h-5"></i>
+            Experience
+        </a>
+        <a href="/admin/education" class="sidebar-link <%= path === '/admin/education' ? 'active' : '' %>">
+            <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+            Education
+        </a>
+        <a href="/admin/skills" class="sidebar-link <%= path === '/admin/skills' ? 'active' : '' %>">
+            <i data-lucide="cpu" class="w-5 h-5"></i>
+            Skills
+        </a>
+        <a href="/admin/socials" class="sidebar-link <%= path === '/admin/socials' ? 'active' : '' %>">
+            <i data-lucide="share-2" class="w-5 h-5"></i>
+            Socials
+        </a>
+        <a href="/admin/awards" class="sidebar-link <%= path === '/admin/awards' ? 'active' : '' %>">
+            <i data-lucide="award" class="w-5 h-5"></i>
+            Awards
+        </a>
+        <a href="/admin/testimonials" class="sidebar-link <%= path === '/admin/testimonials' ? 'active' : '' %>">
+            <i data-lucide="message-square-quote" class="w-5 h-5"></i>
+            Testimonials
+        </a>
+        <a href="/admin/messages" class="sidebar-link <%= path === '/admin/messages' ? 'active' : '' %>">
+            <i data-lucide="mail" class="w-5 h-5"></i>
+            Pesan Masuk
+        </a>
+        <a href="/admin/profile" class="sidebar-link <%= path === '/admin/profile' ? 'active' : '' %>">
+            <i data-lucide="user" class="w-5 h-5"></i>
+            Profile
+        </a>
+    </nav>
+
+    <div class="pt-6 border-t border-white/10">
+        <a href="/admin/logout"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-all">
+            <i data-lucide="log-out" class="w-5 h-5"></i>
+            Logout
+        </a>
+    </div>
+</aside>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= experience ? 'Edit' : 'Add' %> Experience - Admin Panel
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style type="text/tailwindcss">
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0a0a0a; color: white; }
+        .sidebar-link { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all; }
+        .sidebar-link.active { @apply bg-teal-500/10 text-teal-400; }
+        input, textarea { @apply w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-teal-500 transition-colors text-white; }
+        label { @apply block text-sm text-gray-400 mb-1; }
+    </style>
+</head>
+
+<body class="flex min-h-screen">
+    <%- include('../partials/sidebar', { path: '/admin/experience' }) %>
+
+        <main class="flex-1 ml-64 p-8">
+            <%- include('../partials/header', { title: experience ? 'Edit Experience' : 'Add Experience' }) %>
+
+                <div class="max-w-2xl mx-auto">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-8">
+                        <!-- Error Message -->
+                        <% if (error) { %>
+                            <div id="errorMessage" class="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 flex items-center gap-3">
+                                <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                                <span><%= error %></span>
+                            </div>
+                        <% } %>
+
+                        <form id="experienceForm" action="/admin/experience<%= experience ? '/edit/' + experience.id : '/create' %>"
+                            method="POST" class="space-y-6">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label>Company <span class="text-red-400">*</span></label>
+                                    <input type="text" name="company" id="company"
+                                        value="<%= experience ? experience.company : '' %>" 
+                                        required minlength="2" maxlength="100">
+                                    <p class="text-xs text-red-400 mt-1 hidden" id="companyError">Company name is required (2-100 characters)</p>
+                                </div>
+                                <div>
+                                    <label>Position <span class="text-red-400">*</span></label>
+                                    <input type="text" name="position" id="position"
+                                        value="<%= experience ? experience.position : '' %>" 
+                                        required minlength="2" maxlength="100">
+                                    <p class="text-xs text-red-400 mt-1 hidden" id="positionError">Position is required (2-100 characters)</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label>Period <span class="text-red-400">*</span></label>
+                                    <input type="text" name="period" id="period" 
+                                        value="<%= experience ? experience.period : '' %>"
+                                        required placeholder="Jan 2024 - Present" maxlength="50">
+                                    <p class="text-xs text-gray-500 mt-1">Example: Jan 2024 - Present</p>
+                                    <p class="text-xs text-red-400 mt-1 hidden" id="periodError">Period is required</p>
+                                </div>
+                                <div>
+                                    <label>Order (Display Sequence)</label>
+                                    <input type="number" name="order" id="order" 
+                                        value="<%= experience ? experience.order : 0 %>" 
+                                        min="0" max="999">
+                                    <p class="text-xs text-gray-500 mt-1">Lower numbers appear first</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label>Description</label>
+                                <textarea name="description" id="description"
+                                    rows="4" maxlength="1000"><%= experience ? experience.description || '' : '' %></textarea>
+                                <p class="text-xs text-gray-500 mt-1">Optional: Brief description of responsibilities</p>
+                            </div>
+
+                            <div class="flex gap-4 pt-4">
+                                <button type="submit" id="submitBtn"
+                                    class="flex-1 bg-teal-500 hover:bg-teal-600 text-black font-bold py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <%= experience ? 'Update Experience' : 'Add Experience' %>
+                                </button>
+                                <a href="/admin/experience"
+                                    class="flex-1 bg-white/10 hover:bg-white/20 text-white font-bold py-3 rounded-lg text-center transition-colors">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </main>
+        
+        <script>
+            lucide.createIcons();
+
+            // Client-side validation
+            const form = document.getElementById('experienceForm');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            const fields = {
+                company: document.getElementById('company'),
+                position: document.getElementById('position'),
+                period: document.getElementById('period'),
+                order: document.getElementById('order')
+            };
+
+            const errors = {
+                company: document.getElementById('companyError'),
+                position: document.getElementById('positionError'),
+                period: document.getElementById('periodError')
+            };
+
+            // Real-time validation
+            Object.keys(fields).forEach(key => {
+                if (fields[key] && errors[key]) {
+                    fields[key].addEventListener('input', () => validateField(key));
+                    fields[key].addEventListener('blur', () => validateField(key));
+                }
+            });
+
+            function validateField(fieldName) {
+                const field = fields[fieldName];
+                const error = errors[fieldName];
+                
+                if (!field || !error) return true;
+
+                let isValid = true;
+                
+                if (field.hasAttribute('required') && !field.value.trim()) {
+                    isValid = false;
+                } else if (field.hasAttribute('minlength') && field.value.trim().length < parseInt(field.getAttribute('minlength'))) {
+                    isValid = false;
+                } else if (field.hasAttribute('maxlength') && field.value.trim().length > parseInt(field.getAttribute('maxlength'))) {
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    error.classList.add('hidden');
+                    field.classList.remove('border-red-500');
+                } else {
+                    error.classList.remove('hidden');
+                    field.classList.add('border-red-500');
+                }
+
+                return isValid;
+            }
+
+            // Form submission validation
+            form.addEventListener('submit', (e) => {
+                let isValid = true;
+
+                // Validate all required fields
+                ['company', 'position', 'period'].forEach(fieldName => {
+                    if (!validateField(fieldName)) {
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    submitBtn.disabled = false;
+                    
+                    // Scroll to first error
+                    const firstError = form.querySelector('.border-red-500');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+                } else {
+                    // Disable submit button to prevent double submission
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Saving...';
+                }
+            });
+
+            // Auto-dismiss error message after 5 seconds
+            const errorMessage = document.getElementById('errorMessage');
+            if (errorMessage) {
+                setTimeout(() => {
+                    errorMessage.style.transition = 'opacity 0.5s';
+                    errorMessage.style.opacity = '0';
+                    setTimeout(() => errorMessage.remove(), 500);
+                }, 5000);
+            }
+        </script>
+</body>
+
+</html>

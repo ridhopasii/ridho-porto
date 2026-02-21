@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Awards - Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style type="text/tailwindcss">
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0a0a0a; color: white; }
+      .sidebar-link { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all; }
+      .sidebar-link.active { @apply bg-teal-500/10 text-teal-400; }
+  </style>
+</head>
+
+<body class="flex min-h-screen">
+  <%- include('../partials/sidebar', { path: '/admin/awards' }) %>
+    <main class="flex-1 ml-64 p-8">
+      <%- include('../partials/header', { title: 'Sertifikat & Penghargaan' }) %>
+
+        <% if (success) { %>
+          <div
+            class="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-xl text-green-400 flex items-center gap-3">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
+            <span>
+              <% if (success==='created' ) { %>Data berhasil dibuat<% } %>
+                  <% if (success==='updated' ) { %>Data berhasil diperbarui<% } %>
+                      <% if (success==='deleted' ) { %>Data berhasil dihapus<% } %>
+            </span>
+          </div>
+          <% } %>
+
+            <div class="mb-6 flex justify-between items-center">
+              <h3 class="text-xl font-bold font-outfit">List of Awards</h3>
+              <a href="/admin/awards/create"
+                class="bg-teal-500 hover:bg-teal-600 text-black font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors">
+                <i data-lucide="plus" class="w-4 h-4"></i> Add New
+              </a>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+              <table class="w-full text-left">
+                <thead class="bg-white/5 text-gray-400">
+                  <tr>
+                    <th class="p-4 font-medium">Sertifikat</th>
+                    <th class="p-4 font-medium">Tanggal</th>
+                    <th class="p-4 font-medium">Judul</th>
+                    <th class="p-4 font-medium">Penyelenggara</th>
+                    <th class="p-4 font-medium">Kategori</th>
+                    <th class="p-4 font-medium">Credential</th>
+                    <th class="p-4 font-medium text-right">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                  <% if (awards && awards.length> 0) { %>
+                    <% awards.forEach(a=> { %>
+                      <tr class="hover:bg-white/5 transition-colors">
+                        <td class="p-4">
+                          <% if (a.certificateUrl) { const isPdf=a.certificateUrl.toLowerCase().endsWith('.pdf'); %>
+                            <a href="<%= a.certificateUrl %>" target="_blank" rel="noopener noreferrer"
+                              class="inline-flex items-center gap-2">
+                              <% if (isPdf) { %>
+                                <i data-lucide="file-text" class="w-4 h-4"></i>
+                                <span class="text-xs">PDF</span>
+                                <% } else { %>
+                                  <img src="<%= a.certificateUrl %>" alt="Sertifikat <%= a.title %>"
+                                    class="w-16 h-12 object-cover rounded border border-white/10">
+                                  <% } %>
+                            </a>
+                            <% } else { %>
+                              <span class="text-xs text-gray-500">—</span>
+                              <% } %>
+                        </td>
+                        <td class="p-4 text-sm text-gray-400">
+                          <%= a.date %>
+                        </td>
+                        <td class="p-4 font-medium">
+                          <%= a.title %>
+                        </td>
+                        <td class="p-4 text-gray-300">
+                          <%= a.organizer %>
+                        </td>
+                        <td class="p-4 text-gray-300">
+                          <%= a.category || '—' %>
+                        </td>
+                        <td class="p-4 text-gray-300">
+                          <%= a.credentialId || '—' %>
+                        </td>
+                        <td class="p-4 text-right">
+                          <div class="flex items-center justify-end gap-2">
+                            <a href="/admin/awards/edit/<%= a.id %>"
+                              class="p-2 bg-blue-500/10 text-blue-400 rounded-lg hover:bg-blue-500/20 transition-colors">
+                              <i data-lucide="edit-2" class="w-4 h-4"></i>
+                            </a>
+                            <form action="/admin/awards/delete/<%= a.id %>" method="POST"
+                              onsubmit="return confirm('Hapus data ini?')" class="inline">
+                              <button type="submit"
+                                class="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                              </button>
+                            </form>
+                          </div>
+                        </td>
+                      </tr>
+                      <% }) %>
+                        <% } else { %>
+                          <tr>
+                            <td colspan="7" class="p-8 text-center text-gray-500">Belum ada data</td>
+                          </tr>
+                          <% } %>
+                </tbody>
+              </table>
+            </div>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>

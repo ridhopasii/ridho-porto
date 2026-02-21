@@ -1,0 +1,908 @@
+<%- include('partials/header') %>
+
+    <!-- Hero Section -->
+    <section id="beranda" class="min-h-screen flex items-center pt-20 relative overflow-hidden">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 z-0 pointer-events-none">
+            <div
+                class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/20 rounded-full blur-[120px] animate-blob mix-blend-screen">
+            </div>
+            <div
+                class="absolute top-[20%] right-[-10%] w-[35%] h-[35%] bg-purple-500/20 rounded-full blur-[120px] animate-blob animation-delay-2000 mix-blend-screen">
+            </div>
+            <div
+                class="absolute bottom-[-10%] left-[20%] w-[30%] h-[30%] bg-teal-500/20 rounded-full blur-[120px] animate-blob animation-delay-4000 mix-blend-screen">
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                <!-- Left Content -->
+                <div class="order-2 lg:order-1 fade-in-up">
+                    <p class="text-gray-400 text-sm tracking-widest uppercase mb-4">Halo, Saya</p>
+
+                    <h1 class="font-outfit font-bold text-4xl sm:text-5xl lg:text-6xl leading-tight mb-2">
+                        <%= profile?.fullName || 'Hafidz Humaidi' %>
+                    </h1>
+                    <h2 class="font-outfit font-bold text-base sm:text-xl lg:text-2xl leading-tight mb-6 text-accent">
+                        <%= profile?.title || 'Web Developer' %>
+                    </h2>
+
+                    <div class="text-xl sm:text-2xl mb-8">
+                        <span class="text-gray-400">Seorang</span><br>
+                        <span class="highlight-text font-outfit font-semibold text-white">
+                            <%= profile?.title || 'UI/UX Designer & Web Developer' %>
+                        </span>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="flex items-center gap-3 mb-8">
+                        <% if (locals.socials) { %>
+                            <% socials.forEach(social=> { %>
+                                <a href="<%= social.url %>" target="_blank" class="social-icon">
+                                    <i data-lucide="<%= social.icon %>" class="w-5 h-5"></i>
+                                </a>
+                                <% }) %>
+                                    <% } %>
+                    </div>
+
+                    <!-- Description with Typing -->
+                    <p class="text-gray-400 text-lg mb-10 max-w-lg">
+                        <span id="typing-text" class="typing-text"></span>
+                    </p>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#proyek" class="btn-primary">
+                            <span>Lihat Proyek</span>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#kontak" class="btn-outline">
+                            <span>Kontak Saya</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Content - Profile Card -->
+                <div class="order-1 lg:order-2 flex justify-center fade-in-up stagger-1">
+                    <div
+                        class="profile-card relative hover:scale-[1.02] transition-transform duration-500 hover:rotate-1">
+                        <!-- Main Image Card -->
+                        <div
+                            class="relative w-72 sm:w-80 lg:w-96 rounded-3xl overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 shadow-2xl shadow-accent/20">
+                            <img src="<%= profile?.heroImage || '/images/asset_1.jpg' %>" alt="<%= profile?.fullName %>"
+                                class="w-full h-auto object-cover" loading="lazy" decoding="async">
+
+                            <!-- Overlay Text -->
+                            <div class="absolute top-6 left-6 right-6">
+                                <h3 class="font-outfit font-bold text-2xl text-white drop-shadow-lg">
+                                    <%= profile?.fullName %>
+                                </h3>
+                                <p class="text-accent-light text-sm drop-shadow-lg">
+                                    <%= profile?.title %>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Info Card -->
+                        <div
+                            class="absolute -bottom-4 left-4 right-4 bg-secondary/90 backdrop-blur-xl rounded-2xl p-4 border border-white/10 flex items-center justify-between shadow-lg">
+                            <div class="flex items-center gap-3">
+                                <img src="<%= profile?.avatarUrl || '/images/asset_2.jpg' %>" alt="Avatar"
+                                    class="w-10 h-10 rounded-full object-cover ring-2 ring-accent/50" loading="lazy"
+                                    decoding="async" width="40" height="40">
+                                <div>
+                                    <p class="text-sm font-medium">@ridhopasii</p>
+                                    <p class="text-xs text-accent flex items-center gap-1">
+                                        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                                        Online
+                                    </p>
+                                </div>
+                            </div>
+                            <button onclick="document.getElementById('kontak').scrollIntoView({behavior: 'smooth' })"
+                                class="px-4 py-2 bg-white/10 hover:bg-accent hover:text-primary rounded-xl text-sm font-medium transition-all">
+                                Hubungi Saya
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tech Stack Scrolling -->
+            <div class="mt-24 pt-10 border-t border-white/5 relative fade-in-up stagger-2">
+                <p class="text-center text-gray-500 text-sm mb-8 uppercase tracking-widest">Teknologi yang saya gunakan
+                </p>
+                <div class="flex flex-wrap justify-center gap-8 opacity-70 hover:opacity-100 transition-opacity">
+                    <i data-lucide="code-2" class="w-8 h-8 text-gray-400 hover:text-accent transition-colors"></i>
+                    <i data-lucide="database" class="w-8 h-8 text-gray-400 hover:text-blue-400 transition-colors"></i>
+                    <i data-lucide="layout" class="w-8 h-8 text-gray-400 hover:text-pink-400 transition-colors"></i>
+                    <i data-lucide="server" class="w-8 h-8 text-gray-400 hover:text-green-400 transition-colors"></i>
+                    <i data-lucide="smartphone"
+                        class="w-8 h-8 text-gray-400 hover:text-purple-400 transition-colors"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="tentang" class="py-24">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="mb-12">
+                <span class="text-gray-400 text-lg">Tentang</span>
+                <h2 class="font-outfit font-bold text-4xl sm:text-5xl">
+                    <span class="text-accent">Saya</span>
+                </h2>
+            </div>
+
+            <p class="text-xl sm:text-2xl font-outfit font-medium text-white mb-8 max-w-3xl">
+                <%= profile?.bio?.split('.')[0] || 'Perpaduan logika kode dan estetika desain.' %>.
+            </p>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Left - Content -->
+                <div class="space-y-6">
+                    <p class="text-gray-400 leading-relaxed">
+                        <%= profile?.bio || 'Perjalanan saya di dunia digital dimulai sejak bangku sekolah.' %>
+                    </p>
+
+                    <!-- Stats -->
+                    <div class="flex gap-8 pt-6">
+                        <div>
+                            <div class="font-outfit font-bold text-3xl sm:text-4xl text-white">2+</div>
+                            <div class="text-sm text-gray-500 mt-1">Tahun Pengalaman</div>
+                        </div>
+                        <div>
+                            <div class="font-outfit font-bold text-3xl sm:text-4xl text-white">
+                                <%= projects?.length || 0 %>+
+                            </div>
+                            <div class="text-sm text-gray-500 mt-1">Proyek Selesai</div>
+                        </div>
+                        <!-- Education/Experience Timeline simplified -->
+                    </div>
+
+                    <!-- Experience, Education & Achievements Tabs -->
+                    <!-- Experience, Education & Achievements Tabs -->
+                    <div class="mt-12 relative z-10">
+                        <div class="inline-flex flex-wrap gap-1 bg-white/5 border border-white/10 rounded-2xl p-1 mb-6">
+                            <button id="tab-experience" data-tab="experience"
+                                class="tab-btn active px-4 py-2 rounded-xl text-sm font-medium bg-accent/20 text-accent transition-all">
+                                Pengalaman
+                            </button>
+                            <button id="tab-education" data-tab="education"
+                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                                Pendidikan
+                            </button>
+                            <button id="tab-achievements" data-tab="achievements"
+                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                                Pencapaian
+                            </button>
+                        </div>
+
+                        <!-- Experience Content -->
+                        <div id="content-experience" class="tab-content space-y-8 animate-fade-in block">
+                            <% if (locals.experiences) { %>
+                                <% experiences.forEach(exp=> { %>
+                                    <div
+                                        class="relative pl-8 border-l border-white/10 group hover:border-accent/50 transition-colors">
+                                        <div
+                                            class="absolute -left-1.5 top-1.5 w-3 h-3 rounded-full bg-accent/20 border border-accent group-hover:scale-110 transition-transform">
+                                        </div>
+                                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                                            <h4
+                                                class="text-lg font-bold text-white group-hover:text-accent transition-colors">
+                                                <%= exp.position %>
+                                            </h4>
+                                            <span
+                                                class="text-sm text-accent bg-accent/10 px-3 py-1 rounded-full w-fit mt-2 sm:mt-0">
+                                                <%= exp.period %>
+                                            </span>
+                                        </div>
+                                        <p class="text-base text-gray-300 font-medium mb-2">
+                                            <%= exp.company %>
+                                        </p>
+                                        <p class="text-sm text-gray-400 leading-relaxed">
+                                            <%= exp.description || '' %>
+                                        </p>
+                                    </div>
+                                    <% }) %>
+                                        <% } %>
+                        </div>
+
+                        <!-- Education Content -->
+                        <div id="content-education" class="tab-content hidden space-y-8 animate-fade-in">
+                            <% if (locals.education) { %>
+                                <% education.forEach(edu=> { %>
+                                    <div
+                                        class="relative pl-8 border-l border-white/10 group hover:border-accent/50 transition-colors">
+                                        <div
+                                            class="absolute -left-1.5 top-1.5 w-3 h-3 rounded-full bg-teal-500/20 border border-teal-500 group-hover:scale-110 transition-transform">
+                                        </div>
+                                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                                            <h4
+                                                class="text-lg font-bold text-white group-hover:text-teal-400 transition-colors">
+                                                <%= edu.institution %>
+                                            </h4>
+                                            <span
+                                                class="text-sm text-teal-400 bg-teal-500/10 px-3 py-1 rounded-full w-fit mt-2 sm:mt-0">
+                                                <%= edu.period %>
+                                            </span>
+                                        </div>
+                                        <p class="text-base text-gray-300 font-medium mb-2">
+                                            <%= edu.degree %>
+                                        </p>
+                                        <p class="text-sm text-gray-400">
+                                            <%= edu.major %>
+                                        </p>
+                                    </div>
+                                    <% }) %>
+                                        <% } %>
+                        </div>
+
+                        <!-- Achievements Content -->
+                        <div id="content-achievements" class="tab-content hidden space-y-6 animate-fade-in">
+                            <% if (locals.awards && awards.length> 0) { %>
+                                <% awards.forEach(a=> { %>
+                                    <div
+                                        class="bg-white/5 border border-white/10 rounded-xl p-5 hover:border-accent/30 transition-colors">
+                                        <div class="flex items-start gap-4">
+                                            <% if (a.certificateUrl) { %>
+                                                <a href="<%= a.certificateUrl %>" target="_blank"
+                                                    rel="noopener noreferrer" class="shrink-0">
+                                                    <img src="<%= a.certificateUrl %>" alt="<%= a.title %>"
+                                                        class="w-16 h-16 object-cover rounded-lg border border-white/10"
+                                                        loading="lazy" decoding="async">
+                                                </a>
+                                                <% } else { %>
+                                                    <div
+                                                        class="w-16 h-16 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                                                        <i data-lucide="award" class="w-8 h-8 text-accent/50"></i>
+                                                    </div>
+                                                    <% } %>
+                                                        <div>
+                                                            <div class="flex flex-wrap items-center gap-2 mb-1">
+                                                                <h3
+                                                                    class="font-outfit font-semibold text-white text-base">
+                                                                    <%= a.title %>
+                                                                </h3>
+                                                                <span
+                                                                    class="text-xs text-accent bg-accent/10 px-2 py-0.5 rounded">
+                                                                    <%= a.date %>
+                                                                </span>
+                                                            </div>
+                                                            <p class="text-sm text-gray-400 mb-1">
+                                                                <%= a.organizer %>
+                                                            </p>
+                                                            <% if (a.description) { %>
+                                                                <p class="text-xs text-gray-500 line-clamp-2">
+                                                                    <%= a.description %>
+                                                                </p>
+                                                                <% } %>
+                                                        </div>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <p class="text-gray-500 italic">Belum ada pencapaian yang ditampilkan.</p>
+                                            <% } %>
+                        </div>
+                    </div>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            const tabs = document.querySelectorAll('.tab-btn');
+                            const contents = document.querySelectorAll('.tab-content');
+
+                            function switchTab(targetId) {
+                                // 1. Update Buttons
+                                tabs.forEach(btn => {
+                                    if (btn.dataset.tab === targetId) {
+                                        btn.classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-white/5');
+                                        btn.classList.add('bg-accent/20', 'text-accent', 'active');
+                                    } else {
+                                        btn.classList.remove('bg-accent/20', 'text-accent', 'active');
+                                        btn.classList.add('text-gray-400', 'hover:text-white', 'hover:bg-white/5');
+                                    }
+                                });
+
+                                // 2. Update Content
+                                contents.forEach(content => {
+                                    content.classList.add('hidden');
+                                    content.style.display = ''; // Clean up inline styles
+                                });
+
+                                const activeContent = document.getElementById('content-' + targetId);
+                                if (activeContent) {
+                                    activeContent.classList.remove('hidden');
+                                    // Trigger animation
+                                    activeContent.style.animation = 'none';
+                                    activeContent.offsetHeight; /* trigger reflow */
+                                    activeContent.style.animation = null;
+                                }
+                            }
+
+                            // Initialize event listeners
+                            tabs.forEach(btn => {
+                                btn.addEventListener('click', (e) => {
+                                    e.preventDefault();
+                                    const tabId = btn.dataset.tab;
+                                    if (tabId) switchTab(tabId);
+                                });
+                            });
+                        });
+                    </script>
+                    <% if (locals.realtimeEnabled) { %>
+                    <script src="/socket.io/socket.io.js"></script>
+                    <script>
+                        (function () {
+                            try {
+                                const socket = io({ transports: ['websocket', 'polling'] });
+                                console.log('[realtime] connecting...');
+                                socket.on('connect', () => console.log('[realtime] connected', socket.id));
+                                socket.on('disconnect', (reason) => console.warn('[realtime] disconnected:', reason));
+                                socket.on('connect_error', (err) => console.error('[realtime] error:', err.message));
+
+                                function escapeHtml(unsafe) {
+                                    return String(unsafe)
+                                        .replace(/&/g, "&amp;")
+                                        .replace(/</g, "&lt;")
+                                        .replace(/>/g, "&gt;")
+                                        .replace(/"/g, "&quot;")
+                                        .replace(/'/g, "&#039;");
+                                }
+
+                                function renderExperiences(exps) {
+                                    const container = document.getElementById('content-experience');
+                                    if (!container) return;
+                                    if (!Array.isArray(exps) || exps.length === 0) {
+                                        container.innerHTML = '<p class="text-gray-500">Belum ada pengalaman.</p>';
+                                        return;
+                                    }
+                                    const html = exps.map(exp => {
+                                        const position = escapeHtml(exp.position ?? '');
+                                        const period = escapeHtml(exp.period ?? '');
+                                        const company = escapeHtml(exp.company ?? '');
+                                        const description = escapeHtml(exp.description ?? '');
+                                        return `
+                                        <div class="relative pl-8 border-l border-white/10 group hover:border-accent/50 transition-colors">
+                                          <div class="absolute -left-1.5 top-1.5 w-3 h-3 rounded-full bg-accent/20 border border-accent group-hover:scale-110 transition-transform"></div>
+                                          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                                            <h4 class="text-lg font-bold text-white group-hover:text-accent transition-colors">${position}</h4>
+                                            <span class="text-sm text-accent bg-accent/10 px-3 py-1 rounded-full w-fit mt-2 sm:mt-0">${period}</span>
+                                          </div>
+                                          <p class="text-base text-gray-300 font-medium mb-2">${company}</p>
+                                          <p class="text-sm text-gray-400 leading-relaxed">${description}</p>
+                                        </div>`;
+                                    }).join('');
+                                    container.innerHTML = html;
+                                }
+
+                                socket.on('experience:update', (experiences) => {
+                                    console.log('[realtime] experience:update', experiences?.length);
+                                    try {
+                                        renderExperiences(experiences || []);
+                                    } catch (e) {
+                                        console.error('[realtime] render error:', e);
+                                    }
+                                });
+
+                                // Initial sync on load
+                                fetch('/api/experiences')
+                                    .then(r => r.json())
+                                    .then(data => {
+                                        if (data && Array.isArray(data.experiences)) {
+                                            console.log('[realtime] initial experiences', data.experiences.length);
+                                            renderExperiences(data.experiences);
+                                        }
+                                    })
+                                    .catch(err => console.error('[realtime] initial fetch error:', err));
+                            } catch (e) {
+                                console.error('[realtime] init failed:', e);
+                            }
+                        })();
+                    </script>
+                    <% } %>
+
+                    <!-- Download CV -->
+                    <a href="<%= profile?.cvLink %>" target="_blank"
+                        class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/30 rounded-xl transition-all mt-4">
+                        <i data-lucide="download" class="w-5 h-5 text-accent"></i>
+                        <span>Unduh CV</span>
+                    </a>
+                </div>
+
+                <!-- Right - Tech Stack -->
+                <div>
+                    <h3 class="font-outfit font-semibold text-lg mb-6">Kreativitas & Tech Stack</h3>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <% if (locals.skillCategories) { %>
+                            <% Object.entries(skillCategories).forEach(([category, skills])=> { %>
+                                <% skills.forEach(skill=> { %>
+                                    <div class="tech-card">
+                                        <div
+                                            class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-3 text-accent">
+                                            <!-- Simple icon placeholder based on name first letter if icon not mapped -->
+                                            <span class="font-bold">
+                                                <%= skill.name.charAt(0) %>
+                                            </span>
+                                        </div>
+                                        <h4 class="font-medium text-sm">
+                                            <%= skill.name %>
+                                        </h4>
+                                        <p class="text-xs text-gray-500 mt-0.5">
+                                            <%= category %>
+                                        </p>
+                                        <div class="w-full bg-white/10 h-1 mt-2 rounded-full overflow-hidden">
+                                            <div class="bg-accent h-full" style="width: <%= skill.percentage %>%"></div>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                                        <% }) %>
+                                            <% } %>
+                    </div>
+                </div>
+            </div>
+
+    </section>
+
+    <!-- Projects Section -->
+    <section id="proyek" class="py-24">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="mb-12">
+                <span class="text-gray-400 text-lg">Proyek</span>
+                <h2 class="font-outfit font-bold text-4xl sm:text-5xl">
+                    <span class="text-accent">Terpilih</span>
+                </h2>
+                <p class="text-gray-400 mt-4">Beberapa karya yang menyoroti keahlian saya.</p>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <% if (locals.projects) { %>
+                    <% projects.forEach(project=> { %>
+                        <a href="/project/<%= project.slug %>" class="project-card group">
+                            <div class="project-image flex items-center justify-center">
+                                <% if (project.imageUrl) { %>
+                                    <img src="<%= project.imageUrl %>" alt="<%= project.title %>"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        loading="lazy" decoding="async">
+                                    <% } else { %>
+                                        <i data-lucide="folder" class="w-20 h-20 text-accent/30"></i>
+                                        <% } %>
+                            </div>
+                            <div class="p-6">
+                                <h3
+                                    class="font-outfit font-semibold text-xl mb-2 group-hover:text-accent transition-colors">
+                                    <%= project.title %>
+                                </h3>
+                                <p class="text-gray-400 text-sm mb-4">
+                                    <%= project.description %>
+                                </p>
+                                <div class="flex gap-2 flex-wrap">
+                                    <% if (project.tags) { %>
+                                        <% project.tags.split(',').forEach(tag=> { %>
+                                            <span class="px-3 py-1 rounded-full bg-white/5 text-gray-300 text-xs">
+                                                <%= tag.trim() %>
+                                            </span>
+                                            <% }) %>
+                                                <% } %>
+                                </div>
+                            </div>
+                            <div class="px-6 pb-6">
+                                <span class="inline-flex items-center gap-2 text-accent text-sm font-medium">
+                                    <span>Lihat</span>
+                                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </span>
+                            </div>
+                        </a>
+                        <% }) %>
+                            <% } %>
+            </div>
+
+            <!-- View All Button -->
+            <div class="text-center mt-12">
+                <button class="btn-outline">
+                    <span>Lihat Semua Proyek</span>
+                </button>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Latest Articles (Static) -->
+    <section id="blog" class="py-24 bg-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="mb-12 flex justify-between items-end">
+                <div>
+                    <span class="text-gray-400 text-lg">Artikel</span>
+                    <h2 class="font-outfit font-bold text-4xl sm:text-5xl">
+                        <span class="text-accent">Terbaru</span>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <% if (locals.articles && articles.length> 0) { %>
+                    <% articles.forEach(article=> { %>
+                        <a href="/blog/<%= article.slug %>"
+                            class="group relative bg-black/20 border border-white/10 rounded-2xl overflow-hidden hover:border-accent/30 transition-all flex flex-col h-full">
+                            <div class="h-48 overflow-hidden bg-gray-800 relative shrink-0">
+                                <% if (article.imageUrl) { %>
+                                    <% const _img = article.imageUrl.startsWith('http') ? ('https://images.weserv.nl/?url=' + encodeURIComponent(article.imageUrl)) : article.imageUrl; %>
+                                    <img src="<%= _img %>" alt="<%= article.title %>"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        loading="lazy">
+                                    <% } else { %>
+                                        <div
+                                            class="w-full h-full flex items-center justify-center bg-gray-800 text-gray-600">
+                                            <i data-lucide="file-text" class="w-10 h-10"></i>
+                                        </div>
+                                        <% } %>
+                                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent">
+                                            </div>
+                            </div>
+                            <div class="p-6 flex flex-col flex-grow">
+                                <div class="mb-3 flex flex-wrap gap-2">
+                                    <% if (article.tags) { %>
+                                        <% article.tags.split(',').slice(0, 2).forEach(tag=> { %>
+                                            <span
+                                                class="text-xs text-accent bg-accent/10 px-2 py-1 rounded inline-block">
+                                                <%= tag.trim() %>
+                                            </span>
+                                            <% }) %>
+                                                <% } %>
+                                </div>
+                                <h3
+                                    class="font-outfit font-bold text-xl text-white mb-2 group-hover:text-accent transition-colors line-clamp-2">
+                                    <%= article.title %>
+                                </h3>
+                                <div
+                                    class="text-gray-400 text-sm mb-4 line-clamp-2 flex-grow prose prose-invert prose-sm">
+                                    <%- article.content.replace(/<[^>]*>?/gm, '').substring(0, 100) %>...
+                                </div>
+                                <time class="text-xs text-gray-500 mt-auto block">
+                                    <%= new Date(article.createdAt).toLocaleDateString('id-ID', { year: 'numeric' ,
+                                        month: 'long' , day: 'numeric' }) %>
+                                </time>
+                            </div>
+                        </a>
+                        <% }) %>
+                            <% } else { %>
+                                <!-- Fallback / Empty State -->
+                                <div
+                                    class="col-span-full text-center py-12 border border-white/5 rounded-2xl bg-white/5">
+                                    <i data-lucide="pen-tool" class="w-12 h-12 text-gray-600 mx-auto mb-4"></i>
+                                    <h3 class="text-xl font-bold text-white mb-2">Belum ada artikel</h3>
+                                    <p class="text-gray-400">Nantikan tulisan-tulisan menarik di sini segera.</p>
+                                </div>
+                                <% } %>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Testimonials Section -->
+    <section id="testimoni" class="py-24 bg-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="mb-12 text-center">
+                <span class="text-gray-400 text-lg">Apa Kata</span>
+                <h2 class="font-outfit font-bold text-4xl sm:text-5xl">
+                    <span class="text-accent">Mereka</span>
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% if (locals.testimonials && testimonials.length> 0) { %>
+                    <% testimonials.forEach(testi=> { %>
+                        <div
+                            class="bg-black/20 border border-white/10 p-6 rounded-2xl hover:border-accent/30 transition-colors">
+                            <div class="flex items-center gap-4 mb-4">
+                                <% if (testi.avatarUrl) { %>
+                                    <img src="<%= testi.avatarUrl %>" alt="<%= testi.name %>"
+                                        class="w-12 h-12 rounded-full object-cover border border-white/10"
+                                        loading="lazy" decoding="async" width="48" height="48">
+                                    <% } else { %>
+                                        <div
+                                            class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-gray-400">
+                                            <i data-lucide="user" class="w-6 h-6"></i>
+                                        </div>
+                                        <% } %>
+                                            <div>
+                                                <h4 class="font-bold font-outfit text-white">
+                                                    <%= testi.name %>
+                                                </h4>
+                                                <p class="text-sm text-accent">
+                                                    <%= testi.role %>
+                                                </p>
+                                            </div>
+                            </div>
+                            <div class="mb-4">
+                                <i data-lucide="quote" class="w-6 h-6 text-white/10 fill-current"></i>
+                            </div>
+                            <p class="text-gray-400 italic">"<%= testi.message %>"</p>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <div class="col-span-full text-center text-gray-500 italic">
+                                    Belum ada testimoni ditampilkan.
+                                </div>
+                                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="kontak" class="py-24">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="mb-12">
+                <span class="text-gray-400 text-lg">Mari</span>
+                <h2 class="font-outfit font-bold text-4xl sm:text-5xl">
+                    <span class="text-accent">Terhubung</span>
+                </h2>
+                <p class="text-gray-400 mt-4">Saya selalu terbuka untuk proyek baru atau sekadar obrolan. Kirimkan
+                    sinyal Anda.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Left - Contact Info -->
+                <div class="space-y-6">
+                    <!-- Status -->
+                    <div class="flex items-center gap-2 mb-6">
+                        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                        <span class="font-mono text-sm text-accent">STATUS SISTEM: ONLINE</span>
+                    </div>
+
+                    <a href="mailto:<%= profile?.email %>" class="contact-card">
+                        <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                            <i data-lucide="mail" class="w-6 h-6 text-accent"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Email Saya</p>
+                            <p class="font-medium">
+                                <%= profile?.email %>
+                            </p>
+                        </div>
+                    </a>
+
+                    <a href="<%= profile?.whatsappUrl %>" target="_blank" class="contact-card">
+                        <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center">
+                            <i data-lucide="message-circle" class="w-6 h-6 text-green-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Chat WhatsApp</p>
+                            <p class="font-medium">
+                                <%= profile?.phone %>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Right - Contact Form -->
+                <div class="p-8 rounded-2xl bg-white/[0.02] border border-white/5">
+                    <form id="contactForm" class="space-y-6">
+                        <div>
+                            <label class="block text-sm text-gray-500 mb-2">ID Pengirim / Nama</label>
+                            <input type="text" name="name" placeholder="Masukkan nama Anda" class="form-input" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm text-gray-500 mb-2">Email</label>
+                            <input type="email" name="email" placeholder="email@example.com" class="form-input"
+                                required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm text-gray-500 mb-2">Subjek</label>
+                            <input type="text" name="subject" placeholder="Subjek Pesan" class="form-input">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm text-gray-500 mb-2">Pesan</label>
+                            <textarea name="message" rows="4" placeholder="Tulis pesan Anda..."
+                                class="form-input resize-none" required></textarea>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full py-4 rounded-xl bg-accent hover:bg-accent-light text-primary font-semibold transition-all flex items-center justify-center gap-2">
+                            <span>Kirim Pesan</span>
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                        </button>
+                        <p id="formStatus" class="text-center text-sm mt-2 hidden"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="layanan" class="py-24 relative">
+        <div class="absolute inset-0 bg-accent/5 skew-y-3 transform origin-top-left -z-10"></div>
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-accent font-medium tracking-wider text-sm uppercase">Layanan</span>
+                <h2 class="font-outfit font-bold text-3xl sm:text-4xl mt-2">Apa yang Saya Tawarkan?</h2>
+                <div class="h-1 w-20 bg-accent mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <% if (locals.services && services.length> 0) { %>
+                    <% services.forEach((service, index)=> { %>
+                        <div
+                            class="group p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-accent/50 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(0,255,136,0.1)] relative overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <i data-lucide="arrow-up-right" class="w-5 h-5 text-accent"></i>
+                            </div>
+                            <div
+                                class="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-500/20 to-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                                <i data-lucide="<%= service.icon %>" class="w-7 h-7 text-accent"></i>
+                            </div>
+                            <h3 class="font-outfit font-bold text-xl mb-3 group-hover:text-accent transition-colors">
+                                <%= service.title %>
+                            </h3>
+                            <p
+                                class="text-gray-400 leading-relaxed text-sm group-hover:text-gray-300 transition-colors">
+                                <%= service.description %>
+                            </p>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <!-- Default Static Services if DB is empty -->
+                                <div
+                                    class="group p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-accent/50 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(0,255,136,0.1)] relative overflow-hidden">
+                                    <div
+                                        class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-accent"></i>
+                                    </div>
+                                    <div
+                                        class="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-500/20 to-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                                        <i data-lucide="code" class="w-7 h-7 text-accent"></i>
+                                    </div>
+                                    <h3 class="font-outfit font-bold text-xl mb-3">Web Development</h3>
+                                    <p class="text-gray-400 leading-relaxed text-sm">
+                                        Membangun website modern, responsif, dan cepat menggunakan teknologi terbaru
+                                        seperti Node.js & React.
+                                    </p>
+                                </div>
+                                <div
+                                    class="group p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-accent/30 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2">
+                                    <div
+                                        class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                        <i data-lucide="palette" class="w-7 h-7 text-purple-400"></i>
+                                    </div>
+                                    <h3 class="font-outfit font-bold text-xl mb-3">UI/UX Design</h3>
+                                    <p class="text-gray-400 leading-relaxed text-sm">
+                                        Merancang antarmuka pengguna yang intuitif dan menarik secara visual untuk
+                                        meningkatkan pengalaman pengguna.
+                                    </p>
+                                </div>
+                                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const form = this;
+            const btn = form.querySelector('button[type="submit"]');
+            const statusFn = document.getElementById('formStatus');
+            const originalBtnText = btn.innerHTML;
+
+            // Loading state
+            btn.disabled = true;
+            btn.innerHTML = '<span>Mengirim...</span>';
+            statusFn.classList.add('hidden');
+            statusFn.className = 'text-center text-sm mt-2 hidden';
+
+            try {
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+
+                const response = await fetch('/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                statusFn.textContent = result.message;
+                statusFn.classList.remove('hidden');
+
+                if (result.success) {
+                    statusFn.classList.add('text-green-400');
+                    form.reset();
+                } else {
+                    statusFn.classList.add('text-red-400');
+                }
+            } catch (error) {
+                console.error(error);
+                statusFn.textContent = 'Gagal mengirim pesan. Silakan coba lagi.';
+                statusFn.classList.remove('hidden');
+                statusFn.classList.add('text-red-400');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnText;
+                lucide.createIcons();
+            }
+        });
+    </script>
+    </div>
+    </div>
+    </section>
+
+    <!-- Music Widget (Fixed Bottom Left) -->
+    <div id="music-widget" class="fixed bottom-4 left-4 z-50 transition-all duration-300 transform translate-y-0 group">
+        <div
+            class="bg-black/60 backdrop-blur-xl border border-white/10 p-3 rounded-2xl flex items-center gap-3 shadow-2xl hover:border-accent/50 transition-colors pr-6">
+            <div class="relative w-12 h-12 rounded-lg overflow-hidden shrink-0">
+                <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=150&q=80" alt="Album Art"
+                    class="w-full h-full object-cover animate-[spin_8s_linear_infinite]"
+                    style="animation-play-state: paused;" id="music-art">
+                <div class="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer transition-opacity"
+                    id="music-toggle-btn">
+                    <i data-lucide="play" class="w-5 h-5 text-white fill-white" id="music-icon"></i>
+                </div>
+            </div>
+            <div class="min-w-[100px]">
+                <div class="flex items-center gap-2 mb-0.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    <p class="text-[10px] uppercase tracking-wider text-accent font-bold">Sedang Diputar</p>
+                </div>
+                <p class="text-sm font-bold text-white leading-tight">Lofi Focus</p>
+                <p class="text-xs text-gray-400">Mode Coding</p>
+            </div>
+            <!-- Audio Element (Mock Source) -->
+            <audio id="bg-music" loop>
+                <source
+                    src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112762.mp3"
+                    type="audio/mpeg">
+            </audio>
+            <!-- Close Button -->
+            <button onclick="document.getElementById('music-widget').classList.add('translate-y-[200%]')"
+                class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg cursor-pointer transform hover:scale-110">
+                <i data-lucide="x" class="w-3 h-3"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const audio = document.getElementById('bg-music');
+            const toggleBtn = document.getElementById('music-toggle-btn');
+            const icon = document.getElementById('music-icon');
+            const art = document.getElementById('music-art');
+            let isPlaying = false;
+
+            if (toggleBtn && audio) {
+                toggleBtn.addEventListener('click', () => {
+                    if (isPlaying) {
+                        audio.pause();
+                        icon.setAttribute('data-lucide', 'play');
+                        // icon.classList.remove('fill-white');
+                        art.style.animationPlayState = 'paused';
+                    } else {
+                        audio.volume = 0.4;
+                        audio.play().catch(e => console.log('Audio interaction required:', e));
+                        icon.setAttribute('data-lucide', 'pause');
+                        // icon.classList.add('fill-white');
+                        art.style.animationPlayState = 'running';
+                    }
+                    isPlaying = !isPlaying;
+                    if (window.lucide) lucide.createIcons();
+                });
+            }
+        });
+    </script>
+    <!-- Spacer for fixed widget -->
+    <div class="h-24 md:hidden"></div>
+
+    <%- include('partials/footer') %>
+        ```

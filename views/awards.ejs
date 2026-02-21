@@ -1,0 +1,92 @@
+<%- include('partials/header') %>
+
+<section class="pt-32 pb-24 min-h-screen">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <nav aria-label="Breadcrumb" class="mb-4 text-sm text-gray-400">
+      <a href="/" class="hover:text-white">Beranda</a>
+      <span class="mx-2">/</span>
+      <span class="text-white">Sertifikat & Penghargaan</span>
+    </nav>
+    <div class="mb-12">
+      <span class="text-gray-400 text-lg">Sertifikat & Penghargaan</span>
+      <h1 class="font-outfit font-bold text-4xl sm:text-5xl">
+        <span class="text-accent">Pencapaian</span>
+      </h1>
+      <p class="text-gray-400 mt-4 max-w-2xl">Kumpulan sertifikat dan penghargaan yang pernah saya raih.</p>
+    </div>
+
+    <div class="flex items-center justify-between gap-4 mb-6">
+      <h2 class="font-outfit font-bold text-2xl">Certificates</h2>
+      <select id="award-filter" class="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-gray-300">
+        <option value="all">Semua</option>
+        <option value="teknologi">Teknologi</option>
+        <option value="bahasa">Bahasa</option>
+        <option value="soft-skill">Soft Skill</option>
+      </select>
+    </div>
+    <% if (awards && awards.length > 0) { %>
+      <div class="grid md:grid-cols-2 gap-6">
+        <% awards.forEach(a => { %>
+          <article class="award-card bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-accent/30 transition-colors" data-category="<%= (a.category || 'all') %>">
+            <header class="flex items-center justify-between mb-2">
+              <h2 class="font-outfit font-semibold text-xl"><%= a.title %></h2>
+              <time class="text-xs text-accent bg-accent/10 px-2 py-1 rounded"><%= a.date %></time>
+            </header>
+            <p class="text-gray-300 mb-2"><%= a.organizer %></p>
+            <div class="flex items-center gap-2 mb-2">
+              <% if (a.category) { %>
+                <span class="text-xs px-2 py-1 rounded bg-white/10 border border-white/10"><%= a.category %></span>
+              <% } %>
+              <% if (a.credentialId) { %>
+                <span class="text-xs text-gray-400">ID: <%= a.credentialId %></span>
+              <% } %>
+            </div>
+            <% if (a.certificateUrl) { 
+                 const isPdf = a.certificateUrl.toLowerCase().endsWith('.pdf'); %>
+              <div class="mb-3">
+                <% if (isPdf) { %>
+                  <a href="<%= a.certificateUrl %>" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-accent hover:underline">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    <span>Lihat Sertifikat (PDF)</span>
+                  </a>
+                <% } else { %>
+                  <a href="<%= a.certificateUrl %>" target="_blank" rel="noopener noreferrer" class="block">
+                    <img src="<%= a.certificateUrl %>" alt="Sertifikat <%= a.title %>" class="w-full h-48 object-cover rounded-lg border border-white/10" loading="lazy" decoding="async">
+                  </a>
+                <% } %>
+              </div>
+            <% } %>
+            <% if (a.description) { %>
+              <p class="text-gray-400 text-sm"><%= a.description %></p>
+            <% } %>
+          </article>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-8 text-center">
+        <i data-lucide="award" class="w-12 h-12 text-gray-500 mx-auto mb-4"></i>
+        <h3 class="text-xl font-bold mb-2">Belum ada data</h3>
+        <p class="text-gray-400">Tambahkan sertifikat/penghargaan melalui panel admin.</p>
+      </div>
+    <% } %>
+  </div>
+  </section>
+
+<script>
+  (function(){
+    const filter = document.getElementById('award-filter');
+    const cards = document.querySelectorAll('.award-card');
+    if (!filter || !cards.length) return;
+    const apply = () => {
+      const val = filter.value;
+      cards.forEach(c => {
+        const cat = (c.getAttribute('data-category') || '').toLowerCase();
+        c.style.display = (val === 'all' || val === '' || cat === val.toLowerCase()) ? '' : 'none';
+      });
+    };
+    filter.addEventListener('change', apply);
+    apply();
+  })();
+</script>
+
+<%- include('partials/footer') %>

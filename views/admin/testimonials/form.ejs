@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= testimonial ? 'Edit' : 'Add' %> Testimonial - Admin Panel
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style type="text/tailwindcss">
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0a0a0a; color: white; }
+        .sidebar-link { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all; }
+        .sidebar-link.active { @apply bg-teal-500/10 text-teal-400; }
+        input, textarea, select { @apply w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-teal-500 transition-colors text-white; }
+        label { @apply block text-sm text-gray-400 mb-1; }
+    </style>
+</head>
+
+<body class="flex min-h-screen">
+    <%- include('../partials/sidebar', { path: '/admin/testimonials' }) %>
+
+        <main class="flex-1 ml-64 p-8">
+            <%- include('../partials/header', { title: testimonial ? 'Edit Testimonial' : 'Add Testimonial' }) %>
+
+                <div class="max-w-2xl mx-auto">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-8">
+                        <form action="/admin/testimonials<%= testimonial ? '/edit/' + testimonial.id : '/create' %>"
+                            method="POST" enctype="multipart/form-data" class="space-y-6">
+
+                            <!-- Name & Role -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label>Name</label>
+                                    <input type="text" name="name" value="<%= testimonial ? testimonial.name : '' %>"
+                                        required>
+                                </div>
+                                <div>
+                                    <label>Role / Job Title</label>
+                                    <input type="text" name="role" value="<%= testimonial ? testimonial.role : '' %>"
+                                        required>
+                                </div>
+                            </div>
+
+                            <!-- Message -->
+                            <div>
+                                <label>Message</label>
+                                <textarea name="message" rows="4"
+                                    required><%= testimonial ? testimonial.message : '' %></textarea>
+                            </div>
+
+                            <!-- Avatar Input -->
+                            <div id="avatarInputSection">
+                                <label class="mb-2 block">Avatar Image</label>
+
+                                <% if (testimonial && testimonial.avatarUrl) { %>
+                                    <div class="mb-4">
+                                        <p class="text-xs text-gray-500 mb-1">Current Avatar:</p>
+                                        <img src="<%= testimonial.avatarUrl %>"
+                                            class="w-16 h-16 rounded-full object-cover border border-white/10">
+                                    </div>
+                                    <% } %>
+
+                                        <div class="bg-black/20 border border-white/10 rounded-lg p-4">
+                                            <div class="flex gap-4 mb-4 border-b border-white/10 pb-2">
+                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                    <input type="radio" name="imageSource" value="file" checked
+                                                        class="accent-teal-500" onchange="toggleImageInput(this.value)">
+                                                    <span class="text-sm">Upload File</span>
+                                                </label>
+                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                    <input type="radio" name="imageSource" value="url"
+                                                        class="accent-teal-500" onchange="toggleImageInput(this.value)">
+                                                    <span class="text-sm">Image URL</span>
+                                                </label>
+                                            </div>
+
+                                            <div id="fileInputContainer">
+                                                <input type="file" name="image" accept="image/*"
+                                                    class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20">
+                                            </div>
+
+                                            <div id="urlInputContainer" class="hidden">
+                                                <input type="url" name="avatarUrl"
+                                                    placeholder="https://example.com/avatar.jpg"
+                                                    class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-teal-500 transition-colors text-white">
+                                            </div>
+                                        </div>
+                            </div>
+
+                            <script>
+                                function toggleImageInput(source) {
+                                    const fileInput = document.getElementById('fileInputContainer');
+                                    const urlInput = document.getElementById('urlInputContainer');
+
+                                    if (source === 'file') {
+                                        fileInput.classList.remove('hidden');
+                                        urlInput.classList.add('hidden');
+                                    } else {
+                                        fileInput.classList.add('hidden');
+                                        urlInput.classList.remove('hidden');
+                                    }
+                                }
+                            </script>
+
+                            <div class="flex gap-4 pt-4">
+                                <button type="submit"
+                                    class="flex-1 bg-teal-500 hover:bg-teal-600 text-black font-bold py-3 rounded-lg transition-colors">
+                                    <%= testimonial ? 'Update Testimonial' : 'Add Testimonial' %>
+                                </button>
+                                <a href="/admin/testimonials"
+                                    class="flex-1 bg-white/10 hover:bg-white/20 text-white font-bold py-3 rounded-lg text-center transition-colors">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </main>
+        <script>
+            lucide.createIcons();
+        </script>
+</body>
+
+</html>

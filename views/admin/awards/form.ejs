@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= award ? 'Edit' : 'Tambah' %> Award - Admin Panel
+  </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style type="text/tailwindcss">
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0a0a0a; color: white; }
+      .sidebar-link { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all; }
+      .sidebar-link.active { @apply bg-teal-500/10 text-teal-400; }
+  </style>
+</head>
+
+<body class="flex min-h-screen">
+  <%- include('../partials/sidebar', { path: '/admin/awards' }) %>
+    <main class="flex-1 ml-64 p-8">
+      <%- include('../partials/header', { title: (award ? 'Edit' : 'Add New' ) + ' Award' }) %>
+
+        <% if (error) { %>
+          <div class="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 flex items-center gap-3">
+            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+            <span>
+              <%= error %>
+            </span>
+          </div>
+          <% } %>
+
+            <form action="<%= award ? '/admin/awards/edit/' + award.id : '/admin/awards/create' %>" method="POST"
+              enctype="multipart/form-data" class="max-w-xl space-y-4">
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">Judul</label>
+                <input type="text" name="title" value="<%= award?.title || '' %>"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white" required>
+              </div>
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">Penyelenggara</label>
+                <input type="text" name="organizer" value="<%= award?.organizer || '' %>"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white" required>
+              </div>
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">Tanggal</label>
+                <input type="text" name="date" value="<%= award?.date || '' %>"
+                  placeholder="YYYY-MM-DD atau Bulan Tahun"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white" required>
+              </div>
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">Deskripsi</label>
+                <textarea name="description" rows="4"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white"><%= award?.description || '' %></textarea>
+              </div>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Kategori</label>
+                  <select name="category"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white">
+                    <option value="">Pilih kategori</option>
+                    <option value="teknologi" <%=award?.category==='teknologi' ? 'selected' : '' %>>Teknologi</option>
+                    <option value="bahasa" <%=award?.category==='bahasa' ? 'selected' : '' %>>Bahasa</option>
+                    <option value="soft-skill" <%=award?.category==='soft-skill' ? 'selected' : '' %>>Soft Skill
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Credential ID</label>
+                  <input type="text" name="credentialId" value="<%= award?.credentialId || '' %>"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white">
+                </div>
+              </div>
+              <div class="grid gap-4">
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Link Gambar Sertifikat (opsional)</label>
+                  <input type="url" name="certificateUrl"
+                    value="<%= award?.certificateUrl && !award.certificateUrl.startsWith('/uploads/') ? award.certificateUrl : '' %>"
+                    placeholder="https://..."
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white">
+                  <p class="text-xs text-gray-500 mt-1">Jika diisi, akan digunakan alih‑alih file upload.</p>
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Upload Sertifikat (gambar atau PDF, opsional)</label>
+                  <input type="file" name="certificate" accept="image/*,.pdf"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white">
+                  <% if (award?.certificateUrl) { %>
+                    <div class="mt-2 flex items-center gap-3">
+                      <span class="text-xs text-gray-500">Saat ini:</span>
+                      <a href="<%= award.certificateUrl %>" target="_blank" rel="noopener noreferrer"
+                        class="text-accent text-sm hover:underline">Lihat Sertifikat</a>
+                    </div>
+                    <% } %>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <a href="/admin/awards"
+                  class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300">Batal</a>
+                <button type="submit"
+                  class="px-4 py-2 rounded-lg bg-teal-500 text-black font-semibold hover:bg-teal-600">Simpan</button>
+              </div>
+            </form>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= project ? 'Edit' : 'Add' %> Project - Admin Panel
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0a0a0a;
+            color: white;
+        }
+
+        .sidebar-link {
+            @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all;
+        }
+
+        .sidebar-link.active {
+            @apply bg-teal-500/10 text-teal-400;
+        }
+
+        input,
+        textarea {
+            @apply w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-teal-500 transition-colors text-white;
+        }
+
+        label {
+            @apply block text-sm text-gray-400 mb-1;
+        }
+    </style>
+</head>
+
+<body class="flex min-h-screen">
+    <%- include('../partials/sidebar', { path: '/admin/projects' }) %>
+
+        <main class="flex-1 ml-64 p-8">
+            <%- include('../partials/header', { title: project ? 'Edit Project' : 'Add New Project' }) %>
+
+                <div class="max-w-2xl mx-auto">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-8">
+                        <form action="/admin/projects<%= project ? '/edit/' + project.id : '/create' %>" method="POST"
+                            enctype="multipart/form-data" class="space-y-6">
+                            <div>
+                                <label>Title</label>
+                                <input type="text" name="title" value="<%= project ? project.title : '' %>" required>
+                            </div>
+
+                            <div>
+                                <label>Description (Short)</label>
+                                <textarea name="description" rows="3"
+                                    required><%= project ? project.description : '' %></textarea>
+                            </div>
+
+                            <div>
+                                <label>Category</label>
+                                <select name="category" required
+                                    class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-teal-500 transition-colors text-white">
+                                    <option value="project" <%=project && project.category==='project' ? 'selected' : ''
+                                        %>>Project (Development)</option>
+                                    <option value="design" <%=project && project.category==='design' ? 'selected' : ''
+                                        %>>Design (UI/UX)</option>
+                                    <option value="editing" <%=project && project.category==='editing' ? 'selected' : ''
+                                        %>>Editing (Video/Audio)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label>Content (Full Case Study)</label>
+                                <textarea name="content" rows="10"
+                                    placeholder="Use Markdown or HTML for full case study..."
+                                    class="font-mono text-sm"><%= project ? project.content : '' %></textarea>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label>Demo URL</label>
+                                    <input type="url" name="demoUrl" value="<%= project ? project.demoUrl : '' %>">
+                                </div>
+                                <div>
+                                    <label>Repo URL</label>
+                                    <input type="url" name="repoUrl" value="<%= project ? project.repoUrl : '' %>">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label>Tags (comma separated)</label>
+                                <input type="text" name="tags" value="<%= project ? project.tags : '' %>"
+                                    placeholder="html, css, javascript">
+                            </div>
+
+                            <div>
+                                <label class="mb-2 block">Project Image</label>
+
+                                <% if (project && project.imageUrl) { %>
+                                    <div class="mb-4">
+                                        <p class="text-xs text-gray-500 mb-1">Current Image:</p>
+                                        <img src="<%= project.imageUrl %>" alt="Current Image"
+                                            class="h-32 rounded object-cover border border-white/10">
+                                    </div>
+                                    <% } %>
+
+                                        <div class="bg-black/20 border border-white/10 rounded-lg p-4">
+                                            <% const isUrl=project && project.imageUrl &&
+                                                !project.imageUrl.startsWith('/uploads/'); %>
+                                                <div class="flex gap-4 mb-4 border-b border-white/10 pb-2">
+                                                    <label class="flex items-center gap-2 cursor-pointer">
+                                                        <input type="radio" name="imageSource" value="file" <%=!isUrl
+                                                            ? 'checked' : '' %>
+                                                        class="accent-teal-500" onchange="toggleImageInput(this.value)">
+                                                        <span class="text-sm">Upload File</span>
+                                                    </label>
+                                                    <label class="flex items-center gap-2 cursor-pointer">
+                                                        <input type="radio" name="imageSource" value="url" <%=isUrl
+                                                            ? 'checked' : '' %>
+                                                        class="accent-teal-500" onchange="toggleImageInput(this.value)">
+                                                        <span class="text-sm">Image URL</span>
+                                                    </label>
+                                                </div>
+
+                                                <div id="fileInputContainer" class="<%= isUrl ? 'hidden' : '' %>">
+                                                    <input type="file" name="image" accept="image/*"
+                                                        class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20">
+                                                </div>
+
+                                                <div id="urlInputContainer" class="<%= !isUrl ? 'hidden' : '' %>">
+                                                    <input type="url" name="imageUrl"
+                                                        value="<%= isUrl ? project.imageUrl : '' %>"
+                                                        placeholder="https://example.com/image.jpg"
+                                                        class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-teal-500 transition-colors text-white">
+                                                </div>
+                                        </div>
+                            </div>
+
+                            <script>
+                                function toggleImageInput(source) {
+                                    const fileContainer = document.getElementById('fileInputContainer');
+                                    const urlContainer = document.getElementById('urlInputContainer');
+                                    const fileInput = fileContainer.querySelector('input');
+                                    const urlInput = urlContainer.querySelector('input');
+
+                                    if (source === 'file') {
+                                        fileContainer.classList.remove('hidden');
+                                        urlContainer.classList.add('hidden');
+                                        urlInput.value = ''; // Clear URL
+                                    } else {
+                                        fileContainer.classList.add('hidden');
+                                        urlContainer.classList.remove('hidden');
+                                        fileInput.value = ''; // Clear File
+                                    }
+                                }
+                            </script>
+
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" name="featured" id="featured" class="w-5 h-5 accent-teal-500"
+                                    <%=project && project.featured ? 'checked' : '' %>>
+                                <label for="featured" class="mb-0 cursor-pointer">Featured Project?</label>
+                            </div>
+
+                            <div class="flex gap-4 pt-4">
+                                <button type="submit"
+                                    class="flex-1 bg-teal-500 hover:bg-teal-600 text-black font-bold py-3 rounded-lg transition-colors">
+                                    <%= project ? 'Update Project' : 'Create Project' %>
+                                </button>
+                                <a href="/admin/projects"
+                                    class="flex-1 bg-white/10 hover:bg-white/20 text-white font-bold py-3 rounded-lg text-center transition-colors">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </main>
+        <script>lucide.createIcons();</script>
+</body>
+
+</html>

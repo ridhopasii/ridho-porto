@@ -1,0 +1,9 @@
+<script>
+  try {
+    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+      lucide.createIcons();
+    }
+  } catch (e) {
+    console && console.warn && console.warn('Lucide init failed:', e);
+  }
+</script>

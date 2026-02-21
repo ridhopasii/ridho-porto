@@ -1,0 +1,300 @@
+<%- include('partials/header', { title: 'Showcase' }) %>
+  <main class="min-h-screen pt-28 pb-16">
+    <section class="mb-10">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-2 flex items-center gap-2" role="tablist"
+          aria-label="Tab Showcase">
+          <button class="tab-btn px-4 py-3 rounded-xl flex-1 text-center bg-accent/20 text-accent font-semibold"
+            role="tab" aria-selected="true" tabindex="0" data-tab="projects">Proyek</button>
+          <button class="tab-btn px-4 py-3 rounded-xl flex-1 text-center text-gray-300" role="tab" aria-selected="false"
+            tabindex="-1" data-tab="certificates">Sertifikat</button>
+          <button class="tab-btn px-4 py-3 rounded-xl flex-1 text-center text-gray-300" role="tab" aria-selected="false"
+            tabindex="-1" data-tab="techstack">Tech Stack</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-projects" class="section max-w-7xl mx-auto px-6 lg:px-8" role="tabpanel"
+      aria-labelledby="projects">
+      <div class="mb-6">
+        <div class="inline-flex bg-white/5 border border-white/10 rounded-2xl p-1">
+          <button class="subtab-btn px-4 py-2 rounded-xl bg-accent/20 text-accent font-semibold"
+            data-subtab="project">Proyek</button>
+          <button class="subtab-btn px-4 py-2 rounded-xl text-gray-300" data-subtab="design">Desain</button>
+          <button class="subtab-btn px-4 py-2 rounded-xl text-gray-300" data-subtab="editing">Editing</button>
+        </div>
+      </div>
+      <div class="subtab-panel" data-panel="project">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% if (projectsAll && projectsAll.length) { %>
+            <% projectsAll.forEach(p=> { %>
+              <a href="/project/<%= p.slug %>"
+                class="project-card group block rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:border-accent/40 transition-colors">
+                <div class="h-44 bg-secondary flex items-center justify-center">
+                  <% if (p.imageUrl) { %>
+                    <img src="<%= p.imageUrl %>" alt="<%= p.title %>" class="w-full h-full object-cover" loading="lazy"
+                      decoding="async">
+                    <% } else { %>
+                      <i data-lucide="image" class="w-10 h-10 text-gray-600"></i>
+                      <% } %>
+                </div>
+                <div class="p-5">
+                  <h3 class="font-outfit font-semibold text-lg mb-1">
+                    <%= p.title %>
+                  </h3>
+                  <p class="text-gray-400 text-sm line-clamp-2">
+                    <%= p.description %>
+                  </p>
+                  <div class="mt-3 flex gap-3">
+                    <% if (p.demoUrl) { %>
+                      <a href="<%= p.demoUrl %>" target="_blank" rel="noopener noreferrer"
+                        class="text-accent text-sm hover:underline">Demo</a>
+                      <% } %>
+                        <% if (p.repoUrl) { %>
+                          <a href="<%= p.repoUrl %>" target="_blank" rel="noopener noreferrer"
+                            class="text-gray-300 text-sm hover:underline">Source</a>
+                          <% } %>
+                  </div>
+                </div>
+              </a>
+              <% }) %>
+                <% } else { %>
+                  <div class="text-gray-500">Belum ada data.</div>
+                  <% } %>
+        </div>
+      </div>
+      <div class="subtab-panel hidden" data-panel="design">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% if (projectsDesign && projectsDesign.length) { %>
+            <% projectsDesign.forEach(p=> { %>
+              <div class="rounded-2xl overflow-hidden bg-white/5 border border-white/10">
+                <a href="<%= p.demoUrl || '#' %>" target="_blank" rel="noopener noreferrer"
+                  class="block h-48 bg-secondary">
+                  <% if (p.imageUrl) { %>
+                    <img src="<%= p.imageUrl %>" alt="<%= p.title %>" class="w-full h-full object-cover" loading="lazy"
+                      decoding="async">
+                    <% } %>
+                </a>
+                <div class="p-5">
+                  <h3 class="font-outfit font-semibold text-lg mb-1">
+                    <%= p.title %>
+                  </h3>
+                  <p class="text-gray-400 text-sm line-clamp-2">
+                    <%= p.description %>
+                  </p>
+                </div>
+              </div>
+              <% }) %>
+                <% } else { %>
+                  <div class="text-gray-500">Belum ada data.</div>
+                  <% } %>
+        </div>
+      </div>
+      <div class="subtab-panel hidden" data-panel="editing">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% if (projectsEditing && projectsEditing.length) { %>
+            <% projectsEditing.forEach(p=> { %>
+              <div class="rounded-2xl overflow-hidden bg-white/5 border border-white/10">
+                <a href="<%= p.demoUrl || '#' %>" target="_blank" rel="noopener noreferrer"
+                  class="relative block h-48 bg-secondary">
+                  <% if (p.imageUrl) { %>
+                    <img src="<%= p.imageUrl %>" alt="<%= p.title %>" class="w-full h-full object-cover" loading="lazy"
+                      decoding="async">
+                    <% } %>
+                      <span
+                        class="absolute bottom-2 right-2 text-xs bg-black/60 text-white px-2 py-1 rounded">Preview</span>
+                </a>
+                <div class="p-5">
+                  <h3 class="font-outfit font-semibold text-lg mb-1">
+                    <%= p.title %>
+                  </h3>
+                  <p class="text-gray-400 text-sm line-clamp-2">
+                    <%= p.description %>
+                  </p>
+                </div>
+              </div>
+              <% }) %>
+                <% } else { %>
+                  <div class="text-gray-500">Belum ada data.</div>
+                  <% } %>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-certificates" class="section hidden max-w-7xl mx-auto px-6 lg:px-8 mt-12" role="tabpanel"
+      aria-labelledby="certificates">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <h2 class="font-outfit font-bold text-3xl">Certificates</h2>
+        <div class="flex gap-2">
+          <select id="cert-filter" class="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-gray-300">
+            <option value="all">Semua</option>
+            <option value="teknologi">Teknologi</option>
+            <option value="bahasa">Bahasa</option>
+            <option value="soft-skill">Soft Skill</option>
+          </select>
+        </div>
+      </div>
+      <div id="cert-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% if (awards && awards.length) { %>
+          <% awards.forEach(a=> { %>
+            <div class="cert-card bg-white/5 border border-white/10 rounded-2xl overflow-hidden"
+              data-category="<%= (a.category || 'all') %>">
+              <div class="h-44 bg-secondary overflow-hidden cursor-zoom-in cert-zoom"
+                data-src="<%= a.certificateUrl || '' %>">
+                <% if (a.certificateUrl) { %>
+                  <img src="<%= a.certificateUrl %>" alt="Sertifikat <%= a.title %>" class="w-full h-full object-cover"
+                    loading="lazy" decoding="async">
+                  <% } else { %>
+                    <div class="w-full h-full flex items-center justify-center text-gray-600 text-sm">No Image</div>
+                    <% } %>
+              </div>
+              <div class="p-5">
+                <h3 class="font-outfit font-semibold text-lg mb-1">
+                  <%= a.title %>
+                </h3>
+                <p class="text-gray-400 text-sm">
+                  <%= a.organizer %> • <span class="text-gray-500">
+                      <%= a.date %>
+                    </span>
+                </p>
+                <% if (a.category || a.credentialId) { %>
+                  <div class="mt-2 flex items-center gap-2">
+                    <% if (a.category) { %><span class="text-xs px-2 py-1 rounded bg-white/10 border border-white/10">
+                        <%= a.category %>
+                      </span>
+                      <% } %>
+                        <% if (a.credentialId) { %><span class="text-xs text-gray-400">ID: <%= a.credentialId %></span>
+                          <% } %>
+                  </div>
+                  <% } %>
+                    <% if (a.description) { %>
+                      <p class="text-gray-400 text-sm mt-2">
+                        <%= a.description %>
+                      </p>
+                      <% } %>
+                        <% if (a.certificateUrl) { %>
+                          <a href="<%= a.certificateUrl %>" target="_blank" rel="noopener noreferrer"
+                            class="inline-block mt-3 text-accent text-sm hover:underline">Verifikasi</a>
+                          <% } %>
+              </div>
+            </div>
+            <% }) %>
+              <% } else { %>
+                <div class="text-gray-500">Belum ada data.</div>
+                <% } %>
+      </div>
+    </section>
+
+    <section id="section-techstack" class="section hidden max-w-7xl mx-auto px-6 lg:px-8 mt-12" role="tabpanel"
+      aria-labelledby="techstack">
+      <h2 class="font-outfit font-bold text-3xl mb-6">Tech Stack</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <% const categories={}; (skills || []).forEach(s=> { categories[s.category] = categories[s.category] || [];
+          categories[s.category].push(s); }); %>
+          <% Object.keys(categories).forEach(cat=> { %>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+              <h3 class="font-outfit font-semibold text-xl mb-4">
+                <%= cat %>
+              </h3>
+              <div class="grid grid-cols-2 gap-4">
+                <% categories[cat].forEach(s=> { %>
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded bg-white/10 flex items-center justify-center" title="<%= s.name %>">
+                      <i data-lucide="<%= s.icon || 'cpu' %>" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-sm font-medium">
+                        <%= s.name %>
+                      </div>
+                      <div class="w-full bg-white/10 h-1 mt-2 rounded-full overflow-hidden">
+                        <div class="bg-accent h-full" style="width: <%= Math.min(Math.max(s.percentage,0),100) %>%">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <% }) %>
+              </div>
+            </div>
+            <% }) %>
+      </div>
+    </section>
+  </main>
+
+  <div id="lightbox" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-6 z-50">
+    <div class="max-w-4xl w-full">
+      <img id="lightbox-img" src="" alt="Sertifikat" class="w-full h-auto rounded-lg border border-white/20">
+      <button id="lightbox-close"
+        class="mt-4 px-4 py-2 bg-white/10 text-white rounded-lg border border-white/20 hover:bg-white/20">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab-btn');
+    const sections = ['projects', 'certificates', 'techstack'];
+    const activate = (btn) => {
+      sections.forEach(s => {
+        const panel = document.getElementById('section-' + s);
+        const active = s === btn.dataset.tab;
+        panel.classList.toggle('hidden', !active);
+      });
+      tabs.forEach((b, i) => {
+        const active = b === btn;
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+        b.tabIndex = active ? 0 : -1;
+        b.classList.toggle('bg-accent/20', active);
+        b.classList.toggle('text-accent', active);
+        b.classList.toggle('font-semibold', active);
+      });
+    };
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => activate(btn));
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const arr = Array.from(tabs);
+          const idx = arr.indexOf(btn);
+          const next = e.key === 'ArrowRight' ? (idx + 1) % arr.length : (idx - 1 + arr.length) % arr.length;
+          arr[next].focus();
+          activate(arr[next]);
+        }
+      });
+    });
+    const subtabs = document.querySelectorAll('.subtab-btn');
+    const panels = document.querySelectorAll('.subtab-panel');
+    subtabs.forEach(btn => btn.addEventListener('click', () => {
+      panels.forEach(p => p.classList.toggle('hidden', p.dataset.panel !== btn.dataset.subtab));
+      subtabs.forEach(b => b.classList.remove('bg-accent/20', 'text-accent', 'font-semibold'));
+      btn.classList.add('bg-accent/20', 'text-accent', 'font-semibold');
+    }));
+    const grid = document.getElementById('cert-grid');
+    const filter = document.getElementById('cert-filter');
+    if (filter && grid) {
+      const applyFilter = () => {
+        const val = filter.value;
+        [...grid.querySelectorAll('.cert-card')].forEach(card => {
+          const cat = (card.getAttribute('data-category') || '').toLowerCase();
+          card.style.display = (val === 'all' || val === '' || cat === val.toLowerCase()) ? '' : 'none';
+        });
+      };
+      filter.addEventListener('change', applyFilter);
+      applyFilter();
+    }
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightbox-img');
+    const lbClose = document.getElementById('lightbox-close');
+    document.querySelectorAll('.cert-zoom').forEach(el => {
+      el.addEventListener('click', () => {
+        const src = el.getAttribute('data-src');
+        if (!src) return;
+        lbImg.src = src;
+        lb.classList.remove('hidden');
+        lb.classList.add('flex');
+      });
+    });
+    lbClose.addEventListener('click', () => {
+      lb.classList.add('hidden');
+      lb.classList.remove('flex');
+      lbImg.src = '';
+    });
+  </script>
+  <%- include('partials/footer') %>

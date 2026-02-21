@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0a0a0a;
+            color: white;
+        }
+
+        .sidebar-link {
+            @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all;
+        }
+
+        .sidebar-link.active {
+            @apply bg-teal-500/10 text-teal-400;
+        }
+    </style>
+</head>
+
+<body class="flex min-h-screen">
+    <%- include('partials/sidebar', { path: '/admin/dashboard' }) %>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-64 p-8">
+            <%- include('partials/header', { title: 'Dashboard Overview' }) %>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-lg bg-blue-500/10 text-blue-400">
+                                <i data-lucide="folder-kanban" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs text-gray-500 bg-white/5 px-2 py-1 rounded">Total</span>
+                        </div>
+                        <h3 class="text-3xl font-bold font-outfit text-white mb-1">
+                            <%= stats.projects %>
+                        </h3>
+                        <p class="text-sm text-gray-400">Active Projects</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-lg bg-purple-500/10 text-purple-400">
+                                <i data-lucide="file-text" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs text-gray-500 bg-white/5 px-2 py-1 rounded">Total</span>
+                        </div>
+                        <h3 class="text-3xl font-bold font-outfit text-white mb-1">
+                            <%= stats.articles %>
+                        </h3>
+                        <p class="text-sm text-gray-400">Published Articles</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-lg bg-orange-500/10 text-orange-400">
+                                <i data-lucide="cpu" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs text-gray-500 bg-white/5 px-2 py-1 rounded">Total</span>
+                        </div>
+                        <h3 class="text-3xl font-bold font-outfit text-white mb-1">
+                            <%= stats.skills %>
+                        </h3>
+                        <p class="text-sm text-gray-400">Skills Listed</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-lg bg-teal-500/10 text-teal-400">
+                                <i data-lucide="eye" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs text-gray-500 bg-white/5 px-2 py-1 rounded">Total</span>
+                        </div>
+                        <h3 class="text-3xl font-bold font-outfit text-white mb-1">
+                            <%= stats.visits %>
+                        </h3>
+                        <p class="text-sm text-gray-400">Site Visits</p>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <h3 class="text-xl font-bold font-outfit mb-4">Quick Actions</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <a href="/admin/projects"
+                        class="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-teal-500/50 hover:bg-white/10 transition-all group flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-teal-500/20 group-hover:text-teal-400 transition-colors">
+                                <i data-lucide="plus" class="w-5 h-5"></i>
+                            </div>
+                            <span class="font-medium">Add New Project</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-gray-500"></i>
+                    </a>
+
+                    <a href="/admin/articles"
+                        class="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-teal-500/50 hover:bg-white/10 transition-all group flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-purple-500/20 group-hover:text-purple-400 transition-colors">
+                                <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                            </div>
+                            <span class="font-medium">Write Article</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-gray-500"></i>
+                    </a>
+
+                    <a href="/admin/profile"
+                        class="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-teal-500/50 hover:bg-white/10 transition-all group flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-blue-500/20 group-hover:text-blue-400 transition-colors">
+                                <i data-lucide="user-cog" class="w-5 h-5"></i>
+                            </div>
+                            <span class="font-medium">Edit Profile</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-gray-500"></i>
+                    </a>
+                </div>
+        </main>
+
+        <script>
+            lucide.createIcons();
+        </script>
+</body>
+
+</html>

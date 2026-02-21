@@ -1,0 +1,85 @@
+<%- include('partials/header') %>
+
+    <main class="min-h-screen pt-24 pb-12">
+        <!-- Project Hero -->
+        <section class="relative mb-16">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <a href="/#proyek"
+                    class="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Kembali ke Proyek</span>
+                </a>
+
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-6">
+                        <h1 class="text-4xl lg:text-5xl font-bold font-outfit text-white leading-tight">
+                            <%= project.title %>
+                        </h1>
+
+                        <div class="flex flex-wrap gap-2">
+                            <% if (project.tags) { %>
+                                <% project.tags.split(',').forEach(tag=> { %>
+                                    <span
+                                        class="px-3 py-1 rounded-full bg-white/10 text-gray-300 text-sm border border-white/5">
+                                        <%= tag.trim() %>
+                                    </span>
+                                    <% }) %>
+                                        <% } %>
+                        </div>
+
+                        <p class="text-xl text-gray-400 leading-relaxed">
+                            <%= project.description %>
+                        </p>
+
+                        <div class="flex flex-wrap gap-4 pt-4">
+                            <% if (project.demoUrl) { %>
+                                <a href="<%= project.demoUrl %>" target="_blank"
+                                    class="px-6 py-3 bg-accent text-primary font-bold rounded-lg hover:bg-accent-light transition-all flex items-center gap-2">
+                                    <span>Live Demo</span>
+                                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                                </a>
+                                <% } %>
+
+                                    <% if (project.repoUrl) { %>
+                                        <a href="<%= project.repoUrl %>" target="_blank"
+                                            class="px-6 py-3 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20 transition-all flex items-center gap-2">
+                                            <span>Source Code</span>
+                                            <i data-lucide="github" class="w-4 h-4"></i>
+                                        </a>
+                                        <% } %>
+                        </div>
+                    </div>
+
+                    <div class="relative group">
+                        <div
+                            class="absolute -inset-1 bg-gradient-to-r from-teal-500 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000">
+                        </div>
+                        <div
+                            class="relative rounded-xl overflow-hidden border border-white/10 bg-secondary aspect-video">
+                            <% if (project.imageUrl) { %>
+                                <img src="<%= project.imageUrl %>" alt="<%= project.title %>"
+                                    class="w-full h-full object-cover">
+                                <% } else { %>
+                                    <div class="w-full h-full flex items-center justify-center bg-white/5">
+                                        <i data-lucide="folder" class="w-20 h-20 text-white/20"></i>
+                                    </div>
+                                    <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Content -->
+        <section class="max-w-4xl mx-auto px-6 lg:px-8">
+            <div class="prose prose-invert prose-lg max-w-none">
+                <% if (project.content) { %>
+                    <%- project.content.replace(/\n/g, '<br>' ) %>
+                        <% } else { %>
+                            <p class="text-gray-500 italic text-center">Tidak ada detail tambahan untuk proyek ini.</p>
+                            <% } %>
+            </div>
+        </section>
+    </main>
+
+    <%- include('partials/footer') %>

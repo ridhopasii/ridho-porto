@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Profile {
+  id          Int     @id @default(autoincrement())
+  fullName    String
+  title       String?
+  bio         String?
+  location    String?
+  email       String?
+  phone       String?
+  whatsappUrl String?
+  cvLink      String?
+  avatarUrl   String?
+  heroImage   String?
+  aboutImage  String?
+}
+
+model Experience {
+  id          Int      @id @default(autoincrement())
+  company     String
+  position    String
+  period      String
+  description String?
+  order       Int      @default(0)
+}
+
+model Education {
+  id          Int      @id @default(autoincrement())
+  institution String
+  degree      String
+  major       String
+  period      String
+  status      String?
+  order       Int      @default(0)
+}
+
+model Skill {
+  id          Int     @id @default(autoincrement())
+  name        String
+  category    String  // Design, Marketing, Programming
+  percentage  Int
+  icon        String? // Lucide icon name or image url
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique @default(cuid()) // Temporary default for migration
+  description String
+  content     String?  // Rich text content
+  imageUrl    String?
+  demoUrl     String?
+  repoUrl     String?
+  tags        String   // Comma separated tags
+  category    String   @default("project") // project, design, editing
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+// Services
+model Service {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  icon        String   // Lucide icon name
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Article {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  content     String
+  imageUrl    String?
+  tags        String?
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Social {
+  id       Int    @id @default(autoincrement())
+  platform String
+  url      String
+  icon     String // Lucide icon name
+  userId   Int?
+}
+
+model Award {
+  id          Int      @id @default(autoincrement())
+  title       String
+  organizer   String
+  date        String
+  description String?
+  certificateUrl String?
+  category    String? // teknologi, bahasa, soft-skill
+  credentialId String?
+}
+
+model Testimonial {
+  id          Int      @id @default(autoincrement())
+  name        String
+  role        String
+  message     String
+  avatarUrl   String?
+  createdAt   DateTime @default(now())
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= skill ? 'Edit' : 'Add' %> Skill - Admin Panel
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style type="text/tailwindcss">
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0a0a0a; color: white; }
+        .sidebar-link { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all; }
+        .sidebar-link.active { @apply bg-teal-500/10 text-teal-400; }
+        input, textarea, select { @apply w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-teal-500 transition-colors text-white; }
+        label { @apply block text-sm text-gray-400 mb-1; }
+    </style>
+</head>
+
+<body class="flex min-h-screen">
+    <%- include('../partials/sidebar', { path: '/admin/skills' }) %>
+
+        <main class="flex-1 ml-64 p-8">
+            <%- include('../partials/header', { title: skill ? 'Edit Skill' : 'Add Skill' }) %>
+
+                <div class="max-w-2xl mx-auto">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-8">
+                        <form action="/admin/skills<%= skill ? '/edit/' + skill.id : '/create' %>" method="POST"
+                            enctype="multipart/form-data" class="space-y-6">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label>Skill Name</label>
+                                    <input type="text" name="name" value="<%= skill ? skill.name : '' %>" required>
+                                </div>
+                                <div>
+                                    <label>Category</label>
+                                    <select name="category" required>
+                                        <% const categories=['Application', 'Device' , 'Language' , 'Framework' , 'Tool'
+                                            ]; %>
+                                            <% categories.forEach(cat=> { %>
+                                                <option value="<%= cat %>" <%=skill && skill.category===cat ? 'selected'
+                                                    : '' %> class="bg-black text-white"><%= cat %>
+                                                </option>
+                                                <% }) %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label>Proficiency (%)</label>
+                                <input type="number" name="percentage" min="0" max="100"
+                                    value="<%= skill ? skill.percentage : 80 %>" required>
+                            </div>
+
+                            <div>
+                                <label class="mb-3">Icon Type</label>
+                                <div class="flex gap-4 mb-4" id="iconTypeToggle">
+                                    <label
+                                        class="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-white/10 hover:bg-white/5 has-[:checked]:border-teal-500 has-[:checked]:bg-teal-500/10 transition-all">
+                                        <input type="radio" name="iconType" value="name" class="" <%=!skill || (skill &&
+                                            !skill.icon.startsWith('/')) ? 'checked' : '' %>>
+                                        <span>Lucide Icon Name</span>
+                                    </label>
+                                    <label
+                                        class="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-white/10 hover:bg-white/5 has-[:checked]:border-teal-500 has-[:checked]:bg-teal-500/10 transition-all">
+                                        <input type="radio" name="iconType" value="image" class="" <%=skill &&
+                                            skill.icon.startsWith('/') ? 'checked' : '' %>>
+                                        <span>Image Upload</span>
+                                    </label>
+                                </div>
+
+                                <div id="iconNameInput"
+                                    class="<%= skill && skill.icon.startsWith('/') ? 'hidden' : '' %>">
+                                    <label>Icon Name (from Lucide.dev)</label>
+                                    <input type="text" name="iconName"
+                                        value="<%= skill && !skill.icon.startsWith('/') ? skill.icon : '' %>"
+                                        placeholder="e.g. code, figman, pen-tool">
+                                    <p class="text-xs text-gray-500 mt-1">See <a href="https://lucide.dev/icons"
+                                            target="_blank" class="text-teal-400">Lucide Icons</a></p>
+                                </div>
+
+                                <div id="iconImageInput"
+                                    class="<%= !skill || (skill && !skill.icon.startsWith('/')) ? 'hidden' : '' %>">
+                                    <label class="mb-2 block">Icon Image</label>
+
+                                    <% if (skill && skill.icon && skill.icon.startsWith('/')) { %>
+                                        <div class="mb-4">
+                                            <p class="text-xs text-gray-500 mb-1">Current Icon:</p>
+                                            <img src="<%= skill.icon %>"
+                                                class="w-16 h-16 object-contain bg-white/5 rounded p-2 border border-white/10">
+                                        </div>
+                                        <% } %>
+
+                                            <div class="bg-black/20 border border-white/10 rounded-lg p-4">
+                                                <div class="flex gap-4 mb-4 border-b border-white/10 pb-2">
+                                                    <label class="flex items-center gap-2 cursor-pointer">
+                                                        <input type="radio" name="imageSource" value="file" checked
+                                                            class="accent-teal-500"
+                                                            onchange="toggleImageInput(this.value)">
+                                                        <span class="text-sm">Upload File</span>
+                                                    </label>
+                                                    <label class="flex items-center gap-2 cursor-pointer">
+                                                        <input type="radio" name="imageSource" value="url"
+                                                            class="accent-teal-500"
+                                                            onchange="toggleImageInput(this.value)">
+                                                        <span class="text-sm">Image URL</span>
+                                                    </label>
+                                                </div>
+
+                                                <div id="fileInputContainer">
+                                                    <input type="file" name="image" accept="image/*"
+                                                        class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20">
+                                                </div>
+
+                                                <div id="urlInputContainer" class="hidden">
+                                                    <input type="url" name="iconUrl"
+                                                        placeholder="https://example.com/icon.png"
+                                                        class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-teal-500 transition-colors text-white">
+                                                </div>
+                                            </div>
+                                </div>
+
+                                <script>
+                                    function toggleImageInput(source) {
+                                        const fileInput = document.getElementById('fileInputContainer');
+                                        const urlInput = document.getElementById('urlInputContainer');
+
+                                        if (source === 'file') {
+                                            fileInput.classList.remove('hidden');
+                                            urlInput.classList.add('hidden');
+                                        } else {
+                                            fileInput.classList.add('hidden');
+                                            urlInput.classList.remove('hidden');
+                                        }
+                                    }
+                                </script>
+                            </div>
+
+                            <div class="flex gap-4 pt-4">
+                                <button type="submit"
+                                    class="flex-1 bg-teal-500 hover:bg-teal-600 text-black font-bold py-3 rounded-lg transition-colors">
+                                    <%= skill ? 'Update Skill' : 'Add Skill' %>
+                                </button>
+                                <a href="/admin/skills"
+                                    class="flex-1 bg-white/10 hover:bg-white/20 text-white font-bold py-3 rounded-lg text-center transition-colors">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </main>
+        <script>
+            lucide.createIcons();
+
+            const radios = document.querySelectorAll('input[name="iconType"]');
+            const nameInput = document.getElementById('iconNameInput');
+            const imageInput = document.getElementById('iconImageInput');
+
+            radios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    if (e.target.value === 'name') {
+                        nameInput.classList.remove('hidden');
+                        imageInput.classList.add('hidden');
+                    } else {
+                        nameInput.classList.add('hidden');
+                        imageInput.classList.remove('hidden');
+                    }
+                });
+            });
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,126 @@
+<%- include('partials/header') %>
+
+    <!-- Immersive Hero Section -->
+    <div class="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+        <!-- Background Content -->
+        <div class="absolute inset-0 z-0">
+            <% if (article.imageUrl) { %>
+                <img src="<%= article.imageUrl %>" alt="<%= article.title %>"
+                    class="w-full h-full object-cover opacity-40 blur-sm scale-105" loading="eager">
+                <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-[#0a0a0a]"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80"></div>
+                <% } else { %>
+                    <div class="w-full h-full bg-[#0a0a0a] relative overflow-hidden">
+                        <div
+                            class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/20 rounded-full blur-[120px] animate-blob">
+                        </div>
+                        <div
+                            class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-[120px] animate-blob animation-delay-2000">
+                        </div>
+                    </div>
+                    <% } %>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center pt-20">
+            <!-- Tags -->
+            <div class="flex items-center justify-center gap-3 mb-6 flex-wrap">
+                <% if (article.tags) { %>
+                    <% article.tags.split(',').forEach(tag=> { %>
+                        <span
+                            class="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-accent hover:bg-accent hover:text-white transition-all duration-300">
+                            #<%= tag.trim() %>
+                        </span>
+                        <% }) %>
+                            <% } %>
+            </div>
+
+            <!-- Title -->
+            <h1
+                class="font-outfit font-bold text-4xl sm:text-5xl lg:text-7xl leading-tight text-white mb-8 drop-shadow-2xl">
+                <%= article.title %>
+            </h1>
+
+            <!-- Meta Info -->
+            <div class="flex items-center justify-center gap-6 text-gray-400 text-sm sm:text-base">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
+                        <i data-lucide="user" class="w-4 h-4 text-accent"></i>
+                    </div>
+                    <span class="font-medium text-white">
+                        <%= locals.profile?.fullName || 'Hafidz Humaidi' %>
+                    </span>
+                </div>
+                <span class="w-1.5 h-1.5 rounded-full bg-white/20"></span>
+                <div class="flex items-center gap-2">
+                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                    <time datetime="<%= article.createdAt %>">
+                        <%= new Date(article.createdAt).toLocaleDateString('id-ID', { weekday: 'long' , year: 'numeric'
+                            , month: 'long' , day: 'numeric' }) %>
+                    </time>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <article class="relative z-10 pb-24 -mt-10">
+        <div class="max-w-3xl mx-auto px-6 lg:px-8">
+            <!-- Content Card -->
+            <div class="bg-[#0a0a0a] rounded-t-3xl border-t border-x border-white/5 p-8 sm:p-12 shadow-2xl relative">
+
+                <!-- Article Body -->
+                <div class="prose prose-invert prose-lg max-w-none 
+                prose-headings:font-outfit prose-headings:font-bold prose-headings:text-white
+                prose-p:text-gray-300 prose-p:leading-relaxed
+                prose-a:text-accent hover:prose-a:text-accent-light prose-a:no-underline prose-a:border-b prose-a:border-accent/50
+                prose-strong:text-white prose-strong:font-semibold
+                prose-blockquote:border-l-4 prose-blockquote:border-accent prose-blockquote:bg-white/5 prose-blockquote:px-6 prose-blockquote:py-2 prose-blockquote:rounded-r-lg prose-blockquote:not-italic
+                prose-img:rounded-2xl prose-img:shadow-lg prose-img:border prose-img:border-white/10
+                prose-code:text-accent prose-code:bg-white/5 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
+                prose-pre:bg-[#111] prose-pre:border prose-pre:border-white/10 prose-pre:rounded-xl">
+                    <%- article.content %>
+                </div>
+
+                <!-- Share & Navigation -->
+                <div class="mt-16 pt-10 border-t border-white/10">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
+                        <a href="/blog"
+                            class="group flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+                            <div
+                                class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-all">
+                                <i data-lucide="arrow-left"
+                                    class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                            </div>
+                            <span class="font-medium">Kembali ke Artikel</span>
+                        </a>
+
+                        <div class="flex gap-3">
+                            <span class="px-4 py-2 text-sm text-gray-500 font-medium self-center">Bagikan:</span>
+                            <button
+                                onclick="navigator.clipboard.writeText(window.location.href); alert('Link disalin!')"
+                                class="w-10 h-10 rounded-full bg-white/5 hover:bg-accent hover:text-white text-gray-400 flex items-center justify-center transition-all"
+                                title="Copy Link">
+                                <i data-lucide="link" class="w-4 h-4"></i>
+                            </button>
+                            <a href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(article.title) %>&url=<%= encodeURIComponent('https://yourdomain.com/blog/' + article.slug) %>"
+                                target="_blank"
+                                class="w-10 h-10 rounded-full bg-white/5 hover:bg-[#1DA1F2] hover:text-white text-gray-400 flex items-center justify-center transition-all"
+                                title="Share on Twitter">
+                                <i data-lucide="twitter" class="w-4 h-4"></i>
+                            </a>
+                            <a href="https://wa.me/?text=<%= encodeURIComponent(article.title + ' ' + 'https://yourdomain.com/blog/' + article.slug) %>"
+                                target="_blank"
+                                class="w-10 h-10 rounded-full bg-white/5 hover:bg-[#25D366] hover:text-white text-gray-400 flex items-center justify-center transition-all"
+                                title="Share on WhatsApp">
+                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </article>
+
+    <%- include('partials/footer') %>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Services - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0a0a0a;
+            color: white;
+        }
+
+        .sidebar-link {
+            @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all;
+        }
+
+        .sidebar-link.active {
+            @apply bg-teal-500/10 text-teal-400;
+        }
+    </style>
+</head>
+
+<body class="flex min-h-screen">
+    <%- include('../partials/sidebar', { path: '/admin/services' }) %>
+
+        <main class="flex-1 ml-64 p-8">
+            <%- include('../partials/header', { title: 'Manage Services' }) %>
+
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 class="text-3xl font-bold font-outfit mb-2">Services</h1>
+                        <p class="text-gray-400">Manage the services you offer.</p>
+                    </div>
+                    <a href="/admin/services/new"
+                        class="bg-teal-500 hover:bg-teal-600 text-black font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all">
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                        Add Service
+                    </a>
+                </div>
+
+                <% if (locals.success) { %>
+                    <div
+                        class="bg-green-500/10 border border-green-500/20 text-green-500 p-4 rounded-xl mb-6 flex items-center gap-3">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                        <%= success==='created' ? 'Service created successfully!' : success==='updated'
+                            ? 'Service updated successfully!' : success==='deleted' ? 'Service deleted successfully!'
+                            : 'Success!' %>
+                    </div>
+                    <% } %>
+
+                        <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead class="bg-white/5 border-b border-white/10">
+                                        <tr>
+                                            <th class="p-4 font-medium text-gray-400">Order</th>
+                                            <th class="p-4 font-medium text-gray-400">Icon</th>
+                                            <th class="p-4 font-medium text-gray-400">Title</th>
+                                            <th class="p-4 font-medium text-gray-400">Description</th>
+                                            <th class="p-4 font-medium text-gray-400 text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-white/5">
+                                        <% if (services.length===0) { %>
+                                            <tr>
+                                                <td colspan="5" class="p-8 text-center text-gray-500">
+                                                    No services found. Click "Add Service" to create one.
+                                                </td>
+                                            </tr>
+                                            <% } %>
+
+                                                <% services.forEach(service=> { %>
+                                                    <tr class="hover:bg-white/5 transition-colors">
+                                                        <td class="p-4 text-gray-400">
+                                                            <span class="bg-white/10 px-2 py-1 rounded text-xs">#<%=
+                                                                    service.order %></span>
+                                                        </td>
+                                                        <td class="p-4">
+                                                            <div
+                                                                class="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-400 overflow-hidden">
+                                                                <% if (service.icon && (service.icon.includes('/') ||
+                                                                    service.icon.includes('.'))) { %>
+                                                                    <img src="<%= service.icon %>"
+                                                                        alt="<%= service.title %>"
+                                                                        class="w-full h-full object-cover">
+                                                                    <% } else { %>
+                                                                        <i data-lucide="<%= service.icon || 'circle' %>"
+                                                                            class="w-5 h-5"></i>
+                                                                        <% } %>
+                                                            </div>
+                                                        </td>
+                                                        <td class="p-4 font-medium">
+                                                            <%= service.title %>
+                                                        </td>
+                                                        <td class="p-4 text-gray-400 text-sm max-w-xs truncate">
+                                                            <%= service.description %>
+                                                        </td>
+                                                        <td class="p-4">
+                                                            <div class="flex justify-end gap-2">
+                                                                <a href="/admin/services/<%= service.id %>/edit"
+                                                                    class="p-2 hover:bg-white/10 rounded-lg text-blue-400 transition-colors"
+                                                                    title="Edit">
+                                                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                                                </a>
+                                                                <form action="/admin/services/<%= service.id %>/delete"
+                                                                    method="POST"
+                                                                    onsubmit="return confirm('Delete this service?');"
+                                                                    class="inline">
+                                                                    <button type="submit"
+                                                                        class="p-2 hover:bg-red-500/10 rounded-lg text-red-400 transition-colors"
+                                                                        title="Delete">
+                                                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+        </main>
+
+        <script>
+            lucide.createIcons();
+        </script>
+</body>
+
+</html>
