@@ -18,7 +18,7 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full relative z-10">
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                 <!-- Left Content -->
-                <div class="fade-in-up">
+                <div class="order-2 lg:order-1 fade-in-up">
                     <p class="text-gray-400 text-sm tracking-widest uppercase mb-4">Halo, Saya</p>
 
                     <h1 class="font-outfit font-bold text-4xl sm:text-5xl lg:text-6xl leading-tight mb-2">
@@ -60,6 +60,106 @@
                         <a href="#kontak" class="btn-outline">
                             <span>Kontak Saya</span>
                         </a>
+                    </div>
+                </div>
+
+                <!-- Right Content - Premium Profile Card -->
+                <div class="order-1 lg:order-2 flex justify-center fade-in-up stagger-1">
+                    <div class="relative group" style="padding-bottom: 2.5rem; padding-right: 1.5rem;">
+
+                        <!-- Animated glow ring behind card -->
+                        <div
+                            class="absolute -inset-1 rounded-3xl bg-gradient-to-br from-teal-500 via-purple-500 to-blue-500 opacity-30 blur-2xl group-hover:opacity-60 transition-all duration-700 animate-pulse">
+                        </div>
+
+                        <!-- Main card -->
+                        <div
+                            class="relative w-72 sm:w-80 lg:w-96 rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-gradient-to-br from-[#111] to-[#1a1a2e] group-hover:scale-[1.02] group-hover:-rotate-1 transition-all duration-500">
+
+                            <!-- Shimmer overlay -->
+                            <div
+                                class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10">
+                            </div>
+
+                            <!-- Hero image -->
+                            <img src="<%= profile?.heroImage || '/images/asset_1.jpg' %>" alt="<%= profile?.fullName %>"
+                                class="w-full h-auto object-cover" loading="lazy" decoding="async">
+
+                            <!-- Top gradient overlay -->
+                            <div
+                                class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/60 to-transparent z-10">
+                            </div>
+
+                            <!-- Name overlay top -->
+                            <div class="absolute top-5 left-5 right-5 z-20">
+                                <h3 class="font-outfit font-bold text-xl text-white drop-shadow-lg">
+                                    <%= profile?.fullName %>
+                                </h3>
+                                <p class="text-accent text-sm font-medium mt-0.5 drop-shadow">
+                                    <%= profile?.title %>
+                                </p>
+                            </div>
+
+                            <!-- Available badge - top right -->
+                            <div class="absolute top-5 right-5 z-20">
+                                <span
+                                    class="flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-3 py-1 text-xs font-semibold text-teal-300">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+                                    Available
+                                </span>
+                            </div>
+
+                            <!-- Bottom gradient overlay -->
+                            <div
+                                class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-black/90 to-transparent z-10">
+                            </div>
+                        </div>
+
+                        <!-- Bottom floating info card -->
+                        <div class="absolute bottom-0 left-4 right-6 z-30">
+                            <div
+                                class="bg-[#111]/90 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10 shadow-2xl flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="relative">
+                                        <img src="<%= profile?.avatarUrl || '/images/asset_2.jpg' %>" alt="Avatar"
+                                            class="w-10 h-10 rounded-full object-cover ring-2 ring-teal-500/60"
+                                            loading="lazy" decoding="async" width="40" height="40">
+                                        <span
+                                            class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-teal-400 border-2 border-[#111]"></span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-white">@ridhopasii</p>
+                                        <p class="text-xs text-teal-400 font-medium">Online sekarang</p>
+                                    </div>
+                                </div>
+                                <button onclick="document.getElementById('kontak').scrollIntoView({behavior:'smooth'})"
+                                    class="flex-shrink-0 px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-black text-xs font-bold transition-all hover:scale-105 hover:shadow-lg hover:shadow-teal-500/30">
+                                    Hubungi
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Floating badge - Full Stack -->
+                        <div class="absolute -top-4 -left-6 z-30 hidden lg:block">
+                            <div
+                                class="bg-[#111]/90 backdrop-blur-xl border border-white/10 rounded-2xl px-3 py-2 shadow-xl flex items-center gap-2">
+                                <div class="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                    <i data-lucide="code-2" class="w-4 h-4 text-blue-400"></i>
+                                </div>
+                                <span class="text-xs font-semibold text-white">Full Stack</span>
+                            </div>
+                        </div>
+
+                        <!-- Floating badge - UI/UX -->
+                        <div class="absolute bottom-16 -right-2 z-30 hidden lg:block">
+                            <div
+                                class="bg-[#111]/90 backdrop-blur-xl border border-white/10 rounded-2xl px-3 py-2 shadow-xl flex items-center gap-2">
+                                <div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                                    <i data-lucide="palette" class="w-4 h-4 text-purple-400"></i>
+                                </div>
+                                <span class="text-xs font-semibold text-white">UI/UX</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
