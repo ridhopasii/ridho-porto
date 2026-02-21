@@ -6,8 +6,8 @@ const os = require('os');
 
 module.exports = {
   // Site Information
-  SITE_NAME: 'Hafidz Humaidi Portfolio',
-  SITE_DESCRIPTION: 'Portfolio of Hafidz Humaidi - UI/UX Designer & Web Developer',
+  SITE_NAME: 'Ridhopasii Portfolio',
+  SITE_DESCRIPTION: 'Portfolio of Ridhopasii - UI/UX Designer & Web Developer',
 
   // File Upload
   MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB

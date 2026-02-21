@@ -41,7 +41,7 @@ class StructuredDataGenerator {
       keywords: project.tags,
       author: {
         '@type': 'Person',
-        name: 'Hafidz Humaidi',
+        name: 'Ridhopasii',
       },
     };
   }
@@ -62,11 +62,11 @@ class StructuredDataGenerator {
       dateModified: article.updatedAt,
       author: {
         '@type': 'Person',
-        name: 'Hafidz Humaidi',
+        name: 'Ridhopasii',
       },
       publisher: {
         '@type': 'Person',
-        name: 'Hafidz Humaidi',
+        name: 'Ridhopasii',
       },
     };
   }
@@ -79,12 +79,12 @@ class StructuredDataGenerator {
     return {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'Hafidz Humaidi Portfolio',
+      name: 'Ridhopasii Portfolio',
       url: process.env.BASE_URL || 'http://localhost:3000',
-      description: 'Portfolio website of Hafidz Humaidi - UI/UX Designer & Web Developer',
+      description: 'Portfolio website of Ridhopasii - UI/UX Designer & Web Developer',
       author: {
         '@type': 'Person',
-        name: 'Hafidz Humaidi',
+        name: 'Ridhopasii',
       },
     };
   }

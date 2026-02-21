@@ -1,4 +1,4 @@
-// Main JavaScript for Hafidz Humaidi Portfolio Clone
+// Main JavaScript for Ridhopasii Portfolio
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Lucide Icons
