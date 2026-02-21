@@ -936,25 +936,6 @@
     </div>
     </section>
 
-    <div id="music-widget" class="fixed bottom-4 left-4 z-50 transition-all duration-300 transform translate-y-0 group">
-        <div
-            class="bg-black/60 backdrop-blur-xl border border-white/10 p-3 rounded-2xl flex items-center gap-3 shadow-2xl hover:border-accent/50 transition-colors pr-3">
-            <div class="overflow-hidden rounded-xl">
-                <iframe style="border-radius:12px"
-                    src="https://open.spotify.com/embed/playlist/37i9dQZF1DXdPDLmy88MDk?utm_source=generator"
-                    width="300" height="80" frameborder="0" allowfullscreen="false"
-                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" loading="lazy"></iframe>
-            </div>
-            <button onclick="document.getElementById('music-widget').classList.add('translate-y-[200%]')"
-                class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg cursor-pointer transform hover:scale-110">
-                <i data-lucide="x" class="w-3 h-3"></i>
-            </button>
-        </div>
-    </div>
-
-    <script></script>
-    <!-- Spacer for fixed widget -->
-    <div class="h-24 md:hidden"></div>
 
     <%- include('partials/footer') %>
         ```
