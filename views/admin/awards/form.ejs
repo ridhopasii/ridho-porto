@@ -74,28 +74,66 @@
                     class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white">
                 </div>
               </div>
-              <div class="grid gap-4">
-                <div>
-                  <label class="block text-sm text-gray-400 mb-1">Link Gambar Sertifikat (opsional)</label>
-                  <input type="url" name="certificateUrl"
-                    value="<%= award?.certificateUrl && !award.certificateUrl.startsWith('/uploads/') ? award.certificateUrl : '' %>"
-                    placeholder="https://..."
-                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white">
-                  <p class="text-xs text-gray-500 mt-1">Jika diisi, akan digunakan alih‑alih file upload.</p>
-                </div>
-                <div>
-                  <label class="block text-sm text-gray-400 mb-1">Upload Sertifikat (gambar atau PDF, opsional)</label>
-                  <input type="file" name="certificate" accept="image/*,.pdf"
-                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white">
-                  <% if (award?.certificateUrl) { %>
-                    <div class="mt-2 flex items-center gap-3">
-                      <span class="text-xs text-gray-500">Saat ini:</span>
-                      <a href="<%= award.certificateUrl %>" target="_blank" rel="noopener noreferrer"
-                        class="text-accent text-sm hover:underline">Lihat Sertifikat</a>
+              <div>
+                <label class="block text-sm text-gray-400 mb-2">Certificate Image / PDF</label>
+
+                <% const isCertUrl=award && award.certificateUrl && !award.certificateUrl.startsWith('/uploads/'); %>
+
+                  <div class="bg-black/20 border border-white/10 rounded-xl p-4">
+                    <div class="flex gap-2 text-xs mb-4 bg-black/40 rounded-lg p-1 w-full md:w-48">
+                      <label
+                        class="flex-1 text-center cursor-pointer py-1.5 px-2 rounded hover:bg-white/5 has-[:checked]:bg-teal-500/20 has-[:checked]:text-teal-400 transition-all font-medium text-gray-400">
+                        <input type="radio" name="imageSource" value="file" <%=!isCertUrl ? 'checked' : '' %>
+                        class="hidden" onchange="toggleImageInput(this.value)">
+                        Upload File
+                      </label>
+                      <label
+                        class="flex-1 text-center cursor-pointer py-1.5 px-2 rounded hover:bg-white/5 has-[:checked]:bg-teal-500/20 has-[:checked]:text-teal-400 transition-all font-medium text-gray-400">
+                        <input type="radio" name="imageSource" value="url" <%=isCertUrl ? 'checked' : '' %>
+                        class="hidden" onchange="toggleImageInput(this.value)">
+                        URL Link
+                      </label>
                     </div>
-                    <% } %>
-                </div>
+
+                    <div id="fileInputContainer" class="<%= isCertUrl ? 'hidden' : '' %>">
+                      <input type="file" name="certificate" accept="image/*,.pdf"
+                        class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20">
+                      <% if (award?.certificateUrl) { %>
+                        <div class="mt-2 flex items-center gap-3">
+                          <span class="text-xs text-gray-500">Saat ini:</span>
+                          <a href="<%= award.certificateUrl %>" target="_blank"
+                            class="text-teal-400 text-xs hover:underline">Lihat Sertifikat</a>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <div id="urlInputContainer" class="<%= !isCertUrl ? 'hidden' : '' %>">
+                      <input type="url" name="certificateUrl" value="<%= isCertUrl ? award.certificateUrl : '' %>"
+                        placeholder="https://example.com/certificate.pdf"
+                        class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-teal-500 transition-colors text-white text-sm">
+                    </div>
+                  </div>
               </div>
+
+              <script>
+                function toggleImageInput(source) {
+                  const fileInput = document.getElementById('fileInputContainer');
+                  const urlInput = document.getElementById('urlInputContainer');
+
+                  if (source === 'file') {
+                    fileInput.classList.remove('hidden');
+                    urlInput.classList.add('hidden');
+                  } else {
+                    fileInput.classList.add('hidden');
+                    urlInput.classList.remove('hidden');
+                  }
+                }
+
+                window.addEventListener('load', function () {
+                  const checkedSource = document.querySelector('input[name="imageSource"]:checked')?.value;
+                  if (checkedSource) toggleImageInput(checkedSource);
+                });
+              </script>
               <div class="flex items-center gap-3">
                 <a href="/admin/awards"
                   class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300">Batal</a>

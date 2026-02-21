@@ -66,29 +66,37 @@
                                     <% } %>
 
                                         <div class="bg-black/20 border border-white/10 rounded-lg p-4">
-                                            <div class="flex gap-4 mb-4 border-b border-white/10 pb-2">
-                                                <label class="flex items-center gap-2 cursor-pointer">
-                                                    <input type="radio" name="imageSource" value="file" checked
-                                                        class="accent-teal-500" onchange="toggleImageInput(this.value)">
-                                                    <span class="text-sm">Upload File</span>
-                                                </label>
-                                                <label class="flex items-center gap-2 cursor-pointer">
-                                                    <input type="radio" name="imageSource" value="url"
-                                                        class="accent-teal-500" onchange="toggleImageInput(this.value)">
-                                                    <span class="text-sm">Image URL</span>
-                                                </label>
-                                            </div>
+                                            <% const isUrl=testimonial && testimonial.avatarUrl &&
+                                                !testimonial.avatarUrl.startsWith('/uploads/'); %>
+                                                <div
+                                                    class="flex gap-2 text-xs mb-4 bg-black/40 rounded-lg p-1 w-full md:w-48">
+                                                    <label
+                                                        class="flex-1 text-center cursor-pointer py-1.5 px-2 rounded hover:bg-white/5 has-[:checked]:bg-teal-500/20 has-[:checked]:text-teal-400 transition-all font-medium text-gray-400">
+                                                        <input type="radio" name="imageSource" value="file" <%=!isUrl
+                                                            ? 'checked' : '' %> class="hidden"
+                                                        onchange="toggleImageInput(this.value)">
+                                                        Upload File
+                                                    </label>
+                                                    <label
+                                                        class="flex-1 text-center cursor-pointer py-1.5 px-2 rounded hover:bg-white/5 has-[:checked]:bg-teal-500/20 has-[:checked]:text-teal-400 transition-all font-medium text-gray-400">
+                                                        <input type="radio" name="imageSource" value="url" <%=isUrl
+                                                            ? 'checked' : '' %> class="hidden"
+                                                        onchange="toggleImageInput(this.value)">
+                                                        Image URL
+                                                    </label>
+                                                </div>
 
-                                            <div id="fileInputContainer">
-                                                <input type="file" name="image" accept="image/*"
-                                                    class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20">
-                                            </div>
+                                                <div id="fileInputContainer" class="<%= isUrl ? 'hidden' : '' %>">
+                                                    <input type="file" name="image" accept="image/*"
+                                                        class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20">
+                                                </div>
 
-                                            <div id="urlInputContainer" class="hidden">
-                                                <input type="url" name="avatarUrl"
-                                                    placeholder="https://example.com/avatar.jpg"
-                                                    class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-teal-500 transition-colors text-white">
-                                            </div>
+                                                <div id="urlInputContainer" class="<%= !isUrl ? 'hidden' : '' %>">
+                                                    <input type="url" name="avatarUrl"
+                                                        value="<%= isUrl ? testimonial.avatarUrl : '' %>"
+                                                        placeholder="https://example.com/avatar.jpg"
+                                                        class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-teal-500 transition-colors text-white">
+                                                </div>
                                         </div>
                             </div>
 
@@ -105,6 +113,12 @@
                                         urlInput.classList.remove('hidden');
                                     }
                                 }
+
+                                // Initialize on load
+                                window.addEventListener('load', function () {
+                                    const checkedSource = document.querySelector('input[name="imageSource"]:checked')?.value;
+                                    if (checkedSource) toggleImageInput(checkedSource);
+                                });
                             </script>
 
                             <div class="flex gap-4 pt-4">
