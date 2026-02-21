@@ -15,134 +15,94 @@
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full relative z-10">
-            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <!-- Left Content -->
-                <div class="order-2 lg:order-1 fade-in-up">
-                    <p class="text-gray-400 text-sm tracking-widest uppercase mb-4">Halo, Saya</p>
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 w-full relative z-10 py-16 lg:py-0">
+            <div class="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
-                    <h1 class="font-outfit font-bold text-4xl sm:text-5xl lg:text-6xl leading-tight mb-2">
-                        <%= profile?.fullName || 'Hafidz Humaidi' %>
-                    </h1>
-                    <h2 class="font-outfit font-bold text-base sm:text-xl lg:text-2xl leading-tight mb-6 text-accent">
-                        <%= profile?.title || 'Web Developer' %>
-                    </h2>
+                <!-- Right Content (Profile Card) — tampil di atas di mobile -->
+                <div class="order-1 lg:order-2 flex justify-center w-full fade-in-up">
+                    <div class="relative group"
+                        style="padding-bottom: 3rem; padding-left: 0.5rem; padding-right: 0.5rem;">
 
-                    <div class="text-xl sm:text-2xl mb-8">
-                        <span class="text-gray-400">Seorang</span><br>
-                        <span class="highlight-text font-outfit font-semibold text-white">
-                            <%= profile?.title || 'UI/UX Designer & Web Developer' %>
-                        </span>
-                    </div>
-
-                    <!-- Social Links -->
-                    <div class="flex items-center gap-3 mb-8">
-                        <% if (locals.socials) { %>
-                            <% socials.forEach(social=> { %>
-                                <a href="<%= social.url %>" target="_blank" class="social-icon">
-                                    <i data-lucide="<%= social.icon %>" class="w-5 h-5"></i>
-                                </a>
-                                <% }) %>
-                                    <% } %>
-                    </div>
-
-                    <!-- Description with Typing -->
-                    <p class="text-gray-400 text-lg mb-10 max-w-lg">
-                        <span id="typing-text" class="typing-text"></span>
-                    </p>
-
-                    <!-- CTA Buttons -->
-                    <div class="flex flex-wrap gap-4">
-                        <a href="#proyek" class="btn-primary">
-                            <span>Lihat Proyek</span>
-                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
-                        </a>
-                        <a href="#kontak" class="btn-outline">
-                            <span>Kontak Saya</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Right Content - Premium Profile Card -->
-                <div class="order-1 lg:order-2 flex justify-center fade-in-up stagger-1">
-                    <div class="relative group" style="padding-bottom: 2.5rem; padding-right: 1.5rem;">
-
-                        <!-- Animated glow ring behind card -->
+                        <!-- Glow ring -->
                         <div
-                            class="absolute -inset-1 rounded-3xl bg-gradient-to-br from-teal-500 via-purple-500 to-blue-500 opacity-30 blur-2xl group-hover:opacity-60 transition-all duration-700 animate-pulse">
+                            class="absolute -inset-2 rounded-[2.5rem] bg-gradient-to-br from-teal-400 via-purple-500 to-blue-500 opacity-20 blur-2xl group-hover:opacity-50 transition-all duration-700">
                         </div>
 
-                        <!-- Main card -->
-                        <div
-                            class="relative w-72 sm:w-80 lg:w-96 rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-gradient-to-br from-[#111] to-[#1a1a2e] group-hover:scale-[1.02] group-hover:-rotate-1 transition-all duration-500">
+                        <!-- Main image card -->
+                        <div class="relative rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-[#0f0f0f] to-[#1a1a2e] group-hover:scale-[1.015] group-hover:-rotate-[0.5deg] transition-all duration-500"
+                            style="width: min(300px, 80vw); max-width: 380px;">
 
-                            <!-- Shimmer overlay -->
+                            <!-- Shimmer on hover -->
                             <div
-                                class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10">
+                                class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-20">
                             </div>
 
-                            <!-- Hero image -->
-                            <img src="<%= profile?.heroImage || '/images/asset_1.jpg' %>" alt="<%= profile?.fullName %>"
-                                class="w-full h-auto object-cover" loading="lazy" decoding="async">
+                            <!-- Hero image dengan aspect ratio tetap -->
+                            <div class="relative" style="aspect-ratio: 3/4; overflow: hidden;">
+                                <img src="<%= profile?.heroImage || '/images/asset_1.jpg' %>"
+                                    alt="<%= profile?.fullName %>" class="w-full h-full object-cover object-top"
+                                    loading="lazy" decoding="async">
 
-                            <!-- Top gradient overlay -->
-                            <div
-                                class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/60 to-transparent z-10">
-                            </div>
+                                <!-- Top gradient overlay -->
+                                <div
+                                    class="absolute top-0 left-0 right-0 h-36 bg-gradient-to-b from-black/70 to-transparent z-10">
+                                </div>
+                                <!-- Bottom gradient overlay -->
+                                <div
+                                    class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/80 to-transparent z-10">
+                                </div>
 
-                            <!-- Name overlay top -->
-                            <div class="absolute top-5 left-5 right-5 z-20">
-                                <h3 class="font-outfit font-bold text-xl text-white drop-shadow-lg">
-                                    <%= profile?.fullName %>
-                                </h3>
-                                <p class="text-accent text-sm font-medium mt-0.5 drop-shadow">
-                                    <%= profile?.title %>
-                                </p>
-                            </div>
+                                <!-- Name overlay -->
+                                <div class="absolute top-4 left-4 right-4 z-20">
+                                    <h3
+                                        class="font-outfit font-bold text-lg sm:text-xl text-white drop-shadow-lg leading-tight">
+                                        <%= profile?.fullName %>
+                                    </h3>
+                                    <p class="text-teal-400 text-xs sm:text-sm font-medium mt-1 drop-shadow">
+                                        <%= profile?.title %>
+                                    </p>
+                                </div>
 
-                            <!-- Available badge - top right -->
-                            <div class="absolute top-5 right-5 z-20">
-                                <span
-                                    class="flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-3 py-1 text-xs font-semibold text-teal-300">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
-                                    Available
-                                </span>
-                            </div>
-
-                            <!-- Bottom gradient overlay -->
-                            <div
-                                class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-black/90 to-transparent z-10">
-                            </div>
-                        </div>
-
-                        <!-- Bottom floating info card -->
-                        <div class="absolute bottom-0 left-4 right-6 z-30">
-                            <div
-                                class="bg-[#111]/90 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10 shadow-2xl flex items-center justify-between gap-3">
-                                <div class="flex items-center gap-3">
-                                    <div class="relative">
-                                        <img src="<%= profile?.avatarUrl || '/images/asset_2.jpg' %>" alt="Avatar"
-                                            class="w-10 h-10 rounded-full object-cover ring-2 ring-teal-500/60"
-                                            loading="lazy" decoding="async" width="40" height="40">
+                                <!-- Available badge -->
+                                <div class="absolute top-4 right-4 z-20">
+                                    <span
+                                        class="flex items-center gap-1.5 bg-black/70 backdrop-blur-md border border-teal-500/30 rounded-full px-2.5 py-1 text-[10px] sm:text-xs font-bold text-teal-300 shadow-lg">
                                         <span
-                                            class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-teal-400 border-2 border-[#111]"></span>
+                                            class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse flex-shrink-0"></span>
+                                        Available
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating info card di bawah -->
+                        <div class="absolute bottom-0 left-0 right-0 px-2 z-30">
+                            <div
+                                class="bg-[#0f0f0f]/95 backdrop-blur-xl rounded-2xl px-3 py-2.5 sm:px-4 sm:py-3 border border-white/10 shadow-2xl flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <div class="relative flex-shrink-0">
+                                        <img src="<%= profile?.avatarUrl || '/images/asset_2.jpg' %>" alt="Avatar"
+                                            class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover ring-2 ring-teal-500/50"
+                                            loading="lazy" decoding="async">
+                                        <span
+                                            class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-teal-400 border-2 border-[#0f0f0f]"></span>
                                     </div>
-                                    <div>
-                                        <p class="text-sm font-semibold text-white">@ridhopasii</p>
-                                        <p class="text-xs text-teal-400 font-medium">Online sekarang</p>
+                                    <div class="min-w-0">
+                                        <p class="text-xs sm:text-sm font-semibold text-white truncate">@ridhopasii</p>
+                                        <p class="text-[10px] sm:text-xs text-teal-400 font-medium">Online sekarang</p>
                                     </div>
                                 </div>
                                 <button onclick="document.getElementById('kontak').scrollIntoView({behavior:'smooth'})"
-                                    class="flex-shrink-0 px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-black text-xs font-bold transition-all hover:scale-105 hover:shadow-lg hover:shadow-teal-500/30">
+                                    class="flex-shrink-0 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-teal-500 hover:bg-teal-400 active:scale-95 text-black text-[10px] sm:text-xs font-bold transition-all hover:shadow-lg hover:shadow-teal-500/30">
                                     Hubungi
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Floating badge - Full Stack -->
-                        <div class="absolute -top-4 -left-6 z-30 hidden lg:block">
+                        <!-- Floating badge Full Stack — desktop only -->
+                        <div class="absolute -top-3 -left-7 z-30 hidden lg:block">
                             <div
-                                class="bg-[#111]/90 backdrop-blur-xl border border-white/10 rounded-2xl px-3 py-2 shadow-xl flex items-center gap-2">
+                                class="bg-[#0f0f0f]/90 backdrop-blur-xl border border-white/10 rounded-2xl px-3 py-2 shadow-xl flex items-center gap-2 hover:border-blue-500/30 transition-colors">
                                 <div class="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center">
                                     <i data-lucide="code-2" class="w-4 h-4 text-blue-400"></i>
                                 </div>
@@ -150,10 +110,10 @@
                             </div>
                         </div>
 
-                        <!-- Floating badge - UI/UX -->
-                        <div class="absolute bottom-16 -right-2 z-30 hidden lg:block">
+                        <!-- Floating badge UI/UX — desktop only -->
+                        <div class="absolute bottom-14 -right-7 z-30 hidden lg:block">
                             <div
-                                class="bg-[#111]/90 backdrop-blur-xl border border-white/10 rounded-2xl px-3 py-2 shadow-xl flex items-center gap-2">
+                                class="bg-[#0f0f0f]/90 backdrop-blur-xl border border-white/10 rounded-2xl px-3 py-2 shadow-xl flex items-center gap-2 hover:border-purple-500/30 transition-colors">
                                 <div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
                                     <i data-lucide="palette" class="w-4 h-4 text-purple-400"></i>
                                 </div>
@@ -162,23 +122,108 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Left Content (Teks) — di bawah card di mobile -->
+                <div class="order-2 lg:order-1 fade-in-up text-center lg:text-left">
+
+                    <!-- Pill badge -->
+                    <div
+                        class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-5 text-xs text-gray-400 font-medium">
+                        <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+                        Halo, Saya
+                    </div>
+
+                    <!-- Nama gradient -->
+                    <h1 class="font-outfit font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-3">
+                        <span class="text-white">
+                            <%= profile?.fullName?.split(' ')[0] || ' Ridho' %>
+                        </span>
+                        <br>
+                        <span
+                            class="bg-gradient-to-r from-teal-400 via-cyan-300 to-teal-500 bg-clip-text text-transparent">
+                            <%= profile?.fullName?.split(' ').slice(1).join(' ') || ' Pasii' %>
+                        </span>
+                    </h1>
+
+                    <!-- Title dengan garis dekoratif -->
+                    <div class="flex items-center justify-center lg:justify-start gap-3 mb-5">
+                        <div class="h-0.5 w-8 bg-gradient-to-r from-teal-500 to-transparent rounded-full"></div>
+                        <p class="text-teal-400 font-semibold text-sm sm:text-base tracking-wide">
+                            <%= profile?.title || 'Web Developer' %>
+                        </p>
+                    </div>
+
+                    <!-- Typing text -->
+                    <p
+                        class="text-gray-400 text-sm sm:text-base lg:text-lg mb-7 max-w-md mx-auto lg:mx-0 leading-relaxed min-h-[3rem]">
+                        <span id="typing-text" class="typing-text"></span>
+                    </p>
+
+                    <!-- Social links -->
+                    <div class="flex items-center justify-center lg:justify-start gap-3 mb-7">
+                        <% if (locals.socials) { %>
+                            <% socials.forEach(social=> { %>
+                                <a href="<%= social.url %>" target="_blank" class="social-icon">
+                                    <i data-lucide="<%= social.icon %>" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                                </a>
+                                <% }) %>
+                                    <% } %>
+                    </div>
+
+                    <!-- CTA Buttons — full width di mobile -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4">
+                        <a href="#proyek" class="w-full sm:w-auto btn-primary flex items-center justify-center gap-2">
+                            <span>Lihat Proyek</span>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#kontak" class="w-full sm:w-auto btn-outline flex items-center justify-center gap-2">
+                            <span>Kontak Saya</span>
+                        </a>
+                    </div>
+
+                    <!-- Stats mini -->
+                    <div
+                        class="flex items-center justify-center lg:justify-start gap-6 mt-8 pt-6 border-t border-white/5">
+                        <div class="text-center lg:text-left">
+                            <p class="font-outfit font-bold text-xl sm:text-2xl text-white">2+</p>
+                            <p class="text-gray-500 text-[10px] sm:text-xs mt-0.5">Tahun Pengalaman</p>
+                        </div>
+                        <div class="w-px h-8 bg-white/10"></div>
+                        <div class="text-center lg:text-left">
+                            <p class="font-outfit font-bold text-xl sm:text-2xl text-white">20+</p>
+                            <p class="text-gray-500 text-[10px] sm:text-xs mt-0.5">Proyek Selesai</p>
+                        </div>
+                        <div class="w-px h-8 bg-white/10"></div>
+                        <div class="text-center lg:text-left">
+                            <p class="font-outfit font-bold text-xl sm:text-2xl text-white">10+</p>
+                            <p class="text-gray-500 text-[10px] sm:text-xs mt-0.5">Klien Puas</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Tech Stack Scrolling -->
-            <div class="mt-24 pt-10 border-t border-white/5 relative fade-in-up stagger-2">
-                <p class="text-center text-gray-500 text-sm mb-8 uppercase tracking-widest">Teknologi yang saya gunakan
-                </p>
-                <div class="flex flex-wrap justify-center gap-8 opacity-70 hover:opacity-100 transition-opacity">
-                    <i data-lucide="code-2" class="w-8 h-8 text-gray-400 hover:text-accent transition-colors"></i>
-                    <i data-lucide="database" class="w-8 h-8 text-gray-400 hover:text-blue-400 transition-colors"></i>
-                    <i data-lucide="layout" class="w-8 h-8 text-gray-400 hover:text-pink-400 transition-colors"></i>
-                    <i data-lucide="server" class="w-8 h-8 text-gray-400 hover:text-green-400 transition-colors"></i>
+            <div class="mt-16 sm:mt-24 pt-8 sm:pt-10 border-t border-white/5 relative fade-in-up stagger-2">
+                <p class="text-center text-gray-500 text-xs sm:text-sm mb-6 sm:mb-8 uppercase tracking-widest">Teknologi
+                    yang saya gunakan</p>
+                <div
+                    class="flex flex-wrap justify-center gap-6 sm:gap-8 opacity-70 hover:opacity-100 transition-opacity">
+                    <i data-lucide="code-2"
+                        class="w-7 h-7 sm:w-8 sm:h-8 text-gray-400 hover:text-accent transition-colors"></i>
+                    <i data-lucide="database"
+                        class="w-7 h-7 sm:w-8 sm:h-8 text-gray-400 hover:text-blue-400 transition-colors"></i>
+                    <i data-lucide="layout"
+                        class="w-7 h-7 sm:w-8 sm:h-8 text-gray-400 hover:text-pink-400 transition-colors"></i>
+                    <i data-lucide="server"
+                        class="w-7 h-7 sm:w-8 sm:h-8 text-gray-400 hover:text-green-400 transition-colors"></i>
                     <i data-lucide="smartphone"
-                        class="w-8 h-8 text-gray-400 hover:text-purple-400 transition-colors"></i>
+                        class="w-7 h-7 sm:w-8 sm:h-8 text-gray-400 hover:text-purple-400 transition-colors"></i>
                 </div>
             </div>
         </div>
     </section>
+
 
     <!-- About Section -->
     <section id="tentang" class="py-24">
