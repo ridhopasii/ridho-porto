@@ -30,16 +30,7 @@ function toSnakeKey(key) {
 
 function toAppRow(row) {
   if (!row) return null;
-  const out = {};
-
-  for (const [k, v] of Object.entries(row)) {
-    out[toCamelKey(k)] = v;
-  }
-
-  if (out.sortOrder !== undefined) {
-    out.order = out.sortOrder;
-    delete out.sortOrder;
-  }
+  const out = { ...row };
 
   // Convert common date fields to Date objects if they are strings
   ['createdAt', 'updatedAt', 'date', 'publishedAt'].forEach(field => {
@@ -52,18 +43,7 @@ function toAppRow(row) {
 }
 
 function toDbRow(data) {
-  if (!data) return data;
-  const out = {};
-
-  for (const [k, v] of Object.entries(data)) {
-    if (k === 'order') {
-      out.sort_order = v;
-      continue;
-    }
-    out[toSnakeKey(k)] = v;
-  }
-
-  return out;
+  return data;
 }
 
 async function dbPing() {
@@ -163,14 +143,14 @@ module.exports = {
   },
   getExperiences: async () => {
     if (supabase.isConfigured()) {
-      const rows = await supabase.selectMany('Experience', { select: '*', orderBy: { column: 'sort_order', ascending: true } });
+      const rows = await supabase.selectMany('Experience', { select: '*', orderBy: { column: 'order', ascending: true } });
       return (rows || []).map(toAppRow);
     }
     return getPrisma().experience.findMany({ orderBy: { order: 'asc' } });
   },
   getEducation: async () => {
     if (supabase.isConfigured()) {
-      const rows = await supabase.selectMany('Education', { select: '*', orderBy: { column: 'sort_order', ascending: true } });
+      const rows = await supabase.selectMany('Education', { select: '*', orderBy: { column: 'order', ascending: true } });
       return (rows || []).map(toAppRow);
     }
     return getPrisma().education.findMany({ orderBy: { order: 'asc' } });
@@ -198,7 +178,7 @@ module.exports = {
   },
   getTestimonials: async () => {
     if (supabase.isConfigured()) {
-      const rows = await supabase.selectMany('Testimonial', { select: '*', orderBy: { column: 'created_at', ascending: false } });
+      const rows = await supabase.selectMany('Testimonial', { select: '*', orderBy: { column: 'createdAt', ascending: false } });
       return (rows || []).map(toAppRow);
     }
     return getPrisma().testimonial.findMany({ orderBy: { createdAt: 'desc' } });
@@ -215,7 +195,7 @@ module.exports = {
       const rows = await supabase.selectMany('Article', {
         select: '*',
         filters: { published: 'eq.true' },
-        orderBy: { column: 'created_at', ascending: false },
+        orderBy: { column: 'createdAt', ascending: false },
       });
       return (rows || []).map(toAppRow);
     }
@@ -226,7 +206,7 @@ module.exports = {
       const rows = await supabase.selectMany('Article', {
         select: '*',
         filters: { published: 'eq.true' },
-        orderBy: { column: 'created_at', ascending: false },
+        orderBy: { column: 'createdAt', ascending: false },
         limit,
       });
       return (rows || []).map(toAppRow);
@@ -265,7 +245,7 @@ module.exports = {
     if (supabase.isConfigured()) {
       const rows = await supabase.selectMany('Article', {
         select: '*',
-        orderBy: { column: 'created_at', ascending: false },
+        orderBy: { column: 'createdAt', ascending: false },
         accessToken,
         serviceRole: !accessToken,
       });
@@ -617,8 +597,8 @@ module.exports = {
     if (supabase.isConfigured()) {
       const row = await supabase.selectOne('Experience', {
         select: '*',
-        filters: { sort_order: `lt.${parseInt(order)}` },
-        orderBy: { column: 'sort_order', ascending: false },
+        filters: { order: `lt.${parseInt(order)}` },
+        orderBy: { column: 'order', ascending: false },
       });
       return toAppRow(row);
     }
@@ -628,8 +608,8 @@ module.exports = {
     if (supabase.isConfigured()) {
       const row = await supabase.selectOne('Experience', {
         select: '*',
-        filters: { sort_order: `gt.${parseInt(order)}` },
-        orderBy: { column: 'sort_order', ascending: true },
+        filters: { order: `gt.${parseInt(order)}` },
+        orderBy: { column: 'order', ascending: true },
       });
       return toAppRow(row);
     }
@@ -640,7 +620,7 @@ module.exports = {
     if (supabase.isConfigured()) {
       const rows = await supabase.selectMany('Message', {
         select: '*',
-        orderBy: { column: 'created_at', ascending: false },
+        orderBy: { column: 'createdAt', ascending: false },
         accessToken,
       });
       return (rows || []).map(toAppRow);
@@ -662,7 +642,7 @@ module.exports = {
 
   getServices: async () => {
     if (supabase.isConfigured()) {
-      const rows = await supabase.selectMany('Service', { select: '*', orderBy: { column: 'sort_order', ascending: true } });
+      const rows = await supabase.selectMany('Service', { select: '*', orderBy: { column: 'order', ascending: true } });
       return (rows || []).map(toAppRow);
     }
     return getPrisma().service.findMany({ orderBy: { order: 'asc' } });
