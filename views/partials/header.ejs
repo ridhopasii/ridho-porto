@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <%= locals.title ? `${locals.title} | ${profile?.fullName || 'Portfolio' }` : (profile?.fullName
-            || 'Ridhopasii' ) + ' | ' + (profile?.title || 'Web Developer' ) %>
+        <%= locals.title ? `${locals.title} | ${profile?.fullName || 'Portfolio' }` : (profile?.fullName || 'Ridhopasii'
+            ) + ' | ' + (profile?.title || 'Web Developer' ) %>
     </title>
     <meta name="description"
         content="<%= locals.metaDescription || (profile?.bio ? profile.bio.substring(0, 150) + '...' : `Portfolio of ${profile?.fullName} - ${profile?.title}`) %>">
@@ -39,6 +39,10 @@
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <script>
         tailwind.config = {
@@ -311,18 +315,6 @@
             color: #ffffff;
         }
 
-        /* Reveal Animation */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
         /* Light Mode Styles */
         html.light-mode body {
             background: #f8fafc;
@@ -427,6 +419,16 @@
                 });
             }
 
+            // Initialize AOS
+            if (window.AOS) {
+                AOS.init({
+                    duration: 800,
+                    once: true,
+                    offset: 100,
+                    easing: 'ease-out-cubic'
+                });
+            }
+
             // Mobile Menu Toggle
             const mobileBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
@@ -507,6 +509,8 @@
                         class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all">Kontak</a>
                     <a href="/blog"
                         class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all">Blog</a>
+                    <a href="/awards"
+                        class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all">Awards</a>
                     <% if (locals.user) { %>
                         <a href="/admin/dashboard"
                             class="px-5 py-2.5 rounded-lg text-sm font-medium text-teal-400 hover:text-teal-300 transition-all">Dashboard</a>
@@ -548,6 +552,8 @@
                     class="block px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">Kontak</a>
                 <a href="/blog"
                     class="block px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">Blog</a>
+                <a href="/awards"
+                    class="block px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">Awards</a>
             </div>
         </div>
     </nav>

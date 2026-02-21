@@ -11,7 +11,7 @@
                 </a>
 
                 <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="space-y-6">
+                    <div class="space-y-6" data-aos="fade-right">
                         <h1 class="text-4xl lg:text-5xl font-bold font-outfit text-white leading-tight">
                             <%= project.title %>
                         </h1>
@@ -50,7 +50,7 @@
                         </div>
                     </div>
 
-                    <div class="relative group">
+                    <div class="relative group" data-aos="fade-left">
                         <div
                             class="absolute -inset-1 bg-gradient-to-r from-teal-500 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000">
                         </div>
@@ -71,7 +71,7 @@
         </section>
 
         <!-- Project Content -->
-        <section class="max-w-4xl mx-auto px-6 lg:px-8">
+        <section class="max-w-4xl mx-auto px-6 lg:px-8" data-aos="fade-up">
             <div class="prose prose-invert prose-lg max-w-none">
                 <% if (project.content) { %>
                     <%- project.content.replace(/\n/g, '<br>' ) %>
