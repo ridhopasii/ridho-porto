@@ -99,67 +99,84 @@
                             <div>
                                 <label class="mb-2 block">Project Image</label>
 
-                                <% if (project && project.imageUrl) { %>
-                                    <div class="mb-4">
-                                        <p class="text-xs text-gray-500 mb-1">Current Image:</p>
-                                        <img src="<%= project.imageUrl %>" alt="Current Image"
-                                            class="h-32 rounded object-cover border border-white/10">
-                                    </div>
-                                    <% } %>
 
-                                        <div class="bg-black/20 border border-white/10 rounded-lg p-4">
-                                            <% const isUrl=project && project.imageUrl &&
-                                                !project.imageUrl.startsWith('/uploads/'); %>
-                                                <div
-                                                    class="flex gap-2 text-xs mb-4 bg-black/40 rounded-lg p-1 w-full md:w-48">
-                                                    <label
-                                                        class="flex-1 text-center cursor-pointer py-1.5 px-2 rounded hover:bg-white/5 has-[:checked]:bg-teal-500/20 has-[:checked]:text-teal-400 transition-all font-medium text-gray-400">
-                                                        <input type="radio" name="imageSource" value="file" <%=!isUrl
-                                                            ? 'checked' : '' %> class="hidden"
-                                                        onchange="toggleImageInput(this.value)">
-                                                        Upload File
-                                                    </label>
-                                                    <label
-                                                        class="flex-1 text-center cursor-pointer py-1.5 px-2 rounded hover:bg-white/5 has-[:checked]:bg-teal-500/20 has-[:checked]:text-teal-400 transition-all font-medium text-gray-400">
-                                                        <input type="radio" name="imageSource" value="url" <%=isUrl
-                                                            ? 'checked' : '' %> class="hidden"
-                                                        onchange="toggleImageInput(this.value)">
-                                                        Image URL
-                                                    </label>
-                                                </div>
-
-                                                <div id="fileInputContainer" class="<%= isUrl ? 'hidden' : '' %>">
-                                                    <input type="file" name="image" accept="image/*"
-                                                        class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20">
-                                                </div>
-
-                                                <div id="urlInputContainer" class="<%= !isUrl ? 'hidden' : '' %>">
-                                                    <input type="url" name="imageUrl"
-                                                        value="<%= isUrl ? project.imageUrl : '' %>"
-                                                        placeholder="https://example.com/image.jpg"
-                                                        class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-teal-500 transition-colors text-white">
-                                                </div>
+                                <div class="bg-black/20 border border-white/10 rounded-lg p-4">
+                                    <% const isUrl=project && project.imageUrl &&
+                                        !project.imageUrl.startsWith('/uploads/'); %>
+                                        <div class="flex gap-2 text-xs mb-4 bg-black/40 rounded-lg p-1 w-full md:w-48">
+                                            <label
+                                                class="flex-1 text-center cursor-pointer py-1.5 px-2 rounded hover:bg-white/5 has-[:checked]:bg-teal-500/20 has-[:checked]:text-teal-400 transition-all font-medium text-gray-400">
+                                                <input type="radio" name="imageSource" value="file" <%=!isUrl
+                                                    ? 'checked' : '' %> class="hidden"
+                                                onchange="toggleImageInput(this.value)">
+                                                Upload File
+                                            </label>
+                                            <label
+                                                class="flex-1 text-center cursor-pointer py-1.5 px-2 rounded hover:bg-white/5 has-[:checked]:bg-teal-500/20 has-[:checked]:text-teal-400 transition-all font-medium text-gray-400">
+                                                <input type="radio" name="imageSource" value="url" <%=isUrl ? 'checked'
+                                                    : '' %> class="hidden"
+                                                onchange="toggleImageInput(this.value)">
+                                                Image URL
+                                            </label>
                                         </div>
+
+                                        <div id="fileInputContainer" class="<%= isUrl ? 'hidden' : '' %>">
+                                            <input type="file" name="image" accept="image/*"
+                                                class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20">
+                                        </div>
+
+                                        <div id="urlInputContainer" class="<%= !isUrl ? 'hidden' : '' %>">
+                                            <input type="url" name="imageUrl"
+                                                value="<%= isUrl ? project.imageUrl : '' %>"
+                                                placeholder="https://example.com/image.jpg"
+                                                class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-teal-500 transition-colors text-white">
+                                        </div>
+                                </div>
                             </div>
 
                             <script>
-                                function toggleImageInput(source) {
+                                function updateToggleUI(source) {
                                     const fileContainer = document.getElementById('fileInputContainer');
                                     const urlContainer = document.getElementById('urlInputContainer');
+                                    const highlight = document.getElementById('toggleHighlight');
+                                    const labels = document.querySelectorAll('[name="imageSource"] + span');
 
                                     if (source === 'file') {
                                         fileContainer.classList.remove('hidden');
                                         urlContainer.classList.add('hidden');
+                                        if (highlight) {
+                                            highlight.style.left = '4px';
+                                            highlight.style.width = 'calc(50% - 4px)';
+                                        }
+                                        if (labels.length >= 2) {
+                                            labels[0].classList.add('text-black');
+                                            labels[0].classList.remove('text-gray-400');
+                                            labels[1].classList.add('text-gray-400');
+                                            labels[1].classList.remove('text-black');
+                                        }
                                     } else {
                                         fileContainer.classList.add('hidden');
                                         urlContainer.classList.remove('hidden');
+                                        if (highlight) {
+                                            highlight.style.left = '50%';
+                                            highlight.style.width = 'calc(50% - 4px)';
+                                        }
+                                        if (labels.length >= 2) {
+                                            labels[1].classList.add('text-black');
+                                            labels[1].classList.remove('text-gray-400');
+                                            labels[0].classList.add('text-gray-400');
+                                            labels[0].classList.remove('text-black');
+                                        }
                                     }
                                 }
 
                                 // Initialize on load
                                 window.addEventListener('load', function () {
-                                    const checkedSource = document.querySelector('input[name="imageSource"]:checked')?.value;
-                                    if (checkedSource) toggleImageInput(checkedSource);
+                                    const checked = document.querySelector('input[name="imageSource"]:checked');
+                                    if (checked) updateToggleUI(checked.value);
+                                    else updateToggleUI('file');
+
+                                    if (window.lucide) window.lucide.createIcons();
                                 });
                             </script>
 

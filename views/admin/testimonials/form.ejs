@@ -101,23 +101,48 @@
                             </div>
 
                             <script>
-                                function toggleImageInput(source) {
-                                    const fileInput = document.getElementById('fileInputContainer');
-                                    const urlInput = document.getElementById('urlInputContainer');
+                                function updateToggleUI(source) {
+                                    const fileContainer = document.getElementById('fileInputContainer');
+                                    const urlContainer = document.getElementById('urlInputContainer');
+                                    const highlight = document.getElementById('toggleHighlight');
+                                    const labels = document.querySelectorAll('[name="imageSource"] + span');
 
                                     if (source === 'file') {
-                                        fileInput.classList.remove('hidden');
-                                        urlInput.classList.add('hidden');
+                                        fileContainer.classList.remove('hidden');
+                                        urlContainer.classList.add('hidden');
+                                        if (highlight) {
+                                            highlight.style.left = '4px';
+                                            highlight.style.width = 'calc(50% - 4px)';
+                                        }
+                                        if (labels.length >= 2) {
+                                            labels[0].classList.add('text-black');
+                                            labels[0].classList.remove('text-gray-400');
+                                            labels[1].classList.add('text-gray-400');
+                                            labels[1].classList.remove('text-black');
+                                        }
                                     } else {
-                                        fileInput.classList.add('hidden');
-                                        urlInput.classList.remove('hidden');
+                                        fileContainer.classList.add('hidden');
+                                        urlContainer.classList.remove('hidden');
+                                        if (highlight) {
+                                            highlight.style.left = '50%';
+                                            highlight.style.width = 'calc(50% - 4px)';
+                                        }
+                                        if (labels.length >= 2) {
+                                            labels[1].classList.add('text-black');
+                                            labels[1].classList.remove('text-gray-400');
+                                            labels[0].classList.add('text-gray-400');
+                                            labels[0].classList.remove('text-black');
+                                        }
                                     }
                                 }
 
                                 // Initialize on load
                                 window.addEventListener('load', function () {
-                                    const checkedSource = document.querySelector('input[name="imageSource"]:checked')?.value;
-                                    if (checkedSource) toggleImageInput(checkedSource);
+                                    const checked = document.querySelector('input[name="imageSource"]:checked');
+                                    if (checked) updateToggleUI(checked.value);
+                                    else updateToggleUI('file');
+
+                                    if (window.lucide) window.lucide.createIcons();
                                 });
                             </script>
 

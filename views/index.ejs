@@ -18,7 +18,7 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full relative z-10">
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                 <!-- Left Content -->
-                <div class="order-2 lg:order-1 fade-in-up">
+                <div class="fade-in-up">
                     <p class="text-gray-400 text-sm tracking-widest uppercase mb-4">Halo, Saya</p>
 
                     <h1 class="font-outfit font-bold text-4xl sm:text-5xl lg:text-6xl leading-tight mb-2">
@@ -60,50 +60,6 @@
                         <a href="#kontak" class="btn-outline">
                             <span>Kontak Saya</span>
                         </a>
-                    </div>
-                </div>
-
-                <!-- Right Content - Profile Card -->
-                <div class="order-1 lg:order-2 flex justify-center fade-in-up stagger-1">
-                    <div
-                        class="profile-card relative hover:scale-[1.02] transition-transform duration-500 hover:rotate-1">
-                        <!-- Main Image Card -->
-                        <div
-                            class="relative w-72 sm:w-80 lg:w-96 rounded-3xl overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 shadow-2xl shadow-accent/20">
-                            <img src="<%= profile?.heroImage || '/images/asset_1.jpg' %>" alt="<%= profile?.fullName %>"
-                                class="w-full h-auto object-cover" loading="lazy" decoding="async">
-
-                            <!-- Overlay Text -->
-                            <div class="absolute top-6 left-6 right-6">
-                                <h3 class="font-outfit font-bold text-2xl text-white drop-shadow-lg">
-                                    <%= profile?.fullName %>
-                                </h3>
-                                <p class="text-accent-light text-sm drop-shadow-lg">
-                                    <%= profile?.title %>
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Bottom Info Card -->
-                        <div
-                            class="absolute -bottom-4 left-4 right-4 bg-secondary/90 backdrop-blur-xl rounded-2xl p-4 border border-white/10 flex items-center justify-between shadow-lg">
-                            <div class="flex items-center gap-3">
-                                <img src="<%= profile?.avatarUrl || '/images/asset_2.jpg' %>" alt="Avatar"
-                                    class="w-10 h-10 rounded-full object-cover ring-2 ring-accent/50" loading="lazy"
-                                    decoding="async" width="40" height="40">
-                                <div>
-                                    <p class="text-sm font-medium">@ridhopasii</p>
-                                    <p class="text-xs text-accent flex items-center gap-1">
-                                        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-                                        Online
-                                    </p>
-                                </div>
-                            </div>
-                            <button onclick="document.getElementById('kontak').scrollIntoView({behavior: 'smooth' })"
-                                class="px-4 py-2 bg-white/10 hover:bg-accent hover:text-primary rounded-xl text-sm font-medium transition-all">
-                                Hubungi Saya
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -332,38 +288,38 @@
                         });
                     </script>
                     <% if (locals.realtimeEnabled) { %>
-                    <script src="/socket.io/socket.io.js"></script>
-                    <script>
-                        (function () {
-                            try {
-                                const socket = io({ transports: ['websocket', 'polling'] });
-                                console.log('[realtime] connecting...');
-                                socket.on('connect', () => console.log('[realtime] connected', socket.id));
-                                socket.on('disconnect', (reason) => console.warn('[realtime] disconnected:', reason));
-                                socket.on('connect_error', (err) => console.error('[realtime] error:', err.message));
+                        <script src="/socket.io/socket.io.js"></script>
+                        <script>
+                            (function () {
+                                try {
+                                    const socket = io({ transports: ['websocket', 'polling'] });
+                                    console.log('[realtime] connecting...');
+                                    socket.on('connect', () => console.log('[realtime] connected', socket.id));
+                                    socket.on('disconnect', (reason) => console.warn('[realtime] disconnected:', reason));
+                                    socket.on('connect_error', (err) => console.error('[realtime] error:', err.message));
 
-                                function escapeHtml(unsafe) {
-                                    return String(unsafe)
-                                        .replace(/&/g, "&amp;")
-                                        .replace(/</g, "&lt;")
-                                        .replace(/>/g, "&gt;")
-                                        .replace(/"/g, "&quot;")
-                                        .replace(/'/g, "&#039;");
-                                }
-
-                                function renderExperiences(exps) {
-                                    const container = document.getElementById('content-experience');
-                                    if (!container) return;
-                                    if (!Array.isArray(exps) || exps.length === 0) {
-                                        container.innerHTML = '<p class="text-gray-500">Belum ada pengalaman.</p>';
-                                        return;
+                                    function escapeHtml(unsafe) {
+                                        return String(unsafe)
+                                            .replace(/&/g, "&amp;")
+                                            .replace(/</g, "&lt;")
+                                            .replace(/>/g, "&gt;")
+                                            .replace(/"/g, "&quot;")
+                                            .replace(/'/g, "&#039;");
                                     }
-                                    const html = exps.map(exp => {
-                                        const position = escapeHtml(exp.position ?? '');
-                                        const period = escapeHtml(exp.period ?? '');
-                                        const company = escapeHtml(exp.company ?? '');
-                                        const description = escapeHtml(exp.description ?? '');
-                                        return `
+
+                                    function renderExperiences(exps) {
+                                        const container = document.getElementById('content-experience');
+                                        if (!container) return;
+                                        if (!Array.isArray(exps) || exps.length === 0) {
+                                            container.innerHTML = '<p class="text-gray-500">Belum ada pengalaman.</p>';
+                                            return;
+                                        }
+                                        const html = exps.map(exp => {
+                                            const position = escapeHtml(exp.position ?? '');
+                                            const period = escapeHtml(exp.period ?? '');
+                                            const company = escapeHtml(exp.company ?? '');
+                                            const description = escapeHtml(exp.description ?? '');
+                                            return `
                                         <div class="relative pl-8 border-l border-white/10 group hover:border-accent/50 transition-colors">
                                           <div class="absolute -left-1.5 top-1.5 w-3 h-3 rounded-full bg-accent/20 border border-accent group-hover:scale-110 transition-transform"></div>
                                           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
@@ -373,42 +329,42 @@
                                           <p class="text-base text-gray-300 font-medium mb-2">${company}</p>
                                           <p class="text-sm text-gray-400 leading-relaxed">${description}</p>
                                         </div>`;
-                                    }).join('');
-                                    container.innerHTML = html;
-                                }
-
-                                socket.on('experience:update', (experiences) => {
-                                    console.log('[realtime] experience:update', experiences?.length);
-                                    try {
-                                        renderExperiences(experiences || []);
-                                    } catch (e) {
-                                        console.error('[realtime] render error:', e);
+                                        }).join('');
+                                        container.innerHTML = html;
                                     }
-                                });
 
-                                // Initial sync on load
-                                fetch('/api/experiences')
-                                    .then(r => r.json())
-                                    .then(data => {
-                                        if (data && Array.isArray(data.experiences)) {
-                                            console.log('[realtime] initial experiences', data.experiences.length);
-                                            renderExperiences(data.experiences);
+                                    socket.on('experience:update', (experiences) => {
+                                        console.log('[realtime] experience:update', experiences?.length);
+                                        try {
+                                            renderExperiences(experiences || []);
+                                        } catch (e) {
+                                            console.error('[realtime] render error:', e);
                                         }
-                                    })
-                                    .catch(err => console.error('[realtime] initial fetch error:', err));
-                            } catch (e) {
-                                console.error('[realtime] init failed:', e);
-                            }
-                        })();
-                    </script>
-                    <% } %>
+                                    });
 
-                    <!-- Download CV -->
-                    <a href="<%= profile?.cvLink %>" target="_blank"
-                        class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/30 rounded-xl transition-all mt-4">
-                        <i data-lucide="download" class="w-5 h-5 text-accent"></i>
-                        <span>Unduh CV</span>
-                    </a>
+                                    // Initial sync on load
+                                    fetch('/api/experiences')
+                                        .then(r => r.json())
+                                        .then(data => {
+                                            if (data && Array.isArray(data.experiences)) {
+                                                console.log('[realtime] initial experiences', data.experiences.length);
+                                                renderExperiences(data.experiences);
+                                            }
+                                        })
+                                        .catch(err => console.error('[realtime] initial fetch error:', err));
+                                } catch (e) {
+                                    console.error('[realtime] init failed:', e);
+                                }
+                            })();
+                        </script>
+                        <% } %>
+
+                            <!-- Download CV -->
+                            <a href="<%= profile?.cvLink %>" target="_blank"
+                                class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/30 rounded-xl transition-all mt-4">
+                                <i data-lucide="download" class="w-5 h-5 text-accent"></i>
+                                <span>Unduh CV</span>
+                            </a>
                 </div>
 
                 <!-- Right - Tech Stack -->
@@ -530,7 +486,7 @@
                             class="group relative bg-black/20 border border-white/10 rounded-2xl overflow-hidden hover:border-accent/30 transition-all flex flex-col h-full">
                             <div class="h-48 overflow-hidden bg-gray-800 relative shrink-0">
                                 <% if (article.imageUrl) { %>
-                                    <% const _img = article.imageUrl.startsWith('http') ? ('https://images.weserv.nl/?url=' + encodeURIComponent(article.imageUrl)) : article.imageUrl; %>
+                                    <% const _img=article.imageUrl.startsWith('http') ? ('https://images.weserv.nl/?url=' + encodeURIComponent(article.imageUrl)) : article.imageUrl; %>
                                     <img src="<%= _img %>" alt="<%= article.title %>"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                         loading="lazy">
@@ -546,39 +502,36 @@
                             <div class="p-6 flex flex-col flex-grow">
                                 <div class="mb-3 flex flex-wrap gap-2">
                                     <% if (article.tags) { %>
-                                        <% article.tags.split(',').slice(0, 2).forEach(tag=> { %>
-                                            <span
-                                                class="text-xs text-accent bg-accent/10 px-2 py-1 rounded inline-block">
-                                                <%= tag.trim() %>
-                                            </span>
-                                            <% }) %>
-                                                <% } %>
-                                </div>
-                                <h3
-                                    class="font-outfit font-bold text-xl text-white mb-2 group-hover:text-accent transition-colors line-clamp-2">
-                                    <%= article.title %>
-                                </h3>
-                                <div
-                                    class="text-gray-400 text-sm mb-4 line-clamp-2 flex-grow prose prose-invert prose-sm">
-                                    <%- article.content.replace(/<[^>]*>?/gm, '').substring(0, 100) %>...
-                                </div>
-                                <time class="text-xs text-gray-500 mt-auto block">
-                                    <%= new Date(article.createdAt).toLocaleDateString('id-ID', { year: 'numeric' ,
-                                        month: 'long' , day: 'numeric' }) %>
-                                </time>
+                                        <% article.tags.split(' ,').slice(0, 2).forEach(tag=> { %>
+                                        <span class="text-xs text-accent bg-accent/10 px-2 py-1 rounded inline-block">
+                                            <%= tag.trim() %>
+                                        </span>
+                                        <% }) %>
+                                            <% } %>
                             </div>
-                        </a>
-                        <% }) %>
-                            <% } else { %>
-                                <!-- Fallback / Empty State -->
-                                <div
-                                    class="col-span-full text-center py-12 border border-white/5 rounded-2xl bg-white/5">
-                                    <i data-lucide="pen-tool" class="w-12 h-12 text-gray-600 mx-auto mb-4"></i>
-                                    <h3 class="text-xl font-bold text-white mb-2">Belum ada artikel</h3>
-                                    <p class="text-gray-400">Nantikan tulisan-tulisan menarik di sini segera.</p>
-                                </div>
-                                <% } %>
+                            <h3
+                                class="font-outfit font-bold text-xl text-white mb-2 group-hover:text-accent transition-colors line-clamp-2">
+                                <%= article.title %>
+                            </h3>
+                            <div class="text-gray-400 text-sm mb-4 line-clamp-2 flex-grow prose prose-invert prose-sm">
+                                <%- article.content.replace(/<[^>]*>?/gm, '').substring(0, 100) %>...
+                            </div>
+                            <time class="text-xs text-gray-500 mt-auto block">
+                                <%= new Date(article.createdAt).toLocaleDateString('id-ID', { year: 'numeric' ,
+                                    month: 'long' , day: 'numeric' }) %>
+                            </time>
             </div>
+            </a>
+            <% }) %>
+                <% } else { %>
+                    <!-- Fallback / Empty State -->
+                    <div class="col-span-full text-center py-12 border border-white/5 rounded-2xl bg-white/5">
+                        <i data-lucide="pen-tool" class="w-12 h-12 text-gray-600 mx-auto mb-4"></i>
+                        <h3 class="text-xl font-bold text-white mb-2">Belum ada artikel</h3>
+                        <p class="text-gray-400">Nantikan tulisan-tulisan menarik di sini segera.</p>
+                    </div>
+                    <% } %>
+        </div>
         </div>
     </section>
 
@@ -842,7 +795,10 @@
         <div
             class="bg-black/60 backdrop-blur-xl border border-white/10 p-3 rounded-2xl flex items-center gap-3 shadow-2xl hover:border-accent/50 transition-colors pr-3">
             <div class="overflow-hidden rounded-xl">
-                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXdPDLmy88MDk?utm_source=generator" width="300" height="80" frameborder="0" allowfullscreen="false" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" loading="lazy"></iframe>
+                <iframe style="border-radius:12px"
+                    src="https://open.spotify.com/embed/playlist/37i9dQZF1DXdPDLmy88MDk?utm_source=generator"
+                    width="300" height="80" frameborder="0" allowfullscreen="false"
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" loading="lazy"></iframe>
             </div>
             <button onclick="document.getElementById('music-widget').classList.add('translate-y-[200%]')"
                 class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg cursor-pointer transform hover:scale-110">

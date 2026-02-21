@@ -74,64 +74,116 @@
                     class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white">
                 </div>
               </div>
-              <div>
-                <label class="block text-sm text-gray-400 mb-2">Certificate Image / PDF</label>
+              <div class="space-y-4">
+                <label class="text-sm font-medium text-gray-400">Certificate Image / PDF</label>
 
-                <% const isCertUrl=award && award.certificateUrl && !award.certificateUrl.startsWith('/uploads/'); %>
+                <div class="bg-black/40 border border-white/5 rounded-2xl p-6 backdrop-blur-sm">
+                  <% const isCertUrl=award && award.certificateUrl && !award.certificateUrl.startsWith('/uploads/'); %>
 
-                  <div class="bg-black/20 border border-white/10 rounded-xl p-4">
-                    <div class="flex gap-2 text-xs mb-4 bg-black/40 rounded-lg p-1 w-full md:w-48">
-                      <label
-                        class="flex-1 text-center cursor-pointer py-1.5 px-2 rounded hover:bg-white/5 has-[:checked]:bg-teal-500/20 has-[:checked]:text-teal-400 transition-all font-medium text-gray-400">
+                    <!-- Modern Segmented Toggle -->
+                    <div class="inline-flex p-1 bg-white/5 rounded-xl mb-6 relative w-full sm:w-auto">
+                      <div id="toggleHighlight"
+                        class="absolute h-[calc(100%-8px)] transition-all duration-300 ease-out bg-teal-500 rounded-lg shadow-[0_0_20px_rgba(20,184,166,0.3)]">
+                      </div>
+
+                      <label class="relative flex-1 sm:w-32 py-2 text-center cursor-pointer z-10">
                         <input type="radio" name="imageSource" value="file" <%=!isCertUrl ? 'checked' : '' %>
-                        class="hidden" onchange="toggleImageInput(this.value)">
-                        Upload File
+                        class="sr-only" onchange="updateToggleUI('file')">
+                        <span
+                          class="text-sm font-semibold transition-colors duration-300 <%= !isCertUrl ? 'text-black' : 'text-gray-400' %>">Upload
+                          File</span>
                       </label>
-                      <label
-                        class="flex-1 text-center cursor-pointer py-1.5 px-2 rounded hover:bg-white/5 has-[:checked]:bg-teal-500/20 has-[:checked]:text-teal-400 transition-all font-medium text-gray-400">
+
+                      <label class="relative flex-1 sm:w-32 py-2 text-center cursor-pointer z-10">
                         <input type="radio" name="imageSource" value="url" <%=isCertUrl ? 'checked' : '' %>
-                        class="hidden" onchange="toggleImageInput(this.value)">
-                        URL Link
+                        class="sr-only" onchange="updateToggleUI('url')">
+                        <span
+                          class="text-sm font-semibold transition-colors duration-300 <%= isCertUrl ? 'text-black' : 'text-gray-400' %>">URL
+                          Link</span>
                       </label>
                     </div>
 
-                    <div id="fileInputContainer" class="<%= isCertUrl ? 'hidden' : '' %>">
-                      <input type="file" name="certificate" accept="image/*,.pdf"
-                        class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20">
-                      <% if (award?.certificateUrl) { %>
-                        <div class="mt-2 flex items-center gap-3">
-                          <span class="text-xs text-gray-500">Saat ini:</span>
-                          <a href="<%= award.certificateUrl %>" target="_blank"
-                            class="text-teal-400 text-xs hover:underline">Lihat Sertifikat</a>
+                    <div class="space-y-4">
+                      <div id="fileInputContainer" class="hidden animate-in fade-in slide-in-from-top-2 duration-300">
+                        <div
+                          class="border-2 border-dashed border-white/10 hover:border-teal-500/30 rounded-xl p-8 text-center transition-colors group">
+                          <input type="file" name="certificate" id="certInput" accept="image/*,.pdf" class="sr-only">
+                          <label for="certInput" class="cursor-pointer">
+                            <div
+                              class="bg-teal-500/10 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                              <i data-lucide="upload" class="w-5 h-5 text-teal-400"></i>
+                            </div>
+                            <p class="text-xs text-gray-300 font-medium">Upload Certificate</p>
+                            <p class="text-[10px] text-gray-500 mt-1">Images or PDF</p>
+                          </label>
                         </div>
-                        <% } %>
-                    </div>
+                        <% if (award?.certificateUrl) { %>
+                          <div class="mt-3 flex items-center gap-2 bg-white/5 p-2 rounded-lg border border-white/5">
+                            <i data-lucide="file-text" class="w-4 h-4 text-teal-400"></i>
+                            <span class="text-xs text-gray-400">Current:</span>
+                            <a href="<%= award.certificateUrl %>" target="_blank"
+                              class="text-teal-400 text-xs hover:underline truncate flex-1">View Current File</a>
+                          </div>
+                          <% } %>
+                      </div>
 
-                    <div id="urlInputContainer" class="<%= !isCertUrl ? 'hidden' : '' %>">
-                      <input type="url" name="certificateUrl" value="<%= isCertUrl ? award.certificateUrl : '' %>"
-                        placeholder="https://example.com/certificate.pdf"
-                        class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-teal-500 transition-colors text-white text-sm">
+                      <div id="urlInputContainer" class="hidden animate-in fade-in slide-in-from-top-2 duration-300">
+                        <div class="relative group">
+                          <div
+                            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-teal-400 transition-colors">
+                            <i data-lucide="link" class="w-4 h-4"></i>
+                          </div>
+                          <input type="url" name="certificateUrl" value="<%= isCertUrl ? award.certificateUrl : '' %>"
+                            placeholder="https://example.com/certificate.pdf"
+                            class="pl-11 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-2 focus:ring-teal-500/20 w-full outline-none transition-all text-sm">
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                </div>
               </div>
 
               <script>
-                function toggleImageInput(source) {
-                  const fileInput = document.getElementById('fileInputContainer');
-                  const urlInput = document.getElementById('urlInputContainer');
+                function updateToggleUI(source) {
+                  const fileContainer = document.getElementById('fileInputContainer');
+                  const urlContainer = document.getElementById('urlInputContainer');
+                  const highlight = document.getElementById('toggleHighlight');
+                  const labels = document.querySelectorAll('[name="imageSource"] + span');
 
                   if (source === 'file') {
-                    fileInput.classList.remove('hidden');
-                    urlInput.classList.add('hidden');
+                    fileContainer.classList.remove('hidden');
+                    urlContainer.classList.add('hidden');
+                    if (highlight) {
+                      highlight.style.left = '4px';
+                      highlight.style.width = 'calc(50% - 4px)';
+                    }
+                    if (labels.length >= 2) {
+                      labels[0].classList.add('text-black');
+                      labels[0].classList.remove('text-gray-400');
+                      labels[1].classList.add('text-gray-400');
+                      labels[1].classList.remove('text-black');
+                    }
                   } else {
-                    fileInput.classList.add('hidden');
-                    urlInput.classList.remove('hidden');
+                    fileContainer.classList.add('hidden');
+                    urlContainer.classList.remove('hidden');
+                    if (highlight) {
+                      highlight.style.left = '50%';
+                      highlight.style.width = 'calc(50% - 4px)';
+                    }
+                    if (labels.length >= 2) {
+                      labels[1].classList.add('text-black');
+                      labels[1].classList.remove('text-gray-400');
+                      labels[0].classList.add('text-gray-400');
+                      labels[0].classList.remove('text-black');
+                    }
                   }
                 }
 
                 window.addEventListener('load', function () {
-                  const checkedSource = document.querySelector('input[name="imageSource"]:checked')?.value;
-                  if (checkedSource) toggleImageInput(checkedSource);
+                  const checked = document.querySelector('input[name="imageSource"]:checked');
+                  if (checked) updateToggleUI(checked.value);
+                  else updateToggleUI('file');
+
+                  if (window.lucide) window.lucide.createIcons();
                 });
               </script>
               <div class="flex items-center gap-3">
