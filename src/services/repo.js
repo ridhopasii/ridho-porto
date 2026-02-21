@@ -266,18 +266,20 @@ module.exports = {
   },
   createArticle: async (data, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
-      return toAppRow(await supabase.insertOne('Article', toDbRow(data), { accessToken }));
+      const payload = { ...data, updatedAt: new Date() };
+      return toAppRow(await supabase.insertOne('Article', toDbRow(payload), { accessToken }));
     }
     return getPrisma().article.create({ data });
   },
   updateArticle: async (id, data, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
+      const payload = { ...data, updatedAt: new Date() };
       return toAppRow(
         await supabase.updateOne(
           'Article',
           {
             filters: { id: `eq.${parseInt(id)}` },
-            data: toDbRow(data),
+            data: toDbRow(payload),
           },
           { accessToken }
         )
@@ -656,18 +658,20 @@ module.exports = {
   },
   createService: async (data, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
-      return toAppRow(await supabase.insertOne('Service', toDbRow(data), { accessToken }));
+      const payload = { ...data, updatedAt: new Date() };
+      return toAppRow(await supabase.insertOne('Service', toDbRow(payload), { accessToken }));
     }
     return getPrisma().service.create({ data });
   },
   updateService: async (id, data, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
+      const payload = { ...data, updatedAt: new Date() };
       return toAppRow(
         await supabase.updateOne(
           'Service',
           {
             filters: { id: `eq.${encodeURIComponent(id)}` },
-            data: toDbRow(data),
+            data: toDbRow(payload),
           },
           { accessToken }
         )
