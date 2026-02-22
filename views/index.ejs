@@ -485,7 +485,11 @@
                                         <% skills.forEach(skill=> { %>
                                             <div class="tech-card">
                                                 <div class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-3 text-accent">
-                                                    <span class="font-bold"><%= skill.name.charAt(0) %></span>
+                                                    <% if (skill.icon && !skill.icon.startsWith('/')) { %>
+                                                        <i data-lucide="<%= skill.icon %>" class="w-5 h-5"></i>
+                                                    <% } else { %>
+                                                        <span class="font-bold"><%= skill.name.charAt(0) %></span>
+                                                    <% } %>
                                                 </div>
                                                 <h4 class="font-medium text-sm"><%= skill.name %></h4>
                                                 <p class="text-xs text-gray-500 mt-0.5 capitalize"><%= category %></p>
@@ -685,7 +689,7 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="proyek" class="py-24">
+    <section id="proyek" class="py-24 section-fade">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <!-- Section Header -->
             <div class="mb-12" data-aos="fade-up">
@@ -774,7 +778,7 @@
     </script>
 
     <!-- Latest Articles (Static) -->
-    <section id="blog" class="py-24 bg-white/5">
+    <section id="blog" class="py-24 bg-white/5 section-fade">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="mb-12 flex justify-between items-end" data-aos="fade-up">
                 <div>
@@ -844,7 +848,7 @@
 
 
     <!-- Testimonials Section -->
-    <section id="testimoni" class="py-24 bg-white/5">
+    <section id="testimoni" class="py-24 bg-white/5 section-fade">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="mb-12 text-center" data-aos="fade-up">
                 <span class="text-gray-400 text-lg">Apa Kata</span>

@@ -350,6 +350,26 @@ app.get('/sitemap.xml', async (req, res) => {
         <loc>${baseUrl}/blog</loc>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>${baseUrl}/organizations</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>${baseUrl}/skills</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>${baseUrl}/publications</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>${baseUrl}/awards</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
     </url>`;
 
     projects.forEach((project) => {

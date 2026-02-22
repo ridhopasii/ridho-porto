@@ -177,6 +177,17 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
+        /* Focus Rings */
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 2px solid rgba(20, 184, 166, 0.6);
+            outline-offset: 2px;
+            border-radius: 10px;
+        }
+
         /* Typing Animation */
         .typing-text::after {
             content: '|';
@@ -243,6 +254,14 @@
         .section-fade::after {
             bottom: -40px;
             background: linear-gradient(to top, rgba(10,10,10,0), rgba(10,10,10,0.6), rgba(10,10,10,1));
+        }
+
+        /* Micro interactions */
+        .tech-card {
+            transition: transform .2s ease, border-color .2s ease, background-color .2s ease;
+        }
+        .tech-card:hover {
+            transform: translateY(-2px);
         }
 
         /* Button Styles */

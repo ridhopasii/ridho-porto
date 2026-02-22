@@ -8,7 +8,8 @@
       <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-accent/30 transition-colors">
         <div class="flex items-start gap-4">
           <% if (org.logoUrl) { %>
-            <img src="<%= org.logoUrl %>" alt="<%= org.name %>" class="w-14 h-14 rounded-lg object-cover border border-white/10" loading="lazy" decoding="async" />
+            <% const _img=org.logoUrl.startsWith('http') ? ('https://images.weserv.nl/?output=webp&url=' + encodeURIComponent(org.logoUrl)) : org.logoUrl; %>
+            <img src="<%= _img %>" alt="Logo <%= org.name %>" width="56" height="56" class="w-14 h-14 rounded-lg object-cover border border-white/10" loading="lazy" decoding="async" />
           <% } else { %>
             <div class="w-14 h-14 rounded-lg bg-white/10 flex items-center justify-center">
               <i data-lucide="users" class="w-6 h-6 text-accent"></i>
@@ -33,7 +34,14 @@
       </div>
     <% }) %>
     <% if (!organizations || organizations.length === 0) { %>
-      <p class="text-gray-500">Belum ada data organisasi.</p>
+      <div class="text-center py-12 border border-white/10 bg-white/5 rounded-2xl">
+        <i data-lucide="users" class="w-10 h-10 text-gray-600 mx-auto mb-3"></i>
+        <h3 class="text-xl font-bold mb-1">Belum ada organisasi</h3>
+        <p class="text-gray-400 mb-4">Tambahkan pengalaman organisasi untuk memperkuat profil.</p>
+        <a href="/#kontak" class="inline-flex items-center gap-2 text-accent">
+          Hubungi Saya <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
     <% } %>
   </div>
 </section>
