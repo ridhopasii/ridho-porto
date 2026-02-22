@@ -70,11 +70,16 @@ app.set('views', path.join(__dirname, '../views'));
 // Routes
 // Profile Routes
 app.get('/admin/profile', requireAuth, profileController.getProfile);
-app.post('/admin/profile', requireAuth, upload.fields([
-  { name: 'avatarUrl', maxCount: 1 },
-  { name: 'heroImage', maxCount: 1 },
-  { name: 'aboutImage', maxCount: 1 }
-]), profileController.updateProfile);
+app.post(
+  '/admin/profile',
+  requireAuth,
+  upload.fields([
+    { name: 'avatarUrl', maxCount: 1 },
+    { name: 'heroImage', maxCount: 1 },
+    { name: 'aboutImage', maxCount: 1 },
+  ]),
+  profileController.updateProfile
+);
 
 // Service Routes
 app.get('/admin/services', requireAuth, serviceController.getServices);
@@ -351,25 +356,6 @@ app.get('/sitemap.xml', async (req, res) => {
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
-    <url>
-        <loc>${baseUrl}/organizations</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>${baseUrl}/skills</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>${baseUrl}/publications</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>${baseUrl}/awards</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.5</priority>
     </url>`;
 
     projects.forEach((project) => {

@@ -24,6 +24,17 @@
   "prisma": {
     "seed": "node prisma/seed.js"
   },
+  "lint-staged": {
+    "src/**/*.js": [
+      "prettier --write"
+    ],
+    "tests/**/*.js": [
+      "prettier --write"
+    ],
+    "*.{md,css,json}": [
+      "prettier --write"
+    ]
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -51,13 +51,13 @@
                       <span class="text-xs text-gray-400">ID: <%= a.credentialId %></span>
                       <% } %>
               </div>
-              <% if (a.certificateUrl) { const isPdf=a.certificateUrl.toLowerCase().endsWith('.pdf'); %>
+              <% if (a.certificateUrl) { const url=a.certificateUrl.toLowerCase(); const isPdf=/\\.pdf(\\?.*)?$/.test(url); const isImage=/\\.(png|jpe?g|webp|gif)(\\?.*)?$/.test(url); %>
                 <div class="mb-3">
-                  <% if (isPdf) { %>
+                  <% if (isPdf || !isImage) { %>
                     <a href="<%= a.certificateUrl %>" target="_blank" rel="noopener noreferrer"
                       class="inline-flex items-center gap-2 text-accent hover:underline">
                       <i data-lucide="file-text" class="w-4 h-4"></i>
-                      <span>Lihat Sertifikat (PDF)</span>
+                      <span>Lihat Sertifikat</span>
                     </a>
                     <% } else { %>
                       <a href="<%= a.certificateUrl %>" target="_blank" rel="noopener noreferrer" class="block">

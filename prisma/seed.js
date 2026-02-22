@@ -47,6 +47,7 @@ async function main() {
   await prisma.skill.deleteMany({});
   await prisma.award.deleteMany({});
   await prisma.social.deleteMany({});
+  await prisma.organization.deleteMany({});
   await prisma.project.deleteMany({});
 
   // Experience
@@ -142,6 +143,63 @@ async function main() {
 
   for (const social of socials) {
     await prisma.social.create({ data: social });
+  }
+
+  // Organizations
+  const organizations = [
+    {
+      name: 'YRI Sumut (Youth Ranger Indonesia Sumatera Utara)',
+      role: 'Staff Entrepreneur',
+      period: '2025 – Sekarang',
+      description:
+        'Berperan dalam pengembangan kegiatan kewirausahaan pemuda, termasuk kolaborasi program bisnis, peningkatan kapasitas entrepreneur muda, serta keterlibatan dalam kegiatan sosial berbasis ekonomi kreatif dan pemberdayaan masyarakat.',
+      logoUrl: 'https://youthrangerindonesia.com/images/logo-yri.png',
+      website: 'https://youthrangerindonesia.com/',
+      order: 1,
+    },
+    {
+      name: 'GDG USU (Google Developer Groups Universitas Sumatera Utara)',
+      role: 'Member',
+      period: '2025 – Sekarang',
+      description:
+        'Mengikuti kegiatan komunitas teknologi yang berfokus pada pengembangan keterampilan pemrograman, software development, dan teknologi digital melalui workshop, seminar, serta networking dengan praktisi industri teknologi.',
+      logoUrl: null,
+      website: 'https://www.instagram.com/gdgoc.usu/',
+      order: 2,
+    },
+    {
+      name: 'HIPMI PT USU (Himpunan Pengusaha Muda Indonesia Perguruan Tinggi USU)',
+      role: 'Member',
+      period: '2025 – Sekarang',
+      description:
+        'Berpartisipasi dalam kegiatan pengembangan kewirausahaan mahasiswa, pelatihan bisnis, seminar entrepreneur, serta membangun relasi dengan pengusaha muda di lingkungan kampus dan regional.',
+      logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/31/Logo_HIPMI.png',
+      website: 'https://www.instagram.com/hipmiptusu/',
+      order: 3,
+    },
+    {
+      name: 'KAMMI Nusantara USU',
+      role: 'Member',
+      period: '2025 – Sekarang',
+      description:
+        'Aktif dalam kegiatan pembinaan kepemimpinan mahasiswa Muslim, pengembangan karakter, kajian intelektual, serta kegiatan sosial kemasyarakatan berbasis nilai keislaman dan kebangsaan.',
+      logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/10/LOGO_KAMMI.jpg',
+      website: null,
+      order: 4,
+    },
+    {
+      name: 'ID Community Medan',
+      role: 'Member',
+      period: '2025 – Sekarang',
+      description:
+        'Terlibat dalam komunitas pengembangan kreativitas digital dan networking pemuda di Kota Medan, termasuk kegiatan kolaborasi, pelatihan, dan pertukaran wawasan terkait teknologi serta industri kreatif digital.',
+      logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/16/.id.svg',
+      website: 'https://www.instagram.com/idcommunity.medan/',
+      order: 5,
+    },
+  ];
+  for (const org of organizations) {
+    await prisma.organization.create({ data: org });
   }
 
   // Projects
