@@ -234,7 +234,17 @@
 
 
     <!-- About Section -->
-    <section id="tentang" class="py-24">
+    <section id="tentang" class="relative overflow-hidden py-24">
+        <div class="pointer-events-none absolute -top-24 -right-16 w-80 h-80 bg-accent/20 blur-3xl rounded-full"></div>
+        <div class="pointer-events-none absolute bottom-0 -left-10 w-96 h-96 bg-teal-500/10 blur-3xl rounded-full"></div>
+        <svg class="pointer-events-none absolute inset-0 opacity-[0.05]" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="white" stroke-width="0.5"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)"/>
+        </svg>
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <!-- Section Header -->
             <div class="mb-12" data-aos="fade-up">
@@ -251,10 +261,27 @@
 
             <div class="grid lg:grid-cols-1 gap-12">
                 <!-- Left - Content -->
-                <div class="space-y-6 md:bg-white/5 md:border md:border-white/10 md:rounded-2xl md:p-6" data-aos="fade-right">
-                    <p class="text-gray-400 leading-relaxed">
+                <div class="relative overflow-hidden space-y-6 md:bg-white/5 md:border md:border-white/10 md:rounded-2xl md:p-6 md:shadow-lg md:shadow-black/20" data-aos="fade-right">
+                    <% const aboutImg=(profile && (profile.aboutImage || profile.avatarUrl)) ? (profile.aboutImage || profile.avatarUrl) : null; %>
+                    <% if (aboutImg) { %>
+                        <img src="<%= aboutImg %>" class="hidden md:block absolute top-6 right-6 w-28 h-28 rounded-xl object-cover border border-white/10 opacity-90">
+                    <% } %>
+                    <div class="h-1 rounded-full bg-gradient-to-r from-accent/60 via-accent/20 to-transparent"></div>
+                    <p class="text-gray-300 leading-relaxed">
                         <%= profile?.bio || 'Perjalanan saya di dunia digital dimulai sejak bangku sekolah.' %>
                     </p>
+                    <div class="flex flex-wrap gap-2">
+                        <% let _skillsFlat=[]; if (locals.skillCategories) { Object.entries(skillCategories).forEach(([c,arr])=>{ (arr||[]).forEach(s=>_skillsFlat.push({n:s.name,p:s.percentage})); }); _skillsFlat.sort((a,b)=> (b.p||0)-(a.p||0)); } %>
+                        <% (_skillsFlat||[]).slice(0,6).forEach(s=>{ %>
+                            <span class="px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-medium transition-all duration-300 hover:bg-accent/20 hover:text-accent/90"><%= s.n %></span>
+                        <% }) %>
+                    </div>
+                    <div>
+                        <a href="#kontak" class="inline-flex items-center gap-2 px-4 py-2 bg-accent/20 hover:bg-accent/30 text-accent border border-accent/30 rounded-xl transition-colors">
+                            <i data-lucide="message-circle" class="w-4 h-4"></i>
+                            <span>Hubungi Saya</span>
+                        </a>
+                    </div>
 
                     <!-- Stats -->
                     <div class="flex gap-8 pt-6">
@@ -274,36 +301,36 @@
                     <!-- Experience, Education & Achievements Tabs -->
                     <!-- Experience, Education & Achievements Tabs -->
                     <div class="mt-12 relative z-10">
-                        <div class="inline-flex flex-wrap gap-1 bg-white/5 border border-white/10 rounded-2xl p-1 mb-4">
+                        <div class="inline-flex flex-wrap gap-1 bg-white/5 border border-white/10 rounded-2xl p-1 mb-4" role="tablist" aria-label="Informasi profil">
                             <button id="tab-experience" data-tab="experience"
-                                class="tab-btn active px-4 py-2 rounded-xl text-sm font-medium bg-accent/20 text-accent transition-all">
-                                Pengalaman
+                                class="tab-btn active px-4 py-2 rounded-xl text-sm font-medium bg-accent/20 text-accent transition-all inline-flex items-center gap-2" role="tab" aria-selected="true" aria-controls="content-experience">
+                                <i data-lucide="briefcase" class="w-4 h-4"></i><span>Pengalaman</span>
                             </button>
                             <button id="tab-education" data-tab="education"
-                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
-                                Pendidikan
+                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all inline-flex items-center gap-2" role="tab" aria-selected="false" aria-controls="content-education">
+                                <i data-lucide="graduation-cap" class="w-4 h-4"></i><span>Pendidikan</span>
                             </button>
                             <button id="tab-achievements" data-tab="achievements"
-                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
-                                Pencapaian
+                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all inline-flex items-center gap-2" role="tab" aria-selected="false" aria-controls="content-achievements">
+                                <i data-lucide="trophy" class="w-4 h-4"></i><span>Pencapaian</span>
                             </button>
                             <button id="tab-organizations" data-tab="organizations"
-                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
-                                Organisasi
+                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all inline-flex items-center gap-2" role="tab" aria-selected="false" aria-controls="content-organizations">
+                                <i data-lucide="users" class="w-4 h-4"></i><span>Organisasi</span>
                             </button>
                             <button id="tab-skills" data-tab="skills"
-                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
-                                Keterampilan
+                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all inline-flex items-center gap-2" role="tab" aria-selected="false" aria-controls="content-skills">
+                                <i data-lucide="sparkles" class="w-4 h-4"></i><span>Keterampilan</span>
                             </button>
                             <button id="tab-publications" data-tab="publications"
-                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
-                                Publikasi
+                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all inline-flex items-center gap-2" role="tab" aria-selected="false" aria-controls="content-publications">
+                                <i data-lucide="book-open" class="w-4 h-4"></i><span>Publikasi</span>
                             </button>
                         </div>
-                        <div class="tab-panel bg-white/5 border border-white/10 rounded-2xl p-5">
+                        <div class="tab-panel bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-md shadow-xl shadow-black/20 ring-1 ring-white/10">
 
                         <!-- Experience Content -->
-                        <div id="content-experience" class="tab-content space-y-8 animate-fade-in block">
+                        <div id="content-experience" class="tab-content space-y-8 animate-fade-in block" role="tabpanel" aria-labelledby="tab-experience">
                             <% if (locals.experiences) { %>
                                 <% experiences.forEach(exp=> { %>
                                     <div
@@ -333,7 +360,7 @@
                         </div>
 
                         <!-- Education Content -->
-                        <div id="content-education" class="tab-content hidden space-y-8 animate-fade-in">
+                        <div id="content-education" class="tab-content hidden space-y-8 animate-fade-in" role="tabpanel" aria-labelledby="tab-education" aria-hidden="true">
                             <% if (locals.education) { %>
                                 <% education.forEach(edu=> { %>
                                     <div
@@ -363,7 +390,7 @@
                         </div>
 
                         <!-- Achievements Content -->
-                        <div id="content-achievements" class="tab-content hidden space-y-6 animate-fade-in">
+                        <div id="content-achievements" class="tab-content hidden space-y-6 animate-fade-in" role="tabpanel" aria-labelledby="tab-achievements" aria-hidden="true">
                             <% if (locals.awards && awards.length> 0) { %>
                                 <% awards.forEach(a=> { %>
                                     <div
@@ -411,7 +438,7 @@
                         </div>
 
                         <!-- Organizations Content -->
-                        <div id="content-organizations" class="tab-content hidden space-y-6 animate-fade-in">
+                        <div id="content-organizations" class="tab-content hidden space-y-6 animate-fade-in" role="tabpanel" aria-labelledby="tab-organizations" aria-hidden="true">
                             <% if (locals.organizations && organizations.length> 0) { %>
                                 <% organizations.forEach(org=> { %>
                                     <div class="bg-white/5 border border-white/10 rounded-xl p-5 hover:border-accent/30 transition-colors">
@@ -445,7 +472,7 @@
                         </div>
 
                         <!-- Skills Content -->
-                        <div id="content-skills" class="tab-content hidden space-y-4 animate-fade-in">
+                        <div id="content-skills" class="tab-content hidden space-y-4 animate-fade-in" role="tabpanel" aria-labelledby="tab-skills" aria-hidden="true">
                             <div class="flex items-center justify-between">
                                 <h3 class="font-outfit font-semibold text-lg">Kreativitas &amp; Tech Stack</h3>
                                 <a href="/skills" class="text-accent text-sm inline-flex items-center gap-1">
@@ -475,7 +502,7 @@
                         </div>
 
                         <!-- Publications Content -->
-                        <div id="content-publications" class="tab-content hidden space-y-6 animate-fade-in">
+                        <div id="content-publications" class="tab-content hidden space-y-6 animate-fade-in" role="tabpanel" aria-labelledby="tab-publications" aria-hidden="true">
                             <% if (locals.publications && publications.length> 0) { %>
                                 <% publications.slice(0,3).forEach(p=> { %>
                                     <div class="bg-white/5 border border-white/10 rounded-xl p-5 hover:border-accent/30 transition-colors">
@@ -516,9 +543,13 @@
                                     if (btn.dataset.tab === targetId) {
                                         btn.classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-white/5');
                                         btn.classList.add('bg-accent/20', 'text-accent', 'active');
+                                        btn.setAttribute('aria-selected', 'true');
+                                        btn.setAttribute('tabindex', '0');
                                     } else {
                                         btn.classList.remove('bg-accent/20', 'text-accent', 'active');
                                         btn.classList.add('text-gray-400', 'hover:text-white', 'hover:bg-white/5');
+                                        btn.setAttribute('aria-selected', 'false');
+                                        btn.setAttribute('tabindex', '-1');
                                     }
                                 });
 
@@ -526,11 +557,13 @@
                                 contents.forEach(content => {
                                     content.classList.add('hidden');
                                     content.style.display = ''; // Clean up inline styles
+                                    content.setAttribute('aria-hidden', 'true');
                                 });
 
                                 const activeContent = document.getElementById('content-' + targetId);
                                 if (activeContent) {
                                     activeContent.classList.remove('hidden');
+                                    activeContent.setAttribute('aria-hidden', 'false');
                                     // Trigger animation
                                     activeContent.style.animation = 'none';
                                     activeContent.offsetHeight; /* trigger reflow */
@@ -544,6 +577,24 @@
                                     e.preventDefault();
                                     const tabId = btn.dataset.tab;
                                     if (tabId) switchTab(tabId);
+                                });
+                                btn.addEventListener('keydown', (e) => {
+                                    const arr = Array.from(tabs);
+                                    const idx = arr.indexOf(btn);
+                                    if (e.key === 'ArrowRight') {
+                                        e.preventDefault();
+                                        const next = arr[(idx + 1) % arr.length];
+                                        next.focus();
+                                        switchTab(next.dataset.tab);
+                                    }
+                                    if (e.key === 'ArrowLeft') {
+                                        e.preventDefault();
+                                        const prev = arr[(idx - 1 + arr.length) % arr.length];
+                                        prev.focus();
+                                        switchTab(prev.dataset.tab);
+                                    }
+                                    if (e.key === 'Home') { e.preventDefault(); arr[0].focus(); switchTab(arr[0].dataset.tab); }
+                                    if (e.key === 'End') { e.preventDefault(); arr[arr.length - 1].focus(); switchTab(arr[arr.length - 1].dataset.tab); }
                                 });
                             });
                         });
@@ -690,14 +741,37 @@
             </div>
 
             <!-- View All Button -->
-            <div class="text-center mt-12">
-                <button class="btn-outline">
-                    <span>Lihat Semua Proyek</span>
-                </button>
-            </div>
+                            <div class="text-center mt-12">
+                                <a href="/showcase" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/30 rounded-xl transition-all">
+                                    <span>Lihat Semua Proyek</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
         </div>
         </div>
     </section>
+
+    <!-- Scroll To Top -->
+    <button id="scrollTopBtn" aria-label="Kembali ke atas" class="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-full bg-accent/20 hover:bg-accent/30 border border-accent/30 text-accent hidden items-center justify-center transition-all">
+        <i data-lucide="arrow-up" class="w-5 h-5"></i>
+    </button>
+    <script>
+        (function () {
+            try {
+                const btn = document.getElementById('scrollTopBtn');
+                if (!btn) return;
+                const onScroll = () => {
+                    if (window.scrollY > 400) {
+                        btn.classList.remove('hidden');
+                    } else {
+                        btn.classList.add('hidden');
+                    }
+                };
+                window.addEventListener('scroll', onScroll, { passive: true });
+                btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            } catch (_) {}
+        })();
+    </script>
 
     <!-- Latest Articles (Static) -->
     <section id="blog" class="py-24 bg-white/5">

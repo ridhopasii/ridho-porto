@@ -26,6 +26,64 @@
     <meta property="twitter:description"
         content="<%= locals.metaDescription || (profile?.bio ? profile.bio.substring(0, 150) + '...' : `Portfolio of ${profile?.fullName} - ${profile?.title}`) %>">
     <meta property="twitter:image" content="<%= locals.ogImage || profile?.heroImage || '' %>">
+    <link id="canonical-link" rel="canonical" href="">
+    <link id="alt-id" rel="alternate" hreflang="id" href="">
+    <link id="alt-x" rel="alternate" hreflang="x-default" href="">
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+
+    <script>
+        (function () {
+            try {
+                const origin = (location && location.origin) ? location.origin : '';
+                const href = origin + location.pathname;
+                const c = document.getElementById('canonical-link');
+                const a1 = document.getElementById('alt-id');
+                const a2 = document.getElementById('alt-x');
+                if (c) c.href = href;
+                if (a1) a1.href = href;
+                if (a2) a2.href = href;
+            } catch (_) {}
+        })();
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "<%= (profile && profile.fullName) || '' %>",
+      "jobTitle": "<%= (profile && profile.title) || '' %>",
+      "description": "<%= (profile && profile.bio ? profile.bio.substring(0, 150) : '') %>",
+      "image": "<%= (profile && (profile.avatarUrl || profile.heroImage)) || '' %>"
+    }
+    </script>
+
+    <% if (typeof article !== 'undefined' && article) { %>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "<%= article.title %>",
+      "datePublished": "<%= new Date(article.createdAt).toISOString() %>",
+      "dateModified": "<%= new Date(article.updatedAt || article.createdAt).toISOString() %>",
+      "author": { "@type": "Person", "name": "<%= (profile && profile.fullName) || '' %>" },
+      "image": "<%= article.imageUrl || (profile && profile.heroImage) || '' %>"
+    }
+    </script>
+    <% } %>
+
+    <% if (typeof project !== 'undefined' && project) { %>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "name": "<%= project.title %>",
+      "description": "<%= project.description || '' %>",
+      "image": "<%= project.imageUrl || (profile && profile.heroImage) || '' %>",
+      "url": ""
+    }
+    </script>
+    <% } %>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
