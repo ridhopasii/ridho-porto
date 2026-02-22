@@ -163,7 +163,7 @@ async function main() {
       period: '2025 – Sekarang',
       description:
         'Mengikuti kegiatan komunitas teknologi yang berfokus pada pengembangan keterampilan pemrograman, software development, dan teknologi digital melalui workshop, seminar, serta networking dengan praktisi industri teknologi.',
-      logoUrl: null,
+      logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmOHG99Gglye2L1mfmZe9aEFe9cY5v2Mf6hg&s',
       website: 'https://www.instagram.com/gdgoc.usu/',
       order: 2,
     },
