@@ -274,7 +274,7 @@
                     <!-- Experience, Education & Achievements Tabs -->
                     <!-- Experience, Education & Achievements Tabs -->
                     <div class="mt-12 relative z-10">
-                        <div class="inline-flex flex-wrap gap-1 bg-white/5 border border-white/10 rounded-2xl p-1 mb-6">
+                        <div class="inline-flex flex-wrap gap-1 bg-white/5 border border-white/10 rounded-2xl p-1 mb-4">
                             <button id="tab-experience" data-tab="experience"
                                 class="tab-btn active px-4 py-2 rounded-xl text-sm font-medium bg-accent/20 text-accent transition-all">
                                 Pengalaman
@@ -300,6 +300,7 @@
                                 Publikasi
                             </button>
                         </div>
+                        <div class="tab-panel bg-white/5 border border-white/10 rounded-2xl p-5">
 
                         <!-- Experience Content -->
                         <div id="content-experience" class="tab-content space-y-8 animate-fade-in block">
@@ -444,32 +445,32 @@
                         </div>
 
                         <!-- Skills Content -->
-                        <div id="content-skills" class="tab-content hidden space-y-6 animate-fade-in">
-                            <div class="bg-white/5 border border-white/10 rounded-2xl p-5">
-                                <div class="flex items-center justify-between">
-                                    <h3 class="font-outfit font-semibold text-lg">Kreativitas &amp; Tech Stack</h3>
-                                    <a href="/skills" class="text-accent text-sm inline-flex items-center gap-1">
-                                        Lihat semua <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                                    </a>
-                                </div>
-                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
-                                    <% if (locals.skillCategories) { %>
-                                        <% Object.entries(skillCategories).forEach(([category, skills])=> { %>
-                                            <% skills.forEach(skill=> { %>
-                                                <div class="tech-card">
-                                                    <div class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-3 text-accent">
-                                                        <span class="font-bold"><%= skill.name.charAt(0) %></span>
-                                                    </div>
-                                                    <h4 class="font-medium text-sm"><%= skill.name %></h4>
-                                                    <p class="text-xs text-gray-500 mt-0.5"><%= category %></p>
-                                                    <div class="w-full bg-white/10 h-1 mt-2 rounded-full overflow-hidden">
-                                                        <div class="bg-accent h-full" style="width: <%= skill.percentage %>%"></div>
-                                                    </div>
+                        <div id="content-skills" class="tab-content hidden space-y-4 animate-fade-in">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-outfit font-semibold text-lg">Kreativitas &amp; Tech Stack</h3>
+                                <a href="/skills" class="text-accent text-sm inline-flex items-center gap-1">
+                                    Lihat semua <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                <% if (locals.skillCategories) { %>
+                                    <% Object.entries(skillCategories).forEach(([category, skills])=> { %>
+                                        <% skills.forEach(skill=> { %>
+                                            <div class="tech-card">
+                                                <div class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-3 text-accent">
+                                                    <span class="font-bold"><%= skill.name.charAt(0) %></span>
                                                 </div>
-                                            <% }) %>
+                                                <h4 class="font-medium text-sm"><%= skill.name %></h4>
+                                                <p class="text-xs text-gray-500 mt-0.5 capitalize"><%= category %></p>
+                                                <div class="w-full bg-white/10 h-1 mt-2 rounded-full overflow-hidden">
+                                                    <div class="bg-accent h-full" style="width: <%= skill.percentage %>%"></div>
+                                                </div>
+                                            </div>
                                         <% }) %>
-                                    <% } %>
-                                </div>
+                                    <% }) %>
+                                <% } else { %>
+                                    <p class="text-gray-500">Belum ada data keterampilan.</p>
+                                <% } %>
                             </div>
                         </div>
 
@@ -491,7 +492,7 @@
                                                 <% if (p.url) { %>
                                                     <a href="<%= p.url %>" target="_blank" class="inline-flex items-center gap-2 text-accent mt-1 text-sm">Baca <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
                                                 <% } %>
-                                            </div>
+                        </div>
                                         </div>
                                     </div>
                                 <% }) %>
