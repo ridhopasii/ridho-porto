@@ -114,4 +114,22 @@ router.get('/awards/edit/:id', awardController.getForm);
 router.post('/awards/edit/:id', uploadCertificate.single('certificate'), awardController.updateAward);
 router.post('/awards/delete/:id', awardController.deleteAward);
 
+// Organizations
+const organizationController = require('../controllers/organizationController');
+router.get('/organizations', organizationController.getOrganizations);
+router.get('/organizations/create', organizationController.getForm);
+router.post('/organizations/create', organizationController.createOrganization);
+router.get('/organizations/edit/:id', organizationController.getForm);
+router.post('/organizations/edit/:id', organizationController.updateOrganization);
+router.post('/organizations/delete/:id', organizationController.deleteOrganization);
+
+// Publications
+const publicationController = require('../controllers/publicationController');
+router.get('/publications', publicationController.getPublications);
+router.get('/publications/create', publicationController.getForm);
+router.post('/publications/create', publicationController.createPublication);
+router.get('/publications/edit/:id', publicationController.getForm);
+router.post('/publications/edit/:id', publicationController.updatePublication);
+router.post('/publications/delete/:id', publicationController.deletePublication);
+
 module.exports = router;

@@ -97,6 +97,8 @@ app.get('/', async (req, res) => {
     const awards = await repo.getAwards();
     const articles = await repo.getRecentArticles(3);
     const services = await repo.getServices();
+    const organizations = await repo.getOrganizations();
+    const publications = await repo.getPublications();
 
     // Group skills by category
     const skillCategories = skills.reduce((acc, skill) => {
@@ -116,6 +118,8 @@ app.get('/', async (req, res) => {
       awards,
       articles,
       services,
+      organizations,
+      publications,
     });
   } catch (error) {
     next(error);
@@ -155,6 +159,53 @@ app.get('/projects/:slug', async (req, res, next) => {
     const profile = await repo.getProfile();
     const socials = await repo.getSocials();
     res.render('project-detail', { project, profile, socials, title: project.title });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Organizations Page
+app.get('/organizations', async (req, res, next) => {
+  try {
+    const [profile, socials, organizations] = await Promise.all([
+      repo.getProfile(),
+      repo.getSocials(),
+      repo.getOrganizations(),
+    ]);
+    res.render('organizations', { profile, socials, organizations, title: 'Organisasi' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Skills Page
+app.get('/skills', async (req, res, next) => {
+  try {
+    const [profile, socials, skills] = await Promise.all([
+      repo.getProfile(),
+      repo.getSocials(),
+      repo.getSkills(),
+    ]);
+    const skillCategories = skills.reduce((acc, skill) => {
+      acc[skill.category] = acc[skill.category] || [];
+      acc[skill.category].push(skill);
+      return acc;
+    }, {});
+    res.render('skills', { profile, socials, skillCategories, title: 'Keterampilan' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Publications Page
+app.get('/publications', async (req, res, next) => {
+  try {
+    const [profile, socials, publications] = await Promise.all([
+      repo.getProfile(),
+      repo.getSocials(),
+      repo.getPublications(),
+    ]);
+    res.render('publications', { profile, socials, publications, title: 'Publikasi' });
   } catch (error) {
     next(error);
   }

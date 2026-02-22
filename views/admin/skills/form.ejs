@@ -39,13 +39,10 @@
                                 <div>
                                     <label>Category</label>
                                     <select name="category" required>
-                                        <% const categories=['Application', 'Device' , 'Language' , 'Framework' , 'Tool'
-                                            ]; %>
-                                            <% categories.forEach(cat=> { %>
-                                                <option value="<%= cat %>" <%=skill && skill.category===cat ? 'selected'
-                                                    : '' %> class="bg-black text-white"><%= cat %>
-                                                </option>
-                                                <% }) %>
+                                        <% const categories=['hardskill','softskill','bahasa']; %>
+                                        <% categories.forEach(cat=> { %>
+                                          <option value="<%= cat %>" <%= skill && skill.category===cat ? 'selected' : '' %> class="bg-black text-white"><%= cat %></option>
+                                        <% }) %>
                                     </select>
                                 </div>
                             </div>

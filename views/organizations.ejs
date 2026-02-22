@@ -1,0 +1,41 @@
+<%- include('partials/header', { title: 'Organisasi' }) %>
+
+<section class="pt-28 pb-16 max-w-5xl mx-auto px-6">
+  <h1 class="text-3xl sm:text-4xl font-outfit font-extrabold mb-6">Organisasi</h1>
+  <p class="text-gray-400 mb-10">Riwayat organisasi, peran, dan kontribusi.</p>
+  <div class="space-y-6">
+    <% (organizations || []).forEach(org => { %>
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-accent/30 transition-colors">
+        <div class="flex items-start gap-4">
+          <% if (org.logoUrl) { %>
+            <img src="<%= org.logoUrl %>" alt="<%= org.name %>" class="w-14 h-14 rounded-lg object-cover border border-white/10" loading="lazy" decoding="async" />
+          <% } else { %>
+            <div class="w-14 h-14 rounded-lg bg-white/10 flex items-center justify-center">
+              <i data-lucide="users" class="w-6 h-6 text-accent"></i>
+            </div>
+          <% } %>
+          <div class="flex-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <h3 class="font-outfit font-semibold text-white text-lg"><%= org.name %></h3>
+              <span class="text-xs text-accent bg-accent/10 px-2 py-0.5 rounded"><%= org.period %></span>
+            </div>
+            <p class="text-gray-300 mt-1 font-medium"><%= org.role %></p>
+            <% if (org.description) { %>
+              <p class="text-gray-400 mt-2"><%= org.description %></p>
+            <% } %>
+            <% if (org.website) { %>
+              <a href="<%= org.website %>" target="_blank" class="inline-flex items-center gap-2 text-accent mt-3">
+                Kunjungi <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+    <% if (!organizations || organizations.length === 0) { %>
+      <p class="text-gray-500">Belum ada data organisasi.</p>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

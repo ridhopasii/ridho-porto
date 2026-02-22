@@ -241,6 +241,146 @@ module.exports = {
     return getPrisma().skill.count();
   },
 
+  // Organizations
+  getOrganizations: async () => {
+    if (supabase.isConfigured()) {
+      const rows = await supabase.selectMany('Organization', {
+        select: '*',
+        orderBy: { column: 'order', ascending: true },
+      });
+      return (rows || []).map(toAppRow);
+    }
+    return getPrisma().organization.findMany({ orderBy: { order: 'asc' } });
+  },
+  getOrganizationById: async (id) => {
+    if (supabase.isConfigured()) {
+      const row = await supabase.selectOne('Organization', {
+        select: '*',
+        filters: { id: `eq.${parseInt(id)}` },
+      });
+      return toAppRow(row);
+    }
+    return getPrisma().organization.findUnique({ where: { id: parseInt(id) } });
+  },
+  createOrganization: async (data, { accessToken } = {}) => {
+    const payload = {
+      name: data.name,
+      role: data.role,
+      period: data.period,
+      description: data.description || null,
+      logoUrl: data.logoUrl || null,
+      website: data.website || null,
+      order: parseInt(data.order) || 0,
+    };
+    if (supabase.isConfigured()) {
+      return toAppRow(await supabase.insertOne('Organization', toDbRow(payload), { accessToken }));
+    }
+    return getPrisma().organization.create({ data: payload });
+  },
+  updateOrganization: async (id, data, { accessToken } = {}) => {
+    const payload = {
+      name: data.name,
+      role: data.role,
+      period: data.period,
+      description: data.description || null,
+      logoUrl: data.logoUrl || null,
+      website: data.website || null,
+      order: parseInt(data.order) || 0,
+    };
+    if (supabase.isConfigured()) {
+      return toAppRow(
+        await supabase.updateOne(
+          'Organization',
+          {
+            filters: { id: `eq.${parseInt(id)}` },
+            data: toDbRow(payload),
+          },
+          { accessToken }
+        )
+      );
+    }
+    return getPrisma().organization.update({ where: { id: parseInt(id) }, data: payload });
+  },
+  deleteOrganization: async (id, { accessToken } = {}) => {
+    if (supabase.isConfigured()) {
+      return toAppRow(
+        await supabase.deleteOne('Organization', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken })
+      );
+    }
+    return getPrisma().organization.delete({ where: { id: parseInt(id) } });
+  },
+
+  // Publications
+  getPublications: async () => {
+    if (supabase.isConfigured()) {
+      const rows = await supabase.selectMany('Publication', {
+        select: '*',
+        orderBy: { column: 'date', ascending: false },
+      });
+      return (rows || []).map(toAppRow);
+    }
+    return getPrisma().publication.findMany({ orderBy: { date: 'desc' } });
+  },
+  getPublicationById: async (id) => {
+    if (supabase.isConfigured()) {
+      const row = await supabase.selectOne('Publication', {
+        select: '*',
+        filters: { id: `eq.${parseInt(id)}` },
+      });
+      return toAppRow(row);
+    }
+    return getPrisma().publication.findUnique({ where: { id: parseInt(id) } });
+  },
+  createPublication: async (data, { accessToken } = {}) => {
+    const payload = {
+      title: data.title,
+      outlet: data.outlet,
+      date: data.date,
+      url: data.url || null,
+      description: data.description || null,
+      imageUrl: data.imageUrl || null,
+      tags: data.tags || null,
+      updatedAt: new Date(),
+    };
+    if (supabase.isConfigured()) {
+      return toAppRow(await supabase.insertOne('Publication', toDbRow(payload), { accessToken }));
+    }
+    return getPrisma().publication.create({ data: payload });
+  },
+  updatePublication: async (id, data, { accessToken } = {}) => {
+    const payload = {
+      title: data.title,
+      outlet: data.outlet,
+      date: data.date,
+      url: data.url || null,
+      description: data.description || null,
+      imageUrl: data.imageUrl || null,
+      tags: data.tags || null,
+      updatedAt: new Date(),
+    };
+    if (supabase.isConfigured()) {
+      return toAppRow(
+        await supabase.updateOne(
+          'Publication',
+          {
+            filters: { id: `eq.${parseInt(id)}` },
+            data: toDbRow(payload),
+          },
+          { accessToken }
+        )
+      );
+    }
+    return getPrisma().publication.update({ where: { id: parseInt(id) }, data: payload });
+  },
+  deletePublication: async (id, { accessToken } = {}) => {
+    if (supabase.isConfigured()) {
+      return toAppRow(
+        await supabase.deleteOne('Publication', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken })
+      );
+    }
+    return getPrisma().publication.delete({ where: { id: parseInt(id) } });
+  },
+
   getArticlesAdmin: async ({ accessToken } = {}) => {
     if (supabase.isConfigured()) {
       const rows = await supabase.selectMany('Article', {

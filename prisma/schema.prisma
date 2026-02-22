@@ -46,7 +46,7 @@ model Education {
 model Skill {
   id          Int     @id @default(autoincrement())
   name        String
-  category    String  // Design, Marketing, Programming
+  category    String  // hardskill, softskill, bahasa
   percentage  Int
   icon        String? // Lucide icon name or image url
 }
@@ -73,6 +73,30 @@ model Service {
   description String
   icon        String   // Lucide icon name
   order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Organization {
+  id          Int      @id @default(autoincrement())
+  name        String
+  role        String
+  period      String
+  description String?
+  logoUrl     String?
+  website     String?
+  order       Int      @default(0)
+}
+
+model Publication {
+  id          Int      @id @default(autoincrement())
+  title       String
+  outlet      String
+  date        String
+  url         String?
+  description String?
+  imageUrl    String?
+  tags        String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

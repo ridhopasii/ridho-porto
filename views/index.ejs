@@ -287,6 +287,18 @@
                                 class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
                                 Pencapaian
                             </button>
+                            <button id="tab-organizations" data-tab="organizations"
+                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                                Organisasi
+                            </button>
+                            <button id="tab-skills" data-tab="skills"
+                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                                Keterampilan
+                            </button>
+                            <button id="tab-publications" data-tab="publications"
+                                class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                                Publikasi
+                            </button>
                         </div>
 
                         <!-- Experience Content -->
@@ -395,6 +407,104 @@
                                         <% } else { %>
                                             <p class="text-gray-500 italic">Belum ada pencapaian yang ditampilkan.</p>
                                             <% } %>
+                        </div>
+
+                        <!-- Organizations Content -->
+                        <div id="content-organizations" class="tab-content hidden space-y-6 animate-fade-in">
+                            <% if (locals.organizations && organizations.length> 0) { %>
+                                <% organizations.forEach(org=> { %>
+                                    <div class="bg-white/5 border border-white/10 rounded-xl p-5 hover:border-accent/30 transition-colors">
+                                        <div class="flex items-start gap-4">
+                                            <% if (org.logoUrl) { %>
+                                                <img src="<%= org.logoUrl %>" alt="<%= org.name %>" class="w-12 h-12 rounded-lg object-cover border border-white/10" loading="lazy">
+                                            <% } else { %>
+                                                <div class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center">
+                                                    <i data-lucide="users" class="w-6 h-6 text-accent/60"></i>
+                                                </div>
+                                            <% } %>
+                                            <div>
+                                                <div class="flex items-center gap-2 flex-wrap">
+                                                    <h3 class="font-outfit font-semibold text-white"><%= org.name %></h3>
+                                                    <span class="text-xs text-accent bg-accent/10 px-2 py-0.5 rounded"><%= org.period %></span>
+                                                </div>
+                                                <p class="text-sm text-gray-300 font-medium mt-1"><%= org.role %></p>
+                                                <% if (org.description) { %>
+                                                    <p class="text-sm text-gray-400 mt-1"><%= org.description %></p>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                                <div class="pt-2">
+                                    <a href="/organizations" class="inline-flex items-center gap-2 text-accent">Lihat semua organisasi <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                                </div>
+                            <% } else { %>
+                                <p class="text-gray-500 italic">Belum ada organisasi yang ditampilkan.</p>
+                            <% } %>
+                        </div>
+
+                        <!-- Skills Content -->
+                        <div id="content-skills" class="tab-content hidden space-y-6 animate-fade-in">
+                            <% const secList=['hardskill','softskill','bahasa']; %>
+                            <% secList.forEach(sec => { const list = (skillCategories && skillCategories[sec]) || []; %>
+                                <div>
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <div class="w-2 h-2 rounded-full bg-accent"></div>
+                                        <h4 class="font-semibold capitalize text-white"><%= sec %></h4>
+                                    </div>
+                                    <div class="grid sm:grid-cols-2 gap-3">
+                                        <% list.slice(0,4).forEach(s => { %>
+                                            <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <div class="flex items-center gap-2">
+                                                        <% if (s.icon && !s.icon.startsWith('/')) { %>
+                                                            <i data-lucide="<%= s.icon %>" class="w-4 h-4 text-accent"></i>
+                                                        <% } %>
+                                                        <span class="text-sm font-medium"><%= s.name %></span>
+                                                    </div>
+                                                    <span class="text-xs text-accent"><%= s.percentage %>%</span>
+                                                </div>
+                                                <div class="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-accent rounded-full" style="width: <%= s.percentage %>%"></div>
+                                                </div>
+                                            </div>
+                                        <% }) %>
+                                    </div>
+                                </div>
+                            <% }) %>
+                            <div class="pt-2">
+                                <a href="/skills" class="inline-flex items-center gap-2 text-accent">Lihat semua keterampilan <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- Publications Content -->
+                        <div id="content-publications" class="tab-content hidden space-y-6 animate-fade-in">
+                            <% if (locals.publications && publications.length> 0) { %>
+                                <% publications.slice(0,3).forEach(p=> { %>
+                                    <div class="bg-white/5 border border-white/10 rounded-xl p-5 hover:border-accent/30 transition-colors">
+                                        <div class="flex items-start gap-4">
+                                            <% if (p.imageUrl) { %>
+                                                <img src="<%= p.imageUrl %>" alt="<%= p.title %>" class="w-16 h-16 rounded-lg object-cover border border-white/10" loading="lazy">
+                                            <% } %>
+                                            <div class="flex-1">
+                                                <div class="flex items-center justify-between gap-2">
+                                                    <span class="text-xs text-accent bg-accent/10 px-2 py-0.5 rounded"><%= p.outlet %></span>
+                                                    <span class="text-xs text-gray-400"><%= p.date %></span>
+                                                </div>
+                                                <h4 class="text-white font-semibold mt-1"><%= p.title %></h4>
+                                                <% if (p.url) { %>
+                                                    <a href="<%= p.url %>" target="_blank" class="inline-flex items-center gap-2 text-accent mt-1 text-sm">Baca <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                                <div class="pt-2">
+                                    <a href="/publications" class="inline-flex items-center gap-2 text-accent">Lihat semua publikasi <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                                </div>
+                            <% } else { %>
+                                <p class="text-gray-500 italic">Belum ada publikasi yang ditampilkan.</p>
+                            <% } %>
                         </div>
                     </div>
 
