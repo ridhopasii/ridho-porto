@@ -2,7 +2,15 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import PhotoSwiper from './PhotoSwiper';
-import { Instagram, Twitter, MessageCircle } from 'lucide-react';
+import {
+  Instagram,
+  Twitter,
+  MessageCircle,
+  ArrowRight,
+  Mail,
+  Github,
+  Linkedin,
+} from 'lucide-react';
 
 export default function Hero({ profile }) {
   const [text, setText] = useState('');
