@@ -15,6 +15,7 @@ export default function EducationForm({ initialData = null }) {
     major: '',
     period: '',
     description: '',
+    logoUrl: '',
     proofUrl: '',
     images: [],
   });
@@ -66,6 +67,19 @@ export default function EducationForm({ initialData = null }) {
           onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
           placeholder="Contoh: Universitas Indonesia"
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
+          <Camera size={14} /> URL Logo Institusi (Opsional)
+        </label>
+        <input
+          type="text"
+          value={formData.logoUrl || ''}
+          onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          placeholder="https://... (link logo sekolah/universitas)"
         />
       </div>
 

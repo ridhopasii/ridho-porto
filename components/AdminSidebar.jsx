@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
+import { useState } from 'react';
 import {
   LayoutDashboard,
   Folders,
@@ -18,6 +19,7 @@ import {
   Image as ImageIcon,
   ExternalLink,
   Menu,
+  X,
 } from 'lucide-react';
 
 const menuItems = [
@@ -35,8 +37,7 @@ const menuItems = [
   { name: 'Pesan', icon: <MessageSquare size={20} />, href: '/admin/messages' },
 ];
 
-export default function AdminSidebar() {
-  const pathname = usePathname();
+function SidebarContent({ pathname, onClose }) {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -47,21 +48,34 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="w-64 border-r border-white/5 bg-black/50 backdrop-blur-xl p-6 hidden lg:flex flex-col sticky top-0 h-screen">
-      <div className="mb-10">
-        <div className="text-xl font-bold font-outfit tracking-tighter mb-1">
-          RIDHO<span className="text-teal-500">ADMIN.</span>
+    <div className="flex flex-col h-full">
+      {/* Logo */}
+      <div className="mb-10 flex items-center justify-between">
+        <div>
+          <div className="text-xl font-bold font-outfit tracking-tighter mb-1">
+            RIDHO<span className="text-teal-500">ADMIN.</span>
+          </div>
+          <Link
+            href="/"
+            target="_blank"
+            onClick={onClose}
+            className="flex items-center gap-1.5 text-[10px] text-gray-600 hover:text-teal-500 transition-colors font-bold uppercase tracking-widest"
+          >
+            <ExternalLink size={10} /> Lihat Website
+          </Link>
         </div>
-        <Link
-          href="/"
-          target="_blank"
-          className="flex items-center gap-1.5 text-[10px] text-gray-600 hover:text-teal-500 transition-colors font-bold uppercase tracking-widest"
-        >
-          <ExternalLink size={10} /> Lihat Website
-        </Link>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="p-2 text-gray-500 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+          >
+            <X size={20} />
+          </button>
+        )}
       </div>
 
-      <nav className="space-y-1 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+      {/* Nav Links */}
+      <nav className="space-y-1 flex-1 overflow-y-auto pr-1">
         {menuItems.map((item) => {
           const isActive =
             pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
@@ -69,6 +83,7 @@ export default function AdminSidebar() {
             <Link
               key={item.name}
               href={item.href}
+              onClick={onClose}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                 isActive
                   ? 'bg-teal-500 text-black font-bold shadow-lg shadow-teal-500/20'
@@ -82,6 +97,7 @@ export default function AdminSidebar() {
         })}
       </nav>
 
+      {/* Logout */}
       <div className="mt-auto pt-6 border-t border-white/5">
         <button
           onClick={handleLogout}
@@ -91,6 +107,46 @@ export default function AdminSidebar() {
           Keluar
         </button>
       </div>
-    </aside>
+    </div>
+  );
+}
+
+export default function AdminSidebar() {
+  const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <>
+      {/* Mobile Hamburger Toggle */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl text-white shadow-xl hover:border-teal-500/30 transition-all"
+        aria-label="Buka menu"
+      >
+        <Menu size={20} />
+      </button>
+
+      {/* Mobile Backdrop Overlay */}
+      {mobileOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Mobile Slide-in Drawer */}
+      <aside
+        className={`lg:hidden fixed top-0 left-0 bottom-0 w-72 bg-[#090909] border-r border-white/5 p-6 z-50 transition-transform duration-300 ease-in-out overflow-y-auto ${
+          mobileOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <SidebarContent pathname={pathname} onClose={() => setMobileOpen(false)} />
+      </aside>
+
+      {/* Desktop Fixed Sidebar */}
+      <aside className="hidden lg:flex w-64 border-r border-white/5 bg-black/50 backdrop-blur-xl p-6 flex-col sticky top-0 h-screen flex-shrink-0">
+        <SidebarContent pathname={pathname} onClose={null} />
+      </aside>
+    </>
   );
 }
