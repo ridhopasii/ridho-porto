@@ -1,5 +1,5 @@
 import { ExternalLink, CodeXml, ArrowUpRight } from 'lucide-react';
-import ProjectCarousel from './ProjectCarousel';
+import PhotoSwiper from './PhotoSwiper';
 import Link from 'next/link';
 
 export default function Projects({ projects }) {
@@ -29,9 +29,10 @@ export default function Projects({ projects }) {
               {/* Project Card */}
               <div className="relative aspect-[16/10] rounded-[2rem] overflow-hidden border border-white/5 bg-[#111] transition-all duration-500 group-hover:border-teal-500/30">
                 {/* Carousel Integration */}
-                <ProjectCarousel
+                <PhotoSwiper
                   images={project.images?.length > 0 ? project.images : [project.imageUrl]}
-                  title={project.title}
+                  aspectRatio="aspect-[16/10]"
+                  rounded="rounded-[2rem]"
                 />
 
                 {/* Overlay Info (Hanya muncul saat hover) */}

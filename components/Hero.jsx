@@ -1,7 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { CodeXml, Briefcase, Mail, ArrowRight, ExternalLink, Github, Linkedin } from 'lucide-react';
 import Link from 'next/link';
+import PhotoSwiper from './PhotoSwiper';
+import { Instagram, Twitter, MessageCircle } from 'lucide-react';
 
 export default function Hero({ profile }) {
   const [text, setText] = useState('');
@@ -31,13 +32,17 @@ export default function Hero({ profile }) {
           <div className="relative mb-12 animate-fade-in-up">
             <div className="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-teal-500/30 p-2 bg-gradient-to-tr from-teal-500/20 to-transparent">
               <div className="w-full h-full rounded-full overflow-hidden border-2 border-teal-500">
-                <img
-                  src={
-                    profile?.avatarUrl ||
-                    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop'
+                <PhotoSwiper
+                  images={
+                    profile?.images && profile.images.length > 0
+                      ? profile.images
+                      : [
+                          profile?.avatarUrl ||
+                            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop',
+                        ]
                   }
-                  alt={profile?.name}
-                  className="w-full h-full object-cover"
+                  aspectRatio="aspect-square"
+                  rounded="rounded-full"
                 />
               </div>
             </div>
@@ -95,21 +100,50 @@ export default function Hero({ profile }) {
           </div>
 
           {/* Social Links */}
-          <div className="mt-20 flex gap-4 justify-center">
+          <div className="mt-20 flex flex-wrap gap-4 justify-center">
             {[
-              { icon: <Github size={20} />, href: profile?.github_url || '#' },
-              { icon: <Linkedin size={20} />, href: profile?.linkedin_url || '#' },
-              { icon: <Mail size={20} />, href: `mailto:${profile?.email}` || '#' },
-            ].map((social, idx) => (
-              <a
-                key={idx}
-                href={social.href}
-                target="_blank"
-                className="w-14 h-14 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 text-gray-500 hover:text-teal-500 hover:border-teal-500 transition-all hover:-translate-y-2"
-              >
-                {social.icon}
-              </a>
-            ))}
+              {
+                icon: <Github size={20} />,
+                href: profile?.github_url,
+                active: !!profile?.github_url,
+              },
+              {
+                icon: <Linkedin size={20} />,
+                href: profile?.linkedin_url,
+                active: !!profile?.linkedin_url,
+              },
+              {
+                icon: <Instagram size={20} />,
+                href: profile?.instagram_url,
+                active: !!profile?.instagram_url,
+              },
+              {
+                icon: <Twitter size={20} />,
+                href: profile?.twitter_url,
+                active: !!profile?.twitter_url,
+              },
+              {
+                icon: <MessageCircle size={20} />,
+                href: `https://wa.me/${profile?.phone}`,
+                active: !!profile?.phone,
+              },
+              {
+                icon: <Mail size={20} />,
+                href: `mailto:${profile?.email}`,
+                active: !!profile?.email,
+              },
+            ]
+              .filter((s) => s.active)
+              .map((social, idx) => (
+                <a
+                  key={idx}
+                  href={social.href}
+                  target="_blank"
+                  className="w-14 h-14 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 text-gray-500 hover:text-teal-500 hover:border-teal-500 transition-all hover:-translate-y-2"
+                >
+                  {social.icon}
+                </a>
+              ))}
           </div>
         </div>
       </div>

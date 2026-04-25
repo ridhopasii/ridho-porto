@@ -1,18 +1,22 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Save, Loader2, CheckCircle2 } from 'lucide-react';
+import { Save, Loader2, CheckCircle2, Link as LinkIcon, Camera } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import MultiPhotoUpload from './MultiPhotoUpload';
 
 export default function EducationForm({ initialData = null }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
-    school: '',
+    institution: '',
     degree: '',
-    year: '',
+    major: '',
+    period: '',
     description: '',
+    proofUrl: '',
+    images: [],
   });
 
   useEffect(() => {
@@ -58,8 +62,8 @@ export default function EducationForm({ initialData = null }) {
         <input
           required
           type="text"
-          value={formData.school}
-          onChange={(e) => setFormData({ ...formData, school: e.target.value })}
+          value={formData.institution}
+          onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
           placeholder="Contoh: Universitas Indonesia"
         />
@@ -67,7 +71,7 @@ export default function EducationForm({ initialData = null }) {
 
       <div>
         <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">
-          Gelar / Jurusan
+          Gelar
         </label>
         <input
           required
@@ -75,19 +79,33 @@ export default function EducationForm({ initialData = null }) {
           value={formData.degree}
           onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
-          placeholder="Contoh: S1 Teknik Informatika"
+          placeholder="Contoh: Sarjana Komputer"
         />
       </div>
 
       <div>
         <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">
-          Tahun Lulus
+          Jurusan / Bidang Studi
         </label>
         <input
           required
           type="text"
-          value={formData.year}
-          onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+          value={formData.major}
+          onChange={(e) => setFormData({ ...formData, major: e.target.value })}
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          placeholder="Contoh: Teknik Informatika"
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">
+          Periode / Tahun
+        </label>
+        <input
+          required
+          type="text"
+          value={formData.period}
+          onChange={(e) => setFormData({ ...formData, period: e.target.value })}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
           placeholder="Contoh: 2018 - 2022"
         />
@@ -100,9 +118,33 @@ export default function EducationForm({ initialData = null }) {
         <textarea
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          rows={5}
+          rows={4}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all resize-none text-white"
           placeholder="Jelaskan konsentrasi studi atau pencapaian akademik..."
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
+          <LinkIcon size={14} /> Link Bukti / Ijazah (Opsional)
+        </label>
+        <input
+          type="text"
+          value={formData.proofUrl || ''}
+          onChange={(e) => setFormData({ ...formData, proofUrl: e.target.value })}
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          placeholder="https://..."
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest flex items-center gap-2">
+          <Camera size={14} /> Foto Dokumentasi / Sertifikat
+        </label>
+        <MultiPhotoUpload
+          images={formData.images}
+          onChange={(newImages) => setFormData((prev) => ({ ...prev, images: newImages }))}
+          path="education"
         />
       </div>
 

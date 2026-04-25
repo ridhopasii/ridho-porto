@@ -1,8 +1,18 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Save, Loader2, CheckCircle2, Image as ImageIcon, X, Plus } from 'lucide-react';
+import {
+  Save,
+  Loader2,
+  CheckCircle2,
+  Image as ImageIcon,
+  X,
+  Plus,
+  ExternalLink,
+  Github,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import MultiPhotoUpload from './MultiPhotoUpload';
 
 export default function ProjectForm({ initialData = null }) {
   const router = useRouter();
@@ -13,8 +23,11 @@ export default function ProjectForm({ initialData = null }) {
     title: '',
     description: '',
     projectUrl: '',
-    images: [], // Sekarang menggunakan array untuk banyak foto
+    repoUrl: '',
+    images: [],
     tags: '',
+    category: 'project',
+    featured: false,
   });
 
   useEffect(() => {
@@ -35,38 +48,9 @@ export default function ProjectForm({ initialData = null }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
-
-    setUploading(true);
-    const supabase = createClient();
-    const newImages = [...formData.images];
-
-    for (const file of files) {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `projects/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('portofolio')
-        .upload(filePath, file);
-
-      if (!uploadError) {
-        const { data } = supabase.storage.from('portofolio').getPublicUrl(filePath);
-        newImages.push(data.publicUrl);
-      }
-    }
-
-    setFormData((prev) => ({ ...prev, images: newImages }));
-    setUploading(false);
-  };
-
   const removeImage = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index),
-    }));
+    const newImages = formData.images.filter((_, i) => i !== index);
+    setFormData((prev) => ({ ...prev, images: newImages }));
   };
 
   const handleSubmit = async (e) => {
@@ -109,53 +93,18 @@ export default function ProjectForm({ initialData = null }) {
         </div>
       )}
 
-      {/* Upload Banyak Foto */}
-      <div>
-        <label className="block text-sm font-bold text-gray-400 mb-4 uppercase tracking-[0.2em]">
-          Galeri Foto Proyek
+      {/* Upload Galeri Proyek */}
+      <div className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem]">
+        <label className="block text-sm font-bold text-gray-400 mb-6 uppercase tracking-widest flex items-center gap-2">
+          <ImageIcon size={18} className="text-teal-500" /> Galeri Foto Proyek
         </label>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {formData.images.map((url, index) => (
-            <div
-              key={index}
-              className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group"
-            >
-              <img src={url} alt="Preview" className="w-full h-full object-cover" />
-              <button
-                type="button"
-                onClick={() => removeImage(index)}
-                className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all"
-              >
-                <X size={14} />
-              </button>
-              {index === 0 && (
-                <div className="absolute bottom-0 left-0 right-0 bg-teal-500 text-black text-[10px] font-bold text-center py-1">
-                  COVER
-                </div>
-              )}
-            </div>
-          ))}
-          <label className="aspect-square rounded-2xl border-2 border-dashed border-white/10 flex flex-col items-center justify-center cursor-pointer hover:border-teal-500/50 hover:bg-teal-500/5 transition-all">
-            {uploading ? (
-              <Loader2 className="animate-spin text-teal-500" />
-            ) : (
-              <>
-                <Plus className="text-gray-500 mb-2" />
-                <span className="text-[10px] text-gray-500 font-bold uppercase">Tambah Foto</span>
-              </>
-            )}
-            <input
-              type="file"
-              multiple
-              className="hidden"
-              onChange={handleUpload}
-              disabled={uploading}
-              accept="image/*"
-            />
-          </label>
-        </div>
-        <p className="mt-2 text-[10px] text-gray-500 italic">
-          * Foto pertama akan menjadi cover utama.
+        <MultiPhotoUpload
+          images={formData.images}
+          onChange={(newImages) => setFormData((prev) => ({ ...prev, images: newImages }))}
+          path="projects"
+        />
+        <p className="mt-4 text-[10px] text-gray-500 italic">
+          * Foto pertama akan menjadi cover utama proyek.
         </p>
       </div>
 

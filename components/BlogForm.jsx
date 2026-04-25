@@ -1,8 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Save, Loader2, Image as ImageIcon, X } from 'lucide-react';
+import { Save, Loader2, Image as ImageIcon, X, CheckCircle2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import MultiPhotoUpload from './MultiPhotoUpload';
 
 export default function BlogForm({ initialData = null }) {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function BlogForm({ initialData = null }) {
     content: '',
     category: '',
     cover_image: '',
+    images: [],
   });
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -35,25 +37,7 @@ export default function BlogForm({ initialData = null }) {
     setFormData({ ...formData, title, slug });
   };
 
-  const handleUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setUploading(true);
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Math.random()}.${fileExt}`;
-    const filePath = `blog-covers/${fileName}`;
-
-    const { error: uploadError } = await supabase.storage.from('portofolio').upload(filePath, file);
-
-    if (uploadError) {
-      alert('Gagal upload gambar: ' + uploadError.message);
-    } else {
-      const { data } = supabase.storage.from('portofolio').getPublicUrl(filePath);
-      setFormData({ ...formData, cover_image: data.publicUrl });
-    }
-    setUploading(false);
-  };
+  // Multi photo upload handled by component
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -119,39 +103,23 @@ export default function BlogForm({ initialData = null }) {
         </div>
 
         <div className="space-y-4">
-          <label className="text-sm font-medium text-gray-400">Cover Image</label>
-          <div className="relative aspect-video bg-[#1a1a1a] rounded-2xl border border-dashed border-white/10 flex items-center justify-center overflow-hidden group">
-            {formData.cover_image ? (
-              <>
-                <img
-                  src={formData.cover_image}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                />
-                <button
-                  type="button"
-                  onClick={() => setFormData({ ...formData, cover_image: '' })}
-                  className="absolute top-2 right-2 p-2 bg-red-500 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
-                >
-                  <X className="w-4 h-4 text-white" />
-                </button>
-              </>
-            ) : (
-              <label className="cursor-pointer text-center p-4">
-                <ImageIcon className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-                <span className="text-sm text-gray-500">
-                  {uploading ? 'Sedang mengunggah...' : 'Klik untuk upload gambar'}
-                </span>
-                <input
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleUpload}
-                  disabled={uploading}
-                />
-              </label>
-            )}
-          </div>
+          <label className="text-sm font-medium text-gray-400 uppercase tracking-widest flex items-center gap-2">
+            <ImageIcon size={14} className="text-blue-500" /> Galeri Foto Artikel
+          </label>
+          <MultiPhotoUpload
+            images={formData.images}
+            onChange={(newImages) =>
+              setFormData((prev) => ({
+                ...prev,
+                images: newImages,
+                cover_image: newImages[0] || '',
+              }))
+            }
+            path="blog"
+          />
+          <p className="text-[10px] text-gray-500 italic">
+            * Foto pertama otomatis menjadi cover utama.
+          </p>
         </div>
       </div>
 

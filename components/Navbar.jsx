@@ -9,6 +9,7 @@ const navLinks = [
   { name: 'Tentang', href: '#tentang' },
   { name: 'Proyek', href: '#proyek' },
   { name: 'Keterampilan', href: '#keterampilan' },
+  { name: 'Galeri', href: '#galeri' },
   { name: 'Kontak', href: '#kontak' },
 ];
 

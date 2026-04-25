@@ -1,0 +1,51 @@
+import { createClient } from '@/utils/supabase/server';
+import AdminSidebar from '@/components/AdminSidebar';
+import OrganizationList from '@/components/OrganizationList';
+import Link from 'next/link';
+import { Plus, Users } from 'lucide-react';
+
+export const dynamic = 'force-dynamic';
+
+export default async function AdminOrganizations() {
+  const supabase = await createClient();
+  const { data: organizations } = await supabase
+    .from('Organization')
+    .select('*')
+    .order('order', { ascending: true });
+
+  return (
+    <div className="min-h-screen bg-[#050505] text-white flex">
+      <AdminSidebar />
+
+      <main className="flex-1 p-8">
+        <header className="flex justify-between items-center mb-10">
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-3">
+              <Users className="text-teal-500" /> Manajemen Organisasi
+            </h1>
+            <p className="text-gray-500 mt-2 text-sm uppercase tracking-widest font-bold">
+              Kelola pengalaman organisasi dan kepemimpinan Anda.
+            </p>
+          </div>
+          <Link
+            href="/admin/organizations/add"
+            className="px-6 py-4 bg-teal-500 text-black font-black rounded-2xl flex items-center gap-2 hover:scale-105 transition-all shadow-xl shadow-teal-500/20 uppercase tracking-widest text-xs"
+          >
+            <Plus size={18} /> Tambah Organisasi
+          </Link>
+        </header>
+
+        <OrganizationList organizations={organizations} />
+
+        {(!organizations || organizations.length === 0) && (
+          <div className="text-center py-20 bg-white/5 rounded-[3rem] border border-dashed border-white/10 mt-10">
+            <Users size={48} className="mx-auto text-gray-800 mb-4" />
+            <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">
+              Belum ada data organisasi.
+            </p>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}

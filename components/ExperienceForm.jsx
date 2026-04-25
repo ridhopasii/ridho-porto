@@ -1,8 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Save, Loader2, CheckCircle2 } from 'lucide-react';
+import { Save, Loader2, CheckCircle2, Link as LinkIcon, Camera } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import MultiPhotoUpload from './MultiPhotoUpload';
 
 export default function ExperienceForm({ initialData = null }) {
   const router = useRouter();
@@ -13,6 +14,8 @@ export default function ExperienceForm({ initialData = null }) {
     position: '',
     period: '',
     description: '',
+    proofUrl: '',
+    images: [],
   });
 
   useEffect(() => {
@@ -94,15 +97,26 @@ export default function ExperienceForm({ initialData = null }) {
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">
-          Deskripsi Pekerjaan
+        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
+          <LinkIcon size={14} /> Link Bukti / Dokumentasi (Opsional)
         </label>
-        <textarea
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          rows={5}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all resize-none text-white"
-          placeholder="Jelaskan kontribusi dan pencapaian Anda..."
+        <input
+          type="text"
+          value={formData.proofUrl || ''}
+          onChange={(e) => setFormData({ ...formData, proofUrl: e.target.value })}
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          placeholder="https://..."
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest flex items-center gap-2">
+          <Camera size={14} /> Foto Dokumentasi
+        </label>
+        <MultiPhotoUpload
+          images={formData.images}
+          onChange={(newImages) => setFormData((prev) => ({ ...prev, images: newImages }))}
+          path="experience"
         />
       </div>
 

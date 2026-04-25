@@ -7,6 +7,8 @@ import Skills from '@/components/Skills';
 import Timeline from '@/components/Timeline';
 import Achievements from '@/components/Achievements';
 import LatestBlogs from '@/components/LatestBlogs';
+import Gallery from '@/components/Gallery';
+import Organizations from '@/components/Organizations';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -32,17 +34,28 @@ async function getData() {
     .from('Award')
     .select('*')
     .order('year', { ascending: false });
-  const { data: publications } = await supabase
-    .from('Publication')
+  const { data: organizations } = await supabase
+    .from('Organization')
     .select('*')
-    .order('year', { ascending: false });
-  const { data: blogs } = await supabase
-    .from('blogs')
+    .order('order', { ascending: true });
+  const { data: gallery } = await supabase
+    .from('Gallery')
     .select('*')
-    .order('created_at', { ascending: false })
-    .limit(3);
+    .order('createdAt', { ascending: false })
+    .limit(6);
 
-  return { profile, projects, skills, experiences, educations, awards, publications, blogs };
+  return {
+    profile,
+    projects,
+    skills,
+    experiences,
+    educations,
+    awards,
+    publications,
+    blogs,
+    organizations,
+    gallery,
+  };
 }
 
 export default async function Home() {
@@ -60,8 +73,10 @@ export default async function Home() {
 
       <Timeline experiences={data.experiences} educations={data.educations} />
 
+      <Organizations organizations={data.organizations} />
       <Projects projects={data.projects} />
       <LatestBlogs blogs={data.blogs} />
+      <Gallery galleryItems={data.gallery} />
 
       <Achievements awards={data.awards} publications={data.publications} />
 
@@ -97,27 +112,26 @@ export default async function Home() {
               © {new Date().getFullYear()} {data.profile?.name || 'Ridho Robbi Pasi'}. All rights
               reserved.
             </p>
-            <div className="flex gap-8">
-              <a
-                href={data.profile?.github_url || '#'}
-                target="_blank"
-                className="hover:text-teal-500 transition-colors"
-              >
-                GitHub
-              </a>
-              <a
-                href={data.profile?.linkedin_url || '#'}
-                target="_blank"
-                className="hover:text-teal-500 transition-colors"
-              >
-                LinkedIn
-              </a>
-              <a
-                href={`mailto:${data.profile?.email}`}
-                className="hover:text-teal-500 transition-colors"
-              >
-                Email
-              </a>
+            <div className="flex flex-wrap gap-8 justify-center">
+              {[
+                { label: 'GitHub', href: data.profile?.github_url },
+                { label: 'LinkedIn', href: data.profile?.linkedin_url },
+                { label: 'Instagram', href: data.profile?.instagram_url },
+                { label: 'Twitter', href: data.profile?.twitter_url },
+                { label: 'Facebook', href: data.profile?.facebook_url },
+                { label: 'Email', href: `mailto:${data.profile?.email}` },
+              ]
+                .filter((s) => s.href)
+                .map((social, idx) => (
+                  <a
+                    key={idx}
+                    href={social.href}
+                    target="_blank"
+                    className="hover:text-teal-500 transition-colors"
+                  >
+                    {social.label}
+                  </a>
+                ))}
             </div>
           </div>
         </div>

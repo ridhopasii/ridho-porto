@@ -4,19 +4,23 @@ import { createClient } from '@/utils/supabase/client';
 import {
   Save,
   Loader2,
-  User,
   Camera,
-  CheckCircle2,
+  Instagram,
+  Twitter,
+  Linkedin,
+  Github,
   Globe,
-  MessageSquare,
+  CheckCircle2,
+  Facebook,
+  User,
   Layout,
 } from 'lucide-react';
+import MultiPhotoUpload from './MultiPhotoUpload';
 import { useRouter } from 'next/navigation';
 
 export default function ProfileForm({ initialData = null }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -31,6 +35,11 @@ export default function ProfileForm({ initialData = null }) {
     location: 'Indonesia',
     education_level: 'Global Relations',
     availability: 'Ready to Work',
+    instagram_url: '',
+    twitter_url: '',
+    tiktok_url: '',
+    facebook_url: '',
+    images: [],
     footer_title: "LET'S WORK TOGETHER",
     footer_sub: '',
     email: '',
@@ -50,31 +59,6 @@ export default function ProfileForm({ initialData = null }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setUploading(true);
-    const supabase = createClient();
-    const fileExt = file.name.split('.').pop();
-    const fileName = `avatar-${Math.random()}.${fileExt}`;
-    const filePath = `profile/${fileName}`;
-
-    try {
-      const { error: uploadError } = await supabase.storage
-        .from('portofolio')
-        .upload(filePath, file);
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage.from('portofolio').getPublicUrl(filePath);
-      setFormData((prev) => ({ ...prev, avatarUrl: data.publicUrl }));
-    } catch (error) {
-      alert('Gagal upload: ' + error.message);
-    } finally {
-      setUploading(false);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -119,71 +103,71 @@ export default function ProfileForm({ initialData = null }) {
           <User size={14} /> Identitas & Foto
         </h3>
 
-        <div className="flex flex-col md:flex-row gap-10 items-start">
-          <div className="relative group mx-auto md:mx-0">
-            <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-teal-500/30 bg-white/5 flex items-center justify-center">
-              {formData.avatarUrl ? (
-                <img src={formData.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                <User size={64} className="text-gray-700" />
-              )}
-            </div>
-            <label className="absolute bottom-2 right-2 p-3 bg-teal-500 text-black rounded-full cursor-pointer hover:scale-110 transition-all shadow-xl">
-              {uploading ? <Loader2 size={20} className="animate-spin" /> : <Camera size={20} />}
-              <input
-                type="file"
-                className="hidden"
-                onChange={handleUpload}
-                disabled={uploading}
-                accept="image/*"
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+          {/* Photo Gallery (Multi-photo Support) */}
+          <div className="lg:col-span-1">
+            <div className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem]">
+              <h2 className="text-xl font-bold mb-6 flex items-center gap-3">
+                <Camera size={24} className="text-teal-500" /> Galeri Foto Profil
+              </h2>
+              <MultiPhotoUpload
+                images={formData.images}
+                onChange={(newImages) => setFormData((prev) => ({ ...prev, images: newImages }))}
+                path="profile"
               />
-            </label>
+              <p className="mt-4 text-[10px] text-gray-500 uppercase tracking-widest leading-relaxed">
+                Unggah lebih dari satu foto. Foto pertama akan menjadi avatar utama.
+              </p>
+            </div>
           </div>
 
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-            <div>
-              <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
-                Nama Lengkap
-              </label>
-              <input
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
-              />
-            </div>
-            <div>
-              <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
-                Tagline (Hero)
-              </label>
-              <input
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
-              />
-            </div>
-            <div>
-              <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
-                Badge Teks (Foto)
-              </label>
-              <input
-                name="badge"
-                value={formData.badge}
-                onChange={handleChange}
-                className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
-              />
-            </div>
-            <div>
-              <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
-                Status Kolaborasi
-              </label>
-              <input
-                name="status_text"
-                value={formData.status_text}
-                onChange={handleChange}
-                className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
-              />
+          {/* Form Fields */}
+          <div className="lg:col-span-2 space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+              <div>
+                <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+                  Nama Lengkap
+                </label>
+                <input
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+                  Tagline (Hero)
+                </label>
+                <input
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+                  Badge Teks (Foto)
+                </label>
+                <input
+                  name="badge"
+                  value={formData.badge}
+                  onChange={handleChange}
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+                  Status Kolaborasi
+                </label>
+                <input
+                  name="status_text"
+                  value={formData.status_text}
+                  onChange={handleChange}
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -283,39 +267,78 @@ export default function ProfileForm({ initialData = null }) {
         <h3 className="text-teal-500 font-black uppercase tracking-widest text-xs mb-8 flex items-center gap-2">
           <Globe size={14} /> Kontak & Footer
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div>
-            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
-              Email
-            </label>
-            <input
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
-            />
-          </div>
-          <div>
-            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
-              GitHub URL
-            </label>
-            <input
-              name="github_url"
-              value={formData.github_url}
-              onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
-            />
-          </div>
-          <div>
-            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
-              LinkedIn URL
-            </label>
-            <input
-              name="linkedin_url"
-              value={formData.linkedin_url}
-              onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
-            />
+
+        {/* Social Media Links */}
+        <div className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] mb-8">
+          <h3 className="text-lg font-bold mb-8 flex items-center gap-3">
+            <Globe size={20} className="text-teal-500" /> Jejaring Sosial
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest flex items-center gap-2">
+                <Instagram size={14} /> Instagram URL
+              </label>
+              <input
+                type="text"
+                name="instagram_url"
+                value={formData.instagram_url}
+                onChange={handleChange}
+                className="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 focus:border-teal-500 focus:outline-none transition-all"
+                placeholder="https://instagram.com/..."
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest flex items-center gap-2">
+                <Linkedin size={14} /> LinkedIn URL
+              </label>
+              <input
+                type="text"
+                name="linkedin_url"
+                value={formData.linkedin_url}
+                onChange={handleChange}
+                className="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 focus:border-teal-500 focus:outline-none transition-all"
+                placeholder="https://linkedin.com/..."
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest flex items-center gap-2">
+                <Github size={14} /> GitHub URL
+              </label>
+              <input
+                type="text"
+                name="github_url"
+                value={formData.github_url}
+                onChange={handleChange}
+                className="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 focus:border-teal-500 focus:outline-none transition-all"
+                placeholder="https://github.com/..."
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest flex items-center gap-2">
+                <Twitter size={14} /> Twitter URL
+              </label>
+              <input
+                type="text"
+                name="twitter_url"
+                value={formData.twitter_url}
+                onChange={handleChange}
+                className="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 focus:border-teal-500 focus:outline-none transition-all"
+                placeholder="https://twitter.com/..."
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest flex items-center gap-2">
+                <Facebook size={14} /> Facebook URL
+              </label>
+              <input
+                type="text"
+                name="facebook_url"
+                value={formData.facebook_url}
+                onChange={handleChange}
+                className="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 focus:border-teal-500 focus:outline-none transition-all"
+                placeholder="https://facebook.com/..."
+              />
+            </div>
           </div>
         </div>
 
@@ -351,7 +374,7 @@ export default function ProfileForm({ initialData = null }) {
 
       <button
         type="submit"
-        disabled={loading || uploading}
+        disabled={loading}
         className="w-full py-6 bg-teal-500 text-black font-black rounded-[2rem] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-2xl shadow-teal-500/20 uppercase tracking-widest text-sm"
       >
         {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}

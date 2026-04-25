@@ -1,5 +1,6 @@
 'use client';
 import { CheckCircle2, User, MapPin, Briefcase, GraduationCap } from 'lucide-react';
+import PhotoSwiper from './PhotoSwiper';
 
 export default function About({ profile }) {
   return (
@@ -9,14 +10,18 @@ export default function About({ profile }) {
           {/* Image Part - Premium Frame */}
           <div className="relative group">
             <div className="aspect-square rounded-[3rem] overflow-hidden border border-white/5 bg-[#111] p-4 relative z-10">
-              <div className="w-full h-full rounded-[2rem] overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
-                <img
-                  src={
-                    profile?.avatarUrl ||
-                    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop'
+              <div className="w-full h-full rounded-[2rem] overflow-hidden group-hover:grayscale-0 transition-all duration-700">
+                <PhotoSwiper
+                  images={
+                    profile?.images && profile.images.length > 0
+                      ? profile.images
+                      : [
+                          profile?.avatarUrl ||
+                            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop',
+                        ]
                   }
-                  alt={profile?.name}
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                  aspectRatio="aspect-square"
+                  rounded="rounded-[2rem]"
                 />
               </div>
             </div>
