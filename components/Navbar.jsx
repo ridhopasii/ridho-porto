@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import ThemeToggle from './ThemeToggle'
 
 const navLinks = [
   { name: 'Beranda', href: '/' },
@@ -50,12 +51,16 @@ export default function Navbar() {
           </div>
 
           {/* CTA */}
-          <Link 
-            href="/admin" 
-            className="px-5 py-2 bg-white text-black text-xs font-bold rounded-full hover:bg-teal-500 hover:text-white transition-all active:scale-95"
-          >
-            PANEL ADMIN
-          </Link>
+          <div className="hidden md:flex items-center gap-6">
+            <ThemeToggle />
+            <Link 
+              href="/#contact" 
+              className="bg-white text-black px-6 py-2.5 rounded-full text-sm font-bold hover:bg-teal-500 hover:text-white transition-all flex items-center gap-2 group"
+            >
+              Let's Talk
+              <ArrowUpRight size={16} className="group-hover:rotate-45 transition-transform" />
+            </Link>
+          </div>
         </div>
       </div>
     </nav>

@@ -72,8 +72,53 @@ var __TURBOPACK__imported__module__$5b$next$5d2f$internal$2f$font$2f$google$2f$p
 ;
 ;
 const metadata = {
-    title: 'Ridhopasii | Web Developer',
-    description: 'Portfolio of Ridho Pasii - Full Stack Web Developer & UI/UX Designer'
+    title: {
+        default: 'Ridhopasii | Full Stack Developer',
+        template: '%s | Ridhopasii'
+    },
+    description: 'Portofolio Ridho Robbi Pasi - Full Stack Web Developer & UI/UX Designer yang berfokus pada pembangunan aplikasi web modern, cepat, dan elegan.',
+    keywords: [
+        'Web Developer',
+        'Full Stack Developer',
+        'Ridho Robbi Pasi',
+        'Next.js',
+        'React',
+        'Portfolio'
+    ],
+    authors: [
+        {
+            name: 'Ridho Robbi Pasi'
+        }
+    ],
+    creator: 'Ridho Robbi Pasi',
+    openGraph: {
+        type: 'website',
+        locale: 'id_ID',
+        url: 'https://ridhorobbipasi.my.id',
+        siteName: 'Ridhopasii Portfolio',
+        title: 'Ridhopasii | Full Stack Developer',
+        description: 'Penyedia solusi pengembangan web modern dan desain UI/UX berkualitas tinggi.',
+        images: [
+            {
+                url: '/og-image.png',
+                width: 1200,
+                height: 630,
+                alt: 'Ridhopasii Portfolio'
+            }
+        ]
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Ridhopasii | Full Stack Developer',
+        description: 'Portofolio Full Stack Web Developer & UI/UX Designer.',
+        images: [
+            '/og-image.png'
+        ]
+    },
+    robots: {
+        index: true,
+        follow: true
+    }
 };
 function RootLayout({ children }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("html", {
@@ -84,12 +129,12 @@ function RootLayout({ children }) {
             children: children
         }, void 0, false, {
             fileName: "[project]/app/layout.jsx",
-            lineNumber: 24,
+            lineNumber: 56,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/layout.jsx",
-        lineNumber: 23,
+        lineNumber: 55,
         columnNumber: 5
     }, this);
 }

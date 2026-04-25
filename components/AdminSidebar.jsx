@@ -3,13 +3,14 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { 
   LayoutDashboard, Folders, UserCircle, MessageSquare, 
-  Cpu, Briefcase, GraduationCap, Trophy, FileText, LogOut 
+  Cpu, Briefcase, GraduationCap, Trophy, FileText, LogOut, BookOpen 
 } from 'lucide-react'
 
 const menuItems = [
   { name: 'Dashboard', icon: <LayoutDashboard size={20} />, href: '/admin' },
   { name: 'Profil', icon: <UserCircle size={20} />, href: '/admin/profile' },
   { name: 'Proyek', icon: <Folders size={20} />, href: '/admin/projects' },
+  { name: 'Blog', icon: <BookOpen size={20} />, href: '/admin/blogs' },
   { name: 'Keterampilan', icon: <Cpu size={20} />, href: '/admin/skills' },
   { name: 'Pengalaman', icon: <Briefcase size={20} />, href: '/admin/experience' },
   { name: 'Pendidikan', icon: <GraduationCap size={20} />, href: '/admin/education' },

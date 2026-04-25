@@ -19,6 +19,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trophy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Trophy$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/trophy.mjs [app-ssr] (ecmascript) <export default as Trophy>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$text$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__FileText$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/file-text.mjs [app-ssr] (ecmascript) <export default as FileText>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$log$2d$out$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__LogOut$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/log-out.mjs [app-ssr] (ecmascript) <export default as LogOut>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/book-open.mjs [app-ssr] (ecmascript) <export default as BookOpen>");
 'use client';
 ;
 ;
@@ -59,12 +60,23 @@ const menuItems = [
         href: '/admin/projects'
     },
     {
+        name: 'Blog',
+        icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__["BookOpen"], {
+            size: 20
+        }, void 0, false, {
+            fileName: "[project]/components/AdminSidebar.jsx",
+            lineNumber: 13,
+            columnNumber: 25
+        }, ("TURBOPACK compile-time value", void 0)),
+        href: '/admin/blogs'
+    },
+    {
         name: 'Keterampilan',
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$cpu$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Cpu$3e$__["Cpu"], {
             size: 20
         }, void 0, false, {
             fileName: "[project]/components/AdminSidebar.jsx",
-            lineNumber: 13,
+            lineNumber: 14,
             columnNumber: 33
         }, ("TURBOPACK compile-time value", void 0)),
         href: '/admin/skills'
@@ -75,7 +87,7 @@ const menuItems = [
             size: 20
         }, void 0, false, {
             fileName: "[project]/components/AdminSidebar.jsx",
-            lineNumber: 14,
+            lineNumber: 15,
             columnNumber: 31
         }, ("TURBOPACK compile-time value", void 0)),
         href: '/admin/experience'
@@ -86,7 +98,7 @@ const menuItems = [
             size: 20
         }, void 0, false, {
             fileName: "[project]/components/AdminSidebar.jsx",
-            lineNumber: 15,
+            lineNumber: 16,
             columnNumber: 31
         }, ("TURBOPACK compile-time value", void 0)),
         href: '/admin/education'
@@ -97,7 +109,7 @@ const menuItems = [
             size: 20
         }, void 0, false, {
             fileName: "[project]/components/AdminSidebar.jsx",
-            lineNumber: 16,
+            lineNumber: 17,
             columnNumber: 32
         }, ("TURBOPACK compile-time value", void 0)),
         href: '/admin/awards'
@@ -108,7 +120,7 @@ const menuItems = [
             size: 20
         }, void 0, false, {
             fileName: "[project]/components/AdminSidebar.jsx",
-            lineNumber: 17,
+            lineNumber: 18,
             columnNumber: 30
         }, ("TURBOPACK compile-time value", void 0)),
         href: '/admin/publications'
@@ -119,7 +131,7 @@ const menuItems = [
             size: 20
         }, void 0, false, {
             fileName: "[project]/components/AdminSidebar.jsx",
-            lineNumber: 18,
+            lineNumber: 19,
             columnNumber: 26
         }, ("TURBOPACK compile-time value", void 0)),
         href: '/admin/messages'
@@ -139,13 +151,13 @@ function AdminSidebar() {
                         children: "ADMIN."
                     }, void 0, false, {
                         fileName: "[project]/components/AdminSidebar.jsx",
-                        lineNumber: 27,
+                        lineNumber: 28,
                         columnNumber: 14
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/AdminSidebar.jsx",
-                lineNumber: 26,
+                lineNumber: 27,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -162,19 +174,19 @@ function AdminSidebar() {
                                 children: item.name
                             }, void 0, false, {
                                 fileName: "[project]/components/AdminSidebar.jsx",
-                                lineNumber: 42,
+                                lineNumber: 43,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, item.name, true, {
                         fileName: "[project]/components/AdminSidebar.jsx",
-                        lineNumber: 34,
+                        lineNumber: 35,
                         columnNumber: 13
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "[project]/components/AdminSidebar.jsx",
-                lineNumber: 30,
+                lineNumber: 31,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -186,25 +198,25 @@ function AdminSidebar() {
                             size: 18
                         }, void 0, false, {
                             fileName: "[project]/components/AdminSidebar.jsx",
-                            lineNumber: 50,
+                            lineNumber: 51,
                             columnNumber: 11
                         }, this),
                         "Keluar"
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/AdminSidebar.jsx",
-                    lineNumber: 49,
+                    lineNumber: 50,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/AdminSidebar.jsx",
-                lineNumber: 48,
+                lineNumber: 49,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/AdminSidebar.jsx",
-        lineNumber: 25,
+        lineNumber: 26,
         columnNumber: 5
     }, this);
 }
