@@ -9,7 +9,7 @@ export default function PhotoSwiper({
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  if (!images || images.length === 0) return null;
+  if (!Array.isArray(images) || images.length === 0) return null;
 
   const next = (e) => {
     e.preventDefault();
