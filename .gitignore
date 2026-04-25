@@ -34,3 +34,5 @@ Thumbs.db
 
 # Scratch scripts
 scratch/
+
+app/admin/experience/edit/[id]/
