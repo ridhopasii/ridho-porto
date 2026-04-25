@@ -5,7 +5,7 @@ import { Save, Loader2, CheckCircle2, Camera, Tag } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import MultiPhotoUpload from './MultiPhotoUpload';
 
-export default function GalleryForm({ initialData = null }) {
+export default function GalleryForm({ initialData = null, onSuccess }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -19,7 +19,7 @@ export default function GalleryForm({ initialData = null }) {
 
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData);
+      setFormData({ ...initialData, images: initialData.images || [] });
     }
   }, [initialData]);
 
@@ -38,9 +38,13 @@ export default function GalleryForm({ initialData = null }) {
     } else {
       setSuccess(true);
       setTimeout(() => {
-        router.push('/admin/gallery');
-        router.refresh();
-      }, 1500);
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          router.push('/admin/gallery');
+          router.refresh();
+        }
+      }, 1200);
     }
   };
 
@@ -81,18 +85,11 @@ export default function GalleryForm({ initialData = null }) {
             <option value="" className="bg-[#0a0a0a]">
               Pilih Kategori
             </option>
-            <option value="kegiatan" className="bg-[#0a0a0a]">
-              Kegiatan
-            </option>
-            <option value="prestasi" className="bg-[#0a0a0a]">
-              Prestasi
-            </option>
-            <option value="organisasi" className="bg-[#0a0a0a]">
-              Organisasi
-            </option>
-            <option value="lainnya" className="bg-[#0a0a0a]">
-              Lainnya
-            </option>
+            <option value="kegiatan" className="bg-[#0a0a0a]">Kegiatan</option>
+            <option value="prestasi" className="bg-[#0a0a0a]">Prestasi</option>
+            <option value="organisasi" className="bg-[#0a0a0a]">Organisasi</option>
+            <option value="pendidikan" className="bg-[#0a0a0a]">Pendidikan</option>
+            <option value="lainnya" className="bg-[#0a0a0a]">Lainnya</option>
           </select>
         </div>
         <div>
