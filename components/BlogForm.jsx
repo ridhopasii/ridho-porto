@@ -45,8 +45,8 @@ export default function BlogForm({ initialData = null }) {
     setMessage(null);
 
     const { error } = initialData
-      ? await supabase.from('blogs').update(formData).eq('id', initialData.id)
-      : await supabase.from('blogs').insert([formData]);
+      ? await supabase.from('Article').update(formData).eq('id', initialData.id)
+      : await supabase.from('Article').insert([formData]);
 
     if (error) {
       setMessage({ type: 'error', text: error.message });

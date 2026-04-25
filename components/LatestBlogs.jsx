@@ -34,9 +34,9 @@ export default function LatestBlogs({ blogs }) {
               className="group bg-white/5 rounded-3xl overflow-hidden border border-white/5 hover:border-teal-500/30 transition-all duration-500 flex flex-col"
             >
               <div className="relative aspect-[16/10] overflow-hidden">
-                {blog.cover_image ? (
+                {blog.imageUrl ? (
                   <img
-                    src={blog.cover_image}
+                    src={blog.imageUrl}
                     alt={blog.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
                   />
@@ -56,7 +56,7 @@ export default function LatestBlogs({ blogs }) {
                 <div className="flex items-center gap-4 text-[10px] text-gray-500 mb-4 uppercase tracking-wider">
                   <div className="flex items-center gap-1.5 font-bold">
                     <Calendar size={12} className="text-teal-500" />
-                    {new Date(blog.created_at).toLocaleDateString('id-ID', {
+                    {new Date(blog.createdAt).toLocaleDateString('id-ID', {
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric',
