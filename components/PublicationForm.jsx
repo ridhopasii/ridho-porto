@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
-import { Save, Loader2 } from 'lucide-center'
+import { Save, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function PublicationForm() {
