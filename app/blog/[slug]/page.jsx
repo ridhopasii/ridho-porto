@@ -1,57 +1,27 @@
-'use client'
-import { useState, useEffect } from 'react'
-import { createClient } from '@/utils/supabase/client'
-import Navbar from '@/components/Navbar'
-import { Calendar, Tag, ArrowLeft, Loader2, User, Share2 } from 'lucide-react'
-import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { createClient } from '@/utils/supabase/server';
+import Navbar from '@/components/Navbar';
+import { Calendar, Tag, ArrowLeft, User, Share2 } from 'lucide-react';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-export default function BlogDetail() {
-  const { slug } = useParams()
-  const [blog, setBlog] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const supabase = createClient()
+export const dynamic = 'force-dynamic';
 
-  useEffect(() => {
-    fetchBlog()
-  }, [slug])
+export default async function BlogDetail({ params }) {
+  const { slug } = params;
+  const supabase = await createClient();
 
-  const fetchBlog = async () => {
-    const { data, error } = await supabase
-      .from('blogs')
-      .select('*')
-      .eq('slug', slug)
-      .single()
-    
-    if (data) setBlog(data)
-    setLoading(false)
-  }
+  const { data: blog } = await supabase.from('Article').select('*').eq('slug', slug).single();
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#030303] flex items-center justify-center">
-        <Loader2 className="w-10 h-10 text-teal-500 animate-spin" />
-      </div>
-    )
-  }
-
-  if (!blog) {
-    return (
-      <div className="min-h-screen bg-[#030303] flex flex-col items-center justify-center text-white">
-        <h2 className="text-2xl font-bold mb-4">Artikel tidak ditemukan</h2>
-        <Link href="/blog" className="text-teal-500 hover:underline">Kembali ke Blog</Link>
-      </div>
-    )
-  }
+  if (!blog) notFound();
 
   return (
     <main className="min-h-screen bg-[#030303] text-white">
       <Navbar />
-      
+
       <article className="pt-32 pb-20 px-6">
         <div className="max-w-3xl mx-auto">
           {/* Back Button */}
-          <Link 
+          <Link
             href="/blog"
             className="inline-flex items-center gap-2 text-gray-500 hover:text-teal-500 transition-all mb-10 group"
           >
@@ -68,11 +38,15 @@ export default function BlogDetail() {
               <span className="text-gray-600">•</span>
               <div className="flex items-center gap-1.5 text-xs text-gray-500">
                 <Calendar size={14} className="text-teal-500/50" />
-                {new Date(blog.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                {new Date(blog.createdAt).toLocaleDateString('id-ID', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
               </div>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold font-outfit leading-tight mb-8 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-bold font-outfit leading-tight mb-8 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent uppercase tracking-tight">
               {blog.title}
             </h1>
 
@@ -93,13 +67,9 @@ export default function BlogDetail() {
           </header>
 
           {/* Cover Image */}
-          {blog.cover_image && (
+          {blog.imageUrl && (
             <div className="mb-12 rounded-3xl overflow-hidden border border-white/5 shadow-2xl">
-              <img 
-                src={blog.cover_image} 
-                alt={blog.title}
-                className="w-full h-auto"
-              />
+              <img src={blog.imageUrl} alt={blog.title} className="w-full h-auto" />
             </div>
           )}
 
@@ -113,8 +83,11 @@ export default function BlogDetail() {
           {/* Footer Card */}
           <div className="mt-20 p-8 rounded-3xl bg-white/5 border border-white/5 text-center">
             <h3 className="text-xl font-bold mb-4">Terima kasih telah membaca!</h3>
-            <p className="text-gray-400 mb-6 text-sm">Jika Anda menyukai artikel ini atau memiliki pertanyaan, jangan ragu untuk berdiskusi dengan saya melalui halaman kontak.</p>
-            <Link 
+            <p className="text-gray-400 mb-6 text-sm">
+              Jika Anda menyukai artikel ini atau memiliki pertanyaan, jangan ragu untuk berdiskusi
+              dengan saya melalui halaman kontak.
+            </p>
+            <Link
               href="/#contact"
               className="inline-block bg-teal-500 text-black px-8 py-3 rounded-xl font-bold hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20"
             >
@@ -124,5 +97,5 @@ export default function BlogDetail() {
         </div>
       </article>
     </main>
-  )
+  );
 }

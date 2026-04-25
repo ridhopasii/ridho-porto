@@ -1,5 +1,6 @@
 import PhotoSwiper from './PhotoSwiper';
-import { Users, Calendar, MapPin, Globe } from 'lucide-react';
+import Link from 'next/link';
+import { Users, Calendar, MapPin, Globe, ArrowRight } from 'lucide-react';
 
 export default function Organizations({ organizations }) {
   if (!organizations || organizations.length === 0) return null;
@@ -49,9 +50,11 @@ export default function Organizations({ organizations }) {
                   <div className="flex-1 space-y-4">
                     <div className="flex justify-between items-start">
                       <div>
-                        <h4 className="text-2xl font-black text-white group-hover:text-teal-500 transition-colors uppercase tracking-tight">
-                          {org.name || 'Organization Name'}
-                        </h4>
+                        <Link href={`/organizations/${org.slug}`}>
+                          <h4 className="text-2xl font-black text-white group-hover:text-teal-500 transition-colors uppercase tracking-tight">
+                            {org.name || 'Organization Name'}
+                          </h4>
+                        </Link>
                         <p className="text-teal-500 font-bold uppercase text-xs tracking-widest mt-1">
                           {org.role || 'Role'}
                         </p>
@@ -83,9 +86,16 @@ export default function Organizations({ organizations }) {
                       )}
                     </div>
 
-                    <p className="text-gray-400 text-sm leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all">
+                    <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">
                       {org.description || ''}
                     </p>
+
+                    <Link
+                      href={`/organizations/${org.slug}`}
+                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-teal-500 transition-colors pt-2"
+                    >
+                      <ArrowRight size={12} /> View Full Report
+                    </Link>
                   </div>
                 </div>
               </div>

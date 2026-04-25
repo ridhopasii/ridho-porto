@@ -1,5 +1,6 @@
 import { Briefcase, GraduationCap, Calendar, ExternalLink, ImageIcon } from 'lucide-react';
 import PhotoSwiper from './PhotoSwiper';
+import Link from 'next/link';
 
 export default function Timeline({ experiences, educations }) {
   return (
@@ -45,16 +46,24 @@ export default function Timeline({ experiences, educations }) {
                         </div>
                       )}
 
-                      {/* Proof Link */}
-                      {exp.proofUrl && (
-                        <a
-                          href={exp.proofUrl}
-                          target="_blank"
-                          className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-teal-500 hover:text-white transition-colors"
+                      {/* Details Link */}
+                      <div className="mt-6 flex flex-wrap gap-4">
+                        <Link
+                          href={`/experience/${exp.slug}`}
+                          className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-teal-500 transition-colors"
                         >
-                          <ExternalLink size={12} /> View Documentation
-                        </a>
-                      )}
+                          <ImageIcon size={12} /> Full Details
+                        </Link>
+                        {exp.proofUrl && (
+                          <a
+                            href={exp.proofUrl}
+                            target="_blank"
+                            className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-teal-500 hover:text-white transition-colors"
+                          >
+                            <ExternalLink size={12} /> View Credentials
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -89,7 +98,9 @@ export default function Timeline({ experiences, educations }) {
                       <p className="text-purple-500 font-medium mb-2 uppercase text-xs tracking-widest">
                         {edu.institution || 'Institution'} {edu.major ? `• ${edu.major}` : ''}
                       </p>
-                      <p className="text-gray-400 text-sm mb-6">{edu.description || ''}</p>
+                      <p className="text-gray-400 text-sm mb-6 line-clamp-2">
+                        {edu.description || ''}
+                      </p>
 
                       {/* Documentation Photos */}
                       {Array.isArray(edu.images) && edu.images.length > 0 && (
@@ -102,16 +113,24 @@ export default function Timeline({ experiences, educations }) {
                         </div>
                       )}
 
-                      {/* Proof Link */}
-                      {edu.proofUrl && (
-                        <a
-                          href={edu.proofUrl}
-                          target="_blank"
-                          className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-purple-500 hover:text-white transition-colors"
+                      {/* Details & Proof Link */}
+                      <div className="mt-6 flex flex-wrap gap-4">
+                        <Link
+                          href={`/education/${edu.slug}`}
+                          className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-purple-500 transition-colors"
                         >
-                          <ExternalLink size={12} /> View Credentials
-                        </a>
-                      )}
+                          <ImageIcon size={12} /> Academic Record
+                        </Link>
+                        {edu.proofUrl && (
+                          <a
+                            href={edu.proofUrl}
+                            target="_blank"
+                            className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-purple-500 hover:text-white transition-colors"
+                          >
+                            <ExternalLink size={12} /> View Credentials
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}

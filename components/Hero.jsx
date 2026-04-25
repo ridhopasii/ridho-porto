@@ -10,6 +10,7 @@ import {
   Mail,
   Github,
   Linkedin,
+  Download,
 } from 'lucide-react';
 
 export default function Hero({ profile }) {
@@ -98,6 +99,18 @@ export default function Hero({ profile }) {
               View Portfolio
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
+
+            {profile?.cvLink && (
+              <a
+                href={profile.cvLink}
+                target="_blank"
+                className="px-10 py-5 bg-white text-black font-black rounded-2xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 group shadow-xl shadow-white/10 text-sm uppercase tracking-widest"
+              >
+                Download CV
+                <Download size={18} className="group-hover:translate-y-1 transition-transform" />
+              </a>
+            )}
+
             <Link
               href="/#kontak"
               className="px-10 py-5 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl border border-white/10 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 text-sm uppercase tracking-widest"

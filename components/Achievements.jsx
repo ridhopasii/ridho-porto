@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Trophy, FileText, ArrowRight, ExternalLink, ImageIcon } from 'lucide-react';
 import PhotoSwiper from './PhotoSwiper';
 
@@ -27,9 +28,11 @@ export default function Achievements({ awards, publications }) {
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    {award.title || 'Award Title'}
-                  </h3>
+                  <Link href={`/awards/${award.slug}`}>
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-500 transition-colors">
+                      {award.title || 'Award Title'}
+                    </h3>
+                  </Link>
                   <p className="text-yellow-500/80 font-bold uppercase text-[10px] tracking-widest mb-6">
                     {award.organizer || 'Organizer'}
                   </p>
@@ -45,16 +48,24 @@ export default function Achievements({ awards, publications }) {
                     </div>
                   )}
 
-                  {/* Proof Link */}
-                  {award.proofUrl && (
-                    <a
-                      href={award.proofUrl}
-                      target="_blank"
-                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-yellow-500 hover:text-white transition-colors"
+                  {/* Proof Links */}
+                  <div className="flex flex-wrap gap-4">
+                    <Link
+                      href={`/awards/${award.slug}`}
+                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-yellow-500 transition-colors"
                     >
-                      <ExternalLink size={12} /> View Credentials
-                    </a>
-                  )}
+                      <ImageIcon size={12} /> View Full Record
+                    </Link>
+                    {award.proofUrl && (
+                      <a
+                        href={award.proofUrl}
+                        target="_blank"
+                        className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-yellow-500 hover:text-white transition-colors"
+                      >
+                        <ExternalLink size={12} /> Credentials
+                      </a>
+                    )}
+                  </div>
                 </div>
               ))}
             {(!Array.isArray(awards) || awards.length === 0) && (
@@ -85,9 +96,11 @@ export default function Achievements({ awards, publications }) {
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    {pub.title || 'Publication Title'}
-                  </h3>
+                  <Link href={`/publications/${pub.slug}`}>
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-500 transition-colors">
+                      {pub.title || 'Publication Title'}
+                    </h3>
+                  </Link>
                   <p className="text-blue-500/80 font-bold uppercase text-[10px] tracking-widest mb-6">
                     {pub.outlet || 'Publisher'}
                   </p>
@@ -103,15 +116,26 @@ export default function Achievements({ awards, publications }) {
                     </div>
                   )}
 
-                  <a
-                    href={pub.url}
-                    target="_blank"
-                    className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-500 hover:text-white transition-colors"
-                  >
-                    <ArrowRight size={12} /> Read Publication
-                  </a>
+                  <div className="flex flex-wrap gap-4">
+                    <Link
+                      href={`/publications/${pub.slug}`}
+                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-blue-500 transition-colors"
+                    >
+                      <ImageIcon size={12} /> Detail Abstract
+                    </Link>
+                    {pub.url && (
+                      <a
+                        href={pub.url}
+                        target="_blank"
+                        className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-500 hover:text-white transition-colors"
+                      >
+                        <ArrowRight size={12} /> Read Full Text
+                      </a>
+                    )}
+                  </div>
                 </div>
               ))}
+
             {(!Array.isArray(publications) || publications.length === 0) && (
               <p className="text-gray-600 italic">No publications found.</p>
             )}

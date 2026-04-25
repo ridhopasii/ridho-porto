@@ -42,34 +42,44 @@ model Profile {
 
 model Experience {
   id          Int      @id @default(autoincrement())
+  slug        String   @unique @default(cuid())
   company     String
   position    String
   period      String
   description String?
+  logoUrl     String?  // Company/Org Logo
+  images      Json?    // Documentation/Certificate photos
+  proofUrl    String?  // Hyperlink to certificate/proof
   order       Int      @default(0)
-  images      Json?    // Documentation photos
-  proofUrl    String?  // Hyperlink proof
+  createdAt   DateTime @default(now())
 }
 
 model Education {
   id          Int      @id @default(autoincrement())
+  slug        String   @unique @default(cuid())
   institution String
   degree      String
   major       String
   period      String
   status      String?
+  logoUrl     String?  // School Logo
+  images      Json?    // Certificate/Documentation photos
+  proofUrl    String?  // Hyperlink to diploma/proof
   order       Int      @default(0)
-  images      Json?    // Documentation photos
-  proofUrl    String?  // Hyperlink proof
+  createdAt   DateTime @default(now())
 }
 
 model Skill {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique @default(cuid())
   name        String
-  category    String? // hardskill, softskill, bahasa
-  level       String? // Beginner, Intermediate, Advanced, Expert
+  category    String?  // hardskill, softskill, bahasa
+  level       String?  // Beginner, Intermediate, Advanced, Expert
   percentage  Int?
-  icon        String? // Lucide icon name or image url
+  icon        String?  // Lucide icon name or image url
+  description String?  // Skill detail description
+  images      Json?    // Portfolio/Documentation related to this skill
+  createdAt   DateTime @default(now())
 }
 
 model Project {
@@ -90,6 +100,7 @@ model Project {
 
 model Organization {
   id          Int      @id @default(autoincrement())
+  slug        String   @unique @default(cuid())
   name        String
   role        String
   period      String
@@ -99,10 +110,12 @@ model Organization {
   website     String?
   proofUrl    String?  // Hyperlink for proof/documentation
   order       Int      @default(0)
+  createdAt   DateTime @default(now())
 }
 
 model Publication {
   id          Int      @id @default(autoincrement())
+  slug        String   @unique @default(cuid())
   title       String
   outlet      String
   date        String
@@ -117,15 +130,17 @@ model Publication {
 
 model Award {
   id             Int      @id @default(autoincrement())
+  slug           String   @unique @default(cuid())
   title          String
   organizer      String
   date           String
   description    String?
-  certificateUrl String?
-  images         Json?    // Documentation photos
+  certificateUrl String?  // PDF/File Link
+  images         Json?    // Documentation/Sertifikat photos
   proofUrl       String?  // Hyperlink proof
   category       String?
   credentialId   String?
+  createdAt      DateTime @default(now())
 }
 
 model Gallery {
@@ -142,6 +157,8 @@ model Article {
   id          Int      @id @default(autoincrement())
   title       String
   slug        String   @unique
+  excerpt     String?
+  category    String?
   content     String
   imageUrl    String?
   images      Json?    // Multi-photo

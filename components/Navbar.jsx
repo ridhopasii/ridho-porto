@@ -6,12 +6,12 @@ import { ArrowUpRight } from 'lucide-react';
 
 const navLinks = [
   { name: 'Beranda', href: '/' },
-  { name: 'Tentang', href: '#tentang' },
-  { name: 'Organisasi', href: '#organisasi' },
-  { name: 'Proyek', href: '#proyek' },
-  { name: 'Keterampilan', href: '#keterampilan' },
-  { name: 'Galeri', href: '#galeri' },
-  { name: 'Kontak', href: '#kontak' },
+  { name: 'Tentang', href: '/#tentang' },
+  { name: 'Organisasi', href: '/#organisasi' },
+  { name: 'Proyek', href: '/#proyek' },
+  { name: 'Keterampilan', href: '/#keterampilan' },
+  { name: 'Galeri', href: '/#galeri' },
+  { name: 'Kontak', href: '/#kontak' },
 ];
 
 export default function Navbar() {
@@ -64,7 +64,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-6">
             <ThemeToggle />
             <Link
-              href="/#contact"
+              href="/#kontak"
               className="bg-white text-black px-6 py-2.5 rounded-full text-sm font-bold hover:bg-teal-500 hover:text-white transition-all flex items-center gap-2 group"
             >
               Let's Talk
