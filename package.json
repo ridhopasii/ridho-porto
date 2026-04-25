@@ -1,90 +1,29 @@
 {
-  "name": "hafidzhumaidi-clone",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/app.js",
+  "name": "ridho-portfolio",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
-    "build": "prisma generate && prisma db push",
-    "seed:supabase": "node scripts/seedSupabase.js",
-    "setup:admin": "node scripts/setupAdmin.js",
-    "create:admin": "node scripts/createAdmin.js",
-    "test": "jest --runInBand",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage --runInBand",
-    "test:ci": "jest --ci --coverage --maxWorkers=2",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"**/*.{js,json,md,css}\"",
-    "format:check": "prettier --check \"**/*.{js,json,md,css}\"",
-    "validate": "npm run lint && npm run format:check && npm run test:ci",
-    "postinstall": "prisma generate",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev",
-    "db:migrate:deploy": "prisma migrate deploy",
-    "db:seed": "prisma db seed",
-    "db:reset": "prisma migrate reset --force",
-    "db:studio": "prisma studio",
-    "docker:build": "docker build -t portfolio-app .",
-    "docker:run": "docker run -p 3000:3000 --env-file .env portfolio-app",
-    "prepare": "husky install"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write \"**/*.{js,jsx,json,md,css}\""
   },
-  "prisma": {
-    "seed": "node prisma/seed.js"
-  },
-  "lint-staged": {
-    "src/**/*.js": [
-      "prettier --write"
-    ],
-    "tests/**/*.js": [
-      "prettier --write"
-    ],
-    "*.{md,css,json}": [
-      "prettier --write"
-    ]
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "@prisma/client": "^6.0.0",
-    "@supabase/supabase-js": "^2.97.0",
-    "bcryptjs": "^3.0.3",
-    "compression": "^1.8.1",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.6",
-    "csurf": "^1.11.0",
-    "dotenv": "^17.3.1",
-    "ejs": "^4.0.1",
-    "express": "^5.2.1",
-    "express-rate-limit": "^8.2.1",
-    "express-validator": "^7.3.1",
-    "helmet": "^8.1.0",
-    "jsonwebtoken": "^9.0.3",
-    "morgan": "^1.10.1",
-    "multer": "^2.0.2",
-    "node-cache": "^5.1.2",
-    "prisma": "^6.0.0",
-    "sanitize-html": "^2.17.0",
-    "sharp": "^0.34.5",
-    "slugify": "^1.6.6",
-    "socket.io": "^4.7.5",
-    "tslib": "^2.8.1",
-    "winston": "^3.19.0"
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.45.4",
+    "lucide-react": "^0.446.0",
+    "next": "14.2.13",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.2"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/jest": "^30.0.0",
-    "eslint": "^10.0.0",
-    "eslint-config-prettier": "^10.1.8",
-    "husky": "^9.1.7",
-    "jest": "^30.2.0",
-    "lint-staged": "^16.2.7",
-    "nodemon": "^3.1.14",
-    "prettier": "^3.8.1",
-    "supertest": "^7.2.2"
+    "@tailwindcss/postcss": "^4.0.0",
+    "postcss": "^8.4.47",
+    "prettier": "^3.3.3",
+    "tailwindcss": "^4.0.0"
   }
 }
