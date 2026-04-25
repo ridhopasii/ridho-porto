@@ -1,0 +1,31 @@
+<!-- Testimonials Section -->
+<section id="testimoni" class="py-24 bg-white/5">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="mb-12 text-center" data-aos="fade-up">
+            <span class="text-gray-400 text-lg">Apa Kata</span>
+            <h2 class="font-outfit font-bold text-4xl sm:text-5xl"><span class="text-accent">Mereka</span></h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% if (locals.testimonials && testimonials.length > 0) { testimonials.forEach((testi, index) => { %>
+                <div class="bg-black/20 border border-white/10 p-6 rounded-2xl hover:border-accent/30 transition-colors" data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+                    <div class="flex items-center gap-4 mb-4">
+                        <% if (testi.avatarUrl) { %>
+                            <img src="<%= testi.avatarUrl %>" alt="<%= testi.name %>" class="w-12 h-12 rounded-full object-cover border border-white/10" loading="lazy" decoding="async" width="48" height="48">
+                        <% } else { %>
+                            <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-gray-400"><i data-lucide="user" class="w-6 h-6"></i></div>
+                        <% } %>
+                        <div>
+                            <h4 class="font-bold font-outfit text-white"><%= testi.name %></h4>
+                            <p class="text-sm text-accent"><%= testi.role %></p>
+                        </div>
+                    </div>
+                    <div class="mb-4"><i data-lucide="quote" class="w-6 h-6 text-white/10 fill-current"></i></div>
+                    <p class="text-gray-400 italic">"<%= testi.message %>"</p>
+                </div>
+            <% })} else { %>
+                <div class="col-span-full text-center text-gray-500 italic">Belum ada testimoni ditampilkan.</div>
+            <% } %>
+        </div>
+    </div>
+</section>

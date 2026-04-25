@@ -33,7 +33,7 @@ function toAppRow(row) {
   const out = { ...row };
 
   // Convert common date fields to Date objects if they are strings
-  ['createdAt', 'updatedAt', 'date', 'publishedAt'].forEach(field => {
+  ['createdAt', 'updatedAt', 'date', 'publishedAt'].forEach((field) => {
     if (out[field] && typeof out[field] === 'string') {
       out[field] = new Date(out[field]);
     }
@@ -143,14 +143,20 @@ module.exports = {
   },
   getExperiences: async () => {
     if (supabase.isConfigured()) {
-      const rows = await supabase.selectMany('Experience', { select: '*', orderBy: { column: 'order', ascending: true } });
+      const rows = await supabase.selectMany('Experience', {
+        select: '*',
+        orderBy: { column: 'order', ascending: true },
+      });
       return (rows || []).map(toAppRow);
     }
     return getPrisma().experience.findMany({ orderBy: { order: 'asc' } });
   },
   getEducation: async () => {
     if (supabase.isConfigured()) {
-      const rows = await supabase.selectMany('Education', { select: '*', orderBy: { column: 'order', ascending: true } });
+      const rows = await supabase.selectMany('Education', {
+        select: '*',
+        orderBy: { column: 'order', ascending: true },
+      });
       return (rows || []).map(toAppRow);
     }
     return getPrisma().education.findMany({ orderBy: { order: 'asc' } });
@@ -178,14 +184,20 @@ module.exports = {
   },
   getTestimonials: async () => {
     if (supabase.isConfigured()) {
-      const rows = await supabase.selectMany('Testimonial', { select: '*', orderBy: { column: 'createdAt', ascending: false } });
+      const rows = await supabase.selectMany('Testimonial', {
+        select: '*',
+        orderBy: { column: 'createdAt', ascending: false },
+      });
       return (rows || []).map(toAppRow);
     }
     return getPrisma().testimonial.findMany({ orderBy: { createdAt: 'desc' } });
   },
   getAwards: async () => {
     if (supabase.isConfigured()) {
-      const rows = await supabase.selectMany('Award', { select: '*', orderBy: { column: 'date', ascending: false } });
+      const rows = await supabase.selectMany('Award', {
+        select: '*',
+        orderBy: { column: 'date', ascending: false },
+      });
       return (rows || []).map(toAppRow);
     }
     return getPrisma().award.findMany({ orderBy: { date: 'desc' } });
@@ -199,7 +211,10 @@ module.exports = {
       });
       return (rows || []).map(toAppRow);
     }
-    return getPrisma().article.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' } });
+    return getPrisma().article.findMany({
+      where: { published: true },
+      orderBy: { createdAt: 'desc' },
+    });
   },
   getRecentArticles: async (limit = 3) => {
     if (supabase.isConfigured()) {
@@ -211,18 +226,28 @@ module.exports = {
       });
       return (rows || []).map(toAppRow);
     }
-    return getPrisma().article.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' }, take: limit });
+    return getPrisma().article.findMany({
+      where: { published: true },
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+    });
   },
   getArticleBySlug: async (slug) => {
     if (supabase.isConfigured()) {
-      const row = await supabase.selectOne('Article', { select: '*', filters: { slug: `eq.${encodeURIComponent(slug)}` } });
+      const row = await supabase.selectOne('Article', {
+        select: '*',
+        filters: { slug: `eq.${encodeURIComponent(slug)}` },
+      });
       return toAppRow(row);
     }
     return getPrisma().article.findUnique({ where: { slug } });
   },
   getProjectBySlug: async (slug) => {
     if (supabase.isConfigured()) {
-      const row = await supabase.selectOne('Project', { select: '*', filters: { slug: `eq.${encodeURIComponent(slug)}` } });
+      const row = await supabase.selectOne('Project', {
+        select: '*',
+        filters: { slug: `eq.${encodeURIComponent(slug)}` },
+      });
       return toAppRow(row);
     }
     return getPrisma().project.findUnique({ where: { slug } });
@@ -304,7 +329,11 @@ module.exports = {
   deleteOrganization: async (id, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
       return toAppRow(
-        await supabase.deleteOne('Organization', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken })
+        await supabase.deleteOne(
+          'Organization',
+          { filters: { id: `eq.${parseInt(id)}` } },
+          { accessToken }
+        )
       );
     }
     return getPrisma().organization.delete({ where: { id: parseInt(id) } });
@@ -375,7 +404,11 @@ module.exports = {
   deletePublication: async (id, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
       return toAppRow(
-        await supabase.deleteOne('Publication', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken })
+        await supabase.deleteOne(
+          'Publication',
+          { filters: { id: `eq.${parseInt(id)}` } },
+          { accessToken }
+        )
       );
     }
     return getPrisma().publication.delete({ where: { id: parseInt(id) } });
@@ -430,7 +463,11 @@ module.exports = {
   deleteArticle: async (id, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
       return toAppRow(
-        await supabase.deleteOne('Article', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken })
+        await supabase.deleteOne(
+          'Article',
+          { filters: { id: `eq.${parseInt(id)}` } },
+          { accessToken }
+        )
       );
     }
     return getPrisma().article.delete({ where: { id: parseInt(id) } });
@@ -438,7 +475,10 @@ module.exports = {
 
   getProjectById: async (id) => {
     if (supabase.isConfigured()) {
-      const row = await supabase.selectOne('Project', { select: '*', filters: { id: `eq.${parseInt(id)}` } });
+      const row = await supabase.selectOne('Project', {
+        select: '*',
+        filters: { id: `eq.${parseInt(id)}` },
+      });
       return toAppRow(row);
     }
     return getPrisma().project.findUnique({ where: { id: parseInt(id) } });
@@ -466,14 +506,23 @@ module.exports = {
   },
   deleteProject: async (id, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
-      return toAppRow(await supabase.deleteOne('Project', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken }));
+      return toAppRow(
+        await supabase.deleteOne(
+          'Project',
+          { filters: { id: `eq.${parseInt(id)}` } },
+          { accessToken }
+        )
+      );
     }
     return getPrisma().project.delete({ where: { id: parseInt(id) } });
   },
 
   getTestimonialById: async (id) => {
     if (supabase.isConfigured()) {
-      const row = await supabase.selectOne('Testimonial', { select: '*', filters: { id: `eq.${parseInt(id)}` } });
+      const row = await supabase.selectOne('Testimonial', {
+        select: '*',
+        filters: { id: `eq.${parseInt(id)}` },
+      });
       return toAppRow(row);
     }
     return getPrisma().testimonial.findUnique({ where: { id: parseInt(id) } });
@@ -502,7 +551,11 @@ module.exports = {
   deleteTestimonial: async (id, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
       return toAppRow(
-        await supabase.deleteOne('Testimonial', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken })
+        await supabase.deleteOne(
+          'Testimonial',
+          { filters: { id: `eq.${parseInt(id)}` } },
+          { accessToken }
+        )
       );
     }
     return getPrisma().testimonial.delete({ where: { id: parseInt(id) } });
@@ -510,7 +563,10 @@ module.exports = {
 
   getSkillById: async (id) => {
     if (supabase.isConfigured()) {
-      const row = await supabase.selectOne('Skill', { select: '*', filters: { id: `eq.${parseInt(id)}` } });
+      const row = await supabase.selectOne('Skill', {
+        select: '*',
+        filters: { id: `eq.${parseInt(id)}` },
+      });
       return toAppRow(row);
     }
     return getPrisma().skill.findUnique({ where: { id: parseInt(id) } });
@@ -552,14 +608,23 @@ module.exports = {
   },
   deleteSkill: async (id, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
-      return toAppRow(await supabase.deleteOne('Skill', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken }));
+      return toAppRow(
+        await supabase.deleteOne(
+          'Skill',
+          { filters: { id: `eq.${parseInt(id)}` } },
+          { accessToken }
+        )
+      );
     }
     return getPrisma().skill.delete({ where: { id: parseInt(id) } });
   },
 
   getAwardById: async (id) => {
     if (supabase.isConfigured()) {
-      const row = await supabase.selectOne('Award', { select: '*', filters: { id: `eq.${parseInt(id)}` } });
+      const row = await supabase.selectOne('Award', {
+        select: '*',
+        filters: { id: `eq.${parseInt(id)}` },
+      });
       return toAppRow(row);
     }
     return getPrisma().award.findUnique({ where: { id: parseInt(id) } });
@@ -587,14 +652,23 @@ module.exports = {
   },
   deleteAward: async (id, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
-      return toAppRow(await supabase.deleteOne('Award', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken }));
+      return toAppRow(
+        await supabase.deleteOne(
+          'Award',
+          { filters: { id: `eq.${parseInt(id)}` } },
+          { accessToken }
+        )
+      );
     }
     return getPrisma().award.delete({ where: { id: parseInt(id) } });
   },
 
   getEducationById: async (id) => {
     if (supabase.isConfigured()) {
-      const row = await supabase.selectOne('Education', { select: '*', filters: { id: `eq.${parseInt(id)}` } });
+      const row = await supabase.selectOne('Education', {
+        select: '*',
+        filters: { id: `eq.${parseInt(id)}` },
+      });
       return toAppRow(row);
     }
     return getPrisma().education.findUnique({ where: { id: parseInt(id) } });
@@ -620,12 +694,19 @@ module.exports = {
         )
       );
     }
-    return getPrisma().education.update({ where: { id: parseInt(id) }, data: { ...data, order: parseInt(data.order) || 0 } });
+    return getPrisma().education.update({
+      where: { id: parseInt(id) },
+      data: { ...data, order: parseInt(data.order) || 0 },
+    });
   },
   deleteEducation: async (id, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
       return toAppRow(
-        await supabase.deleteOne('Education', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken })
+        await supabase.deleteOne(
+          'Education',
+          { filters: { id: `eq.${parseInt(id)}` } },
+          { accessToken }
+        )
       );
     }
     return getPrisma().education.delete({ where: { id: parseInt(id) } });
@@ -633,7 +714,10 @@ module.exports = {
 
   getSocialById: async (id) => {
     if (supabase.isConfigured()) {
-      const row = await supabase.selectOne('Social', { select: '*', filters: { id: `eq.${parseInt(id)}` } });
+      const row = await supabase.selectOne('Social', {
+        select: '*',
+        filters: { id: `eq.${parseInt(id)}` },
+      });
       return toAppRow(row);
     }
     return getPrisma().social.findUnique({ where: { id: parseInt(id) } });
@@ -661,14 +745,23 @@ module.exports = {
   },
   deleteSocial: async (id, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
-      return toAppRow(await supabase.deleteOne('Social', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken }));
+      return toAppRow(
+        await supabase.deleteOne(
+          'Social',
+          { filters: { id: `eq.${parseInt(id)}` } },
+          { accessToken }
+        )
+      );
     }
     return getPrisma().social.delete({ where: { id: parseInt(id) } });
   },
 
   getExperienceById: async (id) => {
     if (supabase.isConfigured()) {
-      const row = await supabase.selectOne('Experience', { select: '*', filters: { id: `eq.${parseInt(id)}` } });
+      const row = await supabase.selectOne('Experience', {
+        select: '*',
+        filters: { id: `eq.${parseInt(id)}` },
+      });
       return toAppRow(row);
     }
     return getPrisma().experience.findUnique({ where: { id: parseInt(id) } });
@@ -730,7 +823,11 @@ module.exports = {
   deleteExperience: async (id, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
       return toAppRow(
-        await supabase.deleteOne('Experience', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken })
+        await supabase.deleteOne(
+          'Experience',
+          { filters: { id: `eq.${parseInt(id)}` } },
+          { accessToken }
+        )
       );
     }
     return getPrisma().experience.delete({ where: { id: parseInt(id) } });
@@ -744,7 +841,10 @@ module.exports = {
       });
       return toAppRow(row);
     }
-    return getPrisma().experience.findFirst({ where: { order: { lt: order } }, orderBy: { order: 'desc' } });
+    return getPrisma().experience.findFirst({
+      where: { order: { lt: order } },
+      orderBy: { order: 'desc' },
+    });
   },
   findExperienceBelow: async (order) => {
     if (supabase.isConfigured()) {
@@ -755,7 +855,10 @@ module.exports = {
       });
       return toAppRow(row);
     }
-    return getPrisma().experience.findFirst({ where: { order: { gt: order } }, orderBy: { order: 'asc' } });
+    return getPrisma().experience.findFirst({
+      where: { order: { gt: order } },
+      orderBy: { order: 'asc' },
+    });
   },
 
   getMessages: async ({ accessToken } = {}) => {
@@ -777,21 +880,33 @@ module.exports = {
   },
   deleteMessage: async (id, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
-      return toAppRow(await supabase.deleteOne('Message', { filters: { id: `eq.${parseInt(id)}` } }, { accessToken }));
+      return toAppRow(
+        await supabase.deleteOne(
+          'Message',
+          { filters: { id: `eq.${parseInt(id)}` } },
+          { accessToken }
+        )
+      );
     }
     return getPrisma().message.delete({ where: { id: parseInt(id) } });
   },
 
   getServices: async () => {
     if (supabase.isConfigured()) {
-      const rows = await supabase.selectMany('Service', { select: '*', orderBy: { column: 'order', ascending: true } });
+      const rows = await supabase.selectMany('Service', {
+        select: '*',
+        orderBy: { column: 'order', ascending: true },
+      });
       return (rows || []).map(toAppRow);
     }
     return getPrisma().service.findMany({ orderBy: { order: 'asc' } });
   },
   getServiceById: async (id) => {
     if (supabase.isConfigured()) {
-      const row = await supabase.selectOne('Service', { select: '*', filters: { id: `eq.${encodeURIComponent(id)}` } });
+      const row = await supabase.selectOne('Service', {
+        select: '*',
+        filters: { id: `eq.${encodeURIComponent(id)}` },
+      });
       return toAppRow(row);
     }
     return getPrisma().service.findUnique({ where: { id } });
@@ -822,9 +937,69 @@ module.exports = {
   deleteService: async (id, { accessToken } = {}) => {
     if (supabase.isConfigured()) {
       return toAppRow(
-        await supabase.deleteOne('Service', { filters: { id: `eq.${encodeURIComponent(id)}` } }, { accessToken })
+        await supabase.deleteOne(
+          'Service',
+          { filters: { id: `eq.${encodeURIComponent(id)}` } },
+          { accessToken }
+        )
       );
     }
     return getPrisma().service.delete({ where: { id } });
+  },
+
+  searchArticles: async (q) => {
+    if (!q) return [];
+    if (supabase.isConfigured()) {
+      const rows = await supabase.selectMany('Article', {
+        select: '*',
+        filters: {
+          published: 'eq.true',
+          or: `(title.ilike.*${q}*,content.ilike.*${q}*)`,
+        },
+        orderBy: { column: 'createdAt', ascending: false },
+      });
+      return (rows || []).map(toAppRow);
+    }
+    const p = getPrisma();
+    const isPostgres = process.env.DATABASE_URL?.startsWith('postgres');
+    const searchMode = isPostgres ? 'insensitive' : undefined;
+
+    return p.article.findMany({
+      where: {
+        published: true,
+        OR: [
+          { title: { contains: q, mode: searchMode } },
+          { content: { contains: q, mode: searchMode } },
+        ],
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  },
+
+  searchProjects: async (q) => {
+    if (!q) return [];
+    if (supabase.isConfigured()) {
+      const rows = await supabase.selectMany('Project', {
+        select: '*',
+        filters: {
+          or: `(title.ilike.*${q}*,description.ilike.*${q}*)`,
+        },
+        orderBy: { column: 'title', ascending: true },
+      });
+      return (rows || []).map(toAppRow);
+    }
+    const p = getPrisma();
+    const isPostgres = process.env.DATABASE_URL?.startsWith('postgres');
+    const searchMode = isPostgres ? 'insensitive' : undefined;
+
+    return p.project.findMany({
+      where: {
+        OR: [
+          { title: { contains: q, mode: searchMode } },
+          { description: { contains: q, mode: searchMode } },
+        ],
+      },
+      orderBy: { title: 'asc' },
+    });
   },
 };

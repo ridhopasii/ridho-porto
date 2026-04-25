@@ -1,0 +1,134 @@
+<%- include('partials/header') %>
+
+<main class="pt-32 pb-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <!-- Search Header -->
+        <div class="mb-12" data-aos="fade-up">
+            <span class="text-gray-400 text-lg">Hasil Pencarian</span>
+            <h1 class="font-outfit font-bold text-4xl sm:text-5xl mt-2">
+                " <span class="text-accent"><%= q %></span> "
+            </h1>
+            <p class="text-gray-400 mt-4">
+                Ditemukan <%= projects.length + articles.length %> hasil untuk pencarian Anda.
+            </p>
+        </div>
+
+        <!-- Tabs for filtering results -->
+        <div class="flex gap-4 mb-8" data-aos="fade-up" data-aos-delay="100">
+            <button class="px-6 py-2 rounded-full bg-accent text-primary font-bold text-sm">Semua</button>
+            <button class="px-6 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-sm hover:text-white transition-colors">Proyek (<%= projects.length %>)</button>
+            <button class="px-6 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-sm hover:text-white transition-colors">Artikel (<%= articles.length %>)</button>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-12">
+            <!-- Results Content -->
+            <div class="lg:col-span-2 space-y-12">
+                
+                <!-- Projects Results -->
+                <% if (projects.length > 0) { %>
+                <section>
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="folder" class="w-6 h-6 text-accent"></i>
+                        <h2 class="font-outfit font-bold text-2xl">Proyek</h2>
+                    </div>
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <% projects.forEach(project => { %>
+                        <a href="/projects/<%= project.slug %>" class="group bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden hover:border-accent/30 transition-all">
+                            <div class="aspect-video bg-gray-800 relative overflow-hidden">
+                                <% if (project.imageUrl) { %>
+                                <img src="<%= project.imageUrl %>" alt="<%= project.title %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <% } else { %>
+                                <div class="w-full h-full flex items-center justify-center text-accent/20">
+                                    <i data-lucide="image" class="w-12 h-12"></i>
+                                </div>
+                                <% } %>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="font-outfit font-bold text-lg mb-2 group-hover:text-accent transition-colors"><%= project.title %></h3>
+                                <p class="text-gray-400 text-sm line-clamp-2"><%= project.description %></p>
+                            </div>
+                        </a>
+                        <% }) %>
+                    </div>
+                </section>
+                <% } %>
+
+                <!-- Articles Results -->
+                <% if (articles.length > 0) { %>
+                <section>
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="file-text" class="w-6 h-6 text-accent"></i>
+                        <h2 class="font-outfit font-bold text-2xl">Artikel</h2>
+                    </div>
+                    <div class="space-y-6">
+                        <% articles.forEach(article => { %>
+                        <a href="/blog/<%= article.slug %>" class="group flex flex-col sm:flex-row gap-6 p-4 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-accent/30 transition-all">
+                            <div class="w-full sm:w-48 h-32 shrink-0 rounded-xl overflow-hidden bg-gray-800">
+                                <% if (article.imageUrl) { %>
+                                <img src="<%= article.imageUrl %>" alt="<%= article.title %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <% } else { %>
+                                <div class="w-full h-full flex items-center justify-center text-accent/20">
+                                    <i data-lucide="file-text" class="w-8 h-8"></i>
+                                </div>
+                                <% } %>
+                            </div>
+                            <div class="flex-1">
+                                <time class="text-xs text-gray-500"><%= new Date(article.createdAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %></time>
+                                <h3 class="font-outfit font-bold text-xl my-1 group-hover:text-accent transition-colors"><%= article.title %></h3>
+                                <p class="text-gray-400 text-sm line-clamp-2"><%- article.content.replace(/<[^>]*>?/gm, '').substring(0, 150) %>...</p>
+                            </div>
+                        </a>
+                        <% }) %>
+                    </div>
+                </section>
+                <% } %>
+
+                <% if (projects.length === 0 && articles.length === 0) { %>
+                <div class="text-center py-24 bg-white/[0.02] border border-white/10 rounded-3xl" data-aos="zoom-in">
+                    <div class="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i data-lucide="search-x" class="w-10 h-10 text-accent"></i>
+                    </div>
+                    <h2 class="font-outfit font-bold text-2xl mb-2">Tidak Ditemukan</h2>
+                    <p class="text-gray-400 max-w-md mx-auto px-6">
+                        Maaf, kami tidak menemukan hasil yang cocok untuk "<%= q %>". 
+                        Coba gunakan kata kunci lain yang lebih umum.
+                    </p>
+                    <div class="mt-8">
+                        <a href="/" class="btn-primary">Kembali ke Beranda</a>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+
+            <!-- Sidebar / Search Again -->
+            <div class="lg:col-span-1" data-aos="fade-left">
+                <div class="sticky top-32 p-8 rounded-3xl bg-white/[0.02] border border-white/10">
+                    <h3 class="font-outfit font-bold text-xl mb-6">Cari Lagi</h3>
+                    <form action="/search" method="GET" class="space-y-4">
+                        <div class="relative">
+                            <input type="text" name="q" value="<%= q %>" placeholder="Ketik sesuatu..." class="form-input pl-12">
+                            <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
+                        </div>
+                        <button type="submit" class="w-full btn-primary justify-center">Cari Sekarang</button>
+                    </form>
+
+                    <div class="mt-12 pt-12 border-t border-white/5">
+                        <h4 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Mungkin Anda Suka</h4>
+                        <div class="space-y-4">
+                            <a href="/blog" class="flex items-center gap-3 text-gray-400 hover:text-accent transition-colors">
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                <span>Artikel Terbaru</span>
+                            </a>
+                            <a href="/showcase" class="flex items-center gap-3 text-gray-400 hover:text-accent transition-colors">
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                <span>Eksplor Proyek</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('partials/footer') %>

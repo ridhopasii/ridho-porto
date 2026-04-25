@@ -1,0 +1,140 @@
+<!-- Hero Section -->
+<section id="beranda" class="min-h-screen flex items-center pt-20 relative overflow-hidden">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 z-0 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/20 rounded-full blur-[120px] animate-blob mix-blend-screen"></div>
+        <div class="absolute top-[20%] right-[-10%] w-[35%] h-[35%] bg-purple-500/20 rounded-full blur-[120px] animate-blob animation-delay-2000 mix-blend-screen"></div>
+        <div class="absolute bottom-[-10%] left-[20%] w-[30%] h-[30%] bg-teal-500/20 rounded-full blur-[120px] animate-blob animation-delay-4000 mix-blend-screen"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 w-full relative z-10 py-16 lg:py-0">
+        <div class="flex flex-col lg:grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+            <!-- Right Content (Profile Card) — tampil di atas di mobile -->
+            <div class="order-1 lg:order-2 flex justify-center w-full" data-aos="fade-left">
+                <div class="relative group" style="padding-bottom: 3rem; padding-left: 0.5rem; padding-right: 0.5rem;">
+                    <!-- Glow ring -->
+                    <div class="absolute -inset-2 rounded-[2.5rem] bg-gradient-to-br from-teal-400 via-purple-500 to-blue-500 opacity-20 blur-2xl group-hover:opacity-50 transition-all duration-700"></div>
+
+                    <!-- Main image card -->
+                    <div class="relative rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-[#0f0f0f] to-[#1a1a2e] group-hover:scale-[1.015] group-hover:-rotate-[0.5deg] transition-all duration-500" style="width: min(300px, 80vw); max-width: 380px;">
+                        <!-- Shimmer on hover -->
+                        <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-20"></div>
+
+                        <!-- Hero image dengan aspect ratio tetap -->
+                        <div class="relative" style="aspect-ratio: 3/4; overflow: hidden;">
+                            <img src="<%= profile?.heroImage || '/images/asset_1.jpg' %>" alt="<%= profile?.fullName %>" class="w-full h-full object-cover object-top" loading="lazy" decoding="async">
+                            <div class="absolute top-0 left-0 right-0 h-36 bg-gradient-to-b from-black/70 to-transparent z-10"></div>
+                            <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+                            <div class="absolute top-4 left-4 right-4 z-20">
+                                <h3 class="font-outfit font-bold text-lg sm:text-xl text-white drop-shadow-lg leading-tight"><%= profile?.fullName %></h3>
+                                <p class="text-teal-400 text-xs sm:text-sm font-medium mt-1 drop-shadow"><%= profile?.title %></p>
+                            </div>
+                            <div class="absolute top-4 right-4 z-20">
+                                <span class="flex items-center gap-1.5 bg-black/70 backdrop-blur-md border border-teal-500/30 rounded-full px-2.5 py-1 text-[10px] sm:text-xs font-bold text-teal-300 shadow-lg">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse flex-shrink-0"></span>
+                                    Available
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating info card di bawah -->
+                    <div class="absolute bottom-0 left-0 right-0 px-2 z-30">
+                        <div class="bg-[#0f0f0f]/95 backdrop-blur-xl rounded-2xl px-3 py-2.5 sm:px-4 sm:py-3 border border-white/10 shadow-2xl flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="relative flex-shrink-0">
+                                    <img src="<%= profile?.avatarUrl || '/images/asset_2.jpg' %>" alt="Avatar" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover ring-2 ring-teal-500/50" loading="lazy" decoding="async">
+                                    <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-teal-400 border-2 border-[#0f0f0f]"></span>
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-xs sm:text-sm font-semibold text-white truncate">@ridhopasii</p>
+                                    <p class="text-[10px] sm:text-xs text-teal-400 font-medium">Online sekarang</p>
+                                </div>
+                            </div>
+                            <button onclick="document.getElementById('kontak').scrollIntoView({behavior:'smooth'})" class="flex-shrink-0 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-teal-500 hover:bg-teal-400 active:scale-95 text-black text-[10px] sm:text-xs font-bold transition-all hover:shadow-lg hover:shadow-teal-500/30">Hubungi</button>
+                        </div>
+                    </div>
+
+                    <!-- Floating badges — desktop only -->
+                    <div class="absolute -top-3 -left-7 z-30 hidden lg:block">
+                        <div class="bg-[#0f0f0f]/90 backdrop-blur-xl border border-white/10 rounded-2xl px-3 py-2 shadow-xl flex items-center gap-2 hover:border-blue-500/30 transition-colors">
+                            <div class="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center"><i data-lucide="code-2" class="w-4 h-4 text-blue-400"></i></div>
+                            <span class="text-xs font-semibold text-white">Full Stack</span>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-14 -right-7 z-30 hidden lg:block">
+                        <div class="bg-[#0f0f0f]/90 backdrop-blur-xl border border-white/10 rounded-2xl px-3 py-2 shadow-xl flex items-center gap-2 hover:border-purple-500/30 transition-colors">
+                            <div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center"><i data-lucide="palette" class="w-4 h-4 text-purple-400"></i></div>
+                            <span class="text-xs font-semibold text-white">UI/UX</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Left Content (Teks) — di bawah card di mobile -->
+            <div class="order-2 lg:order-1 text-center lg:text-left" data-aos="fade-right">
+                <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-5 text-xs text-gray-400 font-medium">
+                    <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span> Halo, Saya
+                </div>
+                <h1 class="font-outfit font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-3">
+                    <span class="text-white"><%= profile?.fullName?.split(' ')[0] || ' Ridho' %></span><br>
+                    <span class="bg-gradient-to-r from-teal-400 via-cyan-300 to-teal-500 bg-clip-text text-transparent"><%= profile?.fullName?.split(' ').slice(1).join(' ') || ' Pasii' %></span>
+                </h1>
+                <div class="flex items-center justify-center lg:justify-start gap-3 mb-5">
+                    <div class="h-0.5 w-8 bg-gradient-to-r from-teal-500 to-transparent rounded-full"></div>
+                    <p class="text-teal-400 font-semibold text-sm sm:text-base tracking-wide"><%= profile?.title || 'Web Developer' %></p>
+                </div>
+                <p class="text-gray-400 text-sm sm:text-base lg:text-lg mb-7 max-w-md mx-auto lg:mx-0 leading-relaxed min-h-[3rem]">
+                    <span id="typing-text" class="typing-text"></span>
+                </p>
+                <div class="flex items-center justify-center lg:justify-start gap-3 mb-7">
+                    <% if (locals.socials) { %>
+                        <% socials.forEach(social => { %>
+                            <a href="<%= social.url %>" target="_blank" class="social-icon"><i data-lucide="<%= social.icon %>" class="w-4 h-4 sm:w-5 sm:h-5"></i></a>
+                        <% }) %>
+                    <% } %>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4">
+                    <a href="#proyek" class="w-full sm:w-auto btn-primary flex items-center justify-center gap-2">
+                        <span>Lihat Proyek</span><i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                    </a>
+                    <% if (profile?.cvLink) { %>
+                        <a href="<%= profile.cvLink %>" target="_blank" class="w-full sm:w-auto btn-outline flex items-center justify-center gap-2 border-teal-500/50 text-teal-400">
+                            <i data-lucide="download" class="w-4 h-4"></i><span>Download CV</span>
+                        </a>
+                    <% } %>
+                    <a href="#kontak" class="w-full sm:w-auto btn-outline flex items-center justify-center gap-2"><span>Kontak Saya</span></a>
+                </div>
+                <div class="flex items-center justify-center lg:justify-start gap-6 mt-8 pt-6 border-t border-white/5" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-center lg:text-left">
+                        <p class="font-outfit font-bold text-xl sm:text-2xl text-white">2+</p>
+                        <p class="text-gray-500 text-[10px] sm:text-xs mt-0.5">Tahun Pengalaman</p>
+                    </div>
+                    <div class="w-px h-8 bg-white/10"></div>
+                    <div class="text-center lg:text-left">
+                        <p class="font-outfit font-bold text-xl sm:text-2xl text-white">20+</p>
+                        <p class="text-gray-500 text-[10px] sm:text-xs mt-0.5">Proyek Selesai</p>
+                    </div>
+                    <div class="w-px h-8 bg-white/10"></div>
+                    <div class="text-center lg:text-left">
+                        <p class="font-outfit font-bold text-xl sm:text-2xl text-white">10+</p>
+                        <p class="text-gray-500 text-[10px] sm:text-xs mt-0.5">Klien Puas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tech Stack Icons -->
+        <div class="mt-16 sm:mt-24 pt-8 sm:pt-10 border-t border-white/5 relative" data-aos="fade-up">
+            <p class="text-center text-gray-500 text-xs sm:text-sm mb-6 sm:mb-8 uppercase tracking-widest">Teknologi yang saya gunakan</p>
+            <div class="flex flex-wrap justify-center gap-6 sm:gap-8 opacity-70 hover:opacity-100 transition-opacity">
+                <i data-lucide="code-2" class="w-7 h-7 sm:w-8 sm:h-8 text-gray-400 hover:text-accent transition-colors"></i>
+                <i data-lucide="database" class="w-7 h-7 sm:w-8 sm:h-8 text-gray-400 hover:text-blue-400 transition-colors"></i>
+                <i data-lucide="layout" class="w-7 h-7 sm:w-8 sm:h-8 text-gray-400 hover:text-pink-400 transition-colors"></i>
+                <i data-lucide="server" class="w-7 h-7 sm:w-8 sm:h-8 text-gray-400 hover:text-green-400 transition-colors"></i>
+                <i data-lucide="smartphone" class="w-7 h-7 sm:w-8 sm:h-8 text-gray-400 hover:text-purple-400 transition-colors"></i>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,44 @@
+<!-- Projects Section -->
+<section id="proyek" class="py-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="mb-12" data-aos="fade-up">
+            <span class="text-gray-400 text-lg">Proyek</span>
+            <h2 class="font-outfit font-bold text-4xl sm:text-5xl"><span class="text-accent">Terpilih</span></h2>
+            <p class="text-gray-400 mt-4">Beberapa karya yang menyoroti keahlian saya.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <% if (locals.projects) { projects.forEach((project, index) => { %>
+                <a href="/projects/<%= project.slug %>" class="project-card group" data-aos="fade-up" data-aos-delay="<%= index * 100 %>">
+                    <div class="project-image flex items-center justify-center">
+                        <% if (project.imageUrl) { %>
+                            <img src="<%= project.imageUrl %>" alt="<%= project.title %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async">
+                        <% } else { %>
+                            <i data-lucide="folder" class="w-20 h-20 text-accent/30"></i>
+                        <% } %>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-outfit font-semibold text-xl mb-2 group-hover:text-accent transition-colors"><%= project.title %></h3>
+                        <p class="text-gray-400 text-sm mb-4"><%= project.description %></p>
+                        <div class="flex gap-2 flex-wrap">
+                            <% if (project.tags) { project.tags.split(',').forEach(tag => { %>
+                                <span class="px-3 py-1 rounded-full bg-white/5 text-gray-300 text-xs"><%= tag.trim() %></span>
+                            <% })} %>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6">
+                        <span class="inline-flex items-center gap-2 text-accent text-sm font-medium">
+                            <span>Lihat Detail</span><i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        </span>
+                    </div>
+                </a>
+            <% })} %>
+        </div>
+
+        <div class="text-center mt-12">
+            <a href="/showcase" class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/30 rounded-xl transition-all">
+                <span>Lihat Semua Proyek</span><i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </div>
+</section>
