@@ -14,6 +14,7 @@ export default function ExperienceForm({ initialData = null }) {
     position: '',
     period: '',
     description: '',
+    logoUrl: '',
     proofUrl: '',
     images: [],
   });
@@ -65,6 +66,19 @@ export default function ExperienceForm({ initialData = null }) {
           onChange={(e) => setFormData({ ...formData, company: e.target.value })}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
           placeholder="Contoh: Google Indonesia"
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
+          <Camera size={14} /> URL Logo Perusahaan (Opsional)
+        </label>
+        <input
+          type="text"
+          value={formData.logoUrl || ''}
+          onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          placeholder="https://... (link ke logo PNG/SVG)"
         />
       </div>
 

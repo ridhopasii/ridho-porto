@@ -1,52 +1,282 @@
-import { createClient } from '@/utils/supabase/server'
-import AdminSidebar from '@/components/AdminSidebar'
+import { createClient } from '@/utils/supabase/server';
+import AdminSidebar from '@/components/AdminSidebar';
+import Link from 'next/link';
+import {
+  Folders,
+  MessageSquare,
+  Cpu,
+  Briefcase,
+  GraduationCap,
+  Trophy,
+  FileText,
+  Users,
+  Image as ImageIcon,
+  BookOpen,
+  ArrowRight,
+  TrendingUp,
+  Eye,
+  Mail,
+} from 'lucide-react';
 
 export default async function AdminDashboard() {
-  const supabase = await createClient()
-  
-  const { count: projectCount } = await supabase.from('Project').select('*', { count: 'exact', head: true })
-  const { count: messageCount } = await supabase.from('Message').select('*', { count: 'exact', head: true })
-  const { count: skillCount } = await supabase.from('Skill').select('*', { count: 'exact', head: true })
+  const supabase = await createClient();
+
+  const [
+    { count: projectCount },
+    { count: messageCount, data: recentMessages },
+    { count: skillCount },
+    { count: expCount },
+    { count: eduCount },
+    { count: awardCount },
+    { count: pubCount },
+    { count: orgCount },
+    { count: galleryCount },
+    { count: blogCount },
+  ] = await Promise.all([
+    supabase.from('Project').select('*', { count: 'exact', head: true }),
+    supabase
+      .from('Message')
+      .select('name, email, subject, createdAt', { count: 'exact' })
+      .order('createdAt', { ascending: false })
+      .limit(5),
+    supabase.from('Skill').select('*', { count: 'exact', head: true }),
+    supabase.from('Experience').select('*', { count: 'exact', head: true }),
+    supabase.from('Education').select('*', { count: 'exact', head: true }),
+    supabase.from('Award').select('*', { count: 'exact', head: true }),
+    supabase.from('Publication').select('*', { count: 'exact', head: true }),
+    supabase.from('Organization').select('*', { count: 'exact', head: true }),
+    supabase.from('Gallery').select('*', { count: 'exact', head: true }),
+    supabase.from('Article').select('*', { count: 'exact', head: true }),
+  ]);
+
+  const stats = [
+    {
+      label: 'Proyek',
+      value: projectCount || 0,
+      icon: <Folders size={22} />,
+      color: 'teal',
+      href: '/admin/projects',
+    },
+    {
+      label: 'Blog',
+      value: blogCount || 0,
+      icon: <BookOpen size={22} />,
+      color: 'blue',
+      href: '/admin/blogs',
+    },
+    {
+      label: 'Skill',
+      value: skillCount || 0,
+      icon: <Cpu size={22} />,
+      color: 'purple',
+      href: '/admin/skills',
+    },
+    {
+      label: 'Pengalaman',
+      value: expCount || 0,
+      icon: <Briefcase size={22} />,
+      color: 'green',
+      href: '/admin/experience',
+    },
+    {
+      label: 'Pendidikan',
+      value: eduCount || 0,
+      icon: <GraduationCap size={22} />,
+      color: 'yellow',
+      href: '/admin/education',
+    },
+    {
+      label: 'Penghargaan',
+      value: awardCount || 0,
+      icon: <Trophy size={22} />,
+      color: 'orange',
+      href: '/admin/awards',
+    },
+    {
+      label: 'Publikasi',
+      value: pubCount || 0,
+      icon: <FileText size={22} />,
+      color: 'pink',
+      href: '/admin/publications',
+    },
+    {
+      label: 'Organisasi',
+      value: orgCount || 0,
+      icon: <Users size={22} />,
+      color: 'indigo',
+      href: '/admin/organizations',
+    },
+    {
+      label: 'Galeri',
+      value: galleryCount || 0,
+      icon: <ImageIcon size={22} />,
+      color: 'rose',
+      href: '/admin/gallery',
+    },
+    {
+      label: 'Pesan',
+      value: messageCount || 0,
+      icon: <MessageSquare size={22} />,
+      color: 'red',
+      href: '/admin/messages',
+    },
+  ];
+
+  const colorMap = {
+    teal: 'bg-teal-500/10 text-teal-500 border-teal-500/20',
+    blue: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
+    purple: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
+    green: 'bg-green-500/10 text-green-500 border-green-500/20',
+    yellow: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+    orange: 'bg-orange-500/10 text-orange-500 border-orange-500/20',
+    pink: 'bg-pink-500/10 text-pink-500 border-pink-500/20',
+    indigo: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20',
+    rose: 'bg-rose-500/10 text-rose-500 border-rose-500/20',
+    red: 'bg-red-500/10 text-red-500 border-red-500/20',
+  };
 
   return (
     <div className="min-h-screen bg-[#050505] text-white flex font-jakarta">
       <AdminSidebar />
 
       <main className="flex-1 p-8 overflow-y-auto">
+        {/* Header */}
         <header className="flex justify-between items-center mb-10">
-          <h1 className="text-2xl font-bold">Dashboard Overview</h1>
+          <div>
+            <h1 className="text-3xl font-black font-outfit uppercase tracking-tight">Dashboard</h1>
+            <p className="text-gray-500 text-sm mt-1">
+              Selamat datang kembali, <span className="text-teal-500 font-bold">Ridho</span>
+            </p>
+          </div>
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center font-bold text-black">R</div>
-            <div>
-              <p className="text-sm font-bold">Ridho Robbi Pasi</p>
-              <p className="text-xs text-gray-500">Administrator</p>
+            <Link
+              href="/"
+              target="_blank"
+              className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-gray-400 hover:text-teal-500 hover:border-teal-500/30 transition-all flex items-center gap-2"
+            >
+              <Eye size={14} /> Lihat Website
+            </Link>
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center font-black text-black shadow-lg shadow-teal-500/20">
+              R
             </div>
           </div>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          {[
-            { label: 'Total Proyek', value: projectCount || 0, color: 'text-teal-400' },
-            { label: 'Pesan Baru', value: messageCount || 0, color: 'text-purple-400' },
-            { label: 'Total Skill', value: skillCount || 0, color: 'text-blue-400' },
-          ].map((stat) => (
-            <div key={stat.label} className="p-6 bg-white/5 border border-white/10 rounded-3xl">
-              <p className="text-gray-500 text-sm mb-2">{stat.label}</p>
-              <p className={`text-4xl font-black ${stat.color}`}>{stat.value}</p>
-            </div>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
+          {stats.map((stat) => (
+            <Link
+              key={stat.label}
+              href={stat.href}
+              className={`p-5 bg-white/5 border border-white/10 rounded-2xl hover:border-teal-500/20 transition-all group`}
+            >
+              <div
+                className={`w-10 h-10 rounded-xl border flex items-center justify-center mb-4 ${colorMap[stat.color]} transition-all group-hover:scale-110`}
+              >
+                {stat.icon}
+              </div>
+              <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-1">
+                {stat.label}
+              </p>
+              <p className="text-3xl font-black text-white">{stat.value}</p>
+            </Link>
           ))}
         </div>
 
-        <div className="p-10 bg-gradient-to-br from-teal-500/10 to-purple-500/10 border border-white/10 rounded-3xl relative overflow-hidden">
-          <div className="relative z-10">
-            <h2 className="text-3xl font-bold mb-4">Panel Kendali Penuh</h2>
-            <p className="text-gray-400 max-w-md">
-              Sekarang Anda bisa mengelola seluruh aspek portofolio Anda: dari Skill, Pengalaman, hingga Publikasi karya ilmiah Anda.
-            </p>
+        {/* Recent Messages + Quick Actions */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Recent Messages */}
+          <div className="p-6 bg-white/5 border border-white/10 rounded-3xl">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-bold text-white flex items-center gap-2">
+                <MessageSquare size={18} className="text-teal-500" /> Pesan Terbaru
+              </h2>
+              <Link
+                href="/admin/messages"
+                className="text-[10px] text-teal-500 font-bold uppercase tracking-widest hover:text-teal-400 flex items-center gap-1"
+              >
+                Lihat Semua <ArrowRight size={12} />
+              </Link>
+            </div>
+            <div className="space-y-4">
+              {recentMessages && recentMessages.length > 0 ? (
+                recentMessages.map((msg, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5"
+                  >
+                    <div className="w-9 h-9 rounded-full bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-500 text-xs font-black flex-shrink-0">
+                      {msg.name?.[0]?.toUpperCase() || 'A'}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-white truncate">{msg.name}</p>
+                      <p className="text-[10px] text-gray-500 truncate">
+                        {msg.subject || msg.email}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-600 text-sm italic text-center py-4">
+                  Belum ada pesan masuk.
+                </p>
+              )}
+            </div>
           </div>
-          <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/20 blur-[100px] rounded-full -mr-20 -mt-20"></div>
+
+          {/* Quick Actions */}
+          <div className="p-6 bg-white/5 border border-white/10 rounded-3xl">
+            <h2 className="font-bold text-white flex items-center gap-2 mb-6">
+              <TrendingUp size={18} className="text-teal-500" /> Aksi Cepat
+            </h2>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                {
+                  label: 'Tambah Proyek',
+                  href: '/admin/projects',
+                  color: 'bg-teal-500/10 border-teal-500/20 hover:bg-teal-500/20 text-teal-400',
+                },
+                {
+                  label: 'Tulis Artikel',
+                  href: '/admin/blogs',
+                  color: 'bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20 text-blue-400',
+                },
+                {
+                  label: 'Tambah Skill',
+                  href: '/admin/skills',
+                  color:
+                    'bg-purple-500/10 border-purple-500/20 hover:bg-purple-500/20 text-purple-400',
+                },
+                {
+                  label: 'Upload Galeri',
+                  href: '/admin/gallery',
+                  color: 'bg-pink-500/10 border-pink-500/20 hover:bg-pink-500/20 text-pink-400',
+                },
+                {
+                  label: 'Edit Profil',
+                  href: '/admin/profile',
+                  color:
+                    'bg-orange-500/10 border-orange-500/20 hover:bg-orange-500/20 text-orange-400',
+                },
+                {
+                  label: 'Lihat Pesan',
+                  href: '/admin/messages',
+                  color: 'bg-red-500/10 border-red-500/20 hover:bg-red-500/20 text-red-400',
+                },
+              ].map((action) => (
+                <Link
+                  key={action.label}
+                  href={action.href}
+                  className={`p-4 rounded-xl border ${action.color} transition-all text-xs font-bold uppercase tracking-widest flex items-center justify-between`}
+                >
+                  {action.label}
+                  <ArrowRight size={12} />
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </main>
     </div>
-  )
+  );
 }

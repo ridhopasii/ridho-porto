@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { createClient } from '@/utils/supabase/client';
 import {
   LayoutDashboard,
   Folders,
@@ -15,6 +16,8 @@ import {
   BookOpen,
   Users,
   Image as ImageIcon,
+  ExternalLink,
+  Menu,
 } from 'lucide-react';
 
 const menuItems = [
@@ -34,16 +37,34 @@ const menuItems = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/login');
+    router.refresh();
+  };
 
   return (
     <aside className="w-64 border-r border-white/5 bg-black/50 backdrop-blur-xl p-6 hidden lg:flex flex-col sticky top-0 h-screen">
-      <div className="mb-10 text-xl font-bold font-outfit tracking-tighter">
-        RIDHO<span className="text-teal-500">ADMIN.</span>
+      <div className="mb-10">
+        <div className="text-xl font-bold font-outfit tracking-tighter mb-1">
+          RIDHO<span className="text-teal-500">ADMIN.</span>
+        </div>
+        <Link
+          href="/"
+          target="_blank"
+          className="flex items-center gap-1.5 text-[10px] text-gray-600 hover:text-teal-500 transition-colors font-bold uppercase tracking-widest"
+        >
+          <ExternalLink size={10} /> Lihat Website
+        </Link>
       </div>
 
       <nav className="space-y-1 flex-1 overflow-y-auto pr-2 custom-scrollbar">
         {menuItems.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive =
+            pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
           return (
             <Link
               key={item.name}
@@ -62,7 +83,10 @@ export default function AdminSidebar() {
       </nav>
 
       <div className="mt-auto pt-6 border-t border-white/5">
-        <button className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-xl w-full transition-all text-sm">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-xl w-full transition-all text-sm font-medium"
+        >
           <LogOut size={18} />
           Keluar
         </button>

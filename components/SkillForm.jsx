@@ -1,67 +1,179 @@
-'use client'
-import { useState } from 'react'
-import { createClient } from '@/utils/supabase/client'
-import { Save, Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+'use client';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/utils/supabase/client';
+import { Save, Loader2, CheckCircle2, Link as LinkIcon, Camera, Tag, Cpu } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import MultiPhotoUpload from './MultiPhotoUpload';
 
-export default function SkillForm() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [name, setName] = useState('')
-  const [level, setLevel] = useState('Expert')
+export default function SkillForm({ initialData = null }) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    category: 'hardskill',
+    level: 'Expert',
+    percentage: 90,
+    description: '',
+    images: [],
+  });
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        ...initialData,
+        percentage: initialData.percentage || 90,
+        images: initialData.images || [],
+      });
+    }
+  }, [initialData]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    
-    const supabase = createClient()
-    const { error } = await supabase
-      .from('Skill')
-      .insert([{ name, level }])
+    e.preventDefault();
+    setLoading(true);
 
-    setLoading(false)
+    const supabase = createClient();
+    const payload = { ...formData };
+
+    const { error } = initialData
+      ? await supabase.from('Skill').update(payload).eq('id', initialData.id)
+      : await supabase.from('Skill').insert([payload]);
+
+    setLoading(false);
     if (error) {
-      alert('Gagal: ' + error.message)
+      alert('Gagal menyimpan: ' + error.message);
     } else {
-      setName('')
-      router.refresh()
+      setSuccess(true);
+      setTimeout(() => {
+        router.push('/admin/skills');
+        router.refresh();
+      }, 1500);
     }
-  }
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {success && (
+        <div className="flex items-center gap-2 p-4 bg-teal-500/10 border border-teal-500/50 text-teal-400 rounded-xl animate-fade-in-up">
+          <CheckCircle2 size={20} />
+          Skill berhasil disimpan!
+        </div>
+      )}
+
+      {/* Name */}
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-widest">Nama Teknologi</label>
-        <input 
+        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
+          <Cpu size={14} /> Nama Teknologi / Skill
+        </label>
+        <input
           required
-          type="text" 
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-teal-500 focus:outline-none transition-all text-sm"
-          placeholder="Contoh: Next.js"
+          type="text"
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          placeholder="Contoh: Adobe Photoshop"
         />
       </div>
-      <div>
-        <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-widest">Tingkat Kemahiran</label>
-        <select 
-          value={level}
-          onChange={(e) => setLevel(e.target.value)}
-          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-teal-500 focus:outline-none transition-all text-sm appearance-none"
-        >
-          <option value="Beginner">Beginner</option>
-          <option value="Intermediate">Intermediate</option>
-          <option value="Advanced">Advanced</option>
-          <option value="Expert">Expert</option>
-        </select>
+
+      {/* Category & Level */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">
+            Kategori
+          </label>
+          <select
+            value={formData.category}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white appearance-none"
+          >
+            <option value="hardskill">Hard Skill</option>
+            <option value="softskill">Soft Skill</option>
+            <option value="bahasa">Bahasa</option>
+            <option value="design">Design</option>
+            <option value="tools">Tools</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">
+            Level
+          </label>
+          <select
+            value={formData.level}
+            onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white appearance-none"
+          >
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+            <option value="Expert">Expert</option>
+          </select>
+        </div>
       </div>
-      <button 
-        type="submit" 
-        disabled={loading}
-        className="w-full py-3 bg-teal-500 text-black font-bold rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-      >
-        {loading ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
-        {loading ? 'Menyimpan...' : 'Tambah Skill'}
-      </button>
+
+      {/* Percentage */}
+      <div>
+        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">
+          Persentase Kemahiran: <span className="text-teal-500">{formData.percentage}%</span>
+        </label>
+        <input
+          type="range"
+          min="10"
+          max="100"
+          step="5"
+          value={formData.percentage}
+          onChange={(e) => setFormData({ ...formData, percentage: parseInt(e.target.value) })}
+          className="w-full accent-teal-500"
+        />
+        <div className="flex justify-between text-[10px] text-gray-600 mt-1 font-bold uppercase">
+          <span>10%</span>
+          <span>50%</span>
+          <span>100%</span>
+        </div>
+      </div>
+
+      {/* Description */}
+      <div>
+        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">
+          Deskripsi Skill (Opsional)
+        </label>
+        <textarea
+          rows={4}
+          value={formData.description || ''}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white resize-none"
+          placeholder="Jelaskan pengalaman Anda menggunakan skill ini..."
+        />
+      </div>
+
+      {/* Documentation Photos */}
+      <div>
+        <label className="block text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest flex items-center gap-2">
+          <Camera size={14} /> Foto Portofolio Terkait
+        </label>
+        <MultiPhotoUpload
+          images={formData.images}
+          onChange={(newImages) => setFormData((prev) => ({ ...prev, images: newImages }))}
+          path="skills"
+        />
+      </div>
+
+      <div className="pt-4 flex gap-4">
+        <button
+          type="submit"
+          disabled={loading}
+          className="flex-1 py-4 bg-teal-500 text-black font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-teal-500/20"
+        >
+          {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
+          {loading ? 'Menyimpan...' : initialData ? 'Simpan Perubahan' : 'Tambah Skill'}
+        </button>
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="px-8 py-4 bg-white/5 text-white font-bold rounded-xl border border-white/10 hover:bg-white/10 transition-all"
+        >
+          Batal
+        </button>
+      </div>
     </form>
-  )
+  );
 }

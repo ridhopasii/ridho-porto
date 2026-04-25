@@ -16,7 +16,7 @@ export default function Projects({ projects }) {
             </h3>
           </div>
           <Link
-            href="/#contact"
+            href="/#kontak"
             className="text-gray-500 font-bold flex items-center gap-2 cursor-pointer hover:text-teal-500 transition-all uppercase text-xs tracking-widest"
           >
             Start a Project <ArrowUpRight size={18} />

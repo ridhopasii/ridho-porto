@@ -1,8 +1,9 @@
 'use client';
-import { Trash2, Cpu, Loader2 } from 'lucide-react';
+import { Trash2, Cpu, Loader2, Pencil } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function SkillList({ initialSkills }) {
   const router = useRouter();
@@ -37,20 +38,31 @@ export default function SkillList({ initialSkills }) {
             </div>
             <div>
               <h3 className="font-bold">{skill.name}</h3>
-              <p className="text-xs text-gray-500">{skill.level || 'Expert'}</p>
+              <p className="text-xs text-gray-500">
+                {skill.category || 'skill'} • {skill.level || 'Expert'}{' '}
+                {skill.percentage ? `• ${skill.percentage}%` : ''}
+              </p>
             </div>
           </div>
-          <button
-            onClick={() => handleDelete(skill.id)}
-            disabled={deletingId === skill.id}
-            className="p-2 text-red-500 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500/10 rounded-lg disabled:opacity-50"
-          >
-            {deletingId === skill.id ? (
-              <Loader2 size={18} className="animate-spin" />
-            ) : (
-              <Trash2 size={18} />
-            )}
-          </button>
+          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+            <Link
+              href={`/admin/skills/edit/${skill.id}`}
+              className="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg"
+            >
+              <Pencil size={16} />
+            </Link>
+            <button
+              onClick={() => handleDelete(skill.id)}
+              disabled={deletingId === skill.id}
+              className="p-2 text-red-500 transition-all hover:bg-red-500/10 rounded-lg disabled:opacity-50"
+            >
+              {deletingId === skill.id ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                <Trash2 size={18} />
+              )}
+            </button>
+          </div>
         </div>
       ))}
       {initialSkills?.length === 0 && <p className="text-gray-600 italic">Belum ada data skill.</p>}
