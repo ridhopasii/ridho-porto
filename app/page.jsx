@@ -8,6 +8,9 @@ import Timeline from '@/components/Timeline';
 import Achievements from '@/components/Achievements';
 import LatestBlogs from '@/components/LatestBlogs';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getData() {
   const supabase = await createClient();
 

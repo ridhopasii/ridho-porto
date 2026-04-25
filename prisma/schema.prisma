@@ -6,22 +6,33 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model Profile {
-  id          Int     @id @default(autoincrement())
-  fullName    String
-  title       String?
-  bio         String?
-  location    String?
-  email       String?
-  phone       String?
-  whatsappUrl String?
-  cvLink      String?
-  avatarUrl   String?
-  heroImage   String?
-  aboutImage  String?
+  id              Int     @id @default(autoincrement())
+  name            String
+  fullName        String?
+  title           String?
+  bio             String?
+  location        String?
+  email           String?
+  phone           String?
+  whatsappUrl     String?
+  cvLink          String?
+  avatarUrl       String?
+  heroImage       String?
+  aboutImage      String?
+  badge           String?
+  status_text     String?
+  quote           String?
+  about_tag       String?
+  about_title     String?
+  education_level String?
+  availability    String?
+  github_url      String?
+  linkedin_url    String?
+  footer_title    String?
+  footer_sub      String?
 }
 
 model Experience {
@@ -46,8 +57,9 @@ model Education {
 model Skill {
   id          Int     @id @default(autoincrement())
   name        String
-  category    String  // hardskill, softskill, bahasa
-  percentage  Int
+  category    String? // hardskill, softskill, bahasa
+  level       String? // Beginner, Intermediate, Advanced, Expert
+  percentage  Int?
   icon        String? // Lucide icon name or image url
 }
 

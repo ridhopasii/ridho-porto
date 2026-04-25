@@ -28,6 +28,9 @@ export default function ProfileForm({ initialData = null }) {
     quote: '',
     about_tag: 'Discovery',
     about_title: 'Beyond the Surface',
+    location: 'Indonesia',
+    education_level: 'Global Relations',
+    availability: 'Ready to Work',
     footer_title: "LET'S WORK TOGETHER",
     footer_sub: '',
     email: '',
@@ -226,6 +229,41 @@ export default function ProfileForm({ initialData = null }) {
             rows={4}
             className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white resize-none"
           />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+              Lokasi
+            </label>
+            <input
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+              Pendidikan (Tag)
+            </label>
+            <input
+              name="education_level"
+              value={formData.education_level}
+              onChange={handleChange}
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+              Ketersediaan
+            </label>
+            <input
+              name="availability"
+              value={formData.availability}
+              onChange={handleChange}
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+            />
+          </div>
         </div>
         <div>
           <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">

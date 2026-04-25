@@ -1,0 +1,78 @@
+'use client';
+import { Trash2, Briefcase, Edit, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+export default function ExperienceList({ initialExperiences }) {
+  const router = useRouter();
+  const [deletingId, setDeletingId] = useState(null);
+
+  const handleDelete = async (id) => {
+    if (!confirm('Yakin ingin menghapus pengalaman ini?')) return;
+
+    setDeletingId(id);
+    const supabase = createClient();
+    const { error } = await supabase.from('Experience').delete().eq('id', id);
+
+    if (error) {
+      alert('Gagal menghapus: ' + error.message);
+      setDeletingId(null);
+    } else {
+      router.refresh();
+      setDeletingId(null);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      {initialExperiences?.map((exp) => (
+        <div
+          key={exp.id}
+          className="p-6 bg-white/5 border border-white/10 rounded-3xl group hover:border-teal-500/50 transition-all"
+        >
+          <div className="flex justify-between items-start">
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-500">
+                <Briefcase size={24} />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg">{exp.position}</h3>
+                <p className="text-teal-500 font-medium text-sm">{exp.company}</p>
+                <p className="text-gray-500 text-xs mt-1">{exp.period}</p>
+                {exp.description && (
+                  <p className="text-gray-400 text-sm mt-3 line-clamp-2">{exp.description}</p>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+              <Link
+                href={`/admin/experience/edit/${exp.id}`}
+                className="p-2 hover:bg-white/10 rounded-xl text-blue-400"
+              >
+                <Edit size={20} />
+              </Link>
+              <button
+                onClick={() => handleDelete(exp.id)}
+                disabled={deletingId === exp.id}
+                className="p-2 hover:bg-red-500/10 rounded-xl text-red-400 disabled:opacity-50"
+              >
+                {deletingId === exp.id ? (
+                  <Loader2 size={20} className="animate-spin" />
+                ) : (
+                  <Trash2 size={20} />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+      {initialExperiences?.length === 0 && (
+        <div className="text-center py-20 bg-white/5 border border-dashed border-white/10 rounded-3xl text-gray-500">
+          Belum ada data pengalaman.
+        </div>
+      )}
+    </div>
+  );
+}

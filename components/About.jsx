@@ -3,7 +3,7 @@ import { CheckCircle2, User, MapPin, Briefcase, GraduationCap } from 'lucide-rea
 
 export default function About({ profile }) {
   return (
-    <section id="about" className="py-24 px-6 relative bg-[#030303] overflow-hidden">
+    <section id="tentang" className="py-24 px-6 relative bg-[#030303] overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           {/* Image Part - Premium Frame */}
@@ -75,10 +75,14 @@ export default function About({ profile }) {
                 },
                 {
                   label: 'Education',
-                  value: 'Global Relations',
+                  value: profile?.education_level || 'Global Relations',
                   icon: <GraduationCap size={16} />,
                 },
-                { label: 'Availability', value: 'Ready to Work', icon: <User size={16} /> },
+                {
+                  label: 'Availability',
+                  value: profile?.availability || 'Ready to Work',
+                  icon: <User size={16} />,
+                },
               ].map((item) => (
                 <div
                   key={item.label}

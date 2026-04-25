@@ -1,0 +1,76 @@
+'use client';
+import { Trash2, GraduationCap, Edit, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+export default function EducationList({ initialEducations }) {
+  const router = useRouter();
+  const [deletingId, setDeletingId] = useState(null);
+
+  const handleDelete = async (id) => {
+    if (!confirm('Yakin ingin menghapus data pendidikan ini?')) return;
+
+    setDeletingId(id);
+    const supabase = createClient();
+    const { error } = await supabase.from('Education').delete().eq('id', id);
+
+    if (error) {
+      alert('Gagal menghapus: ' + error.message);
+      setDeletingId(null);
+    } else {
+      router.refresh();
+      setDeletingId(null);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      {initialEducations?.map((edu) => (
+        <div
+          key={edu.id}
+          className="p-6 bg-white/5 border border-white/10 rounded-3xl group hover:border-teal-500/50 transition-all"
+        >
+          <div className="flex justify-between items-start">
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
+                <GraduationCap size={24} />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg">{edu.major}</h3>
+                <p className="text-blue-500 font-medium text-sm">{edu.institution}</p>
+                <p className="text-gray-500 text-xs mt-1">{edu.year || edu.period}</p>
+                <p className="text-gray-400 text-sm mt-1">{edu.degree}</p>
+              </div>
+            </div>
+            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+              <Link
+                href={`/admin/education/edit/${edu.id}`}
+                className="p-2 hover:bg-white/10 rounded-xl text-blue-400"
+              >
+                <Edit size={20} />
+              </Link>
+              <button
+                onClick={() => handleDelete(edu.id)}
+                disabled={deletingId === edu.id}
+                className="p-2 hover:bg-red-500/10 rounded-xl text-red-400 disabled:opacity-50"
+              >
+                {deletingId === edu.id ? (
+                  <Loader2 size={20} className="animate-spin" />
+                ) : (
+                  <Trash2 size={20} />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+      {initialEducations?.length === 0 && (
+        <div className="text-center py-20 bg-white/5 border border-dashed border-white/10 rounded-3xl text-gray-500">
+          Belum ada data pendidikan.
+        </div>
+      )}
+    </div>
+  );
+}
