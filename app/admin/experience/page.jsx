@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import AdminSidebar from '@/components/AdminSidebar';
-import { Plus, Trash2, Briefcase, Calendar } from 'lucide-react';
+import Link from 'next/link';
+import { Plus, Trash2, Briefcase, Calendar, Pencil } from 'lucide-react';
 import ExperienceForm from '@/components/ExperienceForm';
 
 export default async function AdminExperience() {

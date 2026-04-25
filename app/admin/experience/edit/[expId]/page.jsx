@@ -8,17 +8,17 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 
 export default function EditExperience() {
-  const { id } = useParams();
+  const { expId } = useParams();
   const [experience, setExperience] = useState(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
   useEffect(() => {
-    fetchExperience();
-  }, [id]);
+    if (expId) fetchExperience();
+  }, [expId]);
 
   const fetchExperience = async () => {
-    const { data, error } = await supabase.from('Experience').select('*').eq('id', id).single();
+    const { data, error } = await supabase.from('Experience').select('*').eq('id', expId).single();
 
     if (data) setExperience(data);
     setLoading(false);

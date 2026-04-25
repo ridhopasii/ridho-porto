@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import AdminSidebar from '@/components/AdminSidebar';
-import { Plus, Trash2, GraduationCap, Calendar } from 'lucide-react';
+import Link from 'next/link';
+import { Plus, Trash2, GraduationCap, Calendar, Pencil } from 'lucide-react';
 import EducationForm from '@/components/EducationForm';
 
 export default async function AdminEducation() {

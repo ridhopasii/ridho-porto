@@ -8,17 +8,17 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 
 export default function EditEducation() {
-  const { id } = useParams();
+  const { eduId } = useParams();
   const [education, setEducation] = useState(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
   useEffect(() => {
-    fetchEducation();
-  }, [id]);
+    if (eduId) fetchEducation();
+  }, [eduId]);
 
   const fetchEducation = async () => {
-    const { data, error } = await supabase.from('Education').select('*').eq('id', id).single();
+    const { data, error } = await supabase.from('Education').select('*').eq('id', eduId).single();
 
     if (data) setEducation(data);
     setLoading(false);
