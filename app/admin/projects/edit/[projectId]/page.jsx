@@ -8,17 +8,17 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 
 export default function EditProject() {
-  const { id } = useParams();
+  const { projectId } = useParams();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
   useEffect(() => {
-    fetchProject();
-  }, [id]);
+    if (projectId) fetchProject();
+  }, [projectId]);
 
   const fetchProject = async () => {
-    const { data, error } = await supabase.from('Project').select('*').eq('id', id).single();
+    const { data, error } = await supabase.from('Project').select('*').eq('id', projectId).single();
 
     if (data) setProject(data);
     setLoading(false);
@@ -48,7 +48,7 @@ export default function EditProject() {
             </div>
           ) : (
             <div className="text-center py-20 bg-[#1a1a1a] rounded-3xl border border-white/5">
-              <p className="text-gray-400">Proyek dengan ID {id} tidak ditemukan.</p>
+              <p className="text-gray-400">Proyek dengan ID {projectId} tidak ditemukan.</p>
             </div>
           )}
         </div>
