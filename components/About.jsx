@@ -57,8 +57,16 @@ export default function About({ profile }) {
               {profile?.about_tag || 'Discovery'}
             </h2>
             <h3 className="text-4xl md:text-6xl font-black mb-8 font-outfit tracking-tighter text-white uppercase">
-              {profile?.about_title?.split(' ').slice(0, -1).join(' ')}{' '}
-              <span className="text-teal-500">{profile?.about_title?.split(' ').pop()}</span>
+              {profile?.about_title ? (
+                <>
+                  {profile.about_title.split(' ').slice(0, -1).join(' ')}{' '}
+                  <span className="text-teal-500">{profile.about_title.split(' ').pop()}</span>
+                </>
+              ) : (
+                <>
+                  ABOUT <span className="text-teal-500">ME</span>
+                </>
+              )}
             </h3>
 
             <p className="text-lg text-gray-400 mb-10 leading-relaxed font-medium">

@@ -92,11 +92,17 @@ export default async function Home() {
       {/* Footer */}
       <footer id="kontak" className="py-24 px-6 border-t border-white/5 bg-black">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl md:text-6xl font-black mb-8 font-outfit tracking-tighter uppercase">
-            {data.profile?.footer_title?.split(' ').slice(0, -1).join(' ') || "LET'S WORK"}{' '}
-            <span className="text-teal-500">
-              {data.profile?.footer_title?.split(' ').pop() || 'TOGETHER'}
-            </span>
+          <h2 className="text-4xl md:text-6xl font-black mb-8 font-outfit tracking-tighter uppercase text-white">
+            {data.profile?.footer_title ? (
+              <>
+                {data.profile.footer_title.split(' ').slice(0, -1).join(' ')}{' '}
+                <span className="text-teal-500">{data.profile.footer_title.split(' ').pop()}</span>
+              </>
+            ) : (
+              <>
+                LET'S WORK <span className="text-teal-500">TOGETHER</span>
+              </>
+            )}
           </h2>
           <p className="text-gray-500 mb-12 max-w-lg mx-auto text-lg leading-relaxed font-medium">
             {data.profile?.footer_sub ||
