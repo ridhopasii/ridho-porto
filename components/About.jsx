@@ -1,46 +1,94 @@
+'use client';
+import { CheckCircle2, User, MapPin, Briefcase, GraduationCap } from 'lucide-react';
+
 export default function About({ profile }) {
   return (
-    <section id="tentang" className="py-24 px-6 relative bg-[#0a0a0a]">
+    <section id="about" className="py-24 px-6 relative bg-[#030303] overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Image Part */}
-          <div className="relative animate-fade-in-up">
-            <div className="aspect-square rounded-3xl overflow-hidden border border-white/10 group">
-              <img 
-                src={profile?.avatarUrl || 'https://github.com/ridhopasii.png'} 
-                alt="Profile" 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-              <div className="absolute bottom-8 left-8">
-                <p className="text-2xl font-bold font-outfit">Ridho Robbi Pasi</p>
-                <p className="text-teal-500 font-medium">TechnoPreneur</p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          {/* Image Part - Premium Frame */}
+          <div className="relative group">
+            <div className="aspect-square rounded-[3rem] overflow-hidden border border-white/5 bg-[#111] p-4 relative z-10">
+              <div className="w-full h-full rounded-[2rem] overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
+                <img
+                  src={
+                    profile?.avatarUrl ||
+                    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop'
+                  }
+                  alt={profile?.name}
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                />
               </div>
             </div>
-            {/* Decoration */}
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-purple-500/30 blur-[60px] rounded-full"></div>
-            <div className="absolute -top-6 -left-6 w-32 h-32 bg-teal-500/30 blur-[60px] rounded-full"></div>
+
+            {/* Glassmorphism Floating Card */}
+            <div className="absolute -bottom-10 -right-4 md:-right-10 bg-white/5 backdrop-blur-2xl border border-white/10 p-8 rounded-3xl z-20 shadow-2xl max-w-[280px] animate-fade-in-up">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 rounded-2xl bg-teal-500 flex items-center justify-center text-black">
+                  <CheckCircle2 size={24} />
+                </div>
+                <div>
+                  <h4 className="text-white font-bold font-outfit">Verified Expert</h4>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">
+                    Global Ambassador
+                  </p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-400 leading-relaxed italic">
+                "Berkomitmen untuk membawa dampak positif melalui teknologi dan inovasi."
+              </p>
+            </div>
+
+            {/* Background Decoration */}
+            <div className="absolute -top-10 -left-10 w-64 h-64 bg-teal-500/10 rounded-full blur-[80px] -z-10"></div>
           </div>
 
           {/* Text Part */}
-          <div className="animate-fade-in-up animation-delay-2000">
-            <h2 className="text-4xl md:text-5xl font-black mb-8 font-outfit tracking-tight">
-              A BIT <span className="text-teal-500">ABOUT ME</span>
+          <div>
+            <h2 className="text-sm font-bold text-teal-500 uppercase tracking-[0.3em] mb-4">
+              Discovery
             </h2>
-            <p className="text-lg text-gray-400 mb-8 leading-relaxed">
-              {profile?.bio || "I am a passionate TechnoPreneur with a deep interest in building scalable web applications and innovative digital solutions. With expertise in modern technologies like React, Next.js, and Supabase, I strive to create experiences that are not only functional but also visually stunning."}
+            <h3 className="text-4xl md:text-6xl font-black mb-8 font-outfit tracking-tighter text-white uppercase">
+              Beyond the <span className="text-teal-500">Surface</span>
+            </h3>
+
+            <p className="text-lg text-gray-400 mb-10 leading-relaxed font-medium">
+              {profile?.bio ||
+                'I am a passionate TechnoPreneur with a deep interest in building scalable web applications and innovative digital solutions. With expertise in modern technologies like React, Next.js, and Supabase.'}
             </p>
-            
-            <div className="grid grid-cols-2 gap-6">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { label: 'Location', value: profile?.location || 'Indonesia' },
-                { label: 'Experience', value: '5+ Years' },
-                { label: 'Projects', value: '20+ Completed' },
-                { label: 'Specialty', value: 'Full Stack Dev' },
+                {
+                  label: 'Role',
+                  value: profile?.title || 'TechnoPreneur',
+                  icon: <Briefcase size={16} />,
+                },
+                {
+                  label: 'Location',
+                  value: profile?.location || 'Indonesia',
+                  icon: <MapPin size={16} />,
+                },
+                {
+                  label: 'Education',
+                  value: 'Global Relations',
+                  icon: <GraduationCap size={16} />,
+                },
+                { label: 'Availability', value: 'Ready to Work', icon: <User size={16} /> },
               ].map((item) => (
-                <div key={item.label} className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-                  <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">{item.label}</p>
-                  <p className="text-white font-bold">{item.value}</p>
+                <div
+                  key={item.label}
+                  className="p-6 bg-white/5 border border-white/5 rounded-2xl hover:border-teal-500/30 transition-all flex items-center gap-4 group/item"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-500 group-hover/item:bg-teal-500 group-hover/item:text-black transition-all">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-0.5">
+                      {item.label}
+                    </p>
+                    <p className="text-white font-bold text-sm tracking-tight">{item.value}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -48,5 +96,5 @@ export default function About({ profile }) {
         </div>
       </div>
     </section>
-  )
+  );
 }
