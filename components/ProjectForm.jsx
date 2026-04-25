@@ -49,11 +49,11 @@ export default function ProjectForm({ initialData = null }) {
       const filePath = `projects/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('portfolio')
+        .from('portofolio')
         .upload(filePath, file);
 
       if (!uploadError) {
-        const { data } = supabase.storage.from('portfolio').getPublicUrl(filePath);
+        const { data } = supabase.storage.from('portofolio').getPublicUrl(filePath);
         newImages.push(data.publicUrl);
       }
     }

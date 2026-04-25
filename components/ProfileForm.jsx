@@ -36,12 +36,12 @@ export default function ProfileForm({ initialData = null }) {
     const fileName = `avatar-${Math.random()}.${fileExt}`;
     const filePath = `profile/${fileName}`;
 
-    const { error: uploadError } = await supabase.storage.from('portfolio').upload(filePath, file);
+    const { error: uploadError } = await supabase.storage.from('portofolio').upload(filePath, file);
 
     if (uploadError) {
       alert('Gagal upload: ' + uploadError.message);
     } else {
-      const { data } = supabase.storage.from('portfolio').getPublicUrl(filePath);
+      const { data } = supabase.storage.from('portofolio').getPublicUrl(filePath);
       setFormData((prev) => ({ ...prev, avatarUrl: data.publicUrl }));
     }
     setUploading(false);

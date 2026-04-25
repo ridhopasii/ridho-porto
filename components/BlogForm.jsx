@@ -1,8 +1,8 @@
-'use client'
-import { useState, useEffect } from 'react'
-import { createClient } from '@/utils/supabase/client'
-import { Save, Loader2, Image as ImageIcon, X } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+'use client';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/utils/supabase/client';
+import { Save, Loader2, Image as ImageIcon, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function BlogForm({ initialData = null }) {
   const [formData, setFormData] = useState({
@@ -11,71 +11,74 @@ export default function BlogForm({ initialData = null }) {
     excerpt: '',
     content: '',
     category: '',
-    cover_image: ''
-  })
-  const [uploading, setUploading] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState(null)
-  const router = useRouter()
-  const supabase = createClient()
+    cover_image: '',
+  });
+  const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+  const router = useRouter();
+  const supabase = createClient();
 
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData)
+      setFormData(initialData);
     }
-  }, [initialData])
+  }, [initialData]);
 
   // Otomatis buat slug dari judul
   const handleTitleChange = (e) => {
-    const title = e.target.value
-    const slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
-    setFormData({ ...formData, title, slug })
-  }
+    const title = e.target.value;
+    const slug = title
+      .toLowerCase()
+      .replace(/ /g, '-')
+      .replace(/[^\w-]+/g, '');
+    setFormData({ ...formData, title, slug });
+  };
 
   const handleUpload = async (e) => {
-    const file = e.target.files[0]
-    if (!file) return
+    const file = e.target.files[0];
+    if (!file) return;
 
-    setUploading(true)
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${Math.random()}.${fileExt}`
-    const filePath = `blog-covers/${fileName}`
+    setUploading(true);
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    const filePath = `blog-covers/${fileName}`;
 
-    const { error: uploadError } = await supabase.storage
-      .from('portfolio')
-      .upload(filePath, file)
+    const { error: uploadError } = await supabase.storage.from('portofolio').upload(filePath, file);
 
     if (uploadError) {
-      alert('Gagal upload gambar: ' + uploadError.message)
+      alert('Gagal upload gambar: ' + uploadError.message);
     } else {
-      const { data } = supabase.storage.from('portfolio').getPublicUrl(filePath)
-      setFormData({ ...formData, cover_image: data.publicUrl })
+      const { data } = supabase.storage.from('portofolio').getPublicUrl(filePath);
+      setFormData({ ...formData, cover_image: data.publicUrl });
     }
-    setUploading(false)
-  }
+    setUploading(false);
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setMessage(null)
+    e.preventDefault();
+    setLoading(true);
+    setMessage(null);
 
-    const { error } = initialData 
+    const { error } = initialData
       ? await supabase.from('blogs').update(formData).eq('id', initialData.id)
-      : await supabase.from('blogs').insert([formData])
+      : await supabase.from('blogs').insert([formData]);
 
     if (error) {
-      setMessage({ type: 'error', text: error.message })
+      setMessage({ type: 'error', text: error.message });
     } else {
-      setMessage({ type: 'success', text: 'Artikel berhasil disimpan!' })
-      setTimeout(() => router.push('/admin/blogs'), 1500)
+      setMessage({ type: 'success', text: 'Artikel berhasil disimpan!' });
+      setTimeout(() => router.push('/admin/blogs'), 1500);
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {message && (
-        <div className={`p-4 rounded-xl text-sm ${message.type === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+        <div
+          className={`p-4 rounded-xl text-sm ${message.type === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}
+        >
           {message.text}
         </div>
       )}
@@ -120,10 +123,14 @@ export default function BlogForm({ initialData = null }) {
           <div className="relative aspect-video bg-[#1a1a1a] rounded-2xl border border-dashed border-white/10 flex items-center justify-center overflow-hidden group">
             {formData.cover_image ? (
               <>
-                <img src={formData.cover_image} alt="Preview" className="w-full h-full object-cover" />
-                <button 
+                <img
+                  src={formData.cover_image}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                />
+                <button
                   type="button"
-                  onClick={() => setFormData({...formData, cover_image: ''})}
+                  onClick={() => setFormData({ ...formData, cover_image: '' })}
                   className="absolute top-2 right-2 p-2 bg-red-500 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
                 >
                   <X className="w-4 h-4 text-white" />
@@ -135,7 +142,13 @@ export default function BlogForm({ initialData = null }) {
                 <span className="text-sm text-gray-500">
                   {uploading ? 'Sedang mengunggah...' : 'Klik untuk upload gambar'}
                 </span>
-                <input type="file" className="hidden" accept="image/*" onChange={handleUpload} disabled={uploading} />
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleUpload}
+                  disabled={uploading}
+                />
               </label>
             )}
           </div>
@@ -174,5 +187,5 @@ export default function BlogForm({ initialData = null }) {
         Simpan Artikel
       </button>
     </form>
-  )
+  );
 }
