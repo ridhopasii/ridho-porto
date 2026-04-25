@@ -97,6 +97,7 @@ model Organization {
   logoUrl     String?
   images      Json?    // Documentation photos
   website     String?
+  proofUrl    String?  // Hyperlink for proof/documentation
   order       Int      @default(0)
 }
 

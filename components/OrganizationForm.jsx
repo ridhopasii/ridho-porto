@@ -15,6 +15,8 @@ export default function OrganizationForm({ initialData = null }) {
     period: '',
     description: '',
     website: '',
+    proofUrl: '',
+    logoUrl: '',
     images: [],
   });
 
@@ -54,60 +56,92 @@ export default function OrganizationForm({ initialData = null }) {
         </div>
       )}
 
-      <div>
-        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
-          Nama Organisasi
-        </label>
-        <input
-          required
-          type="text"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
-          placeholder="Contoh: BUMP Pesantren"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Logo Section */}
+        <div className="md:col-span-1">
+          <label className="block text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest text-white/60 flex items-center gap-2">
+            <Camera size={14} /> Logo Organisasi
+          </label>
+          <MultiPhotoUpload
+            images={formData.logoUrl ? [formData.logoUrl] : []}
+            onChange={(imgs) => setFormData((prev) => ({ ...prev, logoUrl: imgs[0] || '' }))}
+            path="organizations"
+          />
+          <p className="text-[10px] text-gray-500 mt-2 italic">* Unggah 1 foto untuk logo.</p>
+        </div>
+
+        {/* Main Fields Section */}
+        <div className="md:col-span-2 space-y-6">
+          <div>
+            <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
+              Nama Organisasi
+            </label>
+            <input
+              required
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+              placeholder="Contoh: BUMP Pesantren"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
+                Jabatan / Role
+              </label>
+              <input
+                required
+                type="text"
+                value={formData.role}
+                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+                placeholder="Contoh: Ketua Bagian Dokumentasi"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
+                Periode
+              </label>
+              <input
+                required
+                type="text"
+                value={formData.period}
+                onChange={(e) => setFormData({ ...formData, period: e.target.value })}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+                placeholder="Jan 2024 - Jan 2025"
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
-            Jabatan / Role
+            Website / Link (Opsional)
           </label>
           <input
-            required
             type="text"
-            value={formData.role}
-            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+            value={formData.website || ''}
+            onChange={(e) => setFormData({ ...formData, website: e.target.value })}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
-            placeholder="Contoh: Ketua Bagian Dokumentasi"
+            placeholder="https://..."
           />
         </div>
         <div>
           <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
-            Periode
+            Link Bukti / Dokumentasi Online
           </label>
           <input
-            required
             type="text"
-            value={formData.period}
-            onChange={(e) => setFormData({ ...formData, period: e.target.value })}
+            value={formData.proofUrl || ''}
+            onChange={(e) => setFormData({ ...formData, proofUrl: e.target.value })}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
-            placeholder="Jan 2024 - Jan 2025"
+            placeholder="https://google-drive.com/sertifikat"
           />
         </div>
-      </div>
-
-      <div>
-        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
-          Website / Link (Opsional)
-        </label>
-        <input
-          type="text"
-          value={formData.website || ''}
-          onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
-          placeholder="https://..."
-        />
       </div>
 
       <div>
@@ -125,7 +159,7 @@ export default function OrganizationForm({ initialData = null }) {
 
       <div>
         <label className="block text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest flex items-center gap-2 text-white/60">
-          <Camera size={14} /> Foto Dokumentasi Kegiatan
+          <Camera size={14} /> Foto Dokumentasi & Sertifikat (Multi-foto)
         </label>
         <MultiPhotoUpload
           images={formData.images}

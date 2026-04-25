@@ -24,13 +24,26 @@ export default function Organizations({ organizations }) {
                 className="group p-1 bg-white/5 rounded-[3rem] border border-white/10 hover:border-teal-500/30 transition-all duration-500"
               >
                 <div className="flex flex-col md:flex-row gap-8 p-8 h-full bg-[#0d0d0d] rounded-[2.8rem]">
-                  {/* Org Photos */}
-                  <div className="w-full md:w-48 h-48 flex-shrink-0">
-                    <PhotoSwiper
-                      images={org.images}
-                      aspectRatio="aspect-square"
-                      rounded="rounded-[2rem]"
-                    />
+                  {/* Org Logo & Photos */}
+                  <div className="w-full md:w-48 flex-shrink-0 space-y-4">
+                    {org.logoUrl && (
+                      <div className="w-20 h-20 bg-white/5 rounded-2xl overflow-hidden p-3 border border-white/10 group-hover:border-teal-500/30 transition-all">
+                        <img
+                          src={org.logoUrl}
+                          alt={org.name}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    )}
+                    <div className="w-full h-40">
+                      <PhotoSwiper
+                        images={
+                          Array.isArray(org.images) && org.images.length > 0 ? org.images : []
+                        }
+                        aspectRatio="aspect-square"
+                        rounded="rounded-[2rem]"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex-1 space-y-4">
@@ -57,6 +70,15 @@ export default function Organizations({ organizations }) {
                           className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-500/5 text-teal-500 rounded-full border border-teal-500/10 hover:bg-teal-500/10 transition-all"
                         >
                           <Globe size={12} /> Website
+                        </a>
+                      )}
+                      {org.proofUrl && (
+                        <a
+                          href={org.proofUrl}
+                          target="_blank"
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 text-gray-400 rounded-full border border-white/10 hover:bg-white/10 transition-all"
+                        >
+                          <Users size={12} /> Bukti/Dokumentasi
                         </a>
                       )}
                     </div>
