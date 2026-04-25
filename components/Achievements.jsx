@@ -12,49 +12,54 @@ export default function Achievements({ awards, publications }) {
             <span className="text-gray-700">& Honors</span>
           </h2>
           <div className="space-y-6">
-            {awards?.map((award) => (
-              <div
-                key={award.id}
-                className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] group hover:border-yellow-500/30 transition-all"
-              >
-                <div className="flex justify-between items-start mb-6">
-                  <div className="p-3 bg-yellow-500/10 text-yellow-500 rounded-2xl">
-                    <Trophy size={24} />
+            {Array.isArray(awards) &&
+              awards.map((award) => (
+                <div
+                  key={award.id}
+                  className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] group hover:border-yellow-500/30 transition-all"
+                >
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="p-3 bg-yellow-500/10 text-yellow-500 rounded-2xl">
+                      <Trophy size={24} />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                      {award.date || 'Date N/A'}
+                    </span>
                   </div>
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                    {award.date}
-                  </span>
+
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    {award.title || 'Award Title'}
+                  </h3>
+                  <p className="text-yellow-500/80 font-bold uppercase text-[10px] tracking-widest mb-6">
+                    {award.organizer || 'Organizer'}
+                  </p>
+
+                  {/* Documentation Photos */}
+                  {Array.isArray(award.images) && award.images.length > 0 && (
+                    <div className="mb-6">
+                      <PhotoSwiper
+                        images={award.images}
+                        aspectRatio="aspect-video"
+                        rounded="rounded-2xl"
+                      />
+                    </div>
+                  )}
+
+                  {/* Proof Link */}
+                  {award.proofUrl && (
+                    <a
+                      href={award.proofUrl}
+                      target="_blank"
+                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-yellow-500 hover:text-white transition-colors"
+                    >
+                      <ExternalLink size={12} /> View Credentials
+                    </a>
+                  )}
                 </div>
-
-                <h3 className="text-xl font-bold text-white mb-2">{award.title}</h3>
-                <p className="text-yellow-500/80 font-bold uppercase text-[10px] tracking-widest mb-6">
-                  {award.organizer}
-                </p>
-
-                {/* Documentation Photos */}
-                {award.images?.length > 0 && (
-                  <div className="mb-6">
-                    <PhotoSwiper
-                      images={award.images}
-                      aspectRatio="aspect-video"
-                      rounded="rounded-2xl"
-                    />
-                  </div>
-                )}
-
-                {/* Proof Link */}
-                {award.proofUrl && (
-                  <a
-                    href={award.proofUrl}
-                    target="_blank"
-                    className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-yellow-500 hover:text-white transition-colors"
-                  >
-                    <ExternalLink size={12} /> View Credentials
-                  </a>
-                )}
-              </div>
-            ))}
-            {awards?.length === 0 && <p className="text-gray-600 italic">No awards found.</p>}
+              ))}
+            {(!Array.isArray(awards) || awards.length === 0) && (
+              <p className="text-gray-600 italic">No awards found.</p>
+            )}
           </div>
         </div>
 
@@ -65,46 +70,49 @@ export default function Achievements({ awards, publications }) {
             <span className="text-gray-700">& Research</span>
           </h2>
           <div className="space-y-6">
-            {publications?.map((pub) => (
-              <div
-                key={pub.id}
-                className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] group hover:border-blue-500/30 transition-all"
-              >
-                <div className="flex justify-between items-start mb-6">
-                  <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl">
-                    <FileText size={24} />
-                  </div>
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                    {pub.date}
-                  </span>
-                </div>
-
-                <h3 className="text-xl font-bold text-white mb-2">{pub.title}</h3>
-                <p className="text-blue-500/80 font-bold uppercase text-[10px] tracking-widest mb-6">
-                  {pub.outlet}
-                </p>
-
-                {/* Documentation Photos */}
-                {pub.images?.length > 0 && (
-                  <div className="mb-6">
-                    <PhotoSwiper
-                      images={pub.images}
-                      aspectRatio="aspect-video"
-                      rounded="rounded-2xl"
-                    />
-                  </div>
-                )}
-
-                <a
-                  href={pub.url}
-                  target="_blank"
-                  className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-500 hover:text-white transition-colors"
+            {Array.isArray(publications) &&
+              publications.map((pub) => (
+                <div
+                  key={pub.id}
+                  className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] group hover:border-blue-500/30 transition-all"
                 >
-                  <ArrowRight size={12} /> Read Publication
-                </a>
-              </div>
-            ))}
-            {publications?.length === 0 && (
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl">
+                      <FileText size={24} />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                      {pub.date || 'Date N/A'}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    {pub.title || 'Publication Title'}
+                  </h3>
+                  <p className="text-blue-500/80 font-bold uppercase text-[10px] tracking-widest mb-6">
+                    {pub.outlet || 'Publisher'}
+                  </p>
+
+                  {/* Documentation Photos */}
+                  {Array.isArray(pub.images) && pub.images.length > 0 && (
+                    <div className="mb-6">
+                      <PhotoSwiper
+                        images={pub.images}
+                        aspectRatio="aspect-video"
+                        rounded="rounded-2xl"
+                      />
+                    </div>
+                  )}
+
+                  <a
+                    href={pub.url}
+                    target="_blank"
+                    className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-500 hover:text-white transition-colors"
+                  >
+                    <ArrowRight size={12} /> Read Publication
+                  </a>
+                </div>
+              ))}
+            {(!Array.isArray(publications) || publications.length === 0) && (
               <p className="text-gray-600 italic">No publications found.</p>
             )}
           </div>
