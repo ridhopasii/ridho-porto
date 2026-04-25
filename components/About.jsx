@@ -30,12 +30,15 @@ export default function About({ profile }) {
                 <div>
                   <h4 className="text-white font-bold font-outfit">Verified Expert</h4>
                   <p className="text-[10px] text-gray-400 uppercase tracking-widest">
-                    Global Ambassador
+                    {profile?.badge || 'Global Ambassador'}
                   </p>
                 </div>
               </div>
               <p className="text-xs text-gray-400 leading-relaxed italic">
-                "Berkomitmen untuk membawa dampak positif melalui teknologi dan inovasi."
+                "
+                {profile?.quote ||
+                  'Berkomitmen untuk membawa dampak positif melalui teknologi dan inovasi.'}
+                "
               </p>
             </div>
 
@@ -46,15 +49,16 @@ export default function About({ profile }) {
           {/* Text Part */}
           <div>
             <h2 className="text-sm font-bold text-teal-500 uppercase tracking-[0.3em] mb-4">
-              Discovery
+              {profile?.about_tag || 'Discovery'}
             </h2>
             <h3 className="text-4xl md:text-6xl font-black mb-8 font-outfit tracking-tighter text-white uppercase">
-              Beyond the <span className="text-teal-500">Surface</span>
+              {profile?.about_title?.split(' ').slice(0, -1).join(' ')}{' '}
+              <span className="text-teal-500">{profile?.about_title?.split(' ').pop()}</span>
             </h3>
 
             <p className="text-lg text-gray-400 mb-10 leading-relaxed font-medium">
               {profile?.bio ||
-                'I am a passionate TechnoPreneur with a deep interest in building scalable web applications and innovative digital solutions. With expertise in modern technologies like React, Next.js, and Supabase.'}
+                'I am a passionate TechnoPreneur with a deep interest in building scalable web applications and innovative digital solutions.'}
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

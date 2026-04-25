@@ -42,7 +42,7 @@ export default function Hero({ profile }) {
               </div>
             </div>
             <div className="absolute -bottom-2 -right-2 bg-teal-500 text-black px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg shadow-teal-500/40">
-              Duta Pemuda Global
+              {profile?.badge || 'Duta Pemuda Global'}
             </div>
           </div>
 
@@ -50,7 +50,7 @@ export default function Hero({ profile }) {
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-white/10 mb-8 animate-fade-in-up">
             <span className="w-2 h-2 bg-teal-500 rounded-full pulse-ring"></span>
             <span className="text-[10px] text-teal-500 font-black tracking-[0.2em] uppercase">
-              Open for collaborations
+              {profile?.status_text || 'Open for collaborations'}
             </span>
           </div>
 
@@ -86,7 +86,7 @@ export default function Hero({ profile }) {
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
-              href="/#contact"
+              href="/#kontak"
               className="px-10 py-5 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl border border-white/10 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 text-sm uppercase tracking-widest"
             >
               Contact Me
@@ -97,8 +97,8 @@ export default function Hero({ profile }) {
           {/* Social Links */}
           <div className="mt-20 flex gap-4 justify-center">
             {[
-              { icon: <Github size={20} />, href: profile?.github || '#' },
-              { icon: <Linkedin size={20} />, href: profile?.linkedin || '#' },
+              { icon: <Github size={20} />, href: profile?.github_url || '#' },
+              { icon: <Linkedin size={20} />, href: profile?.linkedin_url || '#' },
               { icon: <Mail size={20} />, href: `mailto:${profile?.email}` || '#' },
             ].map((social, idx) => (
               <a

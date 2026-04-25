@@ -1,7 +1,16 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Save, Loader2, User, Camera, CheckCircle2 } from 'lucide-react';
+import {
+  Save,
+  Loader2,
+  User,
+  Camera,
+  CheckCircle2,
+  Globe,
+  MessageSquare,
+  Layout,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function ProfileForm({ initialData = null }) {
@@ -14,17 +23,31 @@ export default function ProfileForm({ initialData = null }) {
     title: '',
     bio: '',
     avatarUrl: '',
-    github: '',
-    linkedin: '',
+    badge: 'Duta Pemuda Global',
+    status_text: 'Open for collaborations',
+    quote: '',
+    about_tag: 'Discovery',
+    about_title: 'Beyond the Surface',
+    footer_title: "LET'S WORK TOGETHER",
+    footer_sub: '',
     email: '',
-    resumeUrl: '',
+    github_url: '',
+    linkedin_url: '',
   });
 
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData);
+      setFormData((prev) => ({
+        ...prev,
+        ...initialData,
+      }));
     }
   }, [initialData]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleUpload = async (e) => {
     const file = e.target.files[0];
@@ -36,143 +59,265 @@ export default function ProfileForm({ initialData = null }) {
     const fileName = `avatar-${Math.random()}.${fileExt}`;
     const filePath = `profile/${fileName}`;
 
-    const { error: uploadError } = await supabase.storage.from('portofolio').upload(filePath, file);
+    try {
+      const { error: uploadError } = await supabase.storage
+        .from('portofolio')
+        .upload(filePath, file);
+      if (uploadError) throw uploadError;
 
-    if (uploadError) {
-      alert('Gagal upload: ' + uploadError.message);
-    } else {
       const { data } = supabase.storage.from('portofolio').getPublicUrl(filePath);
       setFormData((prev) => ({ ...prev, avatarUrl: data.publicUrl }));
+    } catch (error) {
+      alert('Gagal upload: ' + error.message);
+    } finally {
+      setUploading(false);
     }
-    setUploading(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!initialData?.id) {
+      alert('ID Profil tidak ditemukan. Pastikan data sudah ada di database.');
+      return;
+    }
+
     setLoading(true);
-
     const supabase = createClient();
-    const { error } = await supabase.from('Profile').update(formData).eq('id', initialData.id);
 
-    setLoading(false);
-    if (error) {
-      alert('Gagal menyimpan profil: ' + error.message);
-    } else {
+    try {
+      const { error } = await supabase.from('Profile').update(formData).eq('id', initialData.id);
+
+      if (error) throw error;
+
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
         router.refresh();
       }, 3000);
+    } catch (error) {
+      alert('Gagal menyimpan perubahan: ' + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-12">
       {success && (
-        <div className="flex items-center gap-2 p-4 bg-teal-500/10 border border-teal-500/50 text-teal-400 rounded-xl animate-fade-in-up">
+        <div className="sticky top-0 z-50 flex items-center gap-2 p-4 bg-teal-500 text-black font-bold rounded-xl shadow-2xl animate-bounce">
           <CheckCircle2 size={20} />
-          Profil berhasil diperbarui secara real-time!
+          Perubahan Disimpan & Langsung Aktif di Halaman Depan!
         </div>
       )}
 
-      {/* Profile Photo Upload */}
-      <div className="flex flex-col items-center gap-4">
-        <div className="relative group">
-          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white/10 bg-white/5 flex items-center justify-center">
-            {formData.avatarUrl ? (
-              <img src={formData.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-            ) : (
-              <User size={48} className="text-gray-600" />
-            )}
+      {/* SECTION 1: IDENTITAS UTAMA */}
+      <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
+        <h3 className="text-teal-500 font-black uppercase tracking-widest text-xs mb-8 flex items-center gap-2">
+          <User size={14} /> Identitas & Foto
+        </h3>
+
+        <div className="flex flex-col md:flex-row gap-10 items-start">
+          <div className="relative group mx-auto md:mx-0">
+            <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-teal-500/30 bg-white/5 flex items-center justify-center">
+              {formData.avatarUrl ? (
+                <img src={formData.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <User size={64} className="text-gray-700" />
+              )}
+            </div>
+            <label className="absolute bottom-2 right-2 p-3 bg-teal-500 text-black rounded-full cursor-pointer hover:scale-110 transition-all shadow-xl">
+              {uploading ? <Loader2 size={20} className="animate-spin" /> : <Camera size={20} />}
+              <input
+                type="file"
+                className="hidden"
+                onChange={handleUpload}
+                disabled={uploading}
+                accept="image/*"
+              />
+            </label>
           </div>
-          <label className="absolute bottom-0 right-0 p-2 bg-teal-500 text-black rounded-full cursor-pointer hover:scale-110 transition-all shadow-lg">
-            {uploading ? <Loader2 size={16} className="animate-spin" /> : <Camera size={16} />}
+
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+            <div>
+              <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+                Nama Lengkap
+              </label>
+              <input
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+                Tagline (Hero)
+              </label>
+              <input
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+                Badge Teks (Foto)
+              </label>
+              <input
+                name="badge"
+                value={formData.badge}
+                onChange={handleChange}
+                className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+                Status Kolaborasi
+              </label>
+              <input
+                name="status_text"
+                value={formData.status_text}
+                onChange={handleChange}
+                className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 2: ABOUT & QUOTE */}
+      <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
+        <h3 className="text-teal-500 font-black uppercase tracking-widest text-xs mb-8 flex items-center gap-2">
+          <Layout size={14} /> Konten Halaman Tentang
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+              About Tag (Kecil)
+            </label>
             <input
-              type="file"
-              className="hidden"
-              onChange={handleUpload}
-              disabled={uploading}
-              accept="image/*"
+              name="about_tag"
+              value={formData.about_tag}
+              onChange={handleChange}
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
             />
-          </label>
+          </div>
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+              About Title (Besar)
+            </label>
+            <input
+              name="about_title"
+              value={formData.about_title}
+              onChange={handleChange}
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
+            />
+          </div>
         </div>
-        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-          Foto Profil (Duta Pemuda Global)
-        </p>
+        <div className="mb-6">
+          <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+            Bio Utama
+          </label>
+          <textarea
+            name="bio"
+            value={formData.bio}
+            onChange={handleChange}
+            rows={4}
+            className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white resize-none"
+          />
+        </div>
+        <div>
+          <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+            Kutipan / Quote Personal
+          </label>
+          <input
+            name="quote"
+            value={formData.quote}
+            onChange={handleChange}
+            className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
+          />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">
-            Nama Lengkap
-          </label>
-          <input
-            required
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
-          />
+      {/* SECTION 3: SOCIALS & FOOTER */}
+      <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
+        <h3 className="text-teal-500 font-black uppercase tracking-widest text-xs mb-8 flex items-center gap-2">
+          <Globe size={14} /> Kontak & Footer
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+              Email
+            </label>
+            <input
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+              GitHub URL
+            </label>
+            <input
+              name="github_url"
+              value={formData.github_url}
+              onChange={handleChange}
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+              LinkedIn URL
+            </label>
+            <input
+              name="linkedin_url"
+              value={formData.linkedin_url}
+              onChange={handleChange}
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
+            />
+          </div>
         </div>
-        <div>
-          <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">
-            Tagline / Pekerjaan
-          </label>
-          <input
-            required
-            type="text"
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
-          />
-        </div>
-      </div>
 
-      <div>
-        <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">
-          Bio Singkat (About)
-        </label>
-        <textarea
-          required
-          value={formData.bio}
-          onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-          rows={5}
-          className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all resize-none text-white leading-relaxed"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">
-            Email
-          </label>
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">
-            LinkedIn URL
-          </label>
-          <input
-            type="text"
-            value={formData.linkedin}
-            onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-            className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
-          />
+        <div className="space-y-6">
+          <h4 className="text-[10px] font-black text-gray-600 uppercase border-b border-white/5 pb-2">
+            Pengaturan Footer
+          </h4>
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+              Judul Ajakan (CTA)
+            </label>
+            <input
+              name="footer_title"
+              value={formData.footer_title}
+              onChange={handleChange}
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 uppercase mb-2">
+              Deskripsi Footer
+            </label>
+            <textarea
+              name="footer_sub"
+              value={formData.footer_sub}
+              onChange={handleChange}
+              rows={3}
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white resize-none"
+            />
+          </div>
         </div>
       </div>
 
       <button
         type="submit"
         disabled={loading || uploading}
-        className="w-full py-4 bg-white text-black font-bold rounded-2xl hover:bg-teal-500 hover:text-white transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+        className="w-full py-6 bg-teal-500 text-black font-black rounded-[2rem] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-2xl shadow-teal-500/20 uppercase tracking-widest text-sm"
       >
         {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
-        {loading ? 'Menyimpan...' : 'Perbarui Profil'}
+        {loading ? 'Sedang Menyimpan Ke Database...' : 'Simpan Semua Perubahan'}
       </button>
     </form>
   );
