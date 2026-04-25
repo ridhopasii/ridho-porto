@@ -29,11 +29,20 @@ async function getData() {
   const { data: educations } = await supabase
     .from('Education')
     .select('*')
-    .order('year', { ascending: false });
+    .order('period', { ascending: false });
   const { data: awards } = await supabase
     .from('Award')
     .select('*')
-    .order('year', { ascending: false });
+    .order('date', { ascending: false });
+  const { data: publications } = await supabase
+    .from('Publication')
+    .select('*')
+    .order('date', { ascending: false });
+  const { data: blogs } = await supabase
+    .from('Article')
+    .select('*')
+    .order('createdAt', { ascending: false })
+    .limit(3);
   const { data: organizations } = await supabase
     .from('Organization')
     .select('*')
