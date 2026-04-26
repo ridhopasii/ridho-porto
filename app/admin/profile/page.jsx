@@ -11,7 +11,9 @@ export default async function AdminProfile() {
   const { data: profile } = await supabase
     .from('Profile')
     .select('*')
-    .single()
+    .order('id', { ascending: true })
+    .limit(1)
+    .maybeSingle()
 
   return (
     <div className="min-h-screen bg-[#050505] text-white flex font-jakarta">

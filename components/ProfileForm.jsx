@@ -53,6 +53,14 @@ export default function ProfileForm({ initialData = null }) {
       setFormData((prev) => ({
         ...prev,
         ...initialData,
+        // Pastikan images selalu berupa array, bukan string JSON
+        images: Array.isArray(initialData.images)
+          ? initialData.images
+          : typeof initialData.images === 'string'
+          ? JSON.parse(initialData.images || '[]')
+          : [],
+        // Sync fullName ke name
+        name: initialData.fullName || initialData.name || '',
       }));
     }
   }, [initialData]);
@@ -74,12 +82,20 @@ export default function ProfileForm({ initialData = null }) {
 
     try {
       let error;
+      const payload = {
+        ...formData,
+        fullName: formData.name || formData.fullName,
+      };
+
       if (initialData?.id) {
-        // Update existing profile
-        ({ error } = await supabase.from('Profile').update(formData).eq('id', initialData.id));
+        // UPDATE — profil sudah ada
+        ({ error } = await supabase
+          .from('Profile')
+          .update(payload)
+          .eq('id', initialData.id));
       } else {
-        // Insert new profile if none exists
-        ({ error } = await supabase.from('Profile').insert([formData]));
+        // INSERT — profil belum ada sama sekali
+        ({ error } = await supabase.from('Profile').insert([payload]));
       }
 
       if (error) throw error;
@@ -88,9 +104,9 @@ export default function ProfileForm({ initialData = null }) {
       setTimeout(() => {
         setSuccess(false);
         router.refresh();
-      }, 3000);
-    } catch (error) {
-      alert('Gagal menyimpan perubahan: ' + error.message);
+      }, 2000);
+    } catch (err) {
+      alert('Gagal menyimpan: ' + err.message);
     } finally {
       setLoading(false);
     }
