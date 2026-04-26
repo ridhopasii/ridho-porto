@@ -28,61 +28,87 @@ async function getData() {
   const { data: projects } = await supabase
     .from('Project')
     .select('*')
-    .eq('showOnHome', true)
+    .not('showOnHome', 'eq', false)
     .order('createdAt', { ascending: false });
-  
-  const { data: skills } = await supabase
-    .from('Skill')
-    .select('*')
-    .eq('showOnHome', true);
+
+  const { data: skills } = await supabase.from('Skill').select('*').not('showOnHome', 'eq', false);
 
   const { data: experiences } = await supabase
     .from('Experience')
     .select('*')
-    .eq('showOnHome', true)
+    .not('showOnHome', 'eq', false)
     .order('period', { ascending: false });
 
   const { data: educations } = await supabase
     .from('Education')
     .select('*')
-    .eq('showOnHome', true)
+    .not('showOnHome', 'eq', false)
     .order('period', { ascending: false });
 
   const { data: awards } = await supabase
     .from('Award')
     .select('*')
-    .eq('showOnHome', true)
+    .not('showOnHome', 'eq', false)
     .order('date', { ascending: false });
 
   const { data: publications } = await supabase
     .from('Publication')
     .select('*')
-    .eq('showOnHome', true)
+    .not('showOnHome', 'eq', false)
     .order('date', { ascending: false });
 
   const { data: blogs } = await supabase
     .from('Article')
     .select('*')
-    .eq('showOnHome', true)
+    .not('showOnHome', 'eq', false)
     .order('createdAt', { ascending: false })
     .limit(3);
 
   const { data: organizations } = await supabase
     .from('Organization')
     .select('*')
-    .eq('showOnHome', true)
+    .not('showOnHome', 'eq', false)
     .order('updatedAt', { ascending: false });
 
   const { data: gallery } = await supabase
     .from('Gallery')
     .select('*')
-    .eq('showOnHome', true)
+    .not('showOnHome', 'eq', false)
     .order('createdAt', { ascending: false })
     .limit(6);
 
   const { data: settingsData } = await supabase.from('SiteSettings').select('*');
   const settings = {};
-  (settingsData || []).forEach(s => { settings[s.key] = s.value; });
+  (settingsData || []).forEach((s) => {
+    settings[s.key] = s.value;
+  });
+
+  // Fallback if settings empty
+  if (Object.keys(settings).length === 0) {
+    return {
+      profile,
+      projects,
+      skills,
+      experiences,
+      educations,
+      awards,
+      publications,
+      blogs,
+      organizations,
+      gallery,
+      settings: {
+        show_about: true,
+        show_projects: true,
+        show_experience: true,
+        show_education: true,
+        show_blog: true,
+        show_gallery: true,
+        show_skills: true,
+        show_achievements: true,
+        show_contact: true,
+      },
+    };
+  }
 
   return {
     profile,
@@ -115,18 +141,18 @@ export default async function Home() {
       {s.show_skills !== false && <Skills skills={data.skills} />}
 
       {(s.show_experience !== false || s.show_education !== false) && (
-        <Timeline 
-          experiences={s.show_experience !== false ? data.experiences : []} 
-          educations={s.show_education !== false ? data.educations : []} 
+        <Timeline
+          experiences={s.show_experience !== false ? data.experiences : []}
+          educations={s.show_education !== false ? data.educations : []}
         />
       )}
 
       {s.show_organizations !== false && <Organizations organizations={data.organizations} />}
-      
+
       {s.show_projects !== false && <Projects projects={data.projects} />}
-      
+
       {s.show_blog !== false && <LatestBlogs blogs={data.blogs} />}
-      
+
       {s.show_gallery !== false && <Gallery galleryItems={data.gallery} />}
 
       {s.show_achievements !== false && (
@@ -138,80 +164,80 @@ export default async function Home() {
       {/* Footer / Contact Section */}
       {s.show_contact !== false && (
         <footer id="kontak" className="py-24 px-6 border-t border-white/5 bg-black">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
-            {/* Left: Info */}
-            <div>
-              <p className="text-teal-500 font-bold uppercase tracking-[0.3em] mb-4 text-sm">
-                Contact
-              </p>
-              <h2 className="text-4xl md:text-6xl font-black mb-8 font-outfit tracking-tighter uppercase text-white">
-                {data.profile?.footer_title ? (
-                  <>
-                    {data.profile.footer_title.split(' ').slice(0, -1).join(' ')}{' '}
-                    <span className="text-teal-500">
-                      {data.profile.footer_title.split(' ').pop()}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    LET&apos;S WORK <span className="text-teal-500">TOGETHER</span>
-                  </>
-                )}
-              </h2>
-              <p className="text-gray-500 mb-10 max-w-md text-lg leading-relaxed font-medium">
-                {data.profile?.footer_sub ||
-                  "I'm currently available for freelance work and new opportunities. Let's build something amazing together."}
-              </p>
-              <div className="space-y-4">
-                {data.profile?.email && (
-                  <a
-                    href={`mailto:${data.profile.email}`}
-                    className="flex items-center gap-4 text-gray-400 hover:text-teal-500 transition-all group"
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-teal-500 group-hover:border-teal-500 group-hover:text-black transition-all">
-                      @
-                    </div>
-                    <span className="text-sm font-medium">{data.profile.email}</span>
-                  </a>
-                )}
-              </div>
-              <div className="mt-12 pt-12 border-t border-white/5 flex flex-wrap gap-6">
-                {[
-                  { label: 'GitHub', href: data.profile?.github_url },
-                  { label: 'LinkedIn', href: data.profile?.linkedin_url },
-                  { label: 'Instagram', href: data.profile?.instagram_url },
-                  { label: 'Twitter', href: data.profile?.twitter_url },
-                  { label: 'Facebook', href: data.profile?.facebook_url },
-                ]
-                  .filter((s) => s.href)
-                  .map((social, idx) => (
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+              {/* Left: Info */}
+              <div>
+                <p className="text-teal-500 font-bold uppercase tracking-[0.3em] mb-4 text-sm">
+                  Contact
+                </p>
+                <h2 className="text-4xl md:text-6xl font-black mb-8 font-outfit tracking-tighter uppercase text-white">
+                  {data.profile?.footer_title ? (
+                    <>
+                      {data.profile.footer_title.split(' ').slice(0, -1).join(' ')}{' '}
+                      <span className="text-teal-500">
+                        {data.profile.footer_title.split(' ').pop()}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      LET&apos;S WORK <span className="text-teal-500">TOGETHER</span>
+                    </>
+                  )}
+                </h2>
+                <p className="text-gray-500 mb-10 max-w-md text-lg leading-relaxed font-medium">
+                  {data.profile?.footer_sub ||
+                    "I'm currently available for freelance work and new opportunities. Let's build something amazing together."}
+                </p>
+                <div className="space-y-4">
+                  {data.profile?.email && (
                     <a
-                      key={idx}
-                      href={social.href}
-                      target="_blank"
-                      className="text-xs font-black text-gray-600 hover:text-teal-500 transition-colors uppercase tracking-widest"
+                      href={`mailto:${data.profile.email}`}
+                      className="flex items-center gap-4 text-gray-400 hover:text-teal-500 transition-all group"
                     >
-                      {social.label}
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-teal-500 group-hover:border-teal-500 group-hover:text-black transition-all">
+                        @
+                      </div>
+                      <span className="text-sm font-medium">{data.profile.email}</span>
                     </a>
-                  ))}
+                  )}
+                </div>
+                <div className="mt-12 pt-12 border-t border-white/5 flex flex-wrap gap-6">
+                  {[
+                    { label: 'GitHub', href: data.profile?.github_url },
+                    { label: 'LinkedIn', href: data.profile?.linkedin_url },
+                    { label: 'Instagram', href: data.profile?.instagram_url },
+                    { label: 'Twitter', href: data.profile?.twitter_url },
+                    { label: 'Facebook', href: data.profile?.facebook_url },
+                  ]
+                    .filter((s) => s.href)
+                    .map((social, idx) => (
+                      <a
+                        key={idx}
+                        href={social.href}
+                        target="_blank"
+                        className="text-xs font-black text-gray-600 hover:text-teal-500 transition-colors uppercase tracking-widest"
+                      >
+                        {social.label}
+                      </a>
+                    ))}
+                </div>
+              </div>
+              {/* Right: Contact Form */}
+              <div>
+                <ContactForm />
               </div>
             </div>
-            {/* Right: Contact Form */}
-            <div>
-              <ContactForm />
+
+            <div className="mt-24 pt-8 border-t border-white/5 text-gray-600 text-xs font-bold uppercase tracking-widest flex flex-col md:flex-row justify-between items-center gap-4">
+              <p>
+                © {new Date().getFullYear()} {data.profile?.name || 'Ridho Robbi Pasi'}. All rights
+                reserved.
+              </p>
+              <p className="text-gray-800 italic">Built with Next.js + Supabase</p>
             </div>
           </div>
-
-          <div className="mt-24 pt-8 border-t border-white/5 text-gray-600 text-xs font-bold uppercase tracking-widest flex flex-col md:flex-row justify-between items-center gap-4">
-            <p>
-              © {new Date().getFullYear()} {data.profile?.name || 'Ridho Robbi Pasi'}. All rights
-              reserved.
-            </p>
-            <p className="text-gray-800 italic">Built with Next.js + Supabase</p>
-          </div>
-        </div>
-      </footer>
+        </footer>
       )}
     </main>
   );

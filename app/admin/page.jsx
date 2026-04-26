@@ -22,8 +22,9 @@ export default async function AdminDashboard() {
   const supabase = await createClient();
 
   const [
-    { count: projectCount },
+    { count: projectCount, data: projectsHome },
     { count: messageCount, data: recentMessages },
+    { count: unreadCount },
     { count: skillCount },
     { count: expCount },
     { count: eduCount },
@@ -31,14 +32,15 @@ export default async function AdminDashboard() {
     { count: pubCount },
     { count: orgCount },
     { count: galleryCount },
-    { count: blogCount },
+    { count: blogCount, data: blogsHome },
   ] = await Promise.all([
-    supabase.from('Project').select('*', { count: 'exact', head: true }),
+    supabase.from('Project').select('showOnHome', { count: 'exact' }),
     supabase
       .from('Message')
-      .select('name, email, subject, createdAt', { count: 'exact' })
+      .select('name, email, subject, createdAt, isRead', { count: 'exact' })
       .order('createdAt', { ascending: false })
       .limit(5),
+    supabase.from('Message').select('*', { count: 'exact', head: true }).eq('isRead', false),
     supabase.from('Skill').select('*', { count: 'exact', head: true }),
     supabase.from('Experience').select('*', { count: 'exact', head: true }),
     supabase.from('Education').select('*', { count: 'exact', head: true }),
@@ -46,8 +48,11 @@ export default async function AdminDashboard() {
     supabase.from('Publication').select('*', { count: 'exact', head: true }),
     supabase.from('Organization').select('*', { count: 'exact', head: true }),
     supabase.from('Gallery').select('*', { count: 'exact', head: true }),
-    supabase.from('Article').select('*', { count: 'exact', head: true }),
+    supabase.from('Article').select('showOnHome', { count: 'exact' }),
   ]);
+
+  const projectsOnHome = projectsHome?.filter((p) => p.showOnHome !== false).length || 0;
+  const blogsOnHome = blogsHome?.filter((b) => b.showOnHome !== false).length || 0;
 
   const stats = [
     {
@@ -162,7 +167,50 @@ export default async function AdminDashboard() {
           </div>
         </header>
 
-        {/* Stats Grid */}
+        {/* Quick Status Bar */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div className="p-6 bg-teal-500/10 border border-teal-500/20 rounded-3xl flex items-center gap-4">
+            <div className="p-3 bg-teal-500 text-black rounded-2xl">
+              <Folders size={24} />
+            </div>
+            <div>
+              <p className="text-2xl font-black text-white">{projectsOnHome}</p>
+              <p className="text-[10px] text-teal-500 font-bold uppercase tracking-widest">
+                Proyek di Home
+              </p>
+            </div>
+          </div>
+
+          <div className="p-6 bg-blue-500/10 border border-blue-500/20 rounded-3xl flex items-center gap-4">
+            <div className="p-3 bg-blue-500 text-white rounded-2xl">
+              <BookOpen size={24} />
+            </div>
+            <div>
+              <p className="text-2xl font-black text-white">{blogsOnHome}</p>
+              <p className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">
+                Blog di Home
+              </p>
+            </div>
+          </div>
+
+          <div
+            className={`p-6 border rounded-3xl flex items-center gap-4 transition-all ${unreadCount > 0 ? 'bg-red-500/20 border-red-500/40 animate-pulse' : 'bg-white/5 border-white/10'}`}
+          >
+            <div
+              className={`p-3 rounded-2xl ${unreadCount > 0 ? 'bg-red-500 text-white' : 'bg-gray-500/20 text-gray-500'}`}
+            >
+              <MessageSquare size={24} />
+            </div>
+            <div>
+              <p className="text-2xl font-black text-white">{unreadCount}</p>
+              <p
+                className={`text-[10px] font-bold uppercase tracking-widest ${unreadCount > 0 ? 'text-red-500' : 'text-gray-500'}`}
+              >
+                Pesan Baru
+              </p>
+            </div>
+          </div>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
           {stats.map((stat) => (
             <Link

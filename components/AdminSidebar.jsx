@@ -41,6 +41,28 @@ const menuItems = [
 
 function SidebarContent({ pathname, onClose }) {
   const router = useRouter();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useState(() => {
+    const fetchUnread = async () => {
+      const supabase = createClient();
+      const { count } = await supabase
+        .from('Message')
+        .select('*', { count: 'exact', head: true })
+        .eq('isRead', false);
+      setUnreadCount(count || 0);
+    };
+    fetchUnread();
+
+    // Subscribe to new messages
+    const supabase = createClient();
+    const channel = supabase
+      .channel('unread-messages')
+      .on('postgres_changes', { event: '*', table: 'Message', schema: 'public' }, fetchUnread)
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, []);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -86,14 +108,21 @@ function SidebarContent({ pathname, onClose }) {
               key={item.name}
               href={item.href}
               onClick={onClose}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+              className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${
                 isActive
                   ? 'bg-teal-500 text-black font-bold shadow-lg shadow-teal-500/20'
                   : 'text-gray-400 hover:bg-white/5 hover:text-white'
               }`}
             >
-              {item.icon}
-              <span className="text-sm">{item.name}</span>
+              <div className="flex items-center gap-3">
+                {item.icon}
+                <span className="text-sm">{item.name}</span>
+              </div>
+              {item.name === 'Pesan' && unreadCount > 0 && (
+                <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-red-500 text-white text-[10px] font-black rounded-full shadow-lg shadow-red-500/30 animate-pulse">
+                  {unreadCount}
+                </span>
+              )}
             </Link>
           );
         })}

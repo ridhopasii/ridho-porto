@@ -72,18 +72,19 @@ var __TURBOPACK__imported__module__$5b$next$5d2f$internal$2f$font$2f$google$2f$p
 ;
 ;
 const metadata = {
+    metadataBase: new URL('https://ridhorobbipasi.my.id'),
     title: {
-        default: 'Ridhopasii | Full Stack Developer',
-        template: '%s | Ridhopasii'
+        default: 'Ridho Robbi Pasi | Web Developer & UI/UX Designer',
+        template: '%s | Ridho Robbi Pasi'
     },
-    description: 'Portofolio Ridho Robbi Pasi - Full Stack Web Developer & UI/UX Designer yang berfokus pada pembangunan aplikasi web modern, cepat, dan elegan.',
+    description: 'Portofolio Profesional Ridho Robbi Pasi - Full Stack Developer spesialis Next.js & UI/UX. Lihat proyek terbaru, blog teknologi, dan pengalaman kerja saya.',
     keywords: [
-        'Web Developer',
-        'Full Stack Developer',
         'Ridho Robbi Pasi',
-        'Next.js',
-        'React',
-        'Portfolio'
+        'Web Developer',
+        'UI/UX Designer',
+        'Next.js Developer Indonesia',
+        'React Developer',
+        'Full Stack Developer Indonesia'
     ],
     authors: [
         {
@@ -95,24 +96,24 @@ const metadata = {
         type: 'website',
         locale: 'id_ID',
         url: 'https://ridhorobbipasi.my.id',
-        siteName: 'Ridhopasii Portfolio',
-        title: 'Ridhopasii | Full Stack Developer',
-        description: 'Penyedia solusi pengembangan web modern dan desain UI/UX berkualitas tinggi.',
+        siteName: 'Ridho Robbi Pasi Portfolio',
+        title: 'Ridho Robbi Pasi | Solusi Web Modern & Desain Premium',
+        description: 'Bangun aplikasi web impian Anda bersama Ridho Robbi Pasi. Cepat, Responsif, dan Elegan.',
         images: [
             {
-                url: '/og-image.png',
+                url: 'https://uuybelgxovlgozgizith.supabase.co/storage/v1/object/public/portofolio/profile/1777209637898-wtsmkwvdjng.jpg',
                 width: 1200,
                 height: 630,
-                alt: 'Ridhopasii Portfolio'
+                alt: 'Ridho Robbi Pasi Portfolio'
             }
         ]
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Ridhopasii | Full Stack Developer',
-        description: 'Portofolio Full Stack Web Developer & UI/UX Designer.',
+        title: 'Ridho Robbi Pasi | Full Stack Web Developer',
+        description: 'Transformasi ide Anda menjadi produk digital yang luar biasa.',
         images: [
-            '/og-image.png'
+            'https://uuybelgxovlgozgizith.supabase.co/storage/v1/object/public/portofolio/profile/1777209637898-wtsmkwvdjng.jpg'
         ]
     },
     robots: {
@@ -129,12 +130,12 @@ function RootLayout({ children }) {
             children: children
         }, void 0, false, {
             fileName: "[project]/app/layout.jsx",
-            lineNumber: 56,
+            lineNumber: 68,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/layout.jsx",
-        lineNumber: 55,
+        lineNumber: 67,
         columnNumber: 5
     }, this);
 }

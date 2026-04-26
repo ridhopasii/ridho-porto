@@ -5,13 +5,12 @@ import ThemeToggle from './ThemeToggle';
 import { ArrowUpRight } from 'lucide-react';
 
 const navLinks = [
-  { name: 'Beranda', href: '/' },
   { name: 'Tentang', href: '/#tentang' },
-  { name: 'Pengalaman', href: '/experience' },
-  { name: 'Pendidikan', href: '/education' },
   { name: 'Proyek', href: '/projects' },
-  { name: 'Blog', href: '/blog' },
+  { name: 'Timeline', href: '/experience' },
+  { name: 'Pencapaian', href: '/#pencapaian' },
   { name: 'Galeri', href: '/gallery' },
+  { name: 'Blog', href: '/blogs' },
   { name: 'Kontak', href: '/#kontak' },
 ];
 

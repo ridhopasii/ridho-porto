@@ -1,48 +1,60 @@
 import './globals.css';
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
 
-const outfit = Outfit({ 
-  subsets: ['latin'], 
+const outfit = Outfit({
+  subsets: ['latin'],
   variable: '--font-outfit',
-  weight: ['300', '400', '500', '600', '700', '800', '900']
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
 });
 
-const jakarta = Plus_Jakarta_Sans({ 
-  subsets: ['latin'], 
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
   variable: '--font-jakarta',
-  weight: ['400', '500', '600', '700']
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata = {
+  metadataBase: new URL('https://ridhorobbipasi.my.id'),
   title: {
-    default: 'Ridhopasii | Full Stack Developer',
-    template: '%s | Ridhopasii'
+    default: 'Ridho Robbi Pasi | Web Developer & UI/UX Designer',
+    template: '%s | Ridho Robbi Pasi',
   },
-  description: 'Portofolio Ridho Robbi Pasi - Full Stack Web Developer & UI/UX Designer yang berfokus pada pembangunan aplikasi web modern, cepat, dan elegan.',
-  keywords: ['Web Developer', 'Full Stack Developer', 'Ridho Robbi Pasi', 'Next.js', 'React', 'Portfolio'],
+  description:
+    'Portofolio Profesional Ridho Robbi Pasi - Full Stack Developer spesialis Next.js & UI/UX. Lihat proyek terbaru, blog teknologi, dan pengalaman kerja saya.',
+  keywords: [
+    'Ridho Robbi Pasi',
+    'Web Developer',
+    'UI/UX Designer',
+    'Next.js Developer Indonesia',
+    'React Developer',
+    'Full Stack Developer Indonesia',
+  ],
   authors: [{ name: 'Ridho Robbi Pasi' }],
   creator: 'Ridho Robbi Pasi',
   openGraph: {
     type: 'website',
     locale: 'id_ID',
     url: 'https://ridhorobbipasi.my.id',
-    siteName: 'Ridhopasii Portfolio',
-    title: 'Ridhopasii | Full Stack Developer',
-    description: 'Penyedia solusi pengembangan web modern dan desain UI/UX berkualitas tinggi.',
+    siteName: 'Ridho Robbi Pasi Portfolio',
+    title: 'Ridho Robbi Pasi | Solusi Web Modern & Desain Premium',
+    description:
+      'Bangun aplikasi web impian Anda bersama Ridho Robbi Pasi. Cepat, Responsif, dan Elegan.',
     images: [
       {
-        url: '/og-image.png',
+        url: 'https://uuybelgxovlgozgizith.supabase.co/storage/v1/object/public/portofolio/profile/1777209637898-wtsmkwvdjng.jpg',
         width: 1200,
         height: 630,
-        alt: 'Ridhopasii Portfolio',
+        alt: 'Ridho Robbi Pasi Portfolio',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Ridhopasii | Full Stack Developer',
-    description: 'Portofolio Full Stack Web Developer & UI/UX Designer.',
-    images: ['/og-image.png'],
+    title: 'Ridho Robbi Pasi | Full Stack Web Developer',
+    description: 'Transformasi ide Anda menjadi produk digital yang luar biasa.',
+    images: [
+      'https://uuybelgxovlgozgizith.supabase.co/storage/v1/object/public/portofolio/profile/1777209637898-wtsmkwvdjng.jpg',
+    ],
   },
   robots: {
     index: true,
@@ -53,9 +65,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="id" className={`${outfit.variable} ${jakarta.variable}`}>
-      <body className="bg-[#0a0a0a] text-white">
-        {children}
-      </body>
+      <body className="bg-[#0a0a0a] text-white">{children}</body>
     </html>
   );
 }
