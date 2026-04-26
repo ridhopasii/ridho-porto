@@ -23,6 +23,7 @@ export default function ProfileForm({ initialData = null }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
+    fullName: '',
     name: '',
     title: '',
     bio: '',
@@ -58,7 +59,12 @@ export default function ProfileForm({ initialData = null }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      // keep fullName in sync with name field
+      ...(name === 'name' ? { fullName: value } : {}),
+    }));
   };
 
   const handleSubmit = async (e) => {
