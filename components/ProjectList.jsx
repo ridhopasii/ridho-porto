@@ -63,8 +63,8 @@ export default function ProjectList({ initialProjects }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 transition-all">
-            {/* Toggle Visibility Shortcut */}
+          <div className="flex items-center gap-3">
+            {/* Toggle Visibility Shortcut - ALWAYS VISIBLE */}
             <button
               onClick={async (e) => {
                 e.preventDefault();
@@ -75,43 +75,37 @@ export default function ProjectList({ initialProjects }) {
                   .eq('id', project.id);
                 if (!error) router.refresh();
               }}
-              className={`p-2 rounded-lg border border-white/5 transition-all ${
+              className={`p-2.5 rounded-xl border transition-all ${
                 project.showOnHome !== false 
                   ? 'text-teal-500 bg-teal-500/10 border-teal-500/20' 
-                  : 'text-gray-500 bg-white/5'
+                  : 'text-gray-500 bg-white/5 border-white/5'
               }`}
               title={project.showOnHome !== false ? "Tampil di Home" : "Disembunyikan"}
             >
               {project.showOnHome !== false ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
 
-            <Link
-              href={`/admin/projects/edit/${project.id}`}
-              className="p-2 hover:bg-white/10 rounded-lg text-blue-400"
-              title="Edit"
-            >
-              <Edit size={20} />
-            </Link>
-            <button
-              onClick={() => handleDelete(project.id)}
-              disabled={deletingId === project.id}
-              className="p-2 hover:bg-red-500/10 rounded-lg text-red-400 disabled:opacity-50"
-              title="Hapus"
-            >
-              {deletingId === project.id ? (
-                <Loader2 size={20} className="animate-spin" />
-              ) : (
-                <Trash2 size={20} />
-              )}
-            </button>
-            <a
-              href={project.projectUrl}
-              target="_blank"
-              className="p-2 hover:bg-white/10 rounded-lg text-teal-400"
-              title="Lihat"
-            >
-              <ExternalLink size={20} />
-            </a>
+            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all border-l border-white/10 pl-3">
+              <Link
+                href={`/admin/projects/edit/${project.id}`}
+                className="p-2 hover:bg-white/10 rounded-lg text-blue-400"
+                title="Edit"
+              >
+                <Edit size={20} />
+              </Link>
+              <button
+                onClick={() => handleDelete(project.id)}
+                disabled={deletingId === project.id}
+                className="p-2 hover:bg-red-500/10 rounded-lg text-red-400 disabled:opacity-50"
+                title="Hapus"
+              >
+                {deletingId === project.id ? (
+                  <Loader2 size={20} className="animate-spin" />
+                ) : (
+                  <Trash2 size={20} />
+                )}
+              </button>
+            </div>
           </div>
         </div>
       ))}

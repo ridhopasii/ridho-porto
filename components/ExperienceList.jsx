@@ -46,9 +46,11 @@ export default function ExperienceList({ initialExperiences }) {
                 )}
               </div>
             </div>
-            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+            <div className="flex items-center gap-3">
+              {/* Toggle Visibility Shortcut - ALWAYS VISIBLE */}
               <button
-                onClick={async () => {
+                onClick={async (e) => {
+                  e.preventDefault();
                   const supabase = createClient();
                   const { error } = await supabase
                     .from('Experience')
@@ -56,32 +58,35 @@ export default function ExperienceList({ initialExperiences }) {
                     .eq('id', exp.id);
                   if (!error) router.refresh();
                 }}
-                className={`p-2 rounded-xl transition-all ${
+                className={`p-2.5 rounded-xl border transition-all ${
                   exp.showOnHome !== false 
-                    ? 'text-teal-500 hover:bg-teal-500/10' 
-                    : 'text-gray-600 hover:bg-white/5'
+                    ? 'text-teal-500 bg-teal-500/10 border-teal-500/20' 
+                    : 'text-gray-500 bg-white/5 border-white/5'
                 }`}
-                title={exp.showOnHome !== false ? "Sembunyikan" : "Tampilkan"}
+                title={exp.showOnHome !== false ? "Tampil di Home" : "Disembunyikan"}
               >
-                {exp.showOnHome !== false ? <Eye size={20} /> : <EyeOff size={20} />}
+                {exp.showOnHome !== false ? <Eye size={18} /> : <EyeOff size={18} />}
               </button>
-              <Link
-                href={`/admin/experience/edit/${exp.id}`}
-                className="p-2 hover:bg-white/10 rounded-xl text-blue-400"
-              >
-                <Edit size={20} />
-              </Link>
-              <button
-                onClick={() => handleDelete(exp.id)}
-                disabled={deletingId === exp.id}
-                className="p-2 hover:bg-red-500/10 rounded-xl text-red-400 disabled:opacity-50"
-              >
-                {deletingId === exp.id ? (
-                  <Loader2 size={20} className="animate-spin" />
-                ) : (
-                  <Trash2 size={20} />
-                )}
-              </button>
+
+              <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all border-l border-white/10 pl-3">
+                <Link
+                  href={`/admin/experience/edit/${exp.id}`}
+                  className="p-2 hover:bg-white/10 rounded-xl text-blue-400"
+                >
+                  <Edit size={20} />
+                </Link>
+                <button
+                  onClick={() => handleDelete(exp.id)}
+                  disabled={deletingId === exp.id}
+                  className="p-2 hover:bg-red-500/10 rounded-xl text-red-400 disabled:opacity-50"
+                >
+                  {deletingId === exp.id ? (
+                    <Loader2 size={20} className="animate-spin" />
+                  ) : (
+                    <Trash2 size={20} />
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
