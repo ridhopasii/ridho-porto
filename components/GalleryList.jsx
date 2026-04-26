@@ -1,5 +1,5 @@
 'use client';
-import { Trash2, Edit, Image as ImageIcon, Calendar, Tag } from 'lucide-react';
+import { Trash2, Edit, Image as ImageIcon, Calendar, Tag, Eye, EyeOff } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -23,6 +23,18 @@ export default function GalleryList({ galleryItems }) {
     }
   };
 
+  const toggleVisibility = async (item) => {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from('Gallery')
+      .update({ showOnHome: !item.showOnHome })
+      .eq('id', item.id);
+
+    if (!error) {
+      router.refresh();
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {galleryItems?.map((item) => (
@@ -39,6 +51,14 @@ export default function GalleryList({ galleryItems }) {
               </div>
             )}
             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-3">
+              <button
+                onClick={() => toggleVisibility(item)}
+                className={`p-3 rounded-xl hover:scale-110 transition-all ${
+                  item.showOnHome !== false ? 'bg-teal-500 text-white' : 'bg-gray-500 text-white'
+                }`}
+              >
+                {item.showOnHome !== false ? <Eye size={18} /> : <EyeOff size={18} />}
+              </button>
               <button
                 onClick={() => router.push(`/admin/gallery/edit/${item.id}`)}
                 className="p-3 bg-white text-black rounded-xl hover:scale-110 transition-all"

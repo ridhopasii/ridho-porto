@@ -63,10 +63,11 @@ export default function ProjectList({ initialProjects }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+          <div className="flex items-center gap-2 transition-all">
             {/* Toggle Visibility Shortcut */}
             <button
-              onClick={async () => {
+              onClick={async (e) => {
+                e.preventDefault();
                 const supabase = createClient();
                 const { error } = await supabase
                   .from('Project')
@@ -74,14 +75,14 @@ export default function ProjectList({ initialProjects }) {
                   .eq('id', project.id);
                 if (!error) router.refresh();
               }}
-              className={`p-2 rounded-lg transition-all ${
+              className={`p-2 rounded-lg border border-white/5 transition-all ${
                 project.showOnHome !== false 
-                  ? 'text-teal-500 hover:bg-teal-500/10' 
-                  : 'text-gray-600 hover:bg-white/5'
+                  ? 'text-teal-500 bg-teal-500/10 border-teal-500/20' 
+                  : 'text-gray-500 bg-white/5'
               }`}
-              title={project.showOnHome !== false ? "Sembunyikan dari Home" : "Tampilkan di Home"}
+              title={project.showOnHome !== false ? "Tampil di Home" : "Disembunyikan"}
             >
-              {project.showOnHome !== false ? <Eye size={20} /> : <EyeOff size={20} />}
+              {project.showOnHome !== false ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
 
             <Link

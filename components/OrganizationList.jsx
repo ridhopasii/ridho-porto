@@ -1,5 +1,5 @@
 'use client';
-import { Trash2, Edit, ExternalLink, Calendar, Users } from 'lucide-react';
+import { Trash2, Edit, ExternalLink, Calendar, Users, Eye, EyeOff } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -36,6 +36,23 @@ export default function OrganizationList({ organizations }) {
                 <Users size={24} />
               </div>
               <div className="flex gap-2">
+                <button
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    const supabase = createClient();
+                    const { error } = await supabase
+                      .from('Organization')
+                      .update({ showOnHome: !org.showOnHome })
+                      .eq('id', org.id);
+                    if (!error) router.refresh();
+                  }}
+                  className={`p-3 transition-all rounded-xl ${
+                    org.showOnHome !== false ? 'bg-teal-500/10 text-teal-500' : 'bg-white/5 text-gray-500'
+                  }`}
+                  title={org.showOnHome !== false ? "Sembunyikan" : "Tampilkan"}
+                >
+                  {org.showOnHome !== false ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
                 <button
                   onClick={() => router.push(`/admin/organizations/edit/${org.id}`)}
                   className="p-3 bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
