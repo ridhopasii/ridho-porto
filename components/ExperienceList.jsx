@@ -1,5 +1,5 @@
 'use client';
-import { Trash2, Briefcase, Edit, Loader2 } from 'lucide-react';
+import { Trash2, Briefcase, Edit, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -47,6 +47,24 @@ export default function ExperienceList({ initialExperiences }) {
               </div>
             </div>
             <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+              <button
+                onClick={async () => {
+                  const supabase = createClient();
+                  const { error } = await supabase
+                    .from('Experience')
+                    .update({ showOnHome: !exp.showOnHome })
+                    .eq('id', exp.id);
+                  if (!error) router.refresh();
+                }}
+                className={`p-2 rounded-xl transition-all ${
+                  exp.showOnHome !== false 
+                    ? 'text-teal-500 hover:bg-teal-500/10' 
+                    : 'text-gray-600 hover:bg-white/5'
+                }`}
+                title={exp.showOnHome !== false ? "Sembunyikan" : "Tampilkan"}
+              >
+                {exp.showOnHome !== false ? <Eye size={20} /> : <EyeOff size={20} />}
+              </button>
               <Link
                 href={`/admin/experience/edit/${exp.id}`}
                 className="p-2 hover:bg-white/10 rounded-xl text-blue-400"

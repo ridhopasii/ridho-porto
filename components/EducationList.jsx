@@ -1,5 +1,5 @@
 'use client';
-import { Trash2, GraduationCap, Edit, Loader2 } from 'lucide-react';
+import { Trash2, GraduationCap, Edit, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -45,6 +45,24 @@ export default function EducationList({ initialEducations }) {
               </div>
             </div>
             <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+              <button
+                onClick={async () => {
+                  const supabase = createClient();
+                  const { error } = await supabase
+                    .from('Education')
+                    .update({ showOnHome: !edu.showOnHome })
+                    .eq('id', edu.id);
+                  if (!error) router.refresh();
+                }}
+                className={`p-2 rounded-xl transition-all ${
+                  edu.showOnHome !== false 
+                    ? 'text-teal-500 hover:bg-teal-500/10' 
+                    : 'text-gray-600 hover:bg-white/5'
+                }`}
+                title={edu.showOnHome !== false ? "Sembunyikan" : "Tampilkan"}
+              >
+                {edu.showOnHome !== false ? <Eye size={20} /> : <EyeOff size={20} />}
+              </button>
               <Link
                 href={`/admin/education/edit/${edu.id}`}
                 className="p-2 hover:bg-white/10 rounded-xl text-blue-400"

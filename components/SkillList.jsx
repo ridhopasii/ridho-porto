@@ -1,5 +1,5 @@
 'use client';
-import { Trash2, Cpu, Loader2, Pencil } from 'lucide-react';
+import { Trash2, Cpu, Loader2, Pencil, Eye, EyeOff } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -45,6 +45,22 @@ export default function SkillList({ initialSkills }) {
             </div>
           </div>
           <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+            <button
+              onClick={async () => {
+                const supabase = createClient();
+                const { error } = await supabase
+                  .from('Skill')
+                  .update({ showOnHome: !skill.showOnHome })
+                  .eq('id', skill.id);
+                if (!error) router.refresh();
+              }}
+              className={`p-2 transition-all rounded-lg ${
+                skill.showOnHome !== false ? 'text-teal-500 hover:bg-teal-500/10' : 'text-gray-600 hover:bg-white/5'
+              }`}
+              title={skill.showOnHome !== false ? "Sembunyikan" : "Tampilkan"}
+            >
+              {skill.showOnHome !== false ? <Eye size={16} /> : <EyeOff size={16} />}
+            </button>
             <Link
               href={`/admin/skills/edit/${skill.id}`}
               className="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg"

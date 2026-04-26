@@ -64,6 +64,26 @@ export default function ProjectList({ initialProjects }) {
           </div>
 
           <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+            {/* Toggle Visibility Shortcut */}
+            <button
+              onClick={async () => {
+                const supabase = createClient();
+                const { error } = await supabase
+                  .from('Project')
+                  .update({ showOnHome: !project.showOnHome })
+                  .eq('id', project.id);
+                if (!error) router.refresh();
+              }}
+              className={`p-2 rounded-lg transition-all ${
+                project.showOnHome !== false 
+                  ? 'text-teal-500 hover:bg-teal-500/10' 
+                  : 'text-gray-600 hover:bg-white/5'
+              }`}
+              title={project.showOnHome !== false ? "Sembunyikan dari Home" : "Tampilkan di Home"}
+            >
+              {project.showOnHome !== false ? <Eye size={20} /> : <EyeOff size={20} />}
+            </button>
+
             <Link
               href={`/admin/projects/edit/${project.id}`}
               className="p-2 hover:bg-white/10 rounded-lg text-blue-400"
