@@ -18,7 +18,13 @@ export const revalidate = 0;
 async function getData() {
   const supabase = await createClient();
 
-  const { data: profile } = await supabase.from('Profile').select('*').single();
+  const { data: profile } = await supabase
+    .from('Profile')
+    .select('*')
+    .order('id', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
   const { data: projects } = await supabase
     .from('Project')
     .select('*')
