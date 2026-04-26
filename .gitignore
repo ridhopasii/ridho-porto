@@ -35,4 +35,10 @@ Thumbs.db
 # Scratch scripts
 scratch/
 
+# Temp files
 app/admin/experience/edit/[id]/
+*.cjs
+sql2_final.sql
+sql3_final.sql
+upload_result.sql
+upload_dummy_images.*
