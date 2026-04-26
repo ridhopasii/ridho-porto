@@ -1,5 +1,5 @@
 'use client';
-import { Plus, Edit, Trash2, ExternalLink, Folders, Loader2 } from 'lucide-react';
+import { Plus, Edit, Trash2, ExternalLink, Folders, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -48,7 +48,18 @@ export default function ProjectList({ initialProjects }) {
             </div>
             <div>
               <h3 className="font-bold text-lg">{project.title}</h3>
-              <p className="text-sm text-gray-500 line-clamp-1 max-w-md">{project.description}</p>
+              <div className="flex items-center gap-3">
+                <p className="text-sm text-gray-500 line-clamp-1 max-w-md">{project.description}</p>
+                {project.showOnHome !== false ? (
+                  <span className="flex items-center gap-1 text-[10px] bg-teal-500/10 text-teal-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">
+                    <Eye size={10} /> Home
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1 text-[10px] bg-white/5 text-gray-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">
+                    <EyeOff size={10} /> Hidden
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
