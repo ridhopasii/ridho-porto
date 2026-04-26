@@ -7,10 +7,11 @@ import { ArrowUpRight } from 'lucide-react';
 const navLinks = [
   { name: 'Beranda', href: '/' },
   { name: 'Tentang', href: '/#tentang' },
-  { name: 'Organisasi', href: '/#organisasi' },
-  { name: 'Proyek', href: '/#proyek' },
-  { name: 'Keterampilan', href: '/#keterampilan' },
-  { name: 'Galeri', href: '/#galeri' },
+  { name: 'Pengalaman', href: '/experience' },
+  { name: 'Pendidikan', href: '/education' },
+  { name: 'Proyek', href: '/projects' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'Galeri', href: '/gallery' },
   { name: 'Kontak', href: '/#kontak' },
 ];
 
