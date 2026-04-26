@@ -1,12 +1,13 @@
 'use client';
+import React, { useState, useTransition } from 'react';
 import { Trash2, Edit, ExternalLink, Calendar, Users, Eye, EyeOff } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 export default function OrganizationList({ organizations }) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState(null);
+  const [isPending, startTransition] = useTransition();
 
   const handleDelete = async (id) => {
     if (!confirm('Yakin ingin menghapus pengalaman organisasi ini?')) return;
@@ -19,7 +20,10 @@ export default function OrganizationList({ organizations }) {
       alert('Gagal menghapus: ' + error.message);
       setDeletingId(null);
     } else {
-      router.refresh();
+      startTransition(() => {
+        router.refresh();
+        setDeletingId(null);
+      });
     }
   };
 
@@ -39,17 +43,21 @@ export default function OrganizationList({ organizations }) {
                 <button
                   onClick={async (e) => {
                     e.preventDefault();
-                    const supabase = createClient();
-                    const { error } = await supabase
-                      .from('Organization')
-                      .update({ showOnHome: !org.showOnHome })
-                      .eq('id', org.id);
-                    if (!error) router.refresh();
+                    startTransition(async () => {
+                      const supabase = createClient();
+                      const { error } = await supabase
+                        .from('Organization')
+                        .update({ showOnHome: !org.showOnHome })
+                        .eq('id', org.id);
+                      if (!error) router.refresh();
+                    });
                   }}
                   className={`p-3 transition-all rounded-xl ${
-                    org.showOnHome !== false ? 'bg-teal-500/10 text-teal-500' : 'bg-white/5 text-gray-500'
+                    org.showOnHome !== false
+                      ? 'bg-teal-500/10 text-teal-500'
+                      : 'bg-white/5 text-gray-500'
                   }`}
-                  title={org.showOnHome !== false ? "Sembunyikan" : "Tampilkan"}
+                  title={org.showOnHome !== false ? 'Sembunyikan' : 'Tampilkan'}
                 >
                   {org.showOnHome !== false ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
