@@ -28,36 +28,55 @@ async function getData() {
   const { data: projects } = await supabase
     .from('Project')
     .select('*')
+    .eq('showOnHome', true)
     .order('createdAt', { ascending: false });
-  const { data: skills } = await supabase.from('Skill').select('*');
+  
+  const { data: skills } = await supabase
+    .from('Skill')
+    .select('*')
+    .eq('showOnHome', true);
+
   const { data: experiences } = await supabase
     .from('Experience')
     .select('*')
+    .eq('showOnHome', true)
     .order('period', { ascending: false });
+
   const { data: educations } = await supabase
     .from('Education')
     .select('*')
+    .eq('showOnHome', true)
     .order('period', { ascending: false });
+
   const { data: awards } = await supabase
     .from('Award')
     .select('*')
+    .eq('showOnHome', true)
     .order('date', { ascending: false });
+
   const { data: publications } = await supabase
     .from('Publication')
     .select('*')
+    .eq('showOnHome', true)
     .order('date', { ascending: false });
+
   const { data: blogs } = await supabase
     .from('Article')
     .select('*')
+    .eq('showOnHome', true)
     .order('createdAt', { ascending: false })
     .limit(3);
+
   const { data: organizations } = await supabase
     .from('Organization')
     .select('*')
-    .order('order', { ascending: true });
+    .eq('showOnHome', true)
+    .order('updatedAt', { ascending: false });
+
   const { data: gallery } = await supabase
     .from('Gallery')
     .select('*')
+    .eq('showOnHome', true)
     .order('createdAt', { ascending: false })
     .limit(6);
 

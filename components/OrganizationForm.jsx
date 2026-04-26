@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Save, Loader2, CheckCircle2, Camera, Globe } from 'lucide-react';
+import { Save, Loader2, CheckCircle2, Camera, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import MultiPhotoUpload from './MultiPhotoUpload';
 
@@ -18,6 +18,7 @@ export default function OrganizationForm({ initialData = null }) {
     proofUrl: '',
     logoUrl: '',
     images: [],
+    showOnHome: true,
   });
 
   useEffect(() => {
@@ -115,6 +116,26 @@ export default function OrganizationForm({ initialData = null }) {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Visibility Toggle */}
+      <div className="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-3xl">
+        <div className="flex items-center gap-4">
+          <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-teal-500/20 text-teal-500' : 'bg-gray-500/20 text-gray-500'}`}>
+            {formData.showOnHome ? <Eye size={20} /> : <EyeOff size={20} />}
+          </div>
+          <div>
+            <p className="text-sm font-bold">Tampilkan di Home Page</p>
+            <p className="text-xs text-gray-500">Konten ini akan {formData.showOnHome ? 'muncul' : 'disembunyikan'} di halaman utama.</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setFormData(prev => ({ ...prev, showOnHome: !prev.showOnHome }))}
+          className={`relative w-14 h-7 rounded-full transition-all ${formData.showOnHome ? 'bg-teal-500' : 'bg-white/10'}`}
+        >
+          <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all ${formData.showOnHome ? 'left-8' : 'left-1'}`} />
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
