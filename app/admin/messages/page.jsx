@@ -1,3 +1,5 @@
+import { createClient } from '@/utils/supabase/server';
+import AdminSidebar from '@/components/AdminSidebar';
 import MessageItem from '@/components/MessageItem';
 
 export default async function AdminMessages() {

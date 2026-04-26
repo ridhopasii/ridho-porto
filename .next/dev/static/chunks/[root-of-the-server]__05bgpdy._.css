@@ -850,12 +850,12 @@
     z-index: 100;
   }
 
-  .z-\[200\] {
-    z-index: 200;
-  }
-
   .z-\[999\] {
     z-index: 999;
+  }
+
+  .z-\[9999\] {
+    z-index: 9999;
   }
 
   .order-1 {
@@ -876,10 +876,6 @@
 
   .col-span-full {
     grid-column: 1 / -1;
-  }
-
-  .row-span-2 {
-    grid-row: span 2 / span 2;
   }
 
   .container {
@@ -992,10 +988,6 @@
     margin-right: calc(var(--spacing) * 2);
   }
 
-  .mr-3 {
-    margin-right: calc(var(--spacing) * 3);
-  }
-
   .mb-0 {
     margin-bottom: calc(var(--spacing) * 0);
   }
@@ -1052,16 +1044,8 @@
     margin-left: calc(var(--spacing) * 1);
   }
 
-  .ml-1\.5 {
-    margin-left: calc(var(--spacing) * 1.5);
-  }
-
   .ml-2 {
     margin-left: calc(var(--spacing) * 2);
-  }
-
-  .ml-3 {
-    margin-left: calc(var(--spacing) * 3);
   }
 
   .ml-12 {
@@ -1313,14 +1297,6 @@
     height: 100vh;
   }
 
-  .max-h-\[70vh\] {
-    max-height: 70vh;
-  }
-
-  .max-h-\[80vh\] {
-    max-height: 80vh;
-  }
-
   .min-h-\[3rem\] {
     min-height: 3rem;
   }
@@ -1333,12 +1309,20 @@
     min-height: 100vh;
   }
 
+  .w-1 {
+    width: calc(var(--spacing) * 1);
+  }
+
   .w-1\.5 {
     width: calc(var(--spacing) * 1.5);
   }
 
   .w-1\/2 {
     width: 50%;
+  }
+
+  .w-1\/4 {
+    width: 25%;
   }
 
   .w-2 {
@@ -1513,10 +1497,6 @@
     max-width: 280px;
   }
 
-  .max-w-full {
-    max-width: 100%;
-  }
-
   .max-w-lg {
     max-width: var(--container-lg);
   }
@@ -1607,11 +1587,6 @@
 
   .translate-y-10 {
     --tw-translate-y: calc(var(--spacing) * 10);
-    translate: var(--tw-translate-x) var(--tw-translate-y);
-  }
-
-  .translate-y-full {
-    --tw-translate-y: 100%;
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
 
@@ -1733,10 +1708,6 @@
     justify-content: flex-start;
   }
 
-  .gap-0\.5 {
-    gap: calc(var(--spacing) * .5);
-  }
-
   .gap-1 {
     gap: calc(var(--spacing) * 1);
   }
@@ -1759,10 +1730,6 @@
 
   .gap-4 {
     gap: calc(var(--spacing) * 4);
-  }
-
-  .gap-5 {
-    gap: calc(var(--spacing) * 5);
   }
 
   .gap-6 {
@@ -2002,6 +1969,10 @@
     border-color: #0f0f0f;
   }
 
+  .border-\[var\(--accent\)\] {
+    border-color: var(--accent);
+  }
+
   .border-blue-500\/20 {
     border-color: #3080ff33;
   }
@@ -2009,16 +1980,6 @@
   @supports (color: color-mix(in lab, red, red)) {
     .border-blue-500\/20 {
       border-color: color-mix(in oklab, var(--color-blue-500) 20%, transparent);
-    }
-  }
-
-  .border-blue-500\/30 {
-    border-color: #3080ff4d;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .border-blue-500\/30 {
-      border-color: color-mix(in oklab, var(--color-blue-500) 30%, transparent);
     }
   }
 
@@ -2039,16 +2000,6 @@
   @supports (color: color-mix(in lab, red, red)) {
     .border-gray-500\/20 {
       border-color: color-mix(in oklab, var(--color-gray-500) 20%, transparent);
-    }
-  }
-
-  .border-gray-500\/30 {
-    border-color: #6a72824d;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .border-gray-500\/30 {
-      border-color: color-mix(in oklab, var(--color-gray-500) 30%, transparent);
     }
   }
 
@@ -2298,16 +2249,6 @@
     }
   }
 
-  .border-yellow-500\/30 {
-    border-color: #edb2004d;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .border-yellow-500\/30 {
-      border-color: color-mix(in oklab, var(--color-yellow-500) 30%, transparent);
-    }
-  }
-
   .border-yellow-500\/50 {
     border-color: #edb20080;
   }
@@ -2356,11 +2297,6 @@
     background-color: #030303;
   }
 
-  .bg-\[\#030303\]\/80 {
-    background-color: #030303cc;
-    background-color: lab(.822525% 0 0 / .8);
-  }
-
   .bg-\[\#050505\] {
     background-color: #050505;
   }
@@ -2374,18 +2310,22 @@
     background-color: #090909;
   }
 
-  .bg-black {
-    background-color: var(--color-black);
+  .bg-\[var\(--accent\)\] {
+    background-color: var(--accent);
   }
 
-  .bg-black\/0 {
-    background-color: #0000;
+  .bg-\[var\(--accent\)\]\/10 {
+    background-color: var(--accent);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
-    .bg-black\/0 {
-      background-color: color-mix(in oklab, var(--color-black) 0%, transparent);
+    .bg-\[var\(--accent\)\]\/10 {
+      background-color: color-mix(in oklab, var(--accent) 10%, transparent);
     }
+  }
+
+  .bg-black {
+    background-color: var(--color-black);
   }
 
   .bg-black\/20 {
@@ -2455,16 +2395,6 @@
   @supports (color: color-mix(in lab, red, red)) {
     .bg-black\/80 {
       background-color: color-mix(in oklab, var(--color-black) 80%, transparent);
-    }
-  }
-
-  .bg-black\/95 {
-    background-color: #000000f2;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .bg-black\/95 {
-      background-color: color-mix(in oklab, var(--color-black) 95%, transparent);
     }
   }
 
@@ -2545,16 +2475,6 @@
   @supports (color: color-mix(in lab, red, red)) {
     .bg-green-500\/10 {
       background-color: color-mix(in oklab, var(--color-green-500) 10%, transparent);
-    }
-  }
-
-  .bg-green-500\/20 {
-    background-color: #00c75833;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .bg-green-500\/20 {
-      background-color: color-mix(in oklab, var(--color-green-500) 20%, transparent);
     }
   }
 
@@ -2834,16 +2754,6 @@
     }
   }
 
-  .bg-yellow-500\/20 {
-    background-color: #edb20033;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .bg-yellow-500\/20 {
-      background-color: color-mix(in oklab, var(--color-yellow-500) 20%, transparent);
-    }
-  }
-
   .bg-yellow-600 {
     background-color: var(--color-yellow-600);
   }
@@ -2880,6 +2790,11 @@
 
   .from-\[\#050505\] {
     --tw-gradient-from: #050505;
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+
+  .from-\[var\(--accent\)\] {
+    --tw-gradient-from: var(--accent);
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
@@ -3309,10 +3224,6 @@
     padding-inline: calc(var(--spacing) * 10);
   }
 
-  .px-20 {
-    padding-inline: calc(var(--spacing) * 20);
-  }
-
   .py-0\.5 {
     padding-block: calc(var(--spacing) * .5);
   }
@@ -3680,6 +3591,10 @@
     white-space: pre-wrap;
   }
 
+  .text-\[var\(--accent\)\] {
+    color: var(--accent);
+  }
+
   .text-black {
     color: var(--color-black);
   }
@@ -3978,6 +3893,12 @@
 
   .mix-blend-screen {
     mix-blend-mode: screen;
+  }
+
+  .shadow-\[var\(--accent\)\]\/20 {
+    --tw-shadow-alpha: 20%;
+    --tw-shadow: var(--accent);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .shadow-2xl {
@@ -4559,18 +4480,6 @@
   }
 
   @media (hover: hover) {
-    .group-hover\:bg-black\/50:is(:where(.group):hover *) {
-      background-color: #00000080;
-    }
-
-    @supports (color: color-mix(in lab, red, red)) {
-      .group-hover\:bg-black\/50:is(:where(.group):hover *) {
-        background-color: color-mix(in oklab, var(--color-black) 50%, transparent);
-      }
-    }
-  }
-
-  @media (hover: hover) {
     .group-hover\:bg-blue-500\/20:is(:where(.group):hover *) {
       background-color: #3080ff33;
     }
@@ -4621,6 +4530,12 @@
       .group-hover\:bg-white\/\[0\.08\]:is(:where(.group):hover *) {
         background-color: color-mix(in oklab, var(--color-white) 8%, transparent);
       }
+    }
+  }
+
+  @media (hover: hover) {
+    .group-hover\:text-\[var\(--accent\)\]:is(:where(.group):hover *) {
+      color: var(--accent);
     }
   }
 
@@ -4765,6 +4680,46 @@
 
   .peer-checked\:text-white:is(:where(.peer):checked ~ *) {
     color: var(--color-white);
+  }
+
+  .selection\:bg-\[var\(--accent\)\]\/30 ::-moz-selection {
+    background-color: var(--accent);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .selection\:bg-\[var\(--accent\)\]\/30 ::-moz-selection {
+      background-color: color-mix(in oklab, var(--accent) 30%, transparent);
+    }
+  }
+
+  .selection\:bg-\[var\(--accent\)\]\/30 ::selection {
+    background-color: var(--accent);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .selection\:bg-\[var\(--accent\)\]\/30 ::selection {
+      background-color: color-mix(in oklab, var(--accent) 30%, transparent);
+    }
+  }
+
+  .selection\:bg-\[var\(--accent\)\]\/30::-moz-selection {
+    background-color: var(--accent);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .selection\:bg-\[var\(--accent\)\]\/30::-moz-selection {
+      background-color: color-mix(in oklab, var(--accent) 30%, transparent);
+    }
+  }
+
+  .selection\:bg-\[var\(--accent\)\]\/30::selection {
+    background-color: var(--accent);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .selection\:bg-\[var\(--accent\)\]\/30::selection {
+      background-color: color-mix(in oklab, var(--accent) 30%, transparent);
+    }
   }
 
   .selection\:bg-blue-500\/30 ::-moz-selection {
@@ -5112,6 +5067,18 @@
   }
 
   @media (hover: hover) {
+    .hover\:border-\[var\(--accent\)\]\/30:hover {
+      border-color: var(--accent);
+    }
+
+    @supports (color: color-mix(in lab, red, red)) {
+      .hover\:border-\[var\(--accent\)\]\/30:hover {
+        border-color: color-mix(in oklab, var(--accent) 30%, transparent);
+      }
+    }
+  }
+
+  @media (hover: hover) {
     .hover\:border-blue-500\/30:hover {
       border-color: #3080ff4d;
     }
@@ -5143,18 +5110,6 @@
     @supports (color: color-mix(in lab, red, red)) {
       .hover\:border-purple-500\/30:hover {
         border-color: color-mix(in oklab, var(--color-purple-500) 30%, transparent);
-      }
-    }
-  }
-
-  @media (hover: hover) {
-    .hover\:border-purple-500\/40:hover {
-      border-color: #ac4bff66;
-    }
-
-    @supports (color: color-mix(in lab, red, red)) {
-      .hover\:border-purple-500\/40:hover {
-        border-color: color-mix(in oklab, var(--color-purple-500) 40%, transparent);
       }
     }
   }
@@ -5286,6 +5241,12 @@
   }
 
   @media (hover: hover) {
+    .hover\:bg-blue-600:hover {
+      background-color: var(--color-blue-600);
+    }
+  }
+
+  @media (hover: hover) {
     .hover\:bg-blue-700:hover {
       background-color: var(--color-blue-700);
     }
@@ -5372,6 +5333,12 @@
       .hover\:bg-red-500\/20:hover {
         background-color: color-mix(in oklab, var(--color-red-500) 20%, transparent);
       }
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:bg-red-600:hover {
+      background-color: var(--color-red-600);
     }
   }
 
@@ -5610,6 +5577,13 @@
       .hover\:shadow-teal-500\/30:hover {
         --tw-shadow-color: color-mix(in oklab, color-mix(in oklab, var(--color-teal-500) 30%, transparent) var(--tw-shadow-alpha), transparent);
       }
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:brightness-110:hover {
+      --tw-brightness: brightness(110%);
+      filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );
     }
   }
 
@@ -5944,18 +5918,6 @@
   }
 
   @media (min-width: 48rem) {
-    .md\:right-8 {
-      right: calc(var(--spacing) * 8);
-    }
-  }
-
-  @media (min-width: 48rem) {
-    .md\:left-8 {
-      left: calc(var(--spacing) * 8);
-    }
-  }
-
-  @media (min-width: 48rem) {
     .md\:col-span-1 {
       grid-column: span 1 / span 1;
     }
@@ -6061,18 +6023,6 @@
   @media (min-width: 48rem) {
     .md\:items-center {
       align-items: center;
-    }
-  }
-
-  @media (min-width: 48rem) {
-    .md\:items-end {
-      align-items: flex-end;
-    }
-  }
-
-  @media (min-width: 48rem) {
-    .md\:justify-between {
-      justify-content: space-between;
     }
   }
 
@@ -6403,15 +6353,18 @@
   --radius-xl: 20px;
   --radius-2xl: 24px;
   --border-subtle: #ffffff14;
+  --accent: #14b8a6;
+  --accent-rgb: 20, 184, 166;
 }
 
 html {
   scroll-behavior: smooth;
+  cursor: none;
 }
 
 ::selection {
+  background: rgba(var(--accent-rgb), .3);
   color: #fff;
-  background: #14b8a64d;
 }
 
 ::-webkit-scrollbar {
@@ -6428,7 +6381,7 @@ html {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #14b8a6;
+  background: var(--accent);
 }
 
 body {
@@ -6445,7 +6398,9 @@ body {
 }
 
 .glow-accent {
-  box-shadow: 0 0 20px #14b8a64d, 0 0 40px #14b8a633, 0 0 60px #14b8a61a;
+  box-shadow: 0 0 20px rgba(var(--accent-rgb), .3),
+              0 0 40px rgba(var(--accent-rgb), .2),
+              0 0 60px rgba(var(--accent-rgb), .1);
 }
 
 @keyframes fade-in-up {
@@ -6509,8 +6464,9 @@ body {
 }
 
 .gradient-text-animated {
-  background: linear-gradient(90deg, #14b8a6, #a855f7, #14b8a6) 0 0 / 200%;
+  background: linear-gradient(90deg, var(--accent), #a855f7, var(--accent));
   -webkit-text-fill-color: transparent;
+  background-size: 200%;
   -webkit-background-clip: text;
   background-clip: text;
   animation: 3s linear infinite gradient-shift;

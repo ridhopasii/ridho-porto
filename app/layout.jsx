@@ -1,5 +1,8 @@
 import './globals.css';
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
+import { ThemeProvider } from '@/components/ThemeProvider';
+import Analytics from '@/components/Analytics';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -62,10 +65,32 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+import CustomCursor from '@/components/CustomCursor';
+import AccentProvider from '@/components/AccentProvider';
+import { createClient } from '@/utils/supabase/server';
+
+export default async function RootLayout({ children }) {
+  const supabase = await createClient();
+  const { data: settings } = await supabase
+    .from('SiteSettings')
+    .select('*')
+    .eq('key', 'accent_color')
+    .single();
+  const accentColor = settings?.value || '#14b8a6';
+
   return (
-    <html lang="id" className={`${outfit.variable} ${jakarta.variable}`}>
-      <body className="bg-[#0a0a0a] text-white">{children}</body>
+    <html lang="id" className={`${outfit.variable} ${jakarta.variable}`} suppressHydrationWarning>
+      <body className="bg-[#0a0a0a] text-white">
+        <AccentProvider color={accentColor}>
+          <CustomCursor />
+          <ErrorBoundary>
+            <ThemeProvider>
+              <Analytics />
+              {children}
+            </ThemeProvider>
+          </ErrorBoundary>
+        </AccentProvider>
+      </body>
     </html>
   );
 }

@@ -2,20 +2,66 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import AdminSidebar from '@/components/AdminSidebar';
+import ExportData from '@/components/ExportData';
 import {
-  Eye, EyeOff, Save, Loader2, CheckCircle2,
-  User, Briefcase, GraduationCap, Folders,
-  BookOpen, Image as ImageIcon, Mail, Settings
+  Eye,
+  EyeOff,
+  Save,
+  Loader2,
+  CheckCircle2,
+  User,
+  Briefcase,
+  GraduationCap,
+  Folders,
+  BookOpen,
+  Image as ImageIcon,
+  Mail,
+  Settings,
 } from 'lucide-react';
 
 const SECTIONS = [
-  { key: 'show_about', label: 'Tentang', desc: 'Section "About Me" di halaman utama', icon: <User size={20} className="text-teal-500" /> },
-  { key: 'show_experience', label: 'Pengalaman', desc: 'Section timeline pengalaman kerja & organisasi', icon: <Briefcase size={20} className="text-blue-500" /> },
-  { key: 'show_education', label: 'Pendidikan', desc: 'Section timeline riwayat pendidikan', icon: <GraduationCap size={20} className="text-purple-500" /> },
-  { key: 'show_projects', label: 'Proyek', desc: 'Section showcase proyek & portfolio', icon: <Folders size={20} className="text-orange-500" /> },
-  { key: 'show_blog', label: 'Blog', desc: 'Section artikel & tulisan terbaru', icon: <BookOpen size={20} className="text-green-500" /> },
-  { key: 'show_gallery', label: 'Galeri', desc: 'Section galeri foto kegiatan', icon: <ImageIcon size={20} className="text-pink-500" /> },
-  { key: 'show_contact', label: 'Kontak', desc: 'Section form kontak & informasi', icon: <Mail size={20} className="text-yellow-500" /> },
+  {
+    key: 'show_about',
+    label: 'Tentang',
+    desc: 'Section "About Me" di halaman utama',
+    icon: <User size={20} className="text-teal-500" />,
+  },
+  {
+    key: 'show_experience',
+    label: 'Pengalaman',
+    desc: 'Section timeline pengalaman kerja & organisasi',
+    icon: <Briefcase size={20} className="text-blue-500" />,
+  },
+  {
+    key: 'show_education',
+    label: 'Pendidikan',
+    desc: 'Section timeline riwayat pendidikan',
+    icon: <GraduationCap size={20} className="text-purple-500" />,
+  },
+  {
+    key: 'show_projects',
+    label: 'Proyek',
+    desc: 'Section showcase proyek & portfolio',
+    icon: <Folders size={20} className="text-orange-500" />,
+  },
+  {
+    key: 'show_blog',
+    label: 'Blog',
+    desc: 'Section artikel & tulisan terbaru',
+    icon: <BookOpen size={20} className="text-green-500" />,
+  },
+  {
+    key: 'show_gallery',
+    label: 'Galeri',
+    desc: 'Section galeri foto kegiatan',
+    icon: <ImageIcon size={20} className="text-pink-500" />,
+  },
+  {
+    key: 'show_contact',
+    label: 'Kontak',
+    desc: 'Section form kontak & informasi',
+    icon: <Mail size={20} className="text-yellow-500" />,
+  },
 ];
 
 export default function AdminSettings() {
@@ -29,9 +75,11 @@ export default function AdminSettings() {
     const fetchSettings = async () => {
       const { data } = await supabase.from('SiteSettings').select('*');
       const map = {};
-      (data || []).forEach(row => { map[row.key] = row.value; });
+      (data || []).forEach((row) => {
+        map[row.key] = row.value;
+      });
       // Default semua true kalau belum ada
-      SECTIONS.forEach(s => {
+      SECTIONS.forEach((s) => {
         if (map[s.key] === undefined) map[s.key] = true;
       });
       setSettings(map);
@@ -41,7 +89,7 @@ export default function AdminSettings() {
   }, []);
 
   const toggle = (key) => {
-    setSettings(prev => ({ ...prev, [key]: !prev[key] }));
+    setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   const saveSettings = async () => {
@@ -49,7 +97,10 @@ export default function AdminSettings() {
     for (const section of SECTIONS) {
       await supabase
         .from('SiteSettings')
-        .upsert({ key: section.key, value: settings[section.key], updatedAt: new Date().toISOString() }, { onConflict: 'key' });
+        .upsert(
+          { key: section.key, value: settings[section.key], updatedAt: new Date().toISOString() },
+          { onConflict: 'key' }
+        );
     }
     setSaving(false);
     setSaved(true);
@@ -63,10 +114,14 @@ export default function AdminSettings() {
         <div className="max-w-2xl">
           <header className="mb-10">
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-teal-500/10 rounded-xl"><Settings size={24} className="text-teal-500" /></div>
+              <div className="p-2 bg-teal-500/10 rounded-xl">
+                <Settings size={24} className="text-teal-500" />
+              </div>
               <h1 className="text-2xl font-bold">Pengaturan Tampilan</h1>
             </div>
-            <p className="text-gray-500 text-sm ml-12">Pilih section mana yang tampil di halaman utama website.</p>
+            <p className="text-gray-500 text-sm ml-12">
+              Pilih section mana yang tampil di halaman utama website.
+            </p>
           </header>
 
           {saved && (
@@ -105,9 +160,11 @@ export default function AdminSettings() {
                         isOn ? 'bg-teal-500' : 'bg-white/10'
                       }`}
                     >
-                      <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 ${
-                        isOn ? 'left-8' : 'left-1'
-                      }`} />
+                      <div
+                        className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 ${
+                          isOn ? 'left-8' : 'left-1'
+                        }`}
+                      />
                       <span className="sr-only">{isOn ? 'Tampil' : 'Tersembunyi'}</span>
                     </button>
                   </div>
@@ -122,9 +179,22 @@ export default function AdminSettings() {
               disabled={saving}
               className="mt-8 w-full py-4 bg-teal-500 text-black font-black rounded-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-xl shadow-teal-500/20 uppercase tracking-widest text-sm"
             >
-              {saving ? <><Loader2 size={18} className="animate-spin" /> Menyimpan...</> : <><Save size={18} /> Simpan Pengaturan</>}
+              {saving ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" /> Menyimpan...
+                </>
+              ) : (
+                <>
+                  <Save size={18} /> Simpan Pengaturan
+                </>
+              )}
             </button>
           )}
+
+          {/* Export Data Section */}
+          <div className="mt-12 pt-8 border-t border-white/10">
+            <ExportData />
+          </div>
         </div>
       </main>
     </div>

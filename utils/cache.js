@@ -1,74 +1,106 @@
 /**
- * Cache Manager using node-cache
+ * Cache Management Utility
+ * Implements caching strategy untuk mengurangi database queries
  */
 
-const NodeCache = require('node-cache');
-const logger = require('../config/logger');
+const CACHE_DURATION = {
+  SHORT: 5 * 60 * 1000, // 5 menit
+  MEDIUM: 15 * 60 * 1000, // 15 menit
+  LONG: 60 * 60 * 1000, // 1 jam
+};
 
 class CacheManager {
   constructor() {
-    this.cache = new NodeCache({
-      stdTTL: 600, // Default TTL: 10 minutes
-      checkperiod: 120, // Check for expired keys every 2 minutes
-      useClones: false,
-    });
-
-    this.cache.on('expired', (key) => {
-      logger.debug(`Cache key expired: ${key}`);
-    });
+    this.cache = new Map();
   }
 
+  /**
+   * Generate cache key dari table dan filters
+   */
+  generateKey(table, filters = {}) {
+    const filterStr = JSON.stringify(filters);
+    return `${table}:${filterStr}`;
+  }
+
+  /**
+   * Set cache dengan TTL
+   */
+  set(key, value, duration = CACHE_DURATION.MEDIUM) {
+    const expiresAt = Date.now() + duration;
+    this.cache.set(key, { value, expiresAt });
+  }
+
+  /**
+   * Get cache jika masih valid
+   */
   get(key) {
-    try {
-      const value = this.cache.get(key);
-      if (value) {
-        logger.debug(`Cache hit: ${key}`);
-        return value;
+    const cached = this.cache.get(key);
+    if (!cached) return null;
+
+    if (Date.now() > cached.expiresAt) {
+      this.cache.delete(key);
+      return null;
+    }
+
+    return cached.value;
+  }
+
+  /**
+   * Invalidate cache untuk table tertentu
+   */
+  invalidate(table) {
+    for (const key of this.cache.keys()) {
+      if (key.startsWith(`${table}:`)) {
+        this.cache.delete(key);
       }
-      logger.debug(`Cache miss: ${key}`);
-      return null;
-    } catch (error) {
-      logger.error('Cache get error:', error);
-      return null;
     }
   }
 
-  set(key, value, ttl) {
-    try {
-      this.cache.set(key, value, ttl);
-      logger.debug(`Cache set: ${key}`);
-      return true;
-    } catch (error) {
-      logger.error('Cache set error:', error);
-      return false;
-    }
-  }
-
-  del(key) {
-    try {
-      this.cache.del(key);
-      logger.debug(`Cache deleted: ${key}`);
-      return true;
-    } catch (error) {
-      logger.error('Cache delete error:', error);
-      return false;
-    }
-  }
-
+  /**
+   * Clear semua cache
+   */
   clear() {
-    try {
-      this.cache.flushAll();
-      logger.info('Cache cleared');
-      return true;
-    } catch (error) {
-      logger.error('Cache clear error:', error);
-      return false;
-    }
+    this.cache.clear();
   }
 
+  /**
+   * Get cache stats
+   */
   getStats() {
-    return this.cache.getStats();
+    return {
+      size: this.cache.size,
+      keys: Array.from(this.cache.keys()),
+    };
   }
 }
 
-module.exports = new CacheManager();
+export const cacheManager = new CacheManager();
+export { CACHE_DURATION };
+
+/**
+ * Wrapper untuk fetch dengan caching
+ */
+export async function fetchWithCache(
+  table,
+  fetchFn,
+  filters = {},
+  cacheDuration = CACHE_DURATION.MEDIUM
+) {
+  const key = cacheManager.generateKey(table, filters);
+
+  // Check cache
+  const cached = cacheManager.get(key);
+  if (cached) {
+    console.log(`[Cache HIT] ${key}`);
+    return cached;
+  }
+
+  // Fetch data
+  console.log(`[Cache MISS] ${key}`);
+  const data = await fetchFn();
+
+  // Store in cache
+  cacheManager.set(key, data, cacheDuration);
+
+  return data;
+}
