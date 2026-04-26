@@ -20,6 +20,7 @@ import {
   ExternalLink,
   Menu,
   X,
+  Settings,
 } from 'lucide-react';
 
 const menuItems = [
@@ -35,6 +36,7 @@ const menuItems = [
   { name: 'Organisasi', icon: <Users size={20} />, href: '/admin/organizations' },
   { name: 'Galeri', icon: <ImageIcon size={20} />, href: '/admin/gallery' },
   { name: 'Pesan', icon: <MessageSquare size={20} />, href: '/admin/messages' },
+  { name: 'Pengaturan', icon: <Settings size={20} />, href: '/admin/settings' },
 ];
 
 function SidebarContent({ pathname, onClose }) {

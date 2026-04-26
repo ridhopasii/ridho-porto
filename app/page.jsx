@@ -61,6 +61,10 @@ async function getData() {
     .order('createdAt', { ascending: false })
     .limit(6);
 
+  const { data: settingsData } = await supabase.from('SiteSettings').select('*');
+  const settings = {};
+  (settingsData || []).forEach(s => { settings[s.key] = s.value; });
+
   return {
     profile,
     projects,
@@ -72,11 +76,13 @@ async function getData() {
     blogs,
     organizations,
     gallery,
+    settings,
   };
 }
 
 export default async function Home() {
   const data = await getData();
+  const s = data.settings || {};
 
   return (
     <main className="min-h-screen bg-[#0a0a0a] selection:bg-teal-500/30 selection:text-white">
@@ -85,23 +91,34 @@ export default async function Home() {
 
       <Hero profile={data.profile} />
 
-      <About profile={data.profile} />
+      {s.show_about !== false && <About profile={data.profile} />}
 
-      <Skills skills={data.skills} />
+      {s.show_skills !== false && <Skills skills={data.skills} />}
 
-      <Timeline experiences={data.experiences} educations={data.educations} />
+      {(s.show_experience !== false || s.show_education !== false) && (
+        <Timeline 
+          experiences={s.show_experience !== false ? data.experiences : []} 
+          educations={s.show_education !== false ? data.educations : []} 
+        />
+      )}
 
-      <Organizations organizations={data.organizations} />
-      <Projects projects={data.projects} />
-      <LatestBlogs blogs={data.blogs} />
-      <Gallery galleryItems={data.gallery} />
+      {s.show_organizations !== false && <Organizations organizations={data.organizations} />}
+      
+      {s.show_projects !== false && <Projects projects={data.projects} />}
+      
+      {s.show_blog !== false && <LatestBlogs blogs={data.blogs} />}
+      
+      {s.show_gallery !== false && <Gallery galleryItems={data.gallery} />}
 
-      <section id="pencapaian">
-        <Achievements awards={data.awards} publications={data.publications} />
-      </section>
+      {s.show_achievements !== false && (
+        <section id="pencapaian">
+          <Achievements awards={data.awards} publications={data.publications} />
+        </section>
+      )}
 
       {/* Footer / Contact Section */}
-      <footer id="kontak" className="py-24 px-6 border-t border-white/5 bg-black">
+      {s.show_contact !== false && (
+        <footer id="kontak" className="py-24 px-6 border-t border-white/5 bg-black">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
             {/* Left: Info */}
@@ -176,6 +193,7 @@ export default async function Home() {
           </div>
         </div>
       </footer>
+      )}
     </main>
   );
 }
