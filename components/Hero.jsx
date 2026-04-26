@@ -37,22 +37,41 @@ export default function Hero({ profile }) {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col items-center text-center">
-          {/* Profile Photo - The "Duta Pemuda Global" look */}
+          {/* Profile Photo */}
           <div className="relative mb-12 animate-fade-in-up">
             <div className="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-teal-500/30 p-2 bg-gradient-to-tr from-teal-500/20 to-transparent">
               <div className="w-full h-full rounded-full overflow-hidden border-2 border-teal-500">
-                <PhotoSwiper
-                  images={
-                    profile?.images && profile.images.length > 0
-                      ? profile.images
-                      : [
-                          profile?.avatarUrl ||
-                            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop',
-                        ]
+                {(() => {
+                  // Parse images: bisa array JSONB atau string JSON dari DB
+                  let imgs = profile?.images;
+                  if (typeof imgs === 'string') {
+                    try { imgs = JSON.parse(imgs); } catch { imgs = []; }
                   }
-                  aspectRatio="aspect-square"
-                  rounded="rounded-full"
-                />
+                  const validImgs = Array.isArray(imgs) ? imgs.filter(Boolean) : [];
+                  // Fallback chain: images[] → avatarUrl → placeholder abu-abu
+                  const finalImgs = validImgs.length > 0
+                    ? validImgs
+                    : profile?.avatarUrl
+                    ? [profile.avatarUrl]
+                    : [];
+                  
+                  if (finalImgs.length === 0) {
+                    return (
+                      <div className="w-full h-full bg-gradient-to-br from-teal-500/20 to-teal-900/40 flex items-center justify-center">
+                        <span className="text-4xl font-black text-teal-500">
+                          {(profile?.fullName || profile?.name || 'R').charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    );
+                  }
+                  return (
+                    <PhotoSwiper
+                      images={finalImgs}
+                      aspectRatio="aspect-square"
+                      rounded="rounded-full"
+                    />
+                  );
+                })()}
               </div>
             </div>
             <div className="absolute -bottom-2 -right-2 bg-teal-500 text-black px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg shadow-teal-500/40">
