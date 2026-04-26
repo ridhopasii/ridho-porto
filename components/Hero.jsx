@@ -72,7 +72,7 @@ export default function Hero({ profile }) {
           <h1 className="text-5xl md:text-8xl font-black font-outfit mb-6 tracking-tighter leading-tight">
             <span className="text-white">HI, I'M </span>
             <span className="text-teal-500">
-              {profile?.name?.toUpperCase() || 'RIDHO ROBBI PASI'}
+              {(profile?.fullName || profile?.name)?.toUpperCase() || 'RIDHO ROBBI PASI'}
             </span>
           </h1>
 

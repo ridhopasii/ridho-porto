@@ -12,7 +12,7 @@ export default function BlogForm({ initialData = null }) {
     excerpt: '',
     content: '',
     category: '',
-    cover_image: '',
+    imageUrl: '',
     images: [],
   });
   const [uploading, setUploading] = useState(false);
@@ -112,7 +112,7 @@ export default function BlogForm({ initialData = null }) {
               setFormData((prev) => ({
                 ...prev,
                 images: newImages,
-                cover_image: newImages[0] || '',
+                imageUrl: newImages[0] || '',
               }))
             }
             path="blog"

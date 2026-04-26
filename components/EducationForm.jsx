@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/client';
 import { Save, Loader2, CheckCircle2, Link as LinkIcon, Camera } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import MultiPhotoUpload from './MultiPhotoUpload';
+import SinglePhotoUpload from './SinglePhotoUpload';
 
 export default function EducationForm({ initialData = null }) {
   const router = useRouter();
@@ -71,15 +72,15 @@ export default function EducationForm({ initialData = null }) {
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
-          <Camera size={14} /> URL Logo Institusi (Opsional)
+        <label className="block text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest flex items-center gap-2">
+          <Camera size={14} /> Logo Institusi
         </label>
-        <input
-          type="text"
+        <SinglePhotoUpload
           value={formData.logoUrl || ''}
-          onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
-          placeholder="https://... (link logo sekolah/universitas)"
+          onChange={(url) => setFormData({ ...formData, logoUrl: url })}
+          path="logos/education"
+          label="Upload Logo"
+          shape="square"
         />
       </div>
 
