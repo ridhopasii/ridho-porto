@@ -3,13 +3,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import PhotoSwiper from './PhotoSwiper';
 import {
-  Instagram,
-  Twitter,
+  Globe,
+  Share2,
   MessageCircle,
   ArrowRight,
   Mail,
-  Github,
-  Linkedin,
+  Users,
+  Link as LinkIcon,
   Download,
 } from 'lucide-react';
 
@@ -58,9 +58,7 @@ export default function Hero({ profile }) {
                   if (finalImgs.length === 0) {
                     return (
                       <div className="w-full h-full bg-gradient-to-br from-teal-500/20 to-teal-900/40 flex items-center justify-center">
-                        <span className="text-4xl font-black text-teal-500">
-                          {(profile?.fullName || profile?.name || 'R').charAt(0).toUpperCase()}
-                        </span>
+                        <Users className="w-16 h-16 text-teal-500/50" />
                       </div>
                     );
                   }
@@ -143,22 +141,22 @@ export default function Hero({ profile }) {
           <div className="mt-20 flex flex-wrap gap-4 justify-center">
             {[
               {
-                icon: <Github size={20} />,
+                icon: <Users size={20} />,
                 href: profile?.github_url,
                 active: !!profile?.github_url,
               },
               {
-                icon: <Linkedin size={20} />,
+                icon: <LinkIcon size={20} />,
                 href: profile?.linkedin_url,
                 active: !!profile?.linkedin_url,
               },
               {
-                icon: <Instagram size={20} />,
+                icon: <Globe size={20} />,
                 href: profile?.instagram_url,
                 active: !!profile?.instagram_url,
               },
               {
-                icon: <Twitter size={20} />,
+                icon: <Share2 size={20} />,
                 href: profile?.twitter_url,
                 active: !!profile?.twitter_url,
               },

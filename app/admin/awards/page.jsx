@@ -1,7 +1,8 @@
 import { createClient } from '@/utils/supabase/server'
 import AdminSidebar from '@/components/AdminSidebar'
-import { Plus, Trash2, Trophy } from 'lucide-react'
+import { Plus, Trash2, Trophy, Eye, EyeOff } from 'lucide-react'
 import AwardForm from '@/components/AwardForm'
+import VisibilityToggle from '@/components/VisibilityToggle'
 
 export default async function AdminAwards() {
   const supabase = await createClient()
@@ -45,9 +46,16 @@ export default async function AdminAwards() {
                       <p className="text-xs text-gray-500">{award.issuer} • {award.year}</p>
                     </div>
                   </div>
-                  <button className="p-2 text-red-500 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500/10 rounded-lg">
-                    <Trash2 size={18} />
-                  </button>
+                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                    <VisibilityToggle 
+                      id={award.id} 
+                      tableName="Award" 
+                      initialValue={award.showOnHome} 
+                    />
+                    <button className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg">
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 </div>
               ))}
               {awards?.length === 0 && <p className="text-gray-600 italic">Belum ada data penghargaan.</p>}

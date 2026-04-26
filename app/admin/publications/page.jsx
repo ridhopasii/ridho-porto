@@ -1,7 +1,8 @@
 import { createClient } from '@/utils/supabase/server'
 import AdminSidebar from '@/components/AdminSidebar'
-import { Plus, Trash2, FileText, ExternalLink } from 'lucide-react'
+import { Plus, Trash2, FileText, ExternalLink, Eye, EyeOff } from 'lucide-react'
 import PublicationForm from '@/components/PublicationForm'
+import VisibilityToggle from '@/components/VisibilityToggle'
 
 export default async function AdminPublications() {
   const supabase = await createClient()
@@ -45,10 +46,15 @@ export default async function AdminPublications() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <a href={pub.url} target="_blank" className="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all">
+                  <VisibilityToggle 
+                    id={pub.id} 
+                    tableName="Publication" 
+                    initialValue={pub.showOnHome} 
+                  />
+                  <a href={pub.url} target="_blank" className="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg">
                     <ExternalLink size={18} />
                   </a>
-                  <button className="p-2 text-red-500 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500/10 rounded-lg">
+                  <button className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg">
                     <Trash2 size={18} />
                   </button>
                 </div>
