@@ -45,7 +45,10 @@ export default function PhotoSwiper({
       {/* Slides */}
       <div
         className="flex h-full transition-transform duration-500 ease-out"
-        style={{ transform: `translateX(-${currentIndex * 100}%)`, width: `${safeImages.length * 100}%` }}
+        style={{
+          transform: `translateX(-${currentIndex * (100 / safeImages.length)}%)`,
+          width: `${safeImages.length * 100}%`,
+        }}
       >
         {safeImages.map((url, idx) => (
           <div key={idx} className="h-full flex-shrink-0" style={{ width: `${100 / safeImages.length}%` }}>
