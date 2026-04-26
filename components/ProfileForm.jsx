@@ -157,11 +157,6 @@ export default function ProfileForm({ initialData = null }) {
               </p>
             </div>
           </div>
-              <p className="mt-4 text-[10px] text-gray-500 uppercase tracking-widest leading-relaxed">
-                Unggah lebih dari satu foto. Foto pertama akan menjadi avatar utama.
-              </p>
-            </div>
-          </div>
 
           {/* Form Fields */}
           <div className="lg:col-span-2 space-y-8">
