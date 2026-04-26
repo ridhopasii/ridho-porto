@@ -63,16 +63,18 @@ export default function ProfileForm({ initialData = null }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!initialData?.id) {
-      alert('ID Profil tidak ditemukan. Pastikan data sudah ada di database.');
-      return;
-    }
-
     setLoading(true);
     const supabase = createClient();
 
     try {
-      const { error } = await supabase.from('Profile').update(formData).eq('id', initialData.id);
+      let error;
+      if (initialData?.id) {
+        // Update existing profile
+        ({ error } = await supabase.from('Profile').update(formData).eq('id', initialData.id));
+      } else {
+        // Insert new profile if none exists
+        ({ error } = await supabase.from('Profile').insert([formData]));
+      }
 
       if (error) throw error;
 
