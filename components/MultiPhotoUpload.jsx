@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { Plus, X, Loader2, Image as ImageIcon } from 'lucide-react';
+import { Upload, X, Loader2, GripVertical, Star, CheckCircle2 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 
 export default function MultiPhotoUpload({
@@ -10,84 +10,188 @@ export default function MultiPhotoUpload({
   path = 'general',
 }) {
   const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const [previewIndex, setPreviewIndex] = useState(0);
 
-  const handleUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
+  const safeImages = Array.isArray(images) ? images : [];
 
+  const handleUpload = async (files) => {
+    if (!files || files.length === 0) return;
     setUploading(true);
     const supabase = createClient();
-    const newImages = [...(Array.isArray(images) ? images : [])];
+    const newImages = [...safeImages];
 
-    for (const file of files) {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
+    for (const file of Array.from(files)) {
+      const ext = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
       const filePath = `${path}/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage.from(bucket).upload(filePath, file);
-
-      if (!uploadError) {
+      const { error } = await supabase.storage.from(bucket).upload(filePath, file);
+      if (!error) {
         const { data } = supabase.storage.from(bucket).getPublicUrl(filePath);
         newImages.push(data.publicUrl);
-      } else {
-        console.error('Upload error:', uploadError);
       }
     }
 
     onChange(newImages);
+    setPreviewIndex(newImages.length - 1);
     setUploading(false);
   };
 
+  const handleFileInput = (e) => handleUpload(e.target.files);
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    handleUpload(e.dataTransfer.files);
+  };
+
   const removeImage = (index) => {
-    const newImages = images.filter((_, i) => i !== index);
-    onChange(newImages);
+    const updated = safeImages.filter((_, i) => i !== index);
+    onChange(updated);
+    setPreviewIndex(Math.min(previewIndex, updated.length - 1));
+  };
+
+  const setAsMain = (index) => {
+    const updated = [...safeImages];
+    const [moved] = updated.splice(index, 1);
+    updated.unshift(moved);
+    onChange(updated);
+    setPreviewIndex(0);
   };
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {images?.map((url, index) => (
-          <div
-            key={index}
-            className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 group bg-[#111]"
-          >
-            <img src={url} alt="Preview" className="w-full h-full object-cover" />
-            <button
-              type="button"
-              onClick={() => removeImage(index)}
-              className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all shadow-lg"
-            >
-              <X size={14} />
-            </button>
-            {index === 0 && (
-              <div className="absolute bottom-0 left-0 right-0 bg-teal-500 text-black text-[10px] font-bold text-center py-1 uppercase">
-                Utama
-              </div>
-            )}
-          </div>
-        ))}
 
-        <label className="aspect-square rounded-2xl border-2 border-dashed border-white/10 flex flex-col items-center justify-center cursor-pointer hover:border-teal-500/50 hover:bg-teal-500/5 transition-all group">
-          {uploading ? (
-            <Loader2 className="animate-spin text-teal-500" />
-          ) : (
-            <>
-              <Plus className="text-gray-500 group-hover:text-teal-500 mb-2" />
-              <span className="text-[10px] text-gray-500 font-bold uppercase group-hover:text-teal-500">
-                Tambah Foto
+      {/* Main Preview */}
+      {safeImages.length > 0 && (
+        <div className="relative rounded-2xl overflow-hidden bg-[#111] border border-white/10" style={{ aspectRatio: '4/3' }}>
+          <img
+            src={safeImages[previewIndex]}
+            alt={`Preview ${previewIndex + 1}`}
+            className="w-full h-full object-cover"
+          />
+          {/* Overlay info */}
+          <div className="absolute top-3 left-3 flex items-center gap-2">
+            {previewIndex === 0 && (
+              <span className="px-3 py-1 bg-teal-500 text-black text-[10px] font-black uppercase rounded-full flex items-center gap-1">
+                <Star size={10} /> Utama
               </span>
+            )}
+            <span className="px-3 py-1 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold rounded-full">
+              {previewIndex + 1} / {safeImages.length}
+            </span>
+          </div>
+          {/* Nav buttons */}
+          {safeImages.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={() => setPreviewIndex((i) => (i - 1 + safeImages.length) % safeImages.length)}
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 backdrop-blur-sm rounded-full text-white flex items-center justify-center hover:bg-teal-500 transition-all"
+              >‹</button>
+              <button
+                type="button"
+                onClick={() => setPreviewIndex((i) => (i + 1) % safeImages.length)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 backdrop-blur-sm rounded-full text-white flex items-center justify-center hover:bg-teal-500 transition-all"
+              >›</button>
             </>
           )}
-          <input
-            type="file"
-            multiple
-            className="hidden"
-            onChange={handleUpload}
-            disabled={uploading}
-            accept="image/*"
-          />
-        </label>
-      </div>
+        </div>
+      )}
+
+      {/* Thumbnails strip */}
+      {safeImages.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+          {safeImages.map((url, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setPreviewIndex(i)}
+              className={`relative flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
+                i === previewIndex ? 'border-teal-500 scale-105' : 'border-white/10 opacity-60 hover:opacity-100'
+              }`}
+            >
+              <img src={url} className="w-full h-full object-cover" />
+              {i === 0 && (
+                <div className="absolute bottom-0 left-0 right-0 bg-teal-500 text-[8px] font-black text-black text-center py-0.5">
+                  UTAMA
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Action buttons per photo */}
+      {safeImages.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => removeImage(previewIndex)}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-[11px] font-bold hover:bg-red-500/20 transition-all"
+          >
+            <X size={12} /> Hapus Foto ini
+          </button>
+          {previewIndex !== 0 && (
+            <button
+              type="button"
+              onClick={() => setAsMain(previewIndex)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-500/10 border border-teal-500/20 text-teal-400 rounded-xl text-[11px] font-bold hover:bg-teal-500/20 transition-all"
+            >
+              <Star size={12} /> Jadikan Utama
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Upload zone */}
+      <label
+        className={`flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border-2 border-dashed cursor-pointer transition-all ${
+          dragOver
+            ? 'border-teal-500 bg-teal-500/10 scale-[1.01]'
+            : 'border-white/10 hover:border-teal-500/40 hover:bg-white/5'
+        }`}
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={handleDrop}
+      >
+        {uploading ? (
+          <div className="flex items-center gap-2 text-teal-500">
+            <Loader2 size={20} className="animate-spin" />
+            <span className="text-sm font-bold">Mengupload foto...</span>
+          </div>
+        ) : (
+          <>
+            <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
+              <Upload size={20} className="text-gray-400" />
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-bold text-white">
+                {safeImages.length > 0 ? 'Tambah Foto Lagi' : 'Upload Foto'}
+              </p>
+              <p className="text-[11px] text-gray-500 mt-1">
+                Drag & drop atau klik untuk pilih · Bisa pilih banyak sekaligus
+              </p>
+            </div>
+          </>
+        )}
+        <input
+          type="file"
+          multiple
+          className="hidden"
+          onChange={handleFileInput}
+          disabled={uploading}
+          accept="image/*"
+        />
+      </label>
+
+      {/* Count badge */}
+      {safeImages.length > 0 && (
+        <div className="flex items-center gap-2 text-[11px] text-teal-500 font-bold">
+          <CheckCircle2 size={14} />
+          {safeImages.length} foto tersimpan · foto pertama tampil sebagai utama
+        </div>
+      )}
     </div>
   );
 }

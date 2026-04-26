@@ -128,49 +128,17 @@ export default function ProfileForm({ initialData = null }) {
         </h3>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
-          {/* Photo Gallery with Live Preview */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Current Photo Preview */}
-            <div className="p-6 bg-white/5 border border-white/10 rounded-3xl">
-              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <Camera size={12} className="text-teal-500" /> Preview Foto Aktif
+          {/* Photo Upload with built-in preview */}
+          <div className="lg:col-span-1">
+            <div className="p-5 bg-white/5 border border-white/10 rounded-3xl">
+              <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <Camera size={12} /> Foto Profil
               </p>
-              <div className="flex flex-col items-center gap-3">
-                {/* Avatar preview */}
-                <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-teal-500/40 bg-white/5 flex items-center justify-center">
-                  {(formData.images && formData.images.length > 0) ? (
-                    <img src={formData.images[0]} alt="Avatar" className="w-full h-full object-cover" />
-                  ) : formData.avatarUrl ? (
-                    <img src={formData.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="text-gray-600 text-xs text-center px-2">Belum ada foto</div>
-                  )}
-                </div>
-                <p className="text-[10px] text-gray-500 text-center">Foto ini tampil di halaman utama</p>
-                {/* All images strip */}
-                {formData.images && formData.images.length > 1 && (
-                  <div className="flex gap-2 flex-wrap justify-center mt-2">
-                    {formData.images.map((src, i) => (
-                      <img key={i} src={src} className="w-10 h-10 rounded-xl object-cover border-2 border-white/10" />
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Upload */}
-            <div className="p-6 bg-white/5 border border-white/10 rounded-3xl">
-              <h2 className="text-sm font-bold mb-4 flex items-center gap-2">
-                <Camera size={16} className="text-teal-500" /> Upload Foto Profil
-              </h2>
               <MultiPhotoUpload
                 images={formData.images}
                 onChange={(newImages) => setFormData((prev) => ({ ...prev, images: newImages }))}
                 path="profile"
               />
-              <p className="mt-3 text-[10px] text-gray-500 uppercase tracking-widest leading-relaxed">
-                Foto pertama akan jadi avatar utama di hero.
-              </p>
             </div>
           </div>
 
