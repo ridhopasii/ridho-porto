@@ -109,8 +109,6 @@ export default function ProjectForm({ initialData = null }) {
           * Foto pertama akan menjadi cover utama proyek.
         </p>
       </div>
-
-      </div>
       
       {/* Visibility Toggle */}
       <div className="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-3xl">
