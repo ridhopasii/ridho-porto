@@ -91,10 +91,7 @@ export default function PhotoSwiper({
             ))}
           </div>
 
-          {/* Counter */}
-          <div className="absolute top-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-sm rounded-full text-[10px] font-bold text-white">
-            {currentIndex + 1}/{safeImages.length}
-          </div>
+
         </>
       )}
     </div>
