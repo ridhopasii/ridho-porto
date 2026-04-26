@@ -1,13 +1,14 @@
 'use client';
+import React, { useState, useTransition } from 'react';
 import { Trash2, Briefcase, Edit, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 export default function ExperienceList({ initialExperiences }) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState(null);
+  const [isPending, startTransition] = useTransition();
 
   const handleDelete = async (id) => {
     if (!confirm('Yakin ingin menghapus pengalaman ini?')) return;
@@ -20,8 +21,10 @@ export default function ExperienceList({ initialExperiences }) {
       alert('Gagal menghapus: ' + error.message);
       setDeletingId(null);
     } else {
-      router.refresh();
-      setDeletingId(null);
+      startTransition(() => {
+        router.refresh();
+        setDeletingId(null);
+      });
     }
   };
 
@@ -59,11 +62,11 @@ export default function ExperienceList({ initialExperiences }) {
                   if (!error) router.refresh();
                 }}
                 className={`p-2.5 rounded-xl border transition-all ${
-                  exp.showOnHome !== false 
-                    ? 'text-teal-500 bg-teal-500/10 border-teal-500/20' 
+                  exp.showOnHome !== false
+                    ? 'text-teal-500 bg-teal-500/10 border-teal-500/20'
                     : 'text-gray-500 bg-white/5 border-white/5'
                 }`}
-                title={exp.showOnHome !== false ? "Tampil di Home" : "Disembunyikan"}
+                title={exp.showOnHome !== false ? 'Tampil di Home' : 'Disembunyikan'}
               >
                 {exp.showOnHome !== false ? <Eye size={18} /> : <EyeOff size={18} />}
               </button>

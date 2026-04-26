@@ -12,7 +12,6 @@
 /* Smooth Scroll */
 html {
   scroll-behavior: smooth;
-  cursor: none; /* Hide default cursor for custom cursor */
 }
 
 /* Selection Color */
