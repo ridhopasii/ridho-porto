@@ -173,9 +173,70 @@ export default function AdminSettings() {
             )}
           </div>
 
+          {/* Accent Color Selection */}
+          {!loading && (
+            <div className="mt-8 p-6 bg-white/5 border border-white/10 rounded-[2rem]">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-purple-500/10 rounded-xl">
+                  <div
+                    className="w-5 h-5 rounded-full"
+                    style={{ backgroundColor: settings.accent_color || '#14b8a6' }}
+                  />
+                </div>
+                <div>
+                  <p className="font-bold text-sm">Warna Utama Website</p>
+                  <p className="text-gray-500 text-xs">Pilih warna aksen untuk seluruh website</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <input
+                  type="color"
+                  value={settings.accent_color || '#14b8a6'}
+                  onChange={(e) =>
+                    setSettings((prev) => ({ ...prev, accent_color: e.target.value }))
+                  }
+                  className="w-full h-12 rounded-xl bg-black/40 border border-white/10 p-1 cursor-pointer"
+                />
+                <div className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-mono text-xs text-gray-400">
+                  {settings.accent_color || '#14b8a6'}
+                </div>
+              </div>
+            </div>
+          )}
+
           {!loading && (
             <button
-              onClick={saveSettings}
+              onClick={async () => {
+                setSaving(true);
+                // Save all toggles
+                for (const section of SECTIONS) {
+                  await supabase
+                    .from('SiteSettings')
+                    .upsert(
+                      {
+                        key: section.key,
+                        value: settings[section.key],
+                        updatedAt: new Date().toISOString(),
+                      },
+                      { onConflict: 'key' }
+                    );
+                }
+                // Save accent color separately because it's text
+                await supabase
+                  .from('SiteSettings')
+                  .upsert(
+                    {
+                      key: 'accent_color',
+                      value: settings.accent_color || '#14b8a6',
+                      updatedAt: new Date().toISOString(),
+                    },
+                    { onConflict: 'key' }
+                  );
+                setSaving(false);
+                setSaved(true);
+                setTimeout(() => setSaved(false), 3000);
+                window.location.reload(); // Reload to apply color change immediately
+              }}
               disabled={saving}
               className="mt-8 w-full py-4 bg-teal-500 text-black font-black rounded-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-xl shadow-teal-500/20 uppercase tracking-widest text-sm"
             >
