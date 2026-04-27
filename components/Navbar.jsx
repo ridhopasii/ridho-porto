@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Zap } from 'lucide-react';
 
 const navLinks = [
   { name: 'Tentang', href: '/#tentang' },
@@ -62,6 +62,13 @@ export default function Navbar() {
 
           {/* CTA */}
           <div className="hidden md:flex items-center gap-6">
+            <Link 
+              href="/produktif" 
+              className="p-2 text-gray-400 hover:text-[var(--accent)] hover:bg-white/5 rounded-full transition-all"
+              title="Produktif Dashboard"
+            >
+              <Zap size={20} />
+            </Link>
             <ThemeToggle />
             <Link
               href="/#kontak"

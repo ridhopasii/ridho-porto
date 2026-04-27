@@ -21,6 +21,8 @@ import {
   Menu,
   X,
   Settings,
+  Database,
+  ClipboardList,
 } from 'lucide-react';
 
 const menuItems = [
@@ -28,6 +30,8 @@ const menuItems = [
   { name: 'Profil', icon: <UserCircle size={20} />, href: '/admin/profile' },
   { name: 'Proyek', icon: <Folders size={20} />, href: '/admin/projects' },
   { name: 'Blog', icon: <BookOpen size={20} />, href: '/admin/blogs' },
+  { name: 'Manajemen Tugas', icon: <ClipboardList size={20} />, href: '/admin/productivity' },
+  { name: 'Database', icon: <Database size={20} />, href: '/admin/database' },
   { name: 'Keterampilan', icon: <Cpu size={20} />, href: '/admin/skills' },
   { name: 'Pengalaman', icon: <Briefcase size={20} />, href: '/admin/experience' },
   { name: 'Pendidikan', icon: <GraduationCap size={20} />, href: '/admin/education' },

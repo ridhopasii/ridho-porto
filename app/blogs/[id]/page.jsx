@@ -4,6 +4,24 @@ import ReadingProgress from '@/components/ReadingProgress';
 import { ArrowLeft, Clock, Calendar, User } from 'lucide-react';
 import Link from 'next/link';
 
+// DYNAMIC SEO METADATA
+export async function generateMetadata({ params }) {
+  const supabase = await createClient();
+  const { data: blog } = await supabase.from('Article').select('*').eq('id', params.id).single();
+  
+  if (!blog) return { title: 'Blog Not Found' };
+
+  return {
+    title: blog.title,
+    description: blog.content?.substring(0, 160),
+    openGraph: {
+      title: blog.title,
+      description: blog.content?.substring(0, 160),
+      images: [blog.image || ''],
+    },
+  };
+}
+
 export default async function BlogDetailPage({ params }) {
   const supabase = await createClient();
   const { id } = params;
@@ -54,14 +72,10 @@ export default async function BlogDetailPage({ params }) {
             />
           </div>
 
-          {/* Article Content */}
-          <article className="prose prose-invert prose-teal max-w-none">
-            <div className="text-gray-400 text-lg md:text-xl leading-relaxed space-y-8 font-medium">
-              {blog.content?.split('\n').map((para, i) => (
-                <p key={i}>{para}</p>
-              ))}
-            </div>
-          </article>
+          {/* Article Content with Markdown Support */}
+          <div className="max-w-none">
+            <MarkdownRenderer content={blog.content} />
+          </div>
         </div>
       </section>
 

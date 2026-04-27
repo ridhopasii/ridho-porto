@@ -1,0 +1,1766 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produktivitas 3 Blok</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .navy-gradient {
+            background: linear-gradient(135deg, #000080 0%, #1E66FF 100%);
+        }
+        
+        .task-item {
+            transition: all 0.3s ease;
+        }
+        
+        .task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 102, 255, 0.2);
+        }
+        
+        .completed {
+            background: linear-gradient(90deg, rgba(30, 102, 255, 0.1) 0%, rgba(0, 0, 128, 0.1) 100%);
+        }
+        
+        .floating-btn {
+            position: fixed;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 128, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .floating-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s ease-in-out;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 250px;
+        }
+        
+        .chart-bar {
+            transition: height 0.5s ease;
+        }
+        
+        .analytics-period-btn.active {
+            background: #1E66FF !important;
+            color: white !important;
+        }
+        
+        .dark-mode {
+            background: #1a1a2e;
+            color: #ffffff;
+        }
+        
+        .dark-mode .bg-white {
+            background: #16213e !important;
+        }
+        
+        .dark-mode .text-gray-800 {
+            color: #ffffff !important;
+        }
+        
+        .dark-mode .border-gray-200 {
+            border-color: #374151 !important;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="bg-gray-50 font-sans"><!-- Header -->
+  <header class="navy-gradient text-white p-4 sticky top-0 z-50">
+   <div class="max-w-6xl mx-auto flex justify-between items-center">
+    <div>
+     <h1 id="app-title" class="text-2xl font-bold">Produktivitas 3 Blok</h1>
+     <p id="current-date" class="text-blue-200 text-sm"></p>
+    </div>
+    <div class="flex gap-2"><button id="dark-mode-btn" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-2 rounded-lg text-sm transition-all"> 🌙 Dark </button> <button id="template-btn" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-2 rounded-lg text-sm transition-all"> 📋 Template </button> <button id="export-btn" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-2 rounded-lg text-sm transition-all"> 📊 Export </button> <button id="sheet-btn" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-2 rounded-lg text-sm transition-all"> 📄 Sheet </button> <button id="reset-day-btn" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-2 rounded-lg text-sm transition-all"> 🔄 Reset </button>
+    </div>
+   </div>
+  </header>
+  <main class="max-w-6xl mx-auto p-4 space-y-6"><!-- Progress Overview -->
+   <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+     <div class="text-center">
+      <div class="relative w-24 h-24 mx-auto mb-2">
+       <svg class="progress-ring w-24 h-24"><circle cx="48" cy="48" r="40" stroke="#E6E9F0" stroke-width="8" fill="none" /> <circle id="progress-circle" cx="48" cy="48" r="40" stroke="#1E66FF" stroke-width="8" fill="none" stroke-dasharray="251.2" stroke-dashoffset="251.2" class="progress-ring-circle" />
+       </svg>
+       <div class="absolute inset-0 flex items-center justify-center"><span id="progress-percent" class="text-xl font-bold text-navy-800">0%</span>
+       </div>
+      </div>
+      <p class="text-sm text-gray-600">Progress Hari Ini</p>
+     </div>
+     <div class="text-center">
+      <div class="text-3xl font-bold text-navy-800" id="completed-tasks">
+       0
+      </div>
+      <div class="text-sm text-gray-600">
+       Tugas Selesai
+      </div>
+      <div class="text-xs text-gray-500" id="total-tasks">
+       dari 0 tugas
+      </div>
+     </div>
+     <div class="text-center">
+      <div class="text-3xl font-bold text-navy-800" id="current-streak">
+       0
+      </div>
+      <div class="text-sm text-gray-600">
+       Hari Berturut
+      </div>
+      <div class="text-xs text-gray-500">
+       konsisten
+      </div>
+     </div>
+     <div class="text-center">
+      <div class="text-3xl font-bold text-navy-800" id="pomodoro-count">
+       0
+      </div>
+      <div class="text-sm text-gray-600">
+       Pomodoro
+      </div>
+      <div class="text-xs text-gray-500">
+       hari ini
+      </div>
+     </div>
+    </div>
+   </div><!-- Task Blocks -->
+   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><!-- Blok 1: Fondasi Harian -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-200">
+     <div class="bg-gradient-to-r from-blue-600 to-navy-800 text-white p-4 rounded-t-xl">
+      <h2 class="text-lg font-bold">🕌 BLOK 1: FONDASI HARIAN</h2>
+      <p class="text-blue-100 text-sm">Aktivitas spiritual &amp; dasar</p>
+     </div>
+     <div id="block1-tasks" class="p-4 space-y-3"><!-- Tasks will be populated by JavaScript -->
+     </div>
+    </div><!-- Blok 2: Rotasi Fokus -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-200">
+     <div class="bg-gradient-to-r from-indigo-600 to-blue-700 text-white p-4 rounded-t-xl">
+      <h2 class="text-lg font-bold">🎯 BLOK 2: ROTASI FOKUS</h2>
+      <p id="rotation-info" class="text-indigo-100 text-sm">Hari A - Fokus Teknis</p>
+     </div>
+     <div id="block2-tasks" class="p-4 space-y-3"><!-- Tasks will be populated by JavaScript -->
+     </div>
+    </div><!-- Blok 3: Mingguan -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-200">
+     <div class="bg-gradient-to-r from-purple-600 to-indigo-700 text-white p-4 rounded-t-xl">
+      <h2 class="text-lg font-bold">📅 BLOK 3: MINGGUAN</h2>
+      <p class="text-purple-100 text-sm">Review &amp; administrasi</p>
+     </div>
+     <div id="block3-tasks" class="p-4 space-y-3"><!-- Tasks will be populated by JavaScript -->
+     </div>
+    </div>
+   </div><!-- Advanced Analytics -->
+   <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+    <div class="flex justify-between items-center mb-6">
+     <h2 class="text-xl font-bold text-gray-800">📊 Analytics &amp; Insights</h2>
+     <div class="flex bg-gray-100 rounded-lg p-1"><button id="period-7d" class="analytics-period-btn active px-4 py-2 rounded-md text-sm font-medium transition-all">7 Hari</button> <button id="period-30d" class="analytics-period-btn px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-800 transition-all">30 Hari</button> <button id="period-1y" class="analytics-period-btn px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-800 transition-all">1 Tahun</button>
+     </div>
+    </div><!-- Period Summary Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+     <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
+      <div class="text-2xl font-bold text-blue-800" id="period-avg">
+       0%
+      </div>
+      <div class="text-sm text-blue-600">
+       Rata-rata
+      </div>
+     </div>
+     <div class="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
+      <div class="text-2xl font-bold text-green-800" id="period-perfect">
+       0
+      </div>
+      <div class="text-sm text-green-600">
+       Hari Perfect
+      </div>
+     </div>
+     <div class="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
+      <div class="text-2xl font-bold text-purple-800" id="period-streak">
+       0
+      </div>
+      <div class="text-sm text-purple-600">
+       Streak Terbaik
+      </div>
+     </div>
+     <div class="bg-gradient-to-r from-orange-50 to-orange-100 p-4 rounded-lg border border-orange-200">
+      <div class="text-2xl font-bold text-orange-800" id="period-total">
+       0
+      </div>
+      <div class="text-sm text-orange-600">
+       Total Hari
+      </div>
+     </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><!-- Main Chart -->
+     <div class="lg:col-span-2">
+      <h3 id="chart-title" class="text-lg font-semibold text-gray-700 mb-3">Progress 7 Hari Terakhir</h3>
+      <div class="chart-container bg-gray-50 rounded-lg p-4">
+       <div id="main-chart" class="flex items-end justify-between h-full"><!-- Chart bars will be generated by JavaScript -->
+       </div>
+      </div>
+      <div class="mt-3 text-center">
+       <div id="chart-legend" class="flex justify-center gap-4 text-xs text-gray-600">
+        <div class="flex items-center gap-1">
+         <div class="w-3 h-3 bg-blue-600 rounded"></div><span>Completion Rate</span>
+        </div>
+        <div class="flex items-center gap-1">
+         <div class="w-3 h-3 bg-green-600 rounded"></div><span>Target (80%)</span>
+        </div>
+       </div>
+      </div>
+     </div><!-- Detailed Stats -->
+     <div>
+      <h3 class="text-lg font-semibold text-gray-700 mb-3">Detail Statistik</h3>
+      <div class="space-y-3">
+       <div class="p-3 bg-gray-50 rounded-lg">
+        <div class="flex justify-between items-center mb-1"><span class="text-sm text-gray-600">Konsistensi</span> <span id="consistency-rate" class="text-sm font-bold text-gray-800">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+         <div id="consistency-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+       </div>
+       <div class="p-3 bg-gray-50 rounded-lg">
+        <div class="flex justify-between items-center mb-1"><span class="text-sm text-gray-600">Produktivitas</span> <span id="productivity-rate" class="text-sm font-bold text-gray-800">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+         <div id="productivity-bar" class="bg-green-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+       </div>
+       <div class="p-3 bg-gray-50 rounded-lg">
+        <div class="text-sm text-gray-600 mb-2">
+         Trend Mingguan
+        </div>
+        <div id="weekly-trend" class="text-lg font-bold text-gray-800">
+         📈 Naik
+        </div>
+       </div>
+       <div class="p-3 bg-gray-50 rounded-lg">
+        <div class="text-sm text-gray-600 mb-2">
+         Hari Terbaik
+        </div>
+        <div id="best-day" class="text-sm font-bold text-gray-800">
+         Senin
+        </div>
+       </div>
+       <div class="p-3 bg-gray-50 rounded-lg">
+        <div class="text-sm text-gray-600 mb-2">
+         Total Pomodoro
+        </div>
+        <div id="total-pomodoro" class="text-lg font-bold text-red-600">
+         0 🍅
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- Insights & Recommendations -->
+    <div class="mt-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200">
+     <h4 class="text-lg font-semibold text-indigo-800 mb-2">💡 Insights &amp; Rekomendasi</h4>
+     <div id="insights-content" class="text-sm text-indigo-700">
+      Mulai tracking untuk mendapatkan insights personal...
+     </div>
+    </div>
+   </div>
+  </main><!-- Floating Action Buttons --> <button id="edit-mode-btn" class="floating-btn bg-orange-500 hover:bg-orange-600 text-white" style="bottom: 20px; right: 20px;"> ✏️ </button> <button id="mood-btn" class="floating-btn bg-yellow-500 hover:bg-yellow-600 text-white" style="bottom: 90px; right: 20px;"> 😊 </button> <button id="goals-btn" class="floating-btn bg-green-500 hover:bg-green-600 text-white" style="bottom: 160px; right: 20px;"> 🎯 </button> <button id="achievements-btn" class="floating-btn bg-purple-500 hover:bg-purple-600 text-white" style="bottom: 230px; right: 20px;"> 🏆 </button> <button id="timer-btn" class="floating-btn bg-red-500 hover:bg-red-600 text-white" style="bottom: 300px; right: 20px;"> ⏱️ </button> <!-- Modals --> <!-- Mood Modal -->
+  <div id="mood-modal" class="modal">
+   <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">🌟 Mood Tracker</h3>
+    <div class="grid grid-cols-5 gap-3 mb-4"><button class="mood-btn p-3 text-2xl rounded-lg border-2 hover:bg-gray-50" data-mood="😢">😢</button> <button class="mood-btn p-3 text-2xl rounded-lg border-2 hover:bg-gray-50" data-mood="😐">😐</button> <button class="mood-btn p-3 text-2xl rounded-lg border-2 hover:bg-gray-50" data-mood="🙂">🙂</button> <button class="mood-btn p-3 text-2xl rounded-lg border-2 hover:bg-gray-50" data-mood="😊">😊</button> <button class="mood-btn p-3 text-2xl rounded-lg border-2 hover:bg-gray-50" data-mood="🤩">🤩</button>
+    </div>
+    <div class="flex gap-3"><button id="save-mood" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">Simpan</button> <button class="close-modal flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg">Tutup</button>
+    </div>
+   </div>
+  </div><!-- Goals Modal -->
+  <div id="goals-modal" class="modal">
+   <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">🎯 Goals Harian</h3><textarea id="goals-input" class="w-full h-32 p-3 border border-gray-300 rounded-lg resize-none" placeholder="Tulis goals harian Anda..."></textarea>
+    <div class="flex gap-3 mt-4"><button id="save-goals" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg">Simpan</button> <button class="close-modal flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg">Tutup</button>
+    </div>
+   </div>
+  </div><!-- Achievements Modal -->
+  <div id="achievements-modal" class="modal">
+   <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">🏆 Achievements</h3>
+    <div id="achievements-list" class="space-y-3"><!-- Achievements will be populated by JavaScript -->
+    </div><button class="close-modal w-full bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg mt-4">Tutup</button>
+   </div>
+  </div><!-- Timer Modal -->
+  <div id="timer-modal" class="modal">
+   <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">⏱️ Pomodoro Timer</h3>
+    <div class="text-center mb-6">
+     <div id="timer-display" class="text-4xl font-bold text-navy-800 mb-2">
+      25:00
+     </div>
+     <div id="timer-status" class="text-gray-600">
+      Siap untuk mulai
+     </div>
+    </div>
+    <div class="flex gap-3 mb-4"><button id="start-timer" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg">Start</button> <button id="pause-timer" class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded-lg">Pause</button> <button id="reset-timer" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg">Reset</button>
+    </div><button class="close-modal w-full bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg">Tutup</button>
+   </div>
+  </div><!-- Template Modal -->
+  <div id="template-modal" class="modal">
+   <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">📋 Template Hari Khusus</h3>
+    <div class="space-y-3"><button id="template-sick" class="w-full p-3 text-left bg-red-50 hover:bg-red-100 rounded-lg border border-red-200"> 🤒 Mode Sakit 
+      <div class="text-sm text-gray-600">
+       Tugas ringan &amp; recovery
+      </div></button> <button id="template-travel" class="w-full p-3 text-left bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200"> ✈️ Mode Traveling 
+      <div class="text-sm text-gray-600">
+       Tugas mobile &amp; fleksibel
+      </div></button> <button id="template-intensive" class="w-full p-3 text-left bg-green-50 hover:bg-green-100 rounded-lg border border-green-200"> 🔥 Mode Intensif 
+      <div class="text-sm text-gray-600">
+       Produktivitas maksimal
+      </div></button>
+    </div><button class="close-modal w-full bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg mt-4">Tutup</button>
+   </div>
+  </div><!-- Edit Tasks Modal -->
+  <div id="edit-tasks-modal" class="modal">
+   <div class="bg-white rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">✏️ Edit Tugas Harian</h3><!-- Block 1 -->
+    <div class="mb-6">
+     <h4 class="text-lg font-semibold text-blue-800 mb-3">🕌 BLOK 1: FONDASI HARIAN</h4>
+     <div id="edit-block1" class="space-y-2"><!-- Tasks will be populated by JavaScript -->
+     </div><button id="add-task-block1" class="mt-2 text-blue-600 hover:text-blue-800 text-sm">+ Tambah Tugas</button>
+    </div><!-- Block 2 -->
+    <div class="mb-6">
+     <h4 class="text-lg font-semibold text-indigo-800 mb-3">🎯 BLOK 2: ROTASI FOKUS</h4>
+     <div id="edit-block2" class="space-y-2"><!-- Tasks will be populated by JavaScript -->
+     </div><button id="add-task-block2" class="mt-2 text-indigo-600 hover:text-indigo-800 text-sm">+ Tambah Tugas</button>
+    </div><!-- Block 3 -->
+    <div class="mb-6">
+     <h4 class="text-lg font-semibold text-purple-800 mb-3">📅 BLOK 3: MINGGUAN</h4>
+     <div id="edit-block3" class="space-y-2"><!-- Tasks will be populated by JavaScript -->
+     </div><button id="add-task-block3" class="mt-2 text-purple-600 hover:text-purple-800 text-sm">+ Tambah Tugas</button>
+    </div>
+    <div class="flex gap-3 mt-6"><button id="save-tasks" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg">💾 Simpan Perubahan</button> <button id="reset-tasks" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg">🔄 Reset Default</button> <button class="close-modal flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg">Tutup</button>
+    </div>
+   </div>
+  </div>
+  <script>
+        // Global variables
+        let currentData = [];
+        let currentDate = new Date().toISOString().split('T')[0];
+        let todayData = null;
+        let timerInterval = null;
+        let timerMinutes = 25;
+        let timerSeconds = 0;
+        let timerRunning = false;
+        let selectedMood = '';
+        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+        let isEditMode = false;
+        let currentAnalyticsPeriod = '7d';
+        let editingTasks = {
+            block1: [],
+            block2: [],
+            block3: []
+        };
+
+        // Default config
+        const defaultConfig = {
+            app_title: "Produktivitas 3 Blok",
+            user_name: "",
+            daily_goal: "80"
+        };
+
+        // Task definitions
+        const taskBlocks = {
+            block1: [
+                "Tahajud",
+                "Subuh + Qur'an + Al-Waqiah", 
+                "Zikir pagi",
+                "Dhuha",
+                "Zuhur + Ar-Rahman",
+                "Ashar + Al-Insyirah", 
+                "Magrib + Yasin",
+                "Isya + Al-Mulk",
+                "Tilawah 10 halaman",
+                "5 vocabulary",
+                "Jurnal malam",
+                "Listening Episoden"
+            ],
+            block2A: [
+                "Deep Work Python",
+                "Speaking (record 30 menit)",
+                "Latihan desain 30 menit"
+            ],
+            block2B: [
+                "Deep Work C",
+                "English reading & writing", 
+                "Belajar materi (WPU / konsep)"
+            ],
+            block2Sunday: [
+                "Administrasi file",
+                "Review mingguan",
+                "Istirahat / buffer"
+            ],
+            block3: [
+                "Review minggu",
+                "Rapikan file", 
+                "Buffer task"
+            ]
+        };
+
+        // Templates
+        const templates = {
+            sick: {
+                block1: ["Subuh", "Zuhur", "Ashar", "Magrib", "Isya", "Istirahat"],
+                block2: ["Istirahat", "Recovery"],
+                block3: ["Istirahat"]
+            },
+            travel: {
+                block1: ["Subuh", "Zuhur", "Ashar", "Magrib", "Isya", "Listening mobile"],
+                block2: ["Mobile learning", "Voice recording"],
+                block3: ["Quick review"]
+            },
+            intensive: {
+                block1: taskBlocks.block1,
+                block2: ["Deep Work 2 jam", "Skill practice 1 jam", "Review & planning"],
+                block3: ["Weekly review", "Goal setting", "Optimization"]
+            }
+        };
+
+        // Data handler for SDK
+        const dataHandler = {
+            onDataChanged(data) {
+                currentData = data;
+                // Find today's data
+                todayData = currentData.find(item => item.date === currentDate && item.id === `day_${currentDate}`);
+                
+                // If no today data found, create new entry
+                if (!todayData) {
+                    createNewDayEntry();
+                } else {
+                    updateUI();
+                    updateAnalytics();
+                    renderTasks(); // Re-render tasks with saved state
+                }
+            }
+        };
+
+        // Initialize app
+        async function initApp() {
+            // Initialize SDK first
+            if (window.dataSdk) {
+                const result = await window.dataSdk.init(dataHandler);
+                if (!result.isOk) {
+                    console.error("Failed to initialize data SDK");
+                    // Continue with fallback
+                    await initializeFallback();
+                }
+            } else {
+                await initializeFallback();
+            }
+
+            // Initialize Element SDK
+            if (window.elementSdk) {
+                await window.elementSdk.init({
+                    defaultConfig,
+                    onConfigChange: async (config) => {
+                        document.getElementById('app-title').textContent = config.app_title || defaultConfig.app_title;
+                        if (config.user_name) {
+                            document.getElementById('current-date').textContent = `${getCurrentDateString()} - ${config.user_name}`;
+                        } else {
+                            document.getElementById('current-date').textContent = getCurrentDateString();
+                        }
+                    },
+                    mapToCapabilities: (config) => ({
+                        recolorables: [],
+                        borderables: [],
+                        fontEditable: undefined,
+                        fontSizeable: undefined
+                    }),
+                    mapToEditPanelValues: (config) => new Map([
+                        ["app_title", config.app_title || defaultConfig.app_title],
+                        ["user_name", config.user_name || defaultConfig.user_name],
+                        ["daily_goal", config.daily_goal || defaultConfig.daily_goal]
+                    ])
+                });
+            }
+            
+            // Initialize UI
+            initializeUI();
+            setupEventListeners();
+            
+            // Apply dark mode if enabled
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('dark-mode-btn').innerHTML = '☀️ Light';
+            }
+        }
+
+        async function initializeFallback() {
+            // Check for date change and auto-reset
+            await checkDateAndReset();
+            
+            // If still no data after check, ensure we have today's entry
+            if (!todayData) {
+                await createNewDayEntry();
+            }
+        }
+
+        function getCurrentDateString() {
+            const today = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            return today.toLocaleDateString('id-ID', options);
+        }
+
+        function getDayType() {
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+            
+            if (dayOfWeek === 0) return 'Minggu';
+            if (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) return 'A';
+            return 'B';
+        }
+
+        async function checkDateAndReset() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (currentDate !== today) {
+                // Save yesterday's final report if exists
+                if (todayData) {
+                    await createDailyReport(todayData);
+                    await saveCurrentProgress();
+                    
+                    // Show reset notification
+                    showToast(`📅 Hari baru! Reset untuk ${getCurrentDateString()}`, 'info');
+                }
+                
+                // Reset for new day
+                currentDate = today;
+                todayData = null;
+                
+                // Create new day entry with fresh unchecked tasks
+                await createNewDayEntry();
+                
+                // Update date display
+                document.getElementById('current-date').textContent = getCurrentDateString();
+                updateRotationInfo();
+            } else {
+                // Load today's data - look for exact match with proper ID
+                todayData = currentData.find(item => 
+                    item.date === currentDate && 
+                    item.id === `day_${currentDate}` &&
+                    !item.reportType // Exclude backup/report entries
+                );
+                
+                if (!todayData) {
+                    await createNewDayEntry();
+                }
+            }
+        }
+
+        async function createDailyReport(dayData) {
+            if (!window.dataSdk || !dayData) return;
+            
+            // Create daily report entry
+            const report = {
+                id: `report_${dayData.date}`,
+                date: dayData.date,
+                dayType: dayData.dayType,
+                tasks: dayData.tasks,
+                completedTasks: dayData.completedTasks,
+                totalTasks: dayData.totalTasks,
+                completionRate: dayData.completionRate,
+                mood: dayData.mood,
+                pomodoroMinutes: dayData.pomodoroMinutes,
+                goals: dayData.goals,
+                achievements: dayData.achievements,
+                notes: dayData.notes,
+                reportType: 'daily_backup',
+                createdAt: new Date().toISOString()
+            };
+
+            const result = await window.dataSdk.create(report);
+            if (result.isOk) {
+                console.log(`Daily report created for ${dayData.date}`);
+            }
+        }
+
+        async function createNewDayEntry() {
+            const dayType = getDayType();
+            const allTasks = getAllTasksForDay(dayType);
+            
+            const newEntry = {
+                id: `day_${currentDate}`,
+                date: currentDate,
+                dayType: dayType,
+                tasks: JSON.stringify(allTasks.map(task => ({ name: task, completed: false }))),
+                completedTasks: 0,
+                totalTasks: allTasks.length,
+                completionRate: 0,
+                mood: '',
+                pomodoroMinutes: 0,
+                goals: '',
+                achievements: '',
+                notes: '',
+                createdAt: new Date().toISOString()
+            };
+
+            if (window.dataSdk) {
+                const result = await window.dataSdk.create(newEntry);
+                if (result.isOk) {
+                    // Wait for data to be saved and reloaded
+                    setTimeout(() => {
+                        todayData = currentData.find(item => item.date === currentDate && item.id === `day_${currentDate}`);
+                        if (todayData) {
+                            updateUI();
+                            updateAnalytics();
+                            renderTasks();
+                        }
+                    }, 500);
+                }
+            } else {
+                // Fallback if SDK not available
+                todayData = newEntry;
+                updateUI();
+                renderTasks();
+            }
+        }
+
+        function getAllTasksForDay(dayType) {
+            let block2Tasks = [];
+            if (dayType === 'A') {
+                block2Tasks = taskBlocks.block2A;
+            } else if (dayType === 'B') {
+                block2Tasks = taskBlocks.block2B;
+            } else {
+                block2Tasks = taskBlocks.block2Sunday;
+            }
+            
+            return [...taskBlocks.block1, ...block2Tasks, ...taskBlocks.block3];
+        }
+
+        function initializeUI() {
+            document.getElementById('current-date').textContent = getCurrentDateString();
+            renderTasks();
+            updateRotationInfo();
+        }
+
+        function updateRotationInfo() {
+            const dayType = getDayType();
+            const rotationInfo = document.getElementById('rotation-info');
+            
+            if (dayType === 'A') {
+                rotationInfo.textContent = 'Hari A - Fokus Teknis';
+            } else if (dayType === 'B') {
+                rotationInfo.textContent = 'Hari B - Fokus Bahasa & Konsep';
+            } else {
+                rotationInfo.textContent = 'Minggu - Review & Administrasi';
+            }
+        }
+
+        function renderTasks() {
+            const dayType = getDayType();
+            let tasks = [];
+            
+            if (todayData) {
+                tasks = JSON.parse(todayData.tasks);
+            } else {
+                const allTasks = getAllTasksForDay(dayType);
+                tasks = allTasks.map(task => ({ name: task, completed: false }));
+            }
+
+            // Render Block 1
+            renderTaskBlock('block1-tasks', taskBlocks.block1, tasks, 'block1');
+            
+            // Render Block 2
+            let block2Tasks = [];
+            if (dayType === 'A') {
+                block2Tasks = taskBlocks.block2A;
+            } else if (dayType === 'B') {
+                block2Tasks = taskBlocks.block2B;
+            } else {
+                block2Tasks = taskBlocks.block2Sunday;
+            }
+            renderTaskBlock('block2-tasks', block2Tasks, tasks, 'block2');
+            
+            // Render Block 3
+            renderTaskBlock('block3-tasks', taskBlocks.block3, tasks, 'block3');
+        }
+
+        function renderTaskBlock(containerId, blockTasks, allTasks, blockId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            blockTasks.forEach(taskName => {
+                const taskData = allTasks.find(t => t.name === taskName);
+                const isCompleted = taskData ? taskData.completed : false;
+                
+                const taskElement = document.createElement('div');
+                taskElement.className = `task-item p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                    isCompleted ? 'completed border-blue-300 bg-blue-50' : 'border-gray-200 hover:border-blue-200'
+                }`;
+                
+                taskElement.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-5 h-5 rounded border-2 flex items-center justify-center ${
+                            isCompleted ? 'bg-blue-600 border-blue-600' : 'border-gray-300'
+                        }">
+                            ${isCompleted ? '<span class="text-white text-xs">✓</span>' : ''}
+                        </div>
+                        <span class="${isCompleted ? 'text-blue-800 font-medium' : 'text-gray-700'}">${taskName}</span>
+                    </div>
+                `;
+                
+                taskElement.addEventListener('click', () => toggleTask(taskName));
+                container.appendChild(taskElement);
+            });
+        }
+
+        async function toggleTask(taskName) {
+            if (!todayData) return;
+            
+            // Show loading state
+            const taskElements = document.querySelectorAll('.task-item');
+            taskElements.forEach(el => el.style.pointerEvents = 'none');
+            
+            try {
+                const tasks = JSON.parse(todayData.tasks);
+                const taskIndex = tasks.findIndex(t => t.name === taskName);
+                
+                if (taskIndex !== -1) {
+                    tasks[taskIndex].completed = !tasks[taskIndex].completed;
+                    
+                    const completedCount = tasks.filter(t => t.completed).length;
+                    const completionRate = Math.round((completedCount / tasks.length) * 100);
+                    
+                    todayData.tasks = JSON.stringify(tasks);
+                    todayData.completedTasks = completedCount;
+                    todayData.completionRate = completionRate;
+                    
+                    // Save immediately to prevent data loss
+                    await saveCurrentProgress();
+                    
+                    // Update UI
+                    renderTasks();
+                    updateProgress();
+                    
+                    // Auto-backup every 5 completed tasks
+                    if (completedCount > 0 && completedCount % 5 === 0) {
+                        await createProgressBackup();
+                    }
+                }
+            } catch (error) {
+                console.error('Error toggling task:', error);
+            } finally {
+                // Re-enable interactions
+                taskElements.forEach(el => el.style.pointerEvents = 'auto');
+            }
+        }
+
+        async function createProgressBackup() {
+            if (!window.dataSdk || !todayData) return;
+            
+            const backup = {
+                id: `backup_${todayData.date}_${Date.now()}`,
+                date: todayData.date,
+                dayType: todayData.dayType,
+                tasks: todayData.tasks,
+                completedTasks: todayData.completedTasks,
+                totalTasks: todayData.totalTasks,
+                completionRate: todayData.completionRate,
+                mood: todayData.mood,
+                pomodoroMinutes: todayData.pomodoroMinutes,
+                goals: todayData.goals,
+                reportType: 'progress_backup',
+                timestamp: new Date().toISOString()
+            };
+
+            const result = await window.dataSdk.create(backup);
+            if (result.isOk) {
+                console.log('Progress backup created');
+            }
+        }
+
+        async function saveCurrentProgress() {
+            if (!todayData || !window.dataSdk) return;
+            
+            const result = await window.dataSdk.update(todayData);
+            if (!result.isOk) {
+                console.error("Failed to save progress");
+            }
+        }
+
+        function updateUI() {
+            if (todayData) {
+                updateProgress();
+                updateAnalytics();
+            }
+        }
+
+        function updateProgress() {
+            if (!todayData) return;
+            
+            const completionRate = todayData.completionRate;
+            const completedTasks = todayData.completedTasks;
+            const totalTasks = todayData.totalTasks;
+            
+            // Update progress circle
+            const circle = document.getElementById('progress-circle');
+            const circumference = 2 * Math.PI * 40;
+            const offset = circumference - (completionRate / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+            
+            // Update text
+            document.getElementById('progress-percent').textContent = `${completionRate}%`;
+            document.getElementById('completed-tasks').textContent = completedTasks;
+            document.getElementById('total-tasks').textContent = `dari ${totalTasks} tugas`;
+            document.getElementById('pomodoro-count').textContent = Math.floor(todayData.pomodoroMinutes / 25);
+        }
+
+        function updateAnalytics() {
+            updatePeriodAnalytics(currentAnalyticsPeriod);
+            updateStreak();
+            
+            // Ensure analytics show even with minimal data
+            if (currentData.length === 0 && todayData) {
+                // Show today's data in analytics even if it's the only data point
+                const tempData = [todayData];
+                updatePeriodStats(tempData);
+                updateDetailedStats(tempData);
+            }
+        }
+
+        function switchAnalyticsPeriod(period) {
+            currentAnalyticsPeriod = period;
+            
+            // Update button states
+            document.querySelectorAll('.analytics-period-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`period-${period}`).classList.add('active');
+            
+            // Update analytics
+            updatePeriodAnalytics(period);
+        }
+
+        function updatePeriodAnalytics(period) {
+            let periodData = getPeriodData(period);
+            
+            // If no historical data but we have today's data, include it
+            if (periodData.length === 0 && todayData) {
+                periodData = [todayData];
+            }
+            
+            updatePeriodChart(period, periodData);
+            updatePeriodStats(periodData);
+            updateDetailedStats(periodData);
+            updateInsights(periodData, period);
+        }
+
+        function getPeriodData(period) {
+            const now = new Date();
+            let startDate = new Date();
+            
+            switch(period) {
+                case '7d':
+                    startDate.setDate(now.getDate() - 6);
+                    break;
+                case '30d':
+                    startDate.setDate(now.getDate() - 29);
+                    break;
+                case '1y':
+                    startDate.setFullYear(now.getFullYear() - 1);
+                    break;
+            }
+            
+            return currentData.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate >= startDate && itemDate <= now && !item.reportType;
+            }).sort((a, b) => new Date(a.date) - new Date(b.date));
+        }
+
+        function updatePeriodChart(period, data) {
+            const chartContainer = document.getElementById('main-chart');
+            const chartTitle = document.getElementById('chart-title');
+            chartContainer.innerHTML = '';
+            
+            // Update title
+            const titles = {
+                '7d': 'Progress 7 Hari Terakhir',
+                '30d': 'Progress 30 Hari Terakhir', 
+                '1y': 'Progress 12 Bulan Terakhir'
+            };
+            chartTitle.textContent = titles[period];
+            
+            if (period === '1y') {
+                updateYearlyChart(data);
+            } else {
+                updateDailyChart(data, period);
+            }
+        }
+
+        function updateDailyChart(data, period) {
+            const chartContainer = document.getElementById('main-chart');
+            const days = period === '7d' ? 7 : 30;
+            
+            // Create date range
+            const dateRange = [];
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                dateRange.push(date.toISOString().split('T')[0]);
+            }
+            
+            dateRange.forEach(date => {
+                const dayData = data.find(item => item.date === date);
+                const completionRate = dayData ? dayData.completionRate : 0;
+                const isToday = date === currentDate;
+                
+                const container = document.createElement('div');
+                container.className = 'flex flex-col items-center flex-1';
+                
+                const bar = document.createElement('div');
+                bar.className = `chart-bar rounded-t transition-all duration-500 ${
+                    completionRate >= 80 ? 'bg-green-600' : 
+                    completionRate >= 60 ? 'bg-blue-600' : 
+                    completionRate >= 40 ? 'bg-yellow-600' : 
+                    completionRate > 0 ? 'bg-red-400' : 'bg-gray-300'
+                }`;
+                
+                // Ensure minimum height for visibility, higher for today
+                const minHeight = isToday ? 8 : 4;
+                bar.style.height = `${Math.max(completionRate * 2, minHeight)}px`;
+                bar.title = `${date}: ${completionRate}%${isToday ? ' (Hari ini)' : ''}`;
+                
+                // Add border for today
+                if (isToday) {
+                    bar.style.border = '2px solid #1E66FF';
+                    bar.style.boxShadow = '0 2px 8px rgba(30, 102, 255, 0.3)';
+                }
+                
+                const label = document.createElement('div');
+                label.className = `text-xs text-center mt-1 ${isToday ? 'text-blue-600 font-bold' : 'text-gray-600'}`;
+                if (period === '7d') {
+                    label.textContent = new Date(date).toLocaleDateString('id-ID', { weekday: 'short' });
+                } else {
+                    label.textContent = new Date(date).getDate();
+                }
+                
+                // Add percentage display for today or completed days
+                if (isToday || completionRate > 0) {
+                    const percentage = document.createElement('div');
+                    percentage.className = `text-xs ${isToday ? 'text-blue-600 font-bold' : 'text-gray-500'} mt-1`;
+                    percentage.textContent = `${completionRate}%`;
+                    container.appendChild(percentage);
+                }
+                
+                container.appendChild(bar);
+                container.appendChild(label);
+                chartContainer.appendChild(container);
+            });
+        }
+
+        function updateYearlyChart(data) {
+            const chartContainer = document.getElementById('main-chart');
+            const monthlyData = {};
+            
+            // Group data by month
+            data.forEach(item => {
+                const month = new Date(item.date).getMonth();
+                if (!monthlyData[month]) {
+                    monthlyData[month] = [];
+                }
+                monthlyData[month].push(item.completionRate);
+            });
+            
+            // Create bars for each month
+            for (let month = 0; month < 12; month++) {
+                const monthData = monthlyData[month] || [];
+                const avgCompletion = monthData.length > 0 ? 
+                    Math.round(monthData.reduce((sum, rate) => sum + rate, 0) / monthData.length) : 0;
+                
+                const container = document.createElement('div');
+                container.className = 'flex flex-col items-center flex-1';
+                
+                const bar = document.createElement('div');
+                bar.className = `chart-bar rounded-t transition-all duration-500 ${
+                    avgCompletion >= 80 ? 'bg-green-600' : 
+                    avgCompletion >= 60 ? 'bg-blue-600' : 
+                    avgCompletion >= 40 ? 'bg-yellow-600' : 'bg-red-400'
+                }`;
+                bar.style.height = `${Math.max(avgCompletion * 2, 4)}px`;
+                bar.title = `${getMonthName(month)}: ${avgCompletion}%`;
+                
+                const label = document.createElement('div');
+                label.className = 'text-xs text-gray-600 text-center mt-1';
+                label.textContent = getMonthName(month).substring(0, 3);
+                
+                container.appendChild(bar);
+                container.appendChild(label);
+                chartContainer.appendChild(container);
+            }
+        }
+
+        function getMonthName(monthIndex) {
+            const months = [
+                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+            ];
+            return months[monthIndex];
+        }
+
+        function updatePeriodStats(data) {
+            const avgCompletion = data.length > 0 ? 
+                Math.round(data.reduce((sum, item) => sum + item.completionRate, 0) / data.length) : 0;
+            const perfectDays = data.filter(item => item.completionRate === 100).length;
+            const bestStreak = calculateBestStreak(data);
+            
+            document.getElementById('period-avg').textContent = `${avgCompletion}%`;
+            document.getElementById('period-perfect').textContent = perfectDays;
+            document.getElementById('period-streak').textContent = bestStreak;
+            document.getElementById('period-total').textContent = data.length;
+        }
+
+        function updateDetailedStats(data) {
+            // Handle empty data case
+            if (data.length === 0) {
+                document.getElementById('consistency-rate').textContent = '0%';
+                document.getElementById('consistency-bar').style.width = '0%';
+                document.getElementById('productivity-rate').textContent = '0%';
+                document.getElementById('productivity-bar').style.width = '0%';
+                document.getElementById('weekly-trend').textContent = '📊 Mulai tracking';
+                document.getElementById('best-day').textContent = 'Belum ada data';
+                document.getElementById('total-pomodoro').textContent = '0 🍅';
+                return;
+            }
+            
+            // Consistency (days with >60% completion)
+            const consistentDays = data.filter(item => item.completionRate >= 60).length;
+            const consistencyRate = Math.round((consistentDays / data.length) * 100);
+            document.getElementById('consistency-rate').textContent = `${consistencyRate}%`;
+            document.getElementById('consistency-bar').style.width = `${consistencyRate}%`;
+            
+            // Productivity (days with >80% completion)
+            const productiveDays = data.filter(item => item.completionRate >= 80).length;
+            const productivityRate = Math.round((productiveDays / data.length) * 100);
+            document.getElementById('productivity-rate').textContent = `${productivityRate}%`;
+            document.getElementById('productivity-bar').style.width = `${productivityRate}%`;
+            
+            // Weekly trend
+            const recentWeek = data.slice(-7);
+            const previousWeek = data.slice(-14, -7);
+            const recentAvg = recentWeek.length > 0 ? 
+                recentWeek.reduce((sum, item) => sum + item.completionRate, 0) / recentWeek.length : 0;
+            const previousAvg = previousWeek.length > 0 ? 
+                previousWeek.reduce((sum, item) => sum + item.completionRate, 0) / previousWeek.length : 0;
+            
+            let trend = '📊 Stabil';
+            if (data.length === 1) {
+                trend = '🌱 Hari pertama';
+            } else if (recentAvg > previousAvg + 5) {
+                trend = '📈 Naik';
+            } else if (recentAvg < previousAvg - 5) {
+                trend = '📉 Turun';
+            }
+            document.getElementById('weekly-trend').textContent = trend;
+            
+            // Best day of week
+            const dayStats = {};
+            data.forEach(item => {
+                const dayOfWeek = new Date(item.date).getDay();
+                if (!dayStats[dayOfWeek]) dayStats[dayOfWeek] = [];
+                dayStats[dayOfWeek].push(item.completionRate);
+            });
+            
+            let bestDay = 'Belum cukup data';
+            let bestAvg = 0;
+            
+            if (Object.keys(dayStats).length > 0) {
+                Object.keys(dayStats).forEach(day => {
+                    const avg = dayStats[day].reduce((sum, rate) => sum + rate, 0) / dayStats[day].length;
+                    if (avg > bestAvg) {
+                        bestAvg = avg;
+                        bestDay = getDayName(parseInt(day));
+                    }
+                });
+                
+                // If only one day, show that day
+                if (data.length === 1) {
+                    bestDay = getDayName(new Date(data[0].date).getDay()) + ' (hari ini)';
+                }
+            }
+            
+            document.getElementById('best-day').textContent = bestDay;
+            
+            // Total Pomodoro
+            const totalPomodoro = data.reduce((sum, item) => sum + Math.floor((item.pomodoroMinutes || 0) / 25), 0);
+            document.getElementById('total-pomodoro').textContent = `${totalPomodoro} 🍅`;
+        }
+
+        function getDayName(dayIndex) {
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            return days[dayIndex];
+        }
+
+        function updateInsights(data, period) {
+            const insightsContainer = document.getElementById('insights-content');
+            
+            if (data.length === 0) {
+                insightsContainer.innerHTML = '🌱 Mulai tracking untuk mendapatkan insights personal...<br>• Centang tugas pertama Anda untuk memulai analisis<br>• Sistem akan memberikan rekomendasi berdasarkan pola aktivitas Anda';
+                return;
+            }
+            
+            const avgCompletion = data.reduce((sum, item) => sum + item.completionRate, 0) / data.length;
+            const perfectDays = data.filter(item => item.completionRate === 100).length;
+            const consistentDays = data.filter(item => item.completionRate >= 80).length;
+            
+            let insights = [];
+            
+            // Special message for first day
+            if (data.length === 1) {
+                const todayRate = data[0].completionRate;
+                if (todayRate >= 80) {
+                    insights.push('🌟 Hari pertama yang luar biasa! Mulai yang sangat baik.');
+                } else if (todayRate >= 60) {
+                    insights.push('👍 Hari pertama yang solid! Terus tingkatkan besok.');
+                } else if (todayRate >= 30) {
+                    insights.push('📈 Hari pertama yang cukup baik, ada ruang untuk improvement.');
+                } else if (todayRate > 0) {
+                    insights.push('💪 Langkah pertama sudah dimulai! Konsistensi adalah kunci.');
+                } else {
+                    insights.push('🎯 Hari pertama tracking! Mulai centang tugas untuk melihat progress.');
+                }
+                
+                insights.push('📊 Lanjutkan tracking beberapa hari untuk mendapat insights yang lebih mendalam.');
+            } else {
+                // Regular insights for multiple days
+                if (avgCompletion >= 85) {
+                    insights.push('🌟 Performa luar biasa! Anda sangat konsisten.');
+                } else if (avgCompletion >= 70) {
+                    insights.push('👍 Performa baik, pertahankan momentum ini.');
+                } else if (avgCompletion >= 50) {
+                    insights.push('📈 Ada ruang untuk improvement, fokus pada konsistensi.');
+                } else {
+                    insights.push('💪 Saatnya meningkatkan fokus dan disiplin harian.');
+                }
+                
+                if (perfectDays > 0) {
+                    insights.push(`🎯 Anda memiliki ${perfectDays} hari perfect - hebat!`);
+                }
+                
+                const recentTrend = data.slice(-7);
+                const isImproving = recentTrend.length >= 3 && 
+                    recentTrend.slice(-3).every((item, index) => 
+                        index === 0 || item.completionRate >= recentTrend[recentTrend.length - 3 + index - 1].completionRate
+                    );
+                
+                if (isImproving && data.length >= 3) {
+                    insights.push('📈 Trend positif terdeteksi - terus tingkatkan!');
+                }
+                
+                if (period === '30d' && consistentDays >= 20) {
+                    insights.push('🏆 Konsistensi 30 hari sangat baik, Anda sedang membangun habit yang kuat!');
+                }
+                
+                if (period === '1y' && avgCompletion >= 75) {
+                    insights.push('🎖️ Konsistensi tahunan luar biasa! Anda telah membangun sistem yang solid.');
+                }
+            }
+            
+            // Add motivational tips based on current performance
+            if (data.length >= 2) {
+                const latestDay = data[data.length - 1];
+                if (latestDay.completionRate < 50) {
+                    insights.push('💡 Tip: Mulai dengan 3-5 tugas paling penting di pagi hari.');
+                } else if (latestDay.completionRate >= 90) {
+                    insights.push('🚀 Anda dalam zona optimal! Pertahankan ritme ini.');
+                }
+            }
+            
+            insightsContainer.innerHTML = '• ' + insights.join('<br>• ');
+        }
+
+        function calculateBestStreak(data) {
+            let bestStreak = 0;
+            let currentStreak = 0;
+            
+            data.forEach(item => {
+                if (item.completionRate >= 80) {
+                    currentStreak++;
+                    bestStreak = Math.max(bestStreak, currentStreak);
+                } else {
+                    currentStreak = 0;
+                }
+            });
+            
+            return bestStreak;
+        }
+
+        function updateStreak() {
+            let currentStreak = 0;
+            let bestStreak = 0;
+            let tempStreak = 0;
+            
+            // Sort data by date
+            const sortedData = [...currentData].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Calculate current streak
+            for (const item of sortedData) {
+                if (item.completionRate >= 80) {
+                    currentStreak++;
+                } else {
+                    break;
+                }
+            }
+            
+            // Calculate best streak
+            for (const item of sortedData.reverse()) {
+                if (item.completionRate >= 80) {
+                    tempStreak++;
+                    bestStreak = Math.max(bestStreak, tempStreak);
+                } else {
+                    tempStreak = 0;
+                }
+            }
+            
+            document.getElementById('current-streak').textContent = currentStreak;
+        }
+
+        function setupEventListeners() {
+            // Dark mode toggle
+            document.getElementById('dark-mode-btn').addEventListener('click', () => {
+                isDarkMode = !isDarkMode;
+                document.body.classList.toggle('dark-mode');
+                localStorage.setItem('darkMode', isDarkMode);
+                
+                const btn = document.getElementById('dark-mode-btn');
+                btn.innerHTML = isDarkMode ? '☀️ Light' : '🌙 Dark';
+            });
+
+            // Analytics period buttons
+            document.getElementById('period-7d').addEventListener('click', () => switchAnalyticsPeriod('7d'));
+            document.getElementById('period-30d').addEventListener('click', () => switchAnalyticsPeriod('30d'));
+            document.getElementById('period-1y').addEventListener('click', () => switchAnalyticsPeriod('1y'));
+
+            // Modal triggers
+            document.getElementById('mood-btn').addEventListener('click', () => {
+                document.getElementById('mood-modal').classList.add('show');
+            });
+            
+            document.getElementById('goals-btn').addEventListener('click', () => {
+                const modal = document.getElementById('goals-modal');
+                const input = document.getElementById('goals-input');
+                if (todayData) {
+                    input.value = todayData.goals;
+                }
+                modal.classList.add('show');
+            });
+            
+            document.getElementById('achievements-btn').addEventListener('click', () => {
+                updateAchievements();
+                document.getElementById('achievements-modal').classList.add('show');
+            });
+            
+            document.getElementById('timer-btn').addEventListener('click', () => {
+                document.getElementById('timer-modal').classList.add('show');
+            });
+            
+            document.getElementById('template-btn').addEventListener('click', () => {
+                document.getElementById('template-modal').classList.add('show');
+            });
+
+            // Close modals
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.target.closest('.modal').classList.remove('show');
+                });
+            });
+
+            // Modal backdrop close
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('show');
+                    }
+                });
+            });
+
+            // Mood selection
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('border-blue-500', 'bg-blue-50'));
+                    btn.classList.add('border-blue-500', 'bg-blue-50');
+                    selectedMood = btn.dataset.mood;
+                });
+            });
+
+            // Save mood
+            document.getElementById('save-mood').addEventListener('click', async () => {
+                if (selectedMood && todayData) {
+                    todayData.mood = selectedMood;
+                    await saveCurrentProgress();
+                    document.getElementById('mood-modal').classList.remove('show');
+                }
+            });
+
+            // Save goals
+            document.getElementById('save-goals').addEventListener('click', async () => {
+                const goals = document.getElementById('goals-input').value;
+                if (todayData) {
+                    todayData.goals = goals;
+                    await saveCurrentProgress();
+                    document.getElementById('goals-modal').classList.remove('show');
+                }
+            });
+
+            // Timer controls
+            document.getElementById('start-timer').addEventListener('click', startTimer);
+            document.getElementById('pause-timer').addEventListener('click', pauseTimer);
+            document.getElementById('reset-timer').addEventListener('click', resetTimer);
+
+            // Template buttons
+            document.getElementById('template-sick').addEventListener('click', () => applyTemplate('sick'));
+            document.getElementById('template-travel').addEventListener('click', () => applyTemplate('travel'));
+            document.getElementById('template-intensive').addEventListener('click', () => applyTemplate('intensive'));
+
+            // Edit mode button
+            document.getElementById('edit-mode-btn').addEventListener('click', () => {
+                openEditTasksModal();
+            });
+
+            // Edit tasks modal buttons
+            document.getElementById('add-task-block1').addEventListener('click', () => addNewTaskToEdit('block1'));
+            document.getElementById('add-task-block2').addEventListener('click', () => addNewTaskToEdit('block2'));
+            document.getElementById('add-task-block3').addEventListener('click', () => addNewTaskToEdit('block3'));
+            document.getElementById('save-tasks').addEventListener('click', saveEditedTasks);
+            document.getElementById('reset-tasks').addEventListener('click', resetToDefaultTasks);
+
+            // Export button
+            document.getElementById('export-btn').addEventListener('click', exportData);
+            
+            // Sheet button
+            document.getElementById('sheet-btn').addEventListener('click', () => {
+                // This would open the Canva Sheet in a new tab
+                window.open('#', '_blank');
+            });
+
+            // Reset day button
+            document.getElementById('reset-day-btn').addEventListener('click', async () => {
+                if (confirm('🔄 Yakin ingin reset semua centang hari ini?\n\nSemua progress hari ini akan hilang dan tugas akan kembali kosong.')) {
+                    await resetCurrentDay();
+                }
+            });
+        }
+
+        function startTimer() {
+            if (!timerRunning) {
+                timerRunning = true;
+                timerInterval = setInterval(() => {
+                    if (timerSeconds === 0) {
+                        if (timerMinutes === 0) {
+                            // Timer finished
+                            clearInterval(timerInterval);
+                            timerRunning = false;
+                            document.getElementById('timer-status').textContent = 'Pomodoro selesai!';
+                            
+                            // Add pomodoro to today's data
+                            if (todayData) {
+                                todayData.pomodoroMinutes += 25;
+                                saveCurrentProgress();
+                            }
+                            
+                            resetTimer();
+                            return;
+                        }
+                        timerMinutes--;
+                        timerSeconds = 59;
+                    } else {
+                        timerSeconds--;
+                    }
+                    
+                    updateTimerDisplay();
+                }, 1000);
+                
+                document.getElementById('timer-status').textContent = 'Timer berjalan...';
+            }
+        }
+
+        function pauseTimer() {
+            if (timerRunning) {
+                clearInterval(timerInterval);
+                timerRunning = false;
+                document.getElementById('timer-status').textContent = 'Timer dijeda';
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timerMinutes = 25;
+            timerSeconds = 0;
+            updateTimerDisplay();
+            document.getElementById('timer-status').textContent = 'Siap untuk mulai';
+        }
+
+        function updateTimerDisplay() {
+            const display = document.getElementById('timer-display');
+            display.textContent = `${timerMinutes.toString().padStart(2, '0')}:${timerSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateAchievements() {
+            const achievementsList = document.getElementById('achievements-list');
+            achievementsList.innerHTML = '';
+            
+            const achievements = [
+                { name: '3 Hari Konsisten', condition: () => getCurrentStreak() >= 3 },
+                { name: '7 Hari Konsisten', condition: () => getCurrentStreak() >= 7 },
+                { name: '14 Hari Konsisten', condition: () => getCurrentStreak() >= 14 },
+                { name: '30 Hari Konsisten', condition: () => getCurrentStreak() >= 30 },
+                { name: 'Hari Perfect', condition: () => todayData && todayData.completionRate === 100 }
+            ];
+            
+            achievements.forEach(achievement => {
+                const achieved = achievement.condition();
+                const item = document.createElement('div');
+                item.className = `p-3 rounded-lg border-2 ${achieved ? 'bg-green-50 border-green-300' : 'bg-gray-50 border-gray-200'}`;
+                item.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">${achieved ? '🏆' : '🔒'}</span>
+                        <span class="${achieved ? 'text-green-800 font-medium' : 'text-gray-600'}">${achievement.name}</span>
+                    </div>
+                `;
+                achievementsList.appendChild(item);
+            });
+        }
+
+        function getCurrentStreak() {
+            let streak = 0;
+            const sortedData = [...currentData].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            for (const item of sortedData) {
+                if (item.completionRate >= 80) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            
+            return streak;
+        }
+
+        async function applyTemplate(templateName) {
+            if (!todayData) return;
+            
+            const template = templates[templateName];
+            const allTasks = [...template.block1, ...template.block2, ...template.block3];
+            const tasks = allTasks.map(task => ({ name: task, completed: false }));
+            
+            todayData.tasks = JSON.stringify(tasks);
+            todayData.totalTasks = tasks.length;
+            todayData.completedTasks = 0;
+            todayData.completionRate = 0;
+            
+            await saveCurrentProgress();
+            renderTasks();
+            updateProgress();
+            
+            document.getElementById('template-modal').classList.remove('show');
+        }
+
+        function exportData() {
+            const exportData = {
+                summary: {
+                    totalDays: currentData.length,
+                    averageCompletion: currentData.length > 0 ? 
+                        Math.round(currentData.reduce((sum, item) => sum + item.completionRate, 0) / currentData.length) : 0,
+                    perfectDays: currentData.filter(item => item.completionRate === 100).length,
+                    currentStreak: getCurrentStreak()
+                },
+                dailyData: currentData.map(item => ({
+                    date: item.date,
+                    dayType: item.dayType,
+                    completionRate: item.completionRate,
+                    completedTasks: item.completedTasks,
+                    totalTasks: item.totalTasks,
+                    mood: item.mood,
+                    pomodoroMinutes: item.pomodoroMinutes
+                }))
+            };
+            
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `produktivitas-3-blok-${currentDate}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Reset current day manually
+        async function resetCurrentDay() {
+            if (!todayData) return;
+            
+            // Save current progress as backup before reset
+            await createProgressBackup();
+            
+            // Reset all tasks to unchecked
+            const tasks = JSON.parse(todayData.tasks);
+            const resetTasks = tasks.map(task => ({ ...task, completed: false }));
+            
+            todayData.tasks = JSON.stringify(resetTasks);
+            todayData.completedTasks = 0;
+            todayData.completionRate = 0;
+            todayData.pomodoroMinutes = 0;
+            
+            // Save reset state
+            await saveCurrentProgress();
+            
+            // Update UI
+            renderTasks();
+            updateProgress();
+            updateAnalytics();
+            
+            showToast('🔄 Hari ini berhasil direset! Semua centang dihapus.', 'success');
+        }
+
+        // Auto-backup scheduler
+        function scheduleAutoBackup() {
+            setInterval(async () => {
+                const now = new Date();
+                const hour = now.getHours();
+                
+                // Auto-backup at 21:00 (9 PM) and 23:30 (11:30 PM)
+                if ((hour === 21 && now.getMinutes() === 0) || 
+                    (hour === 23 && now.getMinutes() === 30)) {
+                    if (todayData) {
+                        await createDailyReport(todayData);
+                        console.log('Auto-backup completed at', now.toLocaleTimeString());
+                    }
+                }
+                
+                // Check for date change every minute
+                await checkDateAndReset();
+            }, 60000); // Check every minute
+        }
+
+        // Edit Tasks Functions
+        function openEditTasksModal() {
+            if (!todayData) return;
+            
+            // Load current tasks into editing structure
+            const currentTasks = JSON.parse(todayData.tasks);
+            const dayType = getDayType();
+            
+            // Separate tasks by blocks
+            editingTasks.block1 = [];
+            editingTasks.block2 = [];
+            editingTasks.block3 = [];
+            
+            // Get default tasks for reference
+            let defaultBlock2 = [];
+            if (dayType === 'A') {
+                defaultBlock2 = taskBlocks.block2A;
+            } else if (dayType === 'B') {
+                defaultBlock2 = taskBlocks.block2B;
+            } else {
+                defaultBlock2 = taskBlocks.block2Sunday;
+            }
+            
+            // Categorize current tasks
+            currentTasks.forEach(task => {
+                if (taskBlocks.block1.includes(task.name)) {
+                    editingTasks.block1.push(task.name);
+                } else if (defaultBlock2.includes(task.name)) {
+                    editingTasks.block2.push(task.name);
+                } else if (taskBlocks.block3.includes(task.name)) {
+                    editingTasks.block3.push(task.name);
+                } else {
+                    // Custom task - try to categorize by position
+                    const taskIndex = currentTasks.findIndex(t => t.name === task.name);
+                    if (taskIndex < taskBlocks.block1.length) {
+                        editingTasks.block1.push(task.name);
+                    } else if (taskIndex < taskBlocks.block1.length + defaultBlock2.length) {
+                        editingTasks.block2.push(task.name);
+                    } else {
+                        editingTasks.block3.push(task.name);
+                    }
+                }
+            });
+            
+            // Render edit interface
+            renderEditTasks();
+            document.getElementById('edit-tasks-modal').classList.add('show');
+        }
+
+        function renderEditTasks() {
+            renderEditBlock('edit-block1', editingTasks.block1, 'block1');
+            renderEditBlock('edit-block2', editingTasks.block2, 'block2');
+            renderEditBlock('edit-block3', editingTasks.block3, 'block3');
+        }
+
+        function renderEditBlock(containerId, tasks, blockId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            tasks.forEach((taskName, index) => {
+                const taskElement = document.createElement('div');
+                taskElement.className = 'flex items-center gap-2 p-2 bg-gray-50 rounded border';
+                taskElement.innerHTML = `
+                    <input type="text" value="${taskName}" class="flex-1 px-2 py-1 border border-gray-300 rounded text-sm" 
+                           onchange="updateEditingTask('${blockId}', ${index}, this.value)">
+                    <button onclick="removeEditingTask('${blockId}', ${index})" 
+                            class="text-red-600 hover:text-red-800 px-2 py-1 text-sm">🗑️</button>
+                `;
+                container.appendChild(taskElement);
+            });
+        }
+
+        function updateEditingTask(blockId, index, newValue) {
+            if (newValue.trim()) {
+                editingTasks[blockId][index] = newValue.trim();
+            }
+        }
+
+        function removeEditingTask(blockId, index) {
+            editingTasks[blockId].splice(index, 1);
+            renderEditTasks();
+        }
+
+        function addNewTaskToEdit(blockId) {
+            const taskName = prompt('Masukkan nama tugas baru:');
+            if (taskName && taskName.trim()) {
+                editingTasks[blockId].push(taskName.trim());
+                renderEditTasks();
+            }
+        }
+
+        async function saveEditedTasks() {
+            if (!todayData) return;
+            
+            // Combine all edited tasks
+            const allEditedTasks = [
+                ...editingTasks.block1,
+                ...editingTasks.block2,
+                ...editingTasks.block3
+            ];
+            
+            // Get current completion status
+            const currentTasks = JSON.parse(todayData.tasks);
+            const completionMap = new Map();
+            currentTasks.forEach(task => {
+                completionMap.set(task.name, task.completed);
+            });
+            
+            // Create new task structure preserving completion status
+            const newTasks = allEditedTasks.map(taskName => ({
+                name: taskName,
+                completed: completionMap.get(taskName) || false
+            }));
+            
+            // Update today's data
+            todayData.tasks = JSON.stringify(newTasks);
+            todayData.totalTasks = newTasks.length;
+            todayData.completedTasks = newTasks.filter(t => t.completed).length;
+            todayData.completionRate = Math.round((todayData.completedTasks / todayData.totalTasks) * 100);
+            
+            // Save to database
+            await saveCurrentProgress();
+            
+            // Update UI
+            renderTasks();
+            updateProgress();
+            
+            // Close modal
+            document.getElementById('edit-tasks-modal').classList.remove('show');
+            
+            // Show success message
+            showToast('✅ Tugas berhasil diperbarui!', 'success');
+        }
+
+        async function resetToDefaultTasks() {
+            if (!confirm('Yakin ingin reset ke tugas default? Semua perubahan akan hilang.')) {
+                return;
+            }
+            
+            const dayType = getDayType();
+            const allTasks = getAllTasksForDay(dayType);
+            
+            // Reset editing tasks to default
+            editingTasks.block1 = [...taskBlocks.block1];
+            if (dayType === 'A') {
+                editingTasks.block2 = [...taskBlocks.block2A];
+            } else if (dayType === 'B') {
+                editingTasks.block2 = [...taskBlocks.block2B];
+            } else {
+                editingTasks.block2 = [...taskBlocks.block2Sunday];
+            }
+            editingTasks.block3 = [...taskBlocks.block3];
+            
+            // Re-render edit interface
+            renderEditTasks();
+            
+            showToast('🔄 Tugas direset ke default', 'info');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 px-4 py-2 rounded-lg text-white z-[9999] ${
+                type === 'success' ? 'bg-green-600' : 
+                type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+            }`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Make functions global for onclick handlers
+        window.updateEditingTask = updateEditingTask;
+        window.removeEditingTask = removeEditingTask;
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initApp();
+            scheduleAutoBackup();
+        });
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99fae87be14d6045',t:'MTc2MzMzNzIxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

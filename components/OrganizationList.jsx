@@ -10,9 +10,13 @@ export default function OrganizationList({ organizations }) {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = async (id) => {
-    if (!confirm('Yakin ingin menghapus pengalaman organisasi ini?')) return;
+    // Gunakan confirm yang tidak memblokir render
+    const confirmed = window.confirm('Yakin ingin menghapus pengalaman organisasi ini?');
+    if (!confirmed) return;
 
+    // Set loading state SEGERA agar UI merespon instan
     setDeletingId(id);
+    
     const supabase = createClient();
     const { error } = await supabase.from('Organization').delete().eq('id', id);
 
@@ -20,6 +24,7 @@ export default function OrganizationList({ organizations }) {
       alert('Gagal menghapus: ' + error.message);
       setDeletingId(null);
     } else {
+      // Jalankan refresh dalam transition agar UI tetap responsif
       startTransition(() => {
         router.refresh();
         setDeletingId(null);
@@ -72,7 +77,11 @@ export default function OrganizationList({ organizations }) {
                   disabled={deletingId === org.id}
                   className="p-3 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition-all disabled:opacity-50"
                 >
-                  <Trash2 size={18} />
+                  {deletingId === org.id ? (
+                    <div className="w-[18px] h-[18px] border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <Trash2 size={18} />
+                  )}
                 </button>
               </div>
             </div>

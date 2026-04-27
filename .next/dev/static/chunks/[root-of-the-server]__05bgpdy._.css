@@ -981,6 +981,10 @@
     margin-top: calc(var(--spacing) * 24);
   }
 
+  .mt-32 {
+    margin-top: calc(var(--spacing) * 32);
+  }
+
   .mt-auto {
     margin-top: auto;
   }
@@ -1544,6 +1548,10 @@
 
   .min-w-\[20px\] {
     min-width: 20px;
+  }
+
+  .min-w-\[140px\] {
+    min-width: 140px;
   }
 
   .flex-1 {
@@ -5113,6 +5121,12 @@
   @media (hover: hover) {
     .hover\:gap-4:hover {
       gap: calc(var(--spacing) * 4);
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:border-\[var\(--accent\)\]:hover {
+      border-color: var(--accent);
     }
   }
 
