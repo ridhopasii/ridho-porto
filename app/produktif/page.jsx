@@ -12,9 +12,17 @@ import {
 import { createClient } from '@/utils/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Helper to get local date string (YYYY-MM-DD) avoiding UTC offset issues
+const getLocalDateString = (dateObj = new Date()) => {
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export default function ProduktifPage() {
   const [activeTab, setActiveTab] = useState('daily');
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState(getLocalDateString());
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -26,7 +34,7 @@ export default function ProduktifPage() {
   const [savings, setSavings] = useState([]);
   const [habitConfigs, setHabitConfigs] = useState([]);
   const [monthlyTracker, setMonthlyTracker] = useState({});
-  const [dailyConfig, setDailyConfig] = useState({ block1: [], block2A: [], block2B: [], block2Sunday: [], block3: [] });
+  const [dailyConfig, setDailyConfig] = useState([]); // Now an Array for dynamic blocks
   const [loading, setLoading] = useState(true);
   
   // Auth
@@ -51,20 +59,44 @@ export default function ProduktifPage() {
     
     // 1. Fetch Daily Productivity & Config
     const { data: configData } = await supabase.from('SiteSettings').select('value').eq('key', 'productivity_config').single();
-    const config = configData ? JSON.parse(configData.value) : { block1: [], block2A: [], block2B: [], block2Sunday: [], block3: [] };
+    
+    let config = [];
+    if (configData) {
+      try {
+        const parsed = JSON.parse(configData.value);
+        if (!Array.isArray(parsed)) {
+          // Automatic migration from old hardcoded block format to dynamic array format
+          config = [
+            { id: 'b1', name: 'Foundation', tasks: parsed.block1 || [], activeDays: [0,1,2,3,4,5,6] },
+            { id: 'b2a', name: 'Deep Work (Senin-Kamis)', tasks: parsed.block2A || [], activeDays: [1,2,3,4] },
+            { id: 'b2b', name: 'Deep Work (Jumat-Sabtu)', tasks: parsed.block2B || [], activeDays: [5,6] },
+            { id: 'b2s', name: 'Sunday Review', tasks: parsed.block2Sunday || [], activeDays: [0] },
+            { id: 'b3', name: 'Maintenance', tasks: parsed.block3 || [], activeDays: [0,1,2,3,4,5,6] }
+          ];
+        } else {
+          config = parsed;
+        }
+      } catch (e) {
+        config = [];
+      }
+    }
     setDailyConfig(config);
     
     let { data: prodData } = await supabase.from('Productivity').select('*').eq('date', selectedDate).single();
 
-    if (!prodData && config && selectedDate === new Date().toISOString().split('T')[0]) {
-      const dayType = new Date().getDay() === 0 ? 'Sunday' : (new Date().getDay() % 2 === 0 ? 'B' : 'A');
-      let block2 = dayType === 'A' ? config.block2A : (dayType === 'B' ? config.block2B : config.block2Sunday);
-      const allTasks = [
-        ...(config.block1 || []).map(t => ({ name: t, completed: false, block: 1 })),
-        ...(block2 || []).map(t => ({ name: t, completed: false, block: 2 })),
-        ...(config.block3 || []).map(t => ({ name: t, completed: false, block: 3 }))
-      ];
-      const { data: newData } = await supabase.from('Productivity').insert([{ date: selectedDate, tasks: JSON.stringify(allTasks), dayType: dayType }]).select().single();
+    if (!prodData && config.length > 0 && selectedDate === getLocalDateString()) {
+      const targetDateObj = new Date(selectedDate);
+      const dayOfWeek = targetDateObj.getDay(); // 0 is Sunday
+      const activeBlocks = config.filter(b => b.activeDays.includes(dayOfWeek));
+      
+      const allTasks = [];
+      activeBlocks.forEach((block) => {
+        block.tasks.forEach(tName => {
+          allTasks.push({ name: tName, completed: false, blockId: block.id, blockName: block.name });
+        });
+      });
+      
+      const { data: newData } = await supabase.from('Productivity').insert([{ date: selectedDate, tasks: JSON.stringify(allTasks), dayType: 'Dynamic' }]).select().single();
       prodData = newData;
     }
 
@@ -99,7 +131,6 @@ export default function ProduktifPage() {
     if (monthTrack) {
       setMonthlyTracker(monthTrack.checklist || {});
     } else {
-      // Initialize if doesn't exist
       const initChecklist = {};
       habits?.filter(h => h.isActive).forEach(h => { initChecklist[h.id] = false; });
       const { data: newMonthTrack } = await supabase.from('MonthlyTracker').insert([{ date: selectedDate, checklist: initChecklist }]).select().single();
@@ -146,53 +177,58 @@ export default function ProduktifPage() {
     await supabase.from('MonthlyTracker').update({ checklist: updatedChecklist }).eq('date', selectedDate);
   };
 
-  // CMS SAVE HANDLERS
+  // SUPER FAST CMS SAVE USING PROMISE.ALL
   const handleSaveChanges = async () => {
     setIsSaving(true);
     const supabase = createClient();
 
     try {
-      // Save Daily Config
-      await supabase.from('SiteSettings').upsert({ key: 'productivity_config', value: JSON.stringify(dailyConfig) });
+      const promises = [];
+
+      // 1. Save Daily Config
+      promises.push(supabase.from('SiteSettings').upsert({ key: 'productivity_config', value: JSON.stringify(dailyConfig) }));
       
-      // If saving daily config for today, recreate today's task instances (optional but good for UX)
-      if (selectedDate === new Date().toISOString().split('T')[0]) {
-        const dayType = new Date().getDay() === 0 ? 'Sunday' : (new Date().getDay() % 2 === 0 ? 'B' : 'A');
-        let block2 = dayType === 'A' ? dailyConfig.block2A : (dayType === 'B' ? dailyConfig.block2B : dailyConfig.block2Sunday);
-        const allTasks = [
-          ...(dailyConfig.block1 || []).map(t => ({ name: t, completed: false, block: 1 })),
-          ...(block2 || []).map(t => ({ name: t, completed: false, block: 2 })),
-          ...(dailyConfig.block3 || []).map(t => ({ name: t, completed: false, block: 3 }))
-        ];
-        // Preserve completed states if names match
+      // If saving daily config for today, recreate today's task instances instantly
+      if (selectedDate === getLocalDateString()) {
+        const targetDateObj = new Date(selectedDate);
+        const dayOfWeek = targetDateObj.getDay();
+        const activeBlocks = dailyConfig.filter(b => b.activeDays.includes(dayOfWeek));
+        const allTasks = [];
+        activeBlocks.forEach((block) => {
+          block.tasks.forEach(tName => {
+            allTasks.push({ name: tName, completed: false, blockId: block.id, blockName: block.name });
+          });
+        });
         const newTasksWithState = allTasks.map(nt => {
           const existing = tasks.find(ot => ot.name === nt.name);
           if (existing) nt.completed = existing.completed;
           return nt;
         });
-        await supabase.from('Productivity').update({ tasks: JSON.stringify(newTasksWithState) }).eq('date', selectedDate);
+        promises.push(supabase.from('Productivity').update({ tasks: JSON.stringify(newTasksWithState) }).eq('date', selectedDate));
       }
 
-      // Save Yearly Plans
-      for (const plan of yearlyPlans) {
-        if (plan.id) await supabase.from('YearlyPlan').update(plan).eq('id', plan.id);
-        else await supabase.from('YearlyPlan').insert([plan]);
-      }
+      // 2. Save Yearly Plans
+      yearlyPlans.forEach(plan => {
+        if (plan.id) promises.push(supabase.from('YearlyPlan').update(plan).eq('id', plan.id));
+        else promises.push(supabase.from('YearlyPlan').insert([plan]));
+      });
 
-      // Save Savings
-      for (const s of savings) {
-        if(s.id) await supabase.from('TabunganUmroh').update({ amount: s.amount, target: s.target }).eq('id', s.id);
-      }
+      // 3. Save Savings
+      savings.forEach(s => {
+        if(s.id) promises.push(supabase.from('TabunganUmroh').update({ amount: s.amount, target: s.target }).eq('id', s.id));
+      });
 
-      // Save Habit Configs
-      for (const h of habitConfigs) {
-        if (h.id) await supabase.from('HabitConfig').update(h).eq('id', h.id);
-        else await supabase.from('HabitConfig').insert([h]);
-      }
+      // 4. Save Habit Configs
+      habitConfigs.forEach(h => {
+        if (h.id) promises.push(supabase.from('HabitConfig').update(h).eq('id', h.id));
+        else promises.push(supabase.from('HabitConfig').insert([h]));
+      });
 
-      alert("Semua perubahan berhasil disimpan!");
+      await Promise.all(promises);
+
+      alert("Semua perubahan berhasil disimpan dengan kilat!");
       setIsEditMode(false);
-      fetchAllData(); // Refresh UI fully
+      fetchAllData(); 
     } catch (error) {
       console.error(error);
       alert("Gagal menyimpan perubahan.");
@@ -240,12 +276,23 @@ export default function ProduktifPage() {
     const days = [];
     for (let i = 0; i < firstDay; i++) days.push(null);
     for (let i = 1; i <= daysInMonth; i++) {
-      const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
       const hasData = historyData.some(h => h.date === dateStr);
       days.push({ day: i, date: dateStr, hasData });
     }
     return days;
   }, [navDate, historyData]);
+
+  const toggleBlockDay = (blockIndex, dayNumber) => {
+    const newCfg = [...dailyConfig];
+    const days = newCfg[blockIndex].activeDays;
+    if (days.includes(dayNumber)) {
+      newCfg[blockIndex].activeDays = days.filter(d => d !== dayNumber);
+    } else {
+      newCfg[blockIndex].activeDays.push(dayNumber);
+    }
+    setDailyConfig(newCfg);
+  };
 
   if (!isAuthenticated) {
     return (
@@ -270,6 +317,17 @@ export default function ProduktifPage() {
 
   const formatIDR = (val) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
 
+  // Group tasks by blockName for rendering
+  const tasksByBlock = useMemo(() => {
+    const grouped = {};
+    tasks.forEach(t => {
+      const blockName = t.blockName || 'Unassigned';
+      if(!grouped[blockName]) grouped[blockName] = [];
+      grouped[blockName].push(t);
+    });
+    return grouped;
+  }, [tasks]);
+
   return (
     <div className="min-h-screen bg-[#050505] text-white font-jakarta overflow-x-hidden relative">
       <Navbar />
@@ -286,8 +344,8 @@ export default function ProduktifPage() {
               <div>
                 <h2 className="text-2xl font-black font-outfit uppercase tracking-tighter italic">{new Date(selectedDate).toLocaleDateString('id-ID', { weekday: 'long' })}</h2>
                 <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${selectedDate === new Date().toISOString().split('T')[0] ? 'bg-green-500 animate-pulse' : 'bg-gray-600'}`} />
-                  <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">{selectedDate === new Date().toISOString().split('T')[0] ? 'System Online' : 'Viewing Archive'}</p>
+                  <span className={`w-2 h-2 rounded-full ${selectedDate === getLocalDateString() ? 'bg-green-500 animate-pulse' : 'bg-gray-600'}`} />
+                  <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">{selectedDate === getLocalDateString() ? 'System Online' : 'Viewing Archive'}</p>
                 </div>
               </div>
             </div>
@@ -323,54 +381,83 @@ export default function ProduktifPage() {
             <motion.div key="daily" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-12">
                {isEditMode ? (
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                   {/* Daily Config Editor */}
                    <div className="col-span-full mb-4">
                       <div className="p-4 bg-orange-500/20 text-orange-500 border border-orange-500/30 rounded-2xl flex items-center gap-3">
                         <AlertCircle size={20} />
-                        <span className="text-sm font-bold">You are editing the Daily Master Templates. Changes will affect future days.</span>
+                        <span className="text-sm font-bold">You are editing the Master Daily Blocks. Create custom blocks and assign them to specific days of the week!</span>
                       </div>
                    </div>
-                   {Object.keys(dailyConfig).map((block) => (
-                    <div key={block} className="p-6 bg-white/5 border border-white/10 rounded-[2rem]">
-                      <h3 className="text-xs font-black uppercase tracking-widest mb-6 text-[var(--accent)]">{block.replace('block', 'Block ')}</h3>
-                      <div className="space-y-3">
-                        {dailyConfig[block].map((task, idx) => (
+                   {dailyConfig.map((block, blockIndex) => (
+                    <div key={block.id || blockIndex} className="p-6 bg-white/5 border border-white/10 rounded-[2rem] flex flex-col">
+                      <div className="flex justify-between items-center mb-4">
+                        <input type="text" value={block.name} onChange={(e) => {
+                          const newCfg = [...dailyConfig];
+                          newCfg[blockIndex].name = e.target.value;
+                          setDailyConfig(newCfg);
+                        }} className="bg-transparent border-b border-white/20 text-[var(--accent)] font-black uppercase tracking-widest text-sm outline-none pb-1" />
+                        <button onClick={() => {
+                          const newCfg = [...dailyConfig];
+                          newCfg.splice(blockIndex, 1);
+                          setDailyConfig(newCfg);
+                        }} className="text-red-500 hover:text-red-400"><Trash2 size={16} /></button>
+                      </div>
+
+                      {/* Day Assignment Toggles */}
+                      <div className="flex gap-1 mb-6">
+                        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((dayChar, dayIdx) => (
+                          <button key={dayIdx} onClick={() => toggleBlockDay(blockIndex, dayIdx)} className={`flex-1 py-2 text-[10px] font-black rounded-lg transition-all ${block.activeDays.includes(dayIdx) ? 'bg-[var(--accent)] text-black' : 'bg-black/50 text-gray-500 border border-white/10'}`}>
+                            {dayChar}
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="space-y-3 flex-1">
+                        {block.tasks.map((task, idx) => (
                           <div key={idx} className="flex gap-2">
                             <input type="text" value={task} onChange={(e) => {
-                              const newCfg = {...dailyConfig};
-                              newCfg[block][idx] = e.target.value;
+                              const newCfg = [...dailyConfig];
+                              newCfg[blockIndex].tasks[idx] = e.target.value;
                               setDailyConfig(newCfg);
                             }} className="flex-1 bg-black/50 border border-white/5 rounded-xl p-3 text-xs outline-none focus:border-[var(--accent)]/50 text-white" />
                             <button onClick={() => {
-                              const newCfg = {...dailyConfig};
-                              newCfg[block].splice(idx, 1);
+                              const newCfg = [...dailyConfig];
+                              newCfg[blockIndex].tasks.splice(idx, 1);
                               setDailyConfig(newCfg);
-                            }} className="p-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500/20"><Trash2 size={14} /></button>
+                            }} className="p-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500/20"><X size={14} /></button>
                           </div>
                         ))}
                         <button onClick={() => {
-                          const newCfg = {...dailyConfig};
-                          newCfg[block].push('New Task');
+                          const newCfg = [...dailyConfig];
+                          newCfg[blockIndex].tasks.push('New Task');
                           setDailyConfig(newCfg);
                         }} className="w-full p-3 bg-white/5 border border-dashed border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-all">+ Add Task</button>
                       </div>
                     </div>
                   ))}
+
+                  {/* Add New Block Button */}
+                  <div className="p-6 bg-white/2 border border-dashed border-white/10 rounded-[2rem] flex items-center justify-center min-h-[300px]">
+                    <button onClick={() => {
+                      const newCfg = [...dailyConfig];
+                      newCfg.push({ id: `block_${Date.now()}`, name: 'New Block', tasks: [], activeDays: [1,2,3,4,5] });
+                      setDailyConfig(newCfg);
+                    }} className="px-8 py-4 bg-white/5 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-white/10 transition-all">+ Add New Block</button>
+                  </div>
                  </div>
                ) : tasks.length > 0 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                  {[1, 2, 3].map(blockNum => (
+                  {Object.keys(tasksByBlock).map((blockName, blockNum) => (
                     <div key={blockNum} className="p-8 bg-white/[0.02] border border-white/5 rounded-[3rem] backdrop-blur-sm relative group overflow-hidden">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent)]/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                       <h2 className="text-xl font-black font-outfit uppercase tracking-tighter flex items-center gap-4 mb-8 italic">
-                        <span className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${blockNum === 1 ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : blockNum === 2 ? 'bg-orange-500/10 text-orange-500 border-orange-500/20' : 'bg-purple-500/10 text-purple-500 border-purple-500/20'}`}>0{blockNum}</span>
-                        {blockNum === 1 ? 'Foundation' : blockNum === 2 ? 'Deep Work' : 'Maintenance'}
+                        <span className={`w-12 h-12 rounded-2xl flex items-center justify-center border bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]/20`}>0{blockNum + 1}</span>
+                        {blockName}
                       </h2>
                       <div className="space-y-4">
-                        {tasks.filter(t => t.block === blockNum).map((task, idx) => {
+                        {tasksByBlock[blockName].map((task, localIdx) => {
                           const globalIdx = tasks.findIndex(t => t.name === task.name);
                           return (
-                            <button key={idx} onClick={() => toggleTask(globalIdx)} className={`w-full p-5 rounded-3xl border text-left transition-all flex items-center justify-between group ${task.completed ? 'bg-[var(--accent)]/10 border-[var(--accent)]/40 text-[var(--accent)]' : 'bg-black/40 border-white/5 text-gray-400 hover:border-white/20'}`}>
+                            <button key={globalIdx} onClick={() => toggleTask(globalIdx)} className={`w-full p-5 rounded-3xl border text-left transition-all flex items-center justify-between group ${task.completed ? 'bg-[var(--accent)]/10 border-[var(--accent)]/40 text-[var(--accent)]' : 'bg-black/40 border-white/5 text-gray-400 hover:border-white/20'}`}>
                               <span className="font-bold text-sm tracking-tight">{task.name}</span>
                               <div className={`w-6 h-6 rounded-xl border-2 flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-[var(--accent)] border-[var(--accent)] text-black' : 'border-white/10 group-hover:border-[var(--accent)]/50'}`}>
                                 {task.completed && <CheckCircle2 size={14} strokeWidth={4} />}
@@ -385,8 +472,8 @@ export default function ProduktifPage() {
               ) : (
                 <div className="p-20 bg-white/5 border border-dashed border-white/10 rounded-[4rem] text-center backdrop-blur-md">
                   <AlertCircle size={48} className="mx-auto mb-6 text-gray-700" />
-                  <h3 className="text-2xl font-black uppercase mb-4 italic text-gray-400">No Data Available</h3>
-                  <button onClick={() => fetchAllData()} className="px-10 py-5 bg-[var(--accent)] text-black font-black rounded-3xl text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl shadow-[var(--accent)]/20">Initialize Today's Log</button>
+                  <h3 className="text-2xl font-black uppercase mb-4 italic text-gray-400">No Routine For Today</h3>
+                  <button onClick={() => fetchAllData()} className="px-10 py-5 bg-[var(--accent)] text-black font-black rounded-3xl text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl shadow-[var(--accent)]/20">Sync Templates</button>
                 </div>
               )}
             </motion.div>
@@ -475,7 +562,7 @@ export default function ProduktifPage() {
               </div>
             </motion.div>
           )}
-
+ 
           {/* LIFE HUB TAB (YEARLY & SAVINGS) */}
           {activeTab === 'hub' && (
             <motion.div key="hub" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-10">
@@ -508,7 +595,7 @@ export default function ProduktifPage() {
                         </div>
                       );
                     }
-
+ 
                     return (
                       <div key={i} className="p-6 bg-black/40 border border-green-500/10 rounded-3xl space-y-5">
                         <div className="flex items-center gap-4">
@@ -533,7 +620,7 @@ export default function ProduktifPage() {
                   })}
                 </div>
               </div>
-
+ 
               {/* Yearly Plans Viewer */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 {['mindset', 'skill', 'health', 'family'].map(cat => {
@@ -594,7 +681,7 @@ export default function ProduktifPage() {
               </div>
             </motion.div>
           )}
-
+ 
           {/* ANALYTICS TAB */}
           {activeTab === 'analytics' && (
             <motion.div key="analytics" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-12">
@@ -621,7 +708,7 @@ export default function ProduktifPage() {
               </div>
             </motion.div>
           )}
-
+ 
           {/* HISTORY/ARCHIVE TAB */}
           {activeTab === 'history' && (
             <motion.div key="history" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-12">
@@ -662,7 +749,7 @@ export default function ProduktifPage() {
             </motion.div>
           )}
         </AnimatePresence>
-
+ 
         {/* Global Save Button for Edit Mode */}
         <AnimatePresence>
           {isEditMode && (
@@ -673,7 +760,7 @@ export default function ProduktifPage() {
             </motion.div>
           )}
         </AnimatePresence>
-
+ 
         {/* Visual Calendar Modal */}
         <AnimatePresence>
           {showCalendarModal && (
