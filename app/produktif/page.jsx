@@ -66,12 +66,13 @@ export default function ProduktifPage() {
         const parsed = JSON.parse(configData.value);
         if (!Array.isArray(parsed)) {
           // Automatic migration from old hardcoded block format to dynamic array format
+          const safeParsed = parsed || {};
           config = [
-            { id: 'b1', name: 'Foundation', tasks: parsed.block1 || [], activeDays: [0,1,2,3,4,5,6] },
-            { id: 'b2a', name: 'Deep Work (Senin-Kamis)', tasks: parsed.block2A || [], activeDays: [1,2,3,4] },
-            { id: 'b2b', name: 'Deep Work (Jumat-Sabtu)', tasks: parsed.block2B || [], activeDays: [5,6] },
-            { id: 'b2s', name: 'Sunday Review', tasks: parsed.block2Sunday || [], activeDays: [0] },
-            { id: 'b3', name: 'Maintenance', tasks: parsed.block3 || [], activeDays: [0,1,2,3,4,5,6] }
+            { id: 'b1', name: 'Foundation', tasks: safeParsed.block1 || [], activeDays: [0,1,2,3,4,5,6] },
+            { id: 'b2a', name: 'Deep Work (Senin-Kamis)', tasks: safeParsed.block2A || [], activeDays: [1,2,3,4] },
+            { id: 'b2b', name: 'Deep Work (Jumat-Sabtu)', tasks: safeParsed.block2B || [], activeDays: [5,6] },
+            { id: 'b2s', name: 'Sunday Review', tasks: safeParsed.block2Sunday || [], activeDays: [0] },
+            { id: 'b3', name: 'Maintenance', tasks: safeParsed.block3 || [], activeDays: [0,1,2,3,4,5,6] }
           ];
         } else {
           config = parsed;
@@ -80,6 +81,8 @@ export default function ProduktifPage() {
         config = [];
       }
     }
+    // Ensure activeDays exists
+    config = config.map(b => ({ ...b, activeDays: b.activeDays || [0,1,2,3,4,5,6], tasks: b.tasks || [] }));
     setDailyConfig(config);
     
     let { data: prodData } = await supabase.from('Productivity').select('*').eq('date', selectedDate).single();
@@ -101,11 +104,17 @@ export default function ProduktifPage() {
     }
 
     if (prodData) {
-      const parsedTasks = JSON.parse(prodData.tasks);
-      setTasks(parsedTasks);
-      setMood(prodData.mood || '');
-      setGoals(prodData.goals || '');
-      calculateStats(parsedTasks, prodData.pomodoroMinutes);
+      try {
+        const parsedTasks = JSON.parse(prodData.tasks);
+        const safeTasks = Array.isArray(parsedTasks) ? parsedTasks : [];
+        setTasks(safeTasks);
+        setMood(prodData.mood || '');
+        setGoals(prodData.goals || '');
+        calculateStats(safeTasks, prodData.pomodoroMinutes);
+      } catch (e) {
+        setTasks([]);
+        calculateStats([], prodData.pomodoroMinutes);
+      }
     } else {
       setTasks([]); setMood(''); setGoals('');
       setStats({ completion: 0, completedCount: 0, totalCount: 0, pomodoro: 0 });
@@ -143,14 +152,15 @@ export default function ProduktifPage() {
   const calculateCompletionRate = (taskListJson) => {
     try {
       const taskList = JSON.parse(taskListJson);
-      if(taskList.length === 0) return 0;
+      if(!Array.isArray(taskList) || taskList.length === 0) return 0;
       return Math.round((taskList.filter(t => t.completed).length / taskList.length) * 100);
     } catch { return 0; }
   };
 
   const calculateStats = (currentTasks, pomodoro) => {
-    const completed = currentTasks.filter(t => t.completed).length;
-    const total = currentTasks.length;
+    const safeTasks = Array.isArray(currentTasks) ? currentTasks : [];
+    const completed = safeTasks.filter(t => t.completed).length;
+    const total = safeTasks.length;
     setStats({ 
       completion: total > 0 ? Math.round((completed / total) * 100) : 0, 
       completedCount: completed, 
@@ -320,6 +330,7 @@ export default function ProduktifPage() {
   // Group tasks by blockName for rendering
   const tasksByBlock = useMemo(() => {
     const grouped = {};
+    if (!Array.isArray(tasks)) return grouped;
     tasks.forEach(t => {
       const blockName = t.blockName || 'Unassigned';
       if(!grouped[blockName]) grouped[blockName] = [];
