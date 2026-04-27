@@ -15,6 +15,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function ProduktifPage() {
   // States
   const [activeTab, setActiveTab] = useState('tasks'); // tasks, analytics, history
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -45,15 +47,14 @@ export default function ProduktifPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetchTodayData();
+      fetchData(selectedDate);
       fetchHistory();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, selectedDate]);
 
-  const fetchTodayData = async () => {
+  const fetchData = async (targetDate) => {
     setLoading(true);
     const supabase = createClient();
-    const today = new Date().toISOString().split('T')[0];
     
     // Fetch Config
     const { data: configData } = await supabase
@@ -67,10 +68,11 @@ export default function ProduktifPage() {
     let { data, error } = await supabase
       .from('Productivity')
       .select('*')
-      .eq('date', today)
+      .eq('date', targetDate)
       .single();
 
-    if (!data && config) {
+    // Auto-create only for TODAY or if it's explicitly requested
+    if (!data && config && targetDate === new Date().toISOString().split('T')[0]) {
       const dayType = new Date().getDay() === 0 ? 'Sunday' : (new Date().getDay() % 2 === 0 ? 'B' : 'A');
       let block2 = dayType === 'A' ? config.block2A : (dayType === 'B' ? config.block2B : config.block2Sunday);
       
@@ -83,7 +85,7 @@ export default function ProduktifPage() {
       const { data: newData } = await supabase
         .from('Productivity')
         .insert([{ 
-          date: today, 
+          date: targetDate, 
           tasks: JSON.stringify(allTasks),
           dayType: dayType
         }])
@@ -99,6 +101,52 @@ export default function ProduktifPage() {
       setGoals(data.goals || '');
       setStats(prev => ({ ...prev, pomodoro: data.pomodoroMinutes || 0 }));
       calculateStats(JSON.parse(data.tasks));
+    } else {
+      // No data for this date
+      setTasks([]);
+      setMood('');
+      setGoals('');
+      setStats(prev => ({ ...prev, completion: 0, completedCount: 0, totalCount: 0, pomodoro: 0 }));
+    }
+    setLoading(false);
+  };
+
+  const createDataForPastDate = async () => {
+    setLoading(true);
+    const supabase = createClient();
+    
+    const { data: configData } = await supabase
+      .from('SiteSettings')
+      .select('value')
+      .eq('key', 'productivity_config')
+      .single();
+    
+    const config = configData ? JSON.parse(configData.value) : null;
+    if (!config) return;
+
+    const dateObj = new Date(selectedDate);
+    const dayType = dateObj.getDay() === 0 ? 'Sunday' : (dateObj.getDay() % 2 === 0 ? 'B' : 'A');
+    let block2 = dayType === 'A' ? config.block2A : (dayType === 'B' ? config.block2B : config.block2Sunday);
+    
+    const allTasks = [
+      ...(config.block1 || []).map(t => ({ name: t, completed: false, block: 1 })),
+      ...(block2 || []).map(t => ({ name: t, completed: false, block: 2 })),
+      ...(config.block3 || []).map(t => ({ name: t, completed: false, block: 3 }))
+    ];
+
+    const { data: newData } = await supabase
+      .from('Productivity')
+      .insert([{ 
+        date: selectedDate, 
+        tasks: JSON.stringify(allTasks),
+        dayType: dayType
+      }])
+      .select()
+      .single();
+
+    if (newData) {
+      setTasks(allTasks);
+      calculateStats(allTasks);
     }
     setLoading(false);
   };
@@ -225,27 +273,124 @@ export default function ProduktifPage() {
       <Navbar />
 
       <main className="pt-32 pb-20 px-4 md:px-6 max-w-7xl mx-auto">
-        {/* Navigation Tabs */}
-        <div className="flex flex-wrap items-center gap-2 mb-10 p-1.5 bg-white/5 border border-white/10 rounded-2xl w-fit">
-          <button 
-            onClick={() => setActiveTab('tasks')}
-            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'tasks' ? 'bg-[var(--accent)] text-black shadow-lg shadow-[var(--accent)]/20' : 'text-gray-500 hover:text-white'}`}
-          >
-            <List size={16} /> Tasks
-          </button>
-          <button 
-            onClick={() => setActiveTab('analytics')}
-            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'analytics' ? 'bg-[var(--accent)] text-black shadow-lg shadow-[var(--accent)]/20' : 'text-gray-500 hover:text-white'}`}
-          >
-            <BarChart3 size={16} /> Analytics
-          </button>
-          <button 
-            onClick={() => setActiveTab('history')}
-            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'history' ? 'bg-[var(--accent)] text-black shadow-lg shadow-[var(--accent)]/20' : 'text-gray-500 hover:text-white'}`}
-          >
-            <CalendarIcon size={16} /> History
-          </button>
+        {/* Date Selector & Navigation */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+          <div className="flex items-center gap-4">
+            <div 
+              onClick={() => setShowCalendarModal(true)}
+              className="p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all flex items-center gap-4 group"
+            >
+              <div className="w-12 h-12 bg-[var(--accent)]/10 text-[var(--accent)] rounded-xl flex flex-col items-center justify-center group-hover:scale-105 transition-transform">
+                <span className="text-[10px] font-black uppercase leading-none mb-1">{new Date(selectedDate).toLocaleDateString('id-ID', { month: 'short' })}</span>
+                <span className="text-xl font-black leading-none">{new Date(selectedDate).getDate()}</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-black font-outfit uppercase tracking-tighter italic flex items-center gap-2">
+                  {new Date(selectedDate).toLocaleDateString('id-ID', { weekday: 'long' })}
+                  <ChevronRight size={16} className="text-gray-600 group-hover:translate-x-1 transition-transform" />
+                </h2>
+                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                  {selectedDate === new Date().toISOString().split('T')[0] ? 'Current Session' : 'Historical Data'}
+                </p>
+              </div>
+            </div>
+
+            {selectedDate !== new Date().toISOString().split('T')[0] && (
+              <button 
+                onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
+                className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-[var(--accent)] transition-colors"
+              >
+                Go To Today
+              </button>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 p-1.5 bg-white/5 border border-white/10 rounded-2xl w-fit">
+            <button 
+              onClick={() => setActiveTab('tasks')}
+              className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'tasks' ? 'bg-[var(--accent)] text-black shadow-lg shadow-[var(--accent)]/20' : 'text-gray-500 hover:text-white'}`}
+            >
+              <List size={16} /> Tasks
+            </button>
+            <button 
+              onClick={() => setActiveTab('analytics')}
+              className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'analytics' ? 'bg-[var(--accent)] text-black shadow-lg shadow-[var(--accent)]/20' : 'text-gray-500 hover:text-white'}`}
+            >
+              <BarChart3 size={16} /> Analytics
+            </button>
+            <button 
+              onClick={() => setActiveTab('history')}
+              className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'history' ? 'bg-[var(--accent)] text-black shadow-lg shadow-[var(--accent)]/20' : 'text-gray-500 hover:text-white'}`}
+            >
+              <CalendarIcon size={16} /> History
+            </button>
+          </div>
         </div>
+
+        {/* Calendar Modal */}
+        <AnimatePresence>
+          {showCalendarModal && (
+            <div className="fixed inset-0 z-[110] flex items-center justify-center p-6">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setShowCalendarModal(false)}
+                className="absolute inset-0 bg-black/90 backdrop-blur-md"
+              />
+              <motion.div 
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="w-full max-w-lg bg-[#0a0a0a] border border-white/10 rounded-[3rem] p-10 relative z-10 shadow-2xl shadow-[var(--accent)]/5"
+              >
+                <div className="flex justify-between items-center mb-8">
+                  <h3 className="text-2xl font-black font-outfit uppercase tracking-tighter italic">Time <span className="text-[var(--accent)]">Traveler</span></h3>
+                  <button onClick={() => setShowCalendarModal(false)} className="p-3 bg-white/5 rounded-2xl text-gray-500 hover:text-white transition-all">
+                    <Trash2 size={20} />
+                  </button>
+                </div>
+                
+                <div className="space-y-6">
+                  <p className="text-xs text-gray-500 font-medium">Pilih tanggal untuk melihat data masa lalu atau merencanakan hari esok.</p>
+                  <input 
+                    type="date" 
+                    value={selectedDate}
+                    onChange={(e) => {
+                      setSelectedDate(e.target.value);
+                      setShowCalendarModal(false);
+                    }}
+                    className="w-full p-6 bg-white/5 border border-white/10 rounded-[2rem] text-xl font-black font-outfit text-[var(--accent)] outline-none focus:border-[var(--accent)] transition-all"
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <button 
+                      onClick={() => {
+                        const d = new Date();
+                        d.setDate(d.getDate() - 1);
+                        setSelectedDate(d.toISOString().split('T')[0]);
+                        setShowCalendarModal(false);
+                      }}
+                      className="p-5 bg-white/5 border border-white/5 rounded-2xl text-xs font-black uppercase tracking-widest hover:border-white/20 transition-all"
+                    >
+                      Yesterday
+                    </button>
+                    <button 
+                      onClick={() => {
+                        const d = new Date();
+                        d.setDate(d.getDate() + 1);
+                        setSelectedDate(d.toISOString().split('T')[0]);
+                        setShowCalendarModal(false);
+                      }}
+                      className="p-5 bg-white/5 border border-white/5 rounded-2xl text-xs font-black uppercase tracking-widest hover:border-white/20 transition-all"
+                    >
+                      Tomorrow
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence mode="wait">
           {activeTab === 'tasks' && (
@@ -256,7 +401,26 @@ export default function ProduktifPage() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-12"
             >
-              {/* Header Grid */}
+              {/* Empty Data Warning */}
+              {tasks.length === 0 && !loading && (
+                <div className="p-12 bg-white/5 border border-dashed border-white/20 rounded-[3rem] text-center">
+                  <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 text-gray-600">
+                    <AlertCircle size={32} />
+                  </div>
+                  <h3 className="text-xl font-black font-outfit uppercase tracking-tighter italic mb-2">No Data Found</h3>
+                  <p className="text-gray-500 mb-8 max-w-xs mx-auto text-sm">Belum ada data produktivitas untuk tanggal {new Date(selectedDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}.</p>
+                  <button 
+                    onClick={createDataForPastDate}
+                    className="px-8 py-4 bg-[var(--accent)] text-black font-black rounded-2xl text-xs uppercase tracking-widest hover:scale-105 transition-all"
+                  >
+                    Initialize Tracking For This Date
+                  </button>
+                </div>
+              )}
+
+              {tasks.length > 0 && (
+                <>
+                  {/* Header Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Main Progress */}
                 <div className="lg:col-span-2 p-8 bg-white/5 border border-white/10 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-10 relative overflow-hidden group">
@@ -429,8 +593,8 @@ export default function ProduktifPage() {
                       );
                     })}
                   </div>
-                </div>
-              </div>
+                </>
+              )}
             </motion.div>
           )}
 
