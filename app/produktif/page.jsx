@@ -7,7 +7,7 @@ import {
   BarChart3, Clock, AlertCircle, CalendarDays,
   Flame, Award, LayoutGrid, List, CheckCircle2,
   TrendingUp, Sparkles, TrendingDown, Minus,
-  Wallet, Rocket, Leaf, ShieldCheck, Settings, BookOpen
+  Wallet, Rocket, Leaf, ShieldCheck, Edit3, X
 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,6 +16,8 @@ export default function ProduktifPage() {
   const [activeTab, setActiveTab] = useState('daily');
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   
   // Data States
   const [tasks, setTasks] = useState([]);
@@ -24,6 +26,7 @@ export default function ProduktifPage() {
   const [savings, setSavings] = useState([]);
   const [habitConfigs, setHabitConfigs] = useState([]);
   const [monthlyTracker, setMonthlyTracker] = useState({});
+  const [dailyConfig, setDailyConfig] = useState({ block1: [], block2A: [], block2B: [], block2Sunday: [], block3: [] });
   const [loading, setLoading] = useState(true);
   
   // Auth
@@ -46,9 +49,11 @@ export default function ProduktifPage() {
     setLoading(true);
     const supabase = createClient();
     
-    // 1. Fetch Daily Productivity
+    // 1. Fetch Daily Productivity & Config
     const { data: configData } = await supabase.from('SiteSettings').select('value').eq('key', 'productivity_config').single();
-    const config = configData ? JSON.parse(configData.value) : null;
+    const config = configData ? JSON.parse(configData.value) : { block1: [], block2A: [], block2B: [], block2Sunday: [], block3: [] };
+    setDailyConfig(config);
+    
     let { data: prodData } = await supabase.from('Productivity').select('*').eq('date', selectedDate).single();
 
     if (!prodData && config && selectedDate === new Date().toISOString().split('T')[0]) {
@@ -87,7 +92,7 @@ export default function ProduktifPage() {
     if (sav) setSavings(sav);
 
     // 5. Fetch Habit Configs & Monthly Tracker
-    const { data: habits } = await supabase.from('HabitConfig').select('*').eq('isActive', true).order('sortOrder', { ascending: true });
+    const { data: habits } = await supabase.from('HabitConfig').select('*').order('sortOrder', { ascending: true });
     if (habits) setHabitConfigs(habits);
 
     const { data: monthTrack } = await supabase.from('MonthlyTracker').select('*').eq('date', selectedDate).single();
@@ -96,7 +101,7 @@ export default function ProduktifPage() {
     } else {
       // Initialize if doesn't exist
       const initChecklist = {};
-      habits?.forEach(h => { initChecklist[h.id] = false; });
+      habits?.filter(h => h.isActive).forEach(h => { initChecklist[h.id] = false; });
       const { data: newMonthTrack } = await supabase.from('MonthlyTracker').insert([{ date: selectedDate, checklist: initChecklist }]).select().single();
       if (newMonthTrack) setMonthlyTracker(newMonthTrack.checklist || {});
     }
@@ -124,6 +129,7 @@ export default function ProduktifPage() {
   };
 
   const toggleTask = async (index) => {
+    if (isEditMode) return;
     const newTasks = [...tasks];
     newTasks[index].completed = !newTasks[index].completed;
     setTasks(newTasks);
@@ -133,13 +139,68 @@ export default function ProduktifPage() {
   };
 
   const toggleMonthlyHabit = async (habitId) => {
+    if (isEditMode) return;
     const updatedChecklist = { ...monthlyTracker, [habitId]: !monthlyTracker[habitId] };
     setMonthlyTracker(updatedChecklist);
     const supabase = createClient();
     await supabase.from('MonthlyTracker').update({ checklist: updatedChecklist }).eq('date', selectedDate);
   };
 
-  // Smart Analytics Calculation
+  // CMS SAVE HANDLERS
+  const handleSaveChanges = async () => {
+    setIsSaving(true);
+    const supabase = createClient();
+
+    try {
+      // Save Daily Config
+      await supabase.from('SiteSettings').upsert({ key: 'productivity_config', value: JSON.stringify(dailyConfig) });
+      
+      // If saving daily config for today, recreate today's task instances (optional but good for UX)
+      if (selectedDate === new Date().toISOString().split('T')[0]) {
+        const dayType = new Date().getDay() === 0 ? 'Sunday' : (new Date().getDay() % 2 === 0 ? 'B' : 'A');
+        let block2 = dayType === 'A' ? dailyConfig.block2A : (dayType === 'B' ? dailyConfig.block2B : dailyConfig.block2Sunday);
+        const allTasks = [
+          ...(dailyConfig.block1 || []).map(t => ({ name: t, completed: false, block: 1 })),
+          ...(block2 || []).map(t => ({ name: t, completed: false, block: 2 })),
+          ...(dailyConfig.block3 || []).map(t => ({ name: t, completed: false, block: 3 }))
+        ];
+        // Preserve completed states if names match
+        const newTasksWithState = allTasks.map(nt => {
+          const existing = tasks.find(ot => ot.name === nt.name);
+          if (existing) nt.completed = existing.completed;
+          return nt;
+        });
+        await supabase.from('Productivity').update({ tasks: JSON.stringify(newTasksWithState) }).eq('date', selectedDate);
+      }
+
+      // Save Yearly Plans
+      for (const plan of yearlyPlans) {
+        if (plan.id) await supabase.from('YearlyPlan').update(plan).eq('id', plan.id);
+        else await supabase.from('YearlyPlan').insert([plan]);
+      }
+
+      // Save Savings
+      for (const s of savings) {
+        if(s.id) await supabase.from('TabunganUmroh').update({ amount: s.amount, target: s.target }).eq('id', s.id);
+      }
+
+      // Save Habit Configs
+      for (const h of habitConfigs) {
+        if (h.id) await supabase.from('HabitConfig').update(h).eq('id', h.id);
+        else await supabase.from('HabitConfig').insert([h]);
+      }
+
+      alert("Semua perubahan berhasil disimpan!");
+      setIsEditMode(false);
+      fetchAllData(); // Refresh UI fully
+    } catch (error) {
+      console.error(error);
+      alert("Gagal menyimpan perubahan.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const smartAnalytics = useMemo(() => {
     if (historyData.length === 0) return null;
     const recentWeek = historyData.slice(0, 7);
@@ -207,33 +268,40 @@ export default function ProduktifPage() {
     );
   }
 
-  // Format IDR helper
   const formatIDR = (val) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-jakarta overflow-x-hidden">
+    <div className="min-h-screen bg-[#050505] text-white font-jakarta overflow-x-hidden relative">
       <Navbar />
-      <main className="pt-32 pb-20 px-4 md:px-6 max-w-7xl mx-auto">
-        {/* Navigation & Date Picker */}
+      <main className="pt-32 pb-32 px-4 md:px-6 max-w-7xl mx-auto">
+        
+        {/* Navigation & Header */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-8">
-          <div onClick={() => { setNavDate(new Date(selectedDate)); setShowCalendarModal(true); }} className="p-4 bg-white/5 border border-white/10 rounded-[2rem] cursor-pointer hover:bg-white/10 transition-all flex items-center gap-5 group backdrop-blur-md">
-            <div className="w-14 h-14 bg-[var(--accent)]/10 text-[var(--accent)] rounded-2xl flex flex-col items-center justify-center shadow-lg shadow-[var(--accent)]/5">
-              <span className="text-[10px] font-black uppercase leading-none mb-1">{new Date(selectedDate).toLocaleDateString('id-ID', { month: 'short' })}</span>
-              <span className="text-2xl font-black leading-none">{new Date(selectedDate).getDate()}</span>
-            </div>
-            <div>
-              <h2 className="text-2xl font-black font-outfit uppercase tracking-tighter italic">{new Date(selectedDate).toLocaleDateString('id-ID', { weekday: 'long' })}</h2>
-              <div className="flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${selectedDate === new Date().toISOString().split('T')[0] ? 'bg-green-500 animate-pulse' : 'bg-gray-600'}`} />
-                <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">{selectedDate === new Date().toISOString().split('T')[0] ? 'System Online' : 'Viewing Archive'}</p>
+          <div className="flex items-center gap-6">
+            <div onClick={() => { setNavDate(new Date(selectedDate)); setShowCalendarModal(true); }} className="p-4 bg-white/5 border border-white/10 rounded-[2rem] cursor-pointer hover:bg-white/10 transition-all flex items-center gap-5 group backdrop-blur-md">
+              <div className="w-14 h-14 bg-[var(--accent)]/10 text-[var(--accent)] rounded-2xl flex flex-col items-center justify-center shadow-lg shadow-[var(--accent)]/5">
+                <span className="text-[10px] font-black uppercase leading-none mb-1">{new Date(selectedDate).toLocaleDateString('id-ID', { month: 'short' })}</span>
+                <span className="text-2xl font-black leading-none">{new Date(selectedDate).getDate()}</span>
+              </div>
+              <div>
+                <h2 className="text-2xl font-black font-outfit uppercase tracking-tighter italic">{new Date(selectedDate).toLocaleDateString('id-ID', { weekday: 'long' })}</h2>
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${selectedDate === new Date().toISOString().split('T')[0] ? 'bg-green-500 animate-pulse' : 'bg-gray-600'}`} />
+                  <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">{selectedDate === new Date().toISOString().split('T')[0] ? 'System Online' : 'Viewing Archive'}</p>
+                </div>
               </div>
             </div>
+            
+            {/* Edit Mode Toggle */}
+            <button onClick={() => setIsEditMode(!isEditMode)} className={`p-4 rounded-2xl border transition-all flex items-center gap-3 font-bold ${isEditMode ? 'bg-red-500/20 text-red-500 border-red-500/50' : 'bg-white/5 text-gray-400 border-white/10 hover:text-white'}`}>
+              {isEditMode ? <><X size={20} /> Exit Edit Mode</> : <><Edit3 size={20} /> CMS Mode</>}
+            </button>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 p-2 bg-white/5 border border-white/10 rounded-[2rem] backdrop-blur-xl">
             {[
               { id: 'daily', icon: <List size={18} />, label: 'Daily' },
-              { id: 'monthly', icon: <CalendarDays size={18} />, label: 'Monthly Habit' },
+              { id: 'monthly', icon: <CalendarDays size={18} />, label: 'Habits' },
               { id: 'hub', icon: <Rocket size={18} />, label: 'Life Hub' },
               { id: 'analytics', icon: <BarChart3 size={18} />, label: 'Insights' },
               { id: 'history', icon: <Clock size={18} />, label: 'Archive' }
@@ -253,7 +321,43 @@ export default function ProduktifPage() {
           {/* DAILY TASKS TAB */}
           {activeTab === 'daily' && (
             <motion.div key="daily" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-12">
-               {tasks.length > 0 ? (
+               {isEditMode ? (
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                   {/* Daily Config Editor */}
+                   <div className="col-span-full mb-4">
+                      <div className="p-4 bg-orange-500/20 text-orange-500 border border-orange-500/30 rounded-2xl flex items-center gap-3">
+                        <AlertCircle size={20} />
+                        <span className="text-sm font-bold">You are editing the Daily Master Templates. Changes will affect future days.</span>
+                      </div>
+                   </div>
+                   {Object.keys(dailyConfig).map((block) => (
+                    <div key={block} className="p-6 bg-white/5 border border-white/10 rounded-[2rem]">
+                      <h3 className="text-xs font-black uppercase tracking-widest mb-6 text-[var(--accent)]">{block.replace('block', 'Block ')}</h3>
+                      <div className="space-y-3">
+                        {dailyConfig[block].map((task, idx) => (
+                          <div key={idx} className="flex gap-2">
+                            <input type="text" value={task} onChange={(e) => {
+                              const newCfg = {...dailyConfig};
+                              newCfg[block][idx] = e.target.value;
+                              setDailyConfig(newCfg);
+                            }} className="flex-1 bg-black/50 border border-white/5 rounded-xl p-3 text-xs outline-none focus:border-[var(--accent)]/50 text-white" />
+                            <button onClick={() => {
+                              const newCfg = {...dailyConfig};
+                              newCfg[block].splice(idx, 1);
+                              setDailyConfig(newCfg);
+                            }} className="p-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500/20"><Trash2 size={14} /></button>
+                          </div>
+                        ))}
+                        <button onClick={() => {
+                          const newCfg = {...dailyConfig};
+                          newCfg[block].push('New Task');
+                          setDailyConfig(newCfg);
+                        }} className="w-full p-3 bg-white/5 border border-dashed border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-all">+ Add Task</button>
+                      </div>
+                    </div>
+                  ))}
+                 </div>
+               ) : tasks.length > 0 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                   {[1, 2, 3].map(blockNum => (
                     <div key={blockNum} className="p-8 bg-white/[0.02] border border-white/5 rounded-[3rem] backdrop-blur-sm relative group overflow-hidden">
@@ -295,39 +399,74 @@ export default function ProduktifPage() {
                 <h3 className="text-2xl font-black font-outfit uppercase italic mb-2 flex items-center gap-3">
                   <CalendarDays className="text-[var(--accent)]" /> Monthly <span className="text-[var(--accent)]">Habits Tracker</span>
                 </h3>
-                <p className="text-gray-400 text-sm mb-10 font-medium">Lacak ibadah, kesehatan, dan pengembangan diri harian kamu di sini.</p>
+                <p className="text-gray-400 text-sm mb-10 font-medium">{isEditMode ? 'Edit Habit Configuration.' : 'Lacak ibadah, kesehatan, dan pengembangan diri harian kamu di sini.'}</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {['ibadah', 'kesehatan', 'produktivitas', 'pengembangan_diri'].map(category => {
                     const habitsInCategory = habitConfigs.filter(h => h.category === category);
-                    if (habitsInCategory.length === 0) return null;
                     return (
                       <div key={category} className="p-6 bg-black/40 border border-white/5 rounded-[2rem]">
                         <h4 className="text-xs font-black uppercase tracking-widest text-[var(--accent)] mb-6">
                           {category.replace('_', ' ')}
                         </h4>
                         <div className="space-y-3">
-                          {habitsInCategory.map((habit) => (
-                            <button 
-                              key={habit.id} 
-                              onClick={() => toggleMonthlyHabit(habit.id)}
-                              className={`w-full p-4 rounded-2xl flex items-center justify-between border transition-all ${
-                                monthlyTracker[habit.id] 
-                                ? 'bg-[var(--accent)]/20 border-[var(--accent)]/50 text-[var(--accent)]' 
-                                : 'bg-white/5 border-transparent text-gray-400 hover:border-white/10 hover:bg-white/10'
-                              }`}
-                            >
-                              <div className="flex items-center gap-3">
-                                <span>{habit.icon}</span>
-                                <span className="font-bold text-sm text-left">{habit.name}</span>
-                              </div>
-                              <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${
-                                monthlyTracker[habit.id] ? 'bg-[var(--accent)] border-[var(--accent)] text-black' : 'border-gray-600'
-                              }`}>
-                                {monthlyTracker[habit.id] && <CheckCircle2 size={12} strokeWidth={4} />}
-                              </div>
-                            </button>
-                          ))}
+                          {habitsInCategory.map((habit) => {
+                            const globalIdx = habitConfigs.findIndex(item => item.id === habit.id);
+                            
+                            if (isEditMode) {
+                              return (
+                                <div key={habit.id} className="p-3 bg-white/5 rounded-2xl flex gap-2 items-center">
+                                  <input type="text" value={habit.icon || ''} onChange={(e) => {
+                                    const newHabs = [...habitConfigs];
+                                    newHabs[globalIdx].icon = e.target.value;
+                                    setHabitConfigs(newHabs);
+                                  }} className="w-10 h-10 bg-black/50 rounded-xl text-center" />
+                                  <input type="text" value={habit.name} onChange={(e) => {
+                                    const newHabs = [...habitConfigs];
+                                    newHabs[globalIdx].name = e.target.value;
+                                    setHabitConfigs(newHabs);
+                                  }} className="flex-1 bg-black/50 p-2 rounded-xl text-xs text-white" />
+                                  <button onClick={() => {
+                                    const newHabs = [...habitConfigs];
+                                    newHabs[globalIdx].isActive = !newHabs[globalIdx].isActive;
+                                    setHabitConfigs(newHabs);
+                                  }} className={`p-2 rounded-xl ${habit.isActive ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}><Zap size={14} /></button>
+                                </div>
+                              );
+                            }
+
+                            if (!habit.isActive) return null;
+
+                            return (
+                              <button 
+                                key={habit.id} 
+                                onClick={() => toggleMonthlyHabit(habit.id)}
+                                className={`w-full p-4 rounded-2xl flex items-center justify-between border transition-all ${
+                                  monthlyTracker[habit.id] 
+                                  ? 'bg-[var(--accent)]/20 border-[var(--accent)]/50 text-[var(--accent)]' 
+                                  : 'bg-white/5 border-transparent text-gray-400 hover:border-white/10 hover:bg-white/10'
+                                }`}
+                              >
+                                <div className="flex items-center gap-3">
+                                  <span>{habit.icon}</span>
+                                  <span className="font-bold text-sm text-left">{habit.name}</span>
+                                </div>
+                                <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${
+                                  monthlyTracker[habit.id] ? 'bg-[var(--accent)] border-[var(--accent)] text-black' : 'border-gray-600'
+                                }`}>
+                                  {monthlyTracker[habit.id] && <CheckCircle2 size={12} strokeWidth={4} />}
+                                </div>
+                              </button>
+                            );
+                          })}
+                          
+                          {isEditMode && (
+                            <button onClick={() => {
+                              const newHabs = [...habitConfigs];
+                              newHabs.push({ name: 'New Habit', category: category, icon: '✨', isActive: true, sortOrder: 99 });
+                              setHabitConfigs(newHabs);
+                            }} className="w-full p-3 border border-dashed border-white/10 rounded-2xl text-[10px] font-black text-gray-500 hover:text-white">+ Add {category.replace('_', ' ')} Habit</button>
+                          )}
                         </div>
                       </div>
                     );
@@ -349,6 +488,27 @@ export default function ProduktifPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {savings.map((s, i) => {
                     const percentage = s.target > 0 ? Math.min(Math.round((Number(s.amount) / Number(s.target)) * 100), 100) : 0;
+                    
+                    if (isEditMode) {
+                      return (
+                        <div key={i} className="p-6 bg-black/60 border border-green-500/30 rounded-3xl space-y-4">
+                          <h4 className="font-bold text-sm capitalize text-green-500">{s.category.replace('_', ' ')}</h4>
+                          <div>
+                            <label className="text-[10px] text-gray-500 uppercase font-black">Current Amount</label>
+                            <input type="number" value={s.amount} onChange={(e) => {
+                              const newSav = [...savings]; newSav[i].amount = Number(e.target.value); setSavings(newSav);
+                            }} className="w-full p-2 bg-white/5 rounded-lg text-white mt-1" />
+                          </div>
+                          <div>
+                            <label className="text-[10px] text-gray-500 uppercase font-black">Target Amount</label>
+                            <input type="number" value={s.target} onChange={(e) => {
+                              const newSav = [...savings]; newSav[i].target = Number(e.target.value); setSavings(newSav);
+                            }} className="w-full p-2 bg-white/5 rounded-lg text-white mt-1" />
+                          </div>
+                        </div>
+                      );
+                    }
+
                     return (
                       <div key={i} className="p-6 bg-black/40 border border-green-500/10 rounded-3xl space-y-5">
                         <div className="flex items-center gap-4">
@@ -378,38 +538,55 @@ export default function ProduktifPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 {['mindset', 'skill', 'health', 'family'].map(cat => {
                   const plans = yearlyPlans.filter(p => p.category === cat);
-                  if (plans.length === 0) return null;
                   
-                  const icon = cat === 'mindset' ? <BookOpen size={24} className="text-blue-500" /> :
-                               cat === 'skill' ? <Target size={24} className="text-orange-500" /> :
-                               cat === 'health' ? <Leaf size={24} className="text-green-500" /> :
-                               <ShieldCheck size={24} className="text-pink-500" />;
-                  
-                  const titleColor = cat === 'mindset' ? 'text-blue-500' :
-                                     cat === 'skill' ? 'text-orange-500' :
-                                     cat === 'health' ? 'text-green-500' : 'text-pink-500';
-
                   return (
                     <div key={cat} className="p-8 bg-white/5 border border-white/10 rounded-[3rem] backdrop-blur-xl relative overflow-hidden group">
                       <div className="flex items-center gap-4 mb-8">
-                        <div className={`p-3 bg-white/5 rounded-2xl border border-white/10 ${titleColor}`}>
-                          {icon}
-                        </div>
-                        <h3 className={`text-xl font-black font-outfit uppercase italic ${titleColor}`}>{cat} <span className="text-white">Growth</span></h3>
+                        <h3 className={`text-xl font-black font-outfit uppercase italic text-white`}>{cat} <span className="text-[var(--accent)]">Growth</span></h3>
                       </div>
                       <div className="space-y-4 relative z-10">
-                        {plans.map((plan, i) => (
-                          <div key={i} className="p-5 bg-black/40 rounded-2xl border border-white/5 group hover:border-white/20 transition-all">
-                            <p className="font-bold text-gray-200 text-sm leading-relaxed mb-3">{plan.item}</p>
-                            {(plan.monthlyHabit || plan.weeklyHabit || plan.dailyHabit) && (
-                              <div className="mt-4 pt-4 border-t border-white/5 grid grid-cols-3 gap-2">
-                                {plan.dailyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-white block font-bold mb-1">Daily</span>{plan.dailyHabit}</div>}
-                                {plan.weeklyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-white block font-bold mb-1">Weekly</span>{plan.weeklyHabit}</div>}
-                                {plan.monthlyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-white block font-bold mb-1">Monthly</span>{plan.monthlyHabit}</div>}
+                        {plans.map((plan, i) => {
+                          const globalIdx = yearlyPlans.findIndex(p => p.id === plan.id);
+                          if (isEditMode) {
+                            return (
+                              <div key={plan.id || i} className="p-4 bg-black/60 rounded-2xl border border-[var(--accent)]/30 space-y-3">
+                                <input type="text" value={plan.item} onChange={(e) => {
+                                  const newP = [...yearlyPlans]; newP[globalIdx].item = e.target.value; setYearlyPlans(newP);
+                                }} className="w-full bg-white/5 p-3 rounded-xl font-bold text-sm text-white" />
+                                <div className="grid grid-cols-3 gap-2">
+                                  <input type="text" placeholder="Daily target" value={plan.dailyHabit || ''} onChange={(e) => {
+                                    const newP = [...yearlyPlans]; newP[globalIdx].dailyHabit = e.target.value; setYearlyPlans(newP);
+                                  }} className="w-full bg-white/5 p-2 rounded-lg text-[10px]" />
+                                  <input type="text" placeholder="Weekly target" value={plan.weeklyHabit || ''} onChange={(e) => {
+                                    const newP = [...yearlyPlans]; newP[globalIdx].weeklyHabit = e.target.value; setYearlyPlans(newP);
+                                  }} className="w-full bg-white/5 p-2 rounded-lg text-[10px]" />
+                                  <input type="text" placeholder="Monthly target" value={plan.monthlyHabit || ''} onChange={(e) => {
+                                    const newP = [...yearlyPlans]; newP[globalIdx].monthlyHabit = e.target.value; setYearlyPlans(newP);
+                                  }} className="w-full bg-white/5 p-2 rounded-lg text-[10px]" />
+                                </div>
                               </div>
-                            )}
-                          </div>
-                        ))}
+                            );
+                          }
+                          return (
+                            <div key={plan.id || i} className="p-5 bg-black/40 rounded-2xl border border-white/5 group hover:border-white/20 transition-all">
+                              <p className="font-bold text-gray-200 text-sm leading-relaxed mb-3">{plan.item}</p>
+                              {(plan.monthlyHabit || plan.weeklyHabit || plan.dailyHabit) && (
+                                <div className="mt-4 pt-4 border-t border-white/5 grid grid-cols-3 gap-2">
+                                  {plan.dailyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-white block font-bold mb-1">Daily</span>{plan.dailyHabit}</div>}
+                                  {plan.weeklyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-white block font-bold mb-1">Weekly</span>{plan.weeklyHabit}</div>}
+                                  {plan.monthlyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-white block font-bold mb-1">Monthly</span>{plan.monthlyHabit}</div>}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                        {isEditMode && (
+                          <button onClick={() => {
+                            const newPlans = [...yearlyPlans];
+                            newPlans.push({ item: 'New Goal', category: cat, year: 2026, sortOrder: 99 });
+                            setYearlyPlans(newPlans);
+                          }} className="w-full p-4 border border-dashed border-white/10 rounded-2xl text-[10px] font-black text-gray-500 hover:text-white">+ Add {cat} Target</button>
+                        )}
                       </div>
                     </div>
                   );
@@ -442,16 +619,6 @@ export default function ProduktifPage() {
                   </div>
                 )}
               </div>
-              
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                {[{ icon: <TrendingUp className="text-green-500" />, label: 'Consistency', val: (smartAnalytics?.recentAvg || 0) + '%' }, { icon: <TimerIcon className="text-red-500" />, label: 'Pomodoro', val: historyData.reduce((acc, curr) => acc + Math.floor((curr.pomodoroMinutes || 0)/25), 0) }, { icon: <CalendarDays className="text-blue-500" />, label: 'System Logs', val: historyData.length }, { icon: <Smile className="text-yellow-500" />, label: 'Mood Index', val: historyData[0]?.mood || '😐' }].map((s, i) => (
-                  <div key={i} className="p-8 md:p-10 bg-white/5 border border-white/10 rounded-[3rem] backdrop-blur-md">
-                    <div className="mb-6">{s.icon}</div>
-                    <p className="text-[10px] text-gray-600 font-black uppercase tracking-widest mb-2">{s.label}</p>
-                    <h3 className="text-4xl md:text-5xl font-black text-white">{s.val}</h3>
-                  </div>
-                ))}
-              </div>
             </motion.div>
           )}
 
@@ -477,7 +644,6 @@ export default function ProduktifPage() {
                               <span className="text-lg md:text-xl font-black leading-none">{new Date(day.date).getDate()}</span>
                               <span className="text-[8px] font-black uppercase text-gray-500">{new Date(day.date).toLocaleDateString('id-ID', { weekday: 'short' })}</span>
                             </div>
-                            <span className="text-2xl hidden sm:block">{day.mood || '😐'}</span>
                             <p className="text-xs text-gray-500 font-medium italic hidden md:block">"{day.goals?.substring(0, 35) || 'No specific goals recorded'}..."</p>
                           </div>
                           <div className="flex items-center gap-6">
@@ -493,6 +659,17 @@ export default function ProduktifPage() {
                   </div>
                 ))
               )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Global Save Button for Edit Mode */}
+        <AnimatePresence>
+          {isEditMode && (
+            <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100]">
+              <button onClick={handleSaveChanges} disabled={isSaving} className="px-10 py-5 bg-[var(--accent)] text-black rounded-[2rem] font-black uppercase tracking-widest shadow-[0_10px_40px_var(--accent)] hover:scale-105 transition-all flex items-center gap-3">
+                {isSaving ? 'Saving to Vault...' : <><Save size={24} /> Save All Changes</>}
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
