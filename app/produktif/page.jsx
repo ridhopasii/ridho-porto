@@ -6,7 +6,7 @@ import {
   Trash2, Save, Calendar as CalendarIcon, ChevronRight, ChevronLeft,
   BarChart3, Clock, AlertCircle,
   Flame, Award, LayoutGrid, List, CheckCircle2,
-  Filter, TrendingUp, CalendarDays
+  Filter, TrendingUp, CalendarDays, ZapOff, Sparkles, TrendingDown, Minus
 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,10 +21,7 @@ export default function ProduktifPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   
-  // Calendar Navigation State
   const [navDate, setNavDate] = useState(new Date());
-
-  // Filtering States for Analytics/History
   const [viewMode, setViewMode] = useState('monthly');
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -34,22 +31,16 @@ export default function ProduktifPage() {
     completedCount: 0,
     totalCount: 0,
     pomodoro: 0,
-    avgCompletion: 0,
-    totalPomodoroPeriod: 0
+    avgCompletion: 0
   });
   
-  // Modals & Forms
   const [showMoodModal, setShowMoodModal] = useState(false);
   const [showGoalsModal, setShowGoalsModal] = useState(false);
   const [showTimerModal, setShowTimerModal] = useState(false);
   const [mood, setMood] = useState('');
   const [goals, setGoals] = useState('');
-  
-  // Timer State
   const [timer, setTimer] = useState(1500);
   const [timerActive, setTimerActive] = useState(false);
-
-  // History Data
   const [historyData, setHistoryData] = useState([]);
 
   useEffect(() => {
@@ -94,7 +85,7 @@ export default function ProduktifPage() {
 
   const fetchHistory = async () => {
     const supabase = createClient();
-    const { data } = await supabase.from('Productivity').select('date, tasks, mood, goals, pomodoroMinutes').order('date', { ascending: false });
+    const { data } = await supabase.from('Productivity').select('*').order('date', { ascending: false });
     if (data) setHistoryData(data);
   };
 
@@ -133,17 +124,49 @@ export default function ProduktifPage() {
     setShowGoalsModal(false);
   };
 
-  // Calendar Logic
+  // Smart Analytics Logic (From Original HTML)
+  const smartAnalytics = useMemo(() => {
+    if (historyData.length === 0) return null;
+
+    // 1. Weekly Trend
+    const recentWeek = historyData.slice(0, 7);
+    const previousWeek = historyData.slice(7, 14);
+    const recentAvg = recentWeek.length > 0 ? recentWeek.reduce((sum, item) => sum + calculateCompletionRate(item.tasks), 0) / recentWeek.length : 0;
+    const previousAvg = previousWeek.length > 0 ? previousWeek.reduce((sum, item) => sum + calculateCompletionRate(item.tasks), 0) / previousWeek.length : 0;
+
+    let trendLabel = 'Stabil';
+    let TrendIcon = Minus;
+    if (recentAvg > previousAvg + 5) { trendLabel = 'Meningkat'; TrendIcon = TrendingUp; }
+    else if (recentAvg < previousAvg - 5) { trendLabel = 'Menurun'; TrendIcon = TrendingDown; }
+
+    // 2. Best Day
+    const dayStats = {};
+    historyData.forEach(item => {
+      const day = new Date(item.date).getDay();
+      if (!dayStats[day]) dayStats[day] = [];
+      dayStats[day].push(calculateCompletionRate(item.tasks));
+    });
+    let bestDayIdx = -1;
+    let bestDayAvg = 0;
+    Object.keys(dayStats).forEach(d => {
+      const avg = dayStats[d].reduce((a, b) => a + b, 0) / dayStats[d].length;
+      if (avg > bestDayAvg) { bestDayAvg = avg; bestDayIdx = d; }
+    });
+    const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+    // 3. Perfect Days
+    const perfectDays = historyData.filter(item => calculateCompletionRate(item.tasks) === 100).length;
+
+    return { trendLabel, TrendIcon, bestDay: dayNames[bestDayIdx] || '-', perfectDays, recentAvg: Math.round(recentAvg) };
+  }, [historyData]);
+
   const calendarDays = useMemo(() => {
     const year = navDate.getFullYear();
     const month = navDate.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
     const days = [];
-    // Padding for first week
     for (let i = 0; i < firstDay; i++) days.push(null);
-    // Real days
     for (let i = 1; i <= daysInMonth; i++) {
       const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
       const hasData = historyData.some(h => h.date === dateStr);
@@ -151,18 +174,6 @@ export default function ProduktifPage() {
     }
     return days;
   }, [navDate, historyData]);
-
-  // Analytics Helpers
-  const periodStats = useMemo(() => {
-    const filtered = historyData.filter(item => {
-      const d = new Date(item.date);
-      return viewMode === 'monthly' ? (d.getMonth() === selectedMonth && d.getFullYear() === selectedYear) : (d.getFullYear() === selectedYear);
-    });
-    if (filtered.length === 0) return { avg: 0, pomodoro: 0, totalDays: 0, mood: '😐' };
-    const totalComp = filtered.reduce((acc, curr) => acc + calculateCompletionRate(curr.tasks), 0);
-    const totalPomo = filtered.reduce((acc, curr) => acc + (curr.pomodoroMinutes || 0), 0);
-    return { avg: Math.round(totalComp / filtered.length), pomodoro: Math.floor(totalPomo / 25), totalDays: filtered.length, mood: '😊' };
-  }, [historyData, viewMode, selectedMonth, selectedYear]);
 
   if (!isAuthenticated) {
     return (
@@ -180,7 +191,6 @@ export default function ProduktifPage() {
     <div className="min-h-screen bg-[#050505] text-white font-jakarta">
       <Navbar />
       <main className="pt-32 pb-20 px-4 md:px-6 max-w-7xl mx-auto">
-        {/* Date Display */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
           <div onClick={() => { setNavDate(new Date(selectedDate)); setShowCalendarModal(true); }} className="p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all flex items-center gap-4 group">
             <div className="w-12 h-12 bg-[var(--accent)]/10 text-[var(--accent)] rounded-xl flex flex-col items-center justify-center">
@@ -242,25 +252,48 @@ export default function ProduktifPage() {
           )}
 
           {activeTab === 'analytics' && (
-            <motion.div key="analytics" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-12">
-              <div className="flex flex-col md:flex-row justify-between items-center p-8 bg-white/5 border border-white/10 rounded-[2.5rem] gap-6">
-                <h3 className="text-xl font-black font-outfit uppercase tracking-tighter italic">Data <span className="text-[var(--accent)]">Insights</span></h3>
-                <div className="flex gap-3">
-                  <select value={viewMode} onChange={(e) => setViewMode(e.target.value)} className="bg-white/10 border-none rounded-xl p-3 text-xs font-black uppercase outline-none">
-                    <option value="monthly">Monthly</option><option value="yearly">Yearly</option>
-                  </select>
-                  {viewMode === 'monthly' && (
-                    <select value={selectedMonth} onChange={(e) => setSelectedMonth(parseInt(e.target.value))} className="bg-white/10 border-none rounded-xl p-3 text-xs font-black uppercase outline-none">
-                      {['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'].map((m, i) => <option key={i} value={i}>{m}</option>)}
-                    </select>
-                  )}
-                  <select value={selectedYear} onChange={(e) => setSelectedYear(parseInt(e.target.value))} className="bg-white/10 border-none rounded-xl p-3 text-xs font-black uppercase outline-none">
-                    {[2024, 2025, 2026].map(y => <option key={y} value={y}>{y}</option>)}
-                  </select>
+            <motion.div key="analytics" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-8">
+              {/* Smart Insights Row */}
+              {smartAnalytics && (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] flex items-center gap-6 group hover:border-[var(--accent)]/30 transition-all">
+                    <div className="w-16 h-16 bg-[var(--accent)]/10 rounded-3xl flex items-center justify-center text-[var(--accent)] group-hover:scale-110 transition-transform">
+                      <smartAnalytics.TrendIcon size={32} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-600 font-black uppercase tracking-widest">Trend Mingguan</p>
+                      <h4 className="text-xl font-black text-white">{smartAnalytics.trendLabel}</h4>
+                    </div>
+                  </div>
+                  <div className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] flex items-center gap-6 group hover:border-orange-500/30 transition-all">
+                    <div className="w-16 h-16 bg-orange-500/10 rounded-3xl flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
+                      <Sparkles size={32} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-600 font-black uppercase tracking-widest">Hari Terproduktif</p>
+                      <h4 className="text-xl font-black text-white">Hari {smartAnalytics.bestDay}</h4>
+                    </div>
+                  </div>
+                  <div className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] flex items-center gap-6 group hover:border-yellow-500/30 transition-all">
+                    <div className="w-16 h-16 bg-yellow-500/10 rounded-3xl flex items-center justify-center text-yellow-500 group-hover:scale-110 transition-transform">
+                      <Award size={32} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-600 font-black uppercase tracking-widest">Perfect Days</p>
+                      <h4 className="text-xl font-black text-white">{smartAnalytics.perfectDays} Hari</h4>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Standard Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {[{ icon: <TrendingUp className="text-green-500" />, label: 'Avg Completion', val: periodStats.avg + '%' }, { icon: <TimerIcon className="text-red-500" />, label: 'Total Pomodoro', val: periodStats.pomodoro }, { icon: <CalendarDays className="text-blue-500" />, label: 'Days Tracked', val: periodStats.totalDays }, { icon: <Smile className="text-yellow-500" />, label: 'Dominant Mood', val: periodStats.mood }].map((s, i) => (
+                {[
+                  { icon: <TrendingUp className="text-green-500" />, label: 'Avg Completion', val: smartAnalytics?.recentAvg + '%' },
+                  { icon: <TimerIcon className="text-red-500" />, label: 'Total Pomodoro', val: historyData.reduce((acc, curr) => acc + Math.floor((curr.pomodoroMinutes || 0)/25), 0) },
+                  { icon: <CalendarDays className="text-blue-500" />, label: 'Total Logs', val: historyData.length },
+                  { icon: <Smile className="text-yellow-500" />, label: 'Latest Mood', val: historyData[0]?.mood || '😐' }
+                ].map((s, i) => (
                   <div key={i} className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem]">
                     <div className="mb-4">{s.icon}</div>
                     <p className="text-[10px] text-gray-600 font-black uppercase tracking-widest mb-1">{s.label}</p>
@@ -305,24 +338,19 @@ export default function ProduktifPage() {
           )}
         </AnimatePresence>
 
-        {/* Visual Calendar Modal */}
+        {/* Calendar Modal */}
         <AnimatePresence>
           {showCalendarModal && (
             <div className="fixed inset-0 z-[120] flex items-center justify-center p-6">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowCalendarModal(false)} className="absolute inset-0 bg-black/95 backdrop-blur-xl" />
               <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="w-full max-w-lg bg-[#0d0d0d] border border-white/10 rounded-[3.5rem] overflow-hidden relative shadow-2xl">
-                {/* Calendar Header */}
                 <div className="p-10 pb-0 flex justify-between items-center">
-                  <div className="flex items-center gap-4">
-                    <h3 className="text-3xl font-black italic tracking-tighter uppercase">{navDate.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}</h3>
-                  </div>
+                  <h3 className="text-3xl font-black italic tracking-tighter uppercase">{navDate.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}</h3>
                   <div className="flex gap-2">
                     <button onClick={() => setNavDate(new Date(navDate.getFullYear(), navDate.getMonth() - 1, 1))} className="p-3 bg-white/5 rounded-2xl hover:bg-white/10"><ChevronLeft size={20} /></button>
                     <button onClick={() => setNavDate(new Date(navDate.getFullYear(), navDate.getMonth() + 1, 1))} className="p-3 bg-white/5 rounded-2xl hover:bg-white/10"><ChevronRight size={20} /></button>
                   </div>
                 </div>
-
-                {/* Grid */}
                 <div className="p-10 pt-8">
                   <div className="grid grid-cols-7 mb-4">
                     {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => <div key={d} className="text-center text-[10px] font-black text-gray-600 uppercase">{d}</div>)}
@@ -331,23 +359,13 @@ export default function ProduktifPage() {
                     {calendarDays.map((d, i) => (
                       <div key={i} className="aspect-square relative">
                         {d && (
-                          <button 
-                            onClick={() => { setSelectedDate(d.date); setShowCalendarModal(false); }}
-                            className={`w-full h-full rounded-2xl flex items-center justify-center text-sm font-black transition-all hover:scale-110 ${d.date === selectedDate ? 'bg-[var(--accent)] text-black' : 'bg-white/5 hover:bg-white/10 text-gray-400'} ${d.date === new Date().toISOString().split('T')[0] && d.date !== selectedDate ? 'border border-[var(--accent)]/50' : ''}`}
-                          >
+                          <button onClick={() => { setSelectedDate(d.date); setShowCalendarModal(false); }} className={`w-full h-full rounded-2xl flex items-center justify-center text-sm font-black transition-all hover:scale-110 ${d.date === selectedDate ? 'bg-[var(--accent)] text-black' : 'bg-white/5 hover:bg-white/10 text-gray-400'}`}>
                             {d.day}
-                            {d.hasData && d.date !== selectedDate && (
-                              <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-[var(--accent)] rounded-full" />
-                            )}
+                            {d.hasData && d.date !== selectedDate && <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-[var(--accent)] rounded-full" />}
                           </button>
                         )}
                       </div>
                     ))}
-                  </div>
-                  
-                  <div className="mt-10 flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-gray-600">
-                    <div className="flex items-center gap-2"><div className="w-2 h-2 bg-[var(--accent)] rounded-full" /> Logged Entry</div>
-                    <button onClick={() => setShowCalendarModal(false)} className="text-white hover:text-[var(--accent)]">Close Engine</button>
                   </div>
                 </div>
               </motion.div>
