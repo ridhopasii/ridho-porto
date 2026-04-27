@@ -86,7 +86,7 @@ export default function Hero({ profile }) {
           </div>
 
           {/* Name */}
-          <h1 className="text-5xl md:text-8xl font-black font-outfit mb-6 tracking-tighter leading-tight">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black font-outfit mb-6 tracking-tighter leading-[1.1]">
             <span className="text-white">HI, I'M </span>
             <span className="text-teal-500">
               {(profile?.fullName || profile?.name)?.toUpperCase() || 'RIDHO ROBBI PASI'}
@@ -108,10 +108,10 @@ export default function Hero({ profile }) {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center w-full px-4">
             <Link
               href="/#proyek"
-              className="px-10 py-5 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-2xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 group shadow-xl shadow-teal-500/20 text-sm uppercase tracking-widest"
+              className="w-full sm:w-auto px-10 py-5 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-2xl transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 group shadow-xl shadow-teal-500/20 text-xs uppercase tracking-widest"
             >
               View Portfolio
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -121,52 +121,44 @@ export default function Hero({ profile }) {
               <a
                 href={profile.cvLink}
                 target="_blank"
-                className="px-10 py-5 bg-white text-black font-black rounded-2xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2 group shadow-xl shadow-white/10 text-sm uppercase tracking-widest"
+                className="w-full sm:w-auto px-10 py-5 bg-white text-black font-black rounded-2xl transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 group shadow-xl shadow-white/10 text-xs uppercase tracking-widest"
               >
                 Download CV
                 <Download size={18} className="group-hover:translate-y-1 transition-transform" />
               </a>
             )}
-
-            <Link
-              href="/#kontak"
-              className="px-10 py-5 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl border border-white/10 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 text-sm uppercase tracking-widest"
-            >
-              Contact Me
-              <Mail size={18} />
-            </Link>
           </div>
 
           {/* Social Links */}
-          <div className="mt-20 flex flex-wrap gap-4 justify-center">
+          <div className="mt-16 md:mt-20 flex flex-wrap gap-3 md:gap-4 justify-center">
             {[
               {
-                icon: <Users size={20} />,
+                icon: <Users size={18} />,
                 href: profile?.github_url,
                 active: !!profile?.github_url,
               },
               {
-                icon: <LinkIcon size={20} />,
+                icon: <LinkIcon size={18} />,
                 href: profile?.linkedin_url,
                 active: !!profile?.linkedin_url,
               },
               {
-                icon: <Globe size={20} />,
+                icon: <Globe size={18} />,
                 href: profile?.instagram_url,
                 active: !!profile?.instagram_url,
               },
               {
-                icon: <Share2 size={20} />,
+                icon: <Share2 size={18} />,
                 href: profile?.twitter_url,
                 active: !!profile?.twitter_url,
               },
               {
-                icon: <MessageCircle size={20} />,
+                icon: <MessageCircle size={18} />,
                 href: `https://wa.me/${profile?.phone}`,
                 active: !!profile?.phone,
               },
               {
-                icon: <Mail size={20} />,
+                icon: <Mail size={18} />,
                 href: `mailto:${profile?.email}`,
                 active: !!profile?.email,
               },
@@ -177,7 +169,7 @@ export default function Hero({ profile }) {
                   key={idx}
                   href={social.href}
                   target="_blank"
-                  className="w-14 h-14 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 text-gray-500 hover:text-teal-500 hover:border-teal-500 transition-all hover:-translate-y-2"
+                  className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-white/5 border border-white/10 text-gray-500 hover:text-teal-500 hover:border-teal-500 transition-all hover:-translate-y-2 active:scale-90"
                 >
                   {social.icon}
                 </a>
