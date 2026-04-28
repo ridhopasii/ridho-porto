@@ -3,91 +3,121 @@ import Link from 'next/link';
 
 export default function Timeline({ experiences, educations }) {
   return (
-    <section className="py-24 px-6 bg-[#0a0a0a]">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
-          {/* Experience Column */}
-          <div className="animate-fade-in-up">
-            <div className="flex items-center gap-4 mb-12">
-              <div className="p-3 bg-teal-500/10 text-teal-500 rounded-2xl">
-                <Briefcase size={28} />
-              </div>
-              <h2 className="text-3xl font-black font-outfit uppercase tracking-tight">
-                Experience
-              </h2>
+    <section className="py-24 px-6 bg-[#0a0a0a] overflow-hidden">
+      <div className="max-w-7xl mx-auto space-y-24">
+        
+        {/* Experience Section */}
+        <div className="animate-fade-in-up">
+          <div className="flex items-center gap-4 mb-12">
+            <div className="p-3 bg-teal-500/10 text-teal-500 rounded-2xl">
+              <Briefcase size={28} />
             </div>
+            <h2 className="text-3xl md:text-5xl font-black font-outfit uppercase tracking-tight">
+              Experience
+            </h2>
+          </div>
 
-            <div className="space-y-12 relative before:absolute before:left-[7px] before:top-2 before:bottom-0 before:w-px before:bg-white/10">
-              {Array.isArray(experiences) &&
-                experiences.map((exp) => (
-                  <div key={exp.id} className="relative pl-10 group">
-                    <div className="absolute left-0 top-1.5 w-4 h-4 bg-[#0a0a0a] rounded-full border border-teal-500/50 z-10 group-hover:bg-teal-500 transition-colors"></div>
-                    <div className="pt-0.5">
-                      <p className="text-gray-500 text-[10px] font-black tracking-widest uppercase mb-1">
-                        {exp.period || 'Period N/A'}
-                      </p>
-                      <Link href={`/experience/${exp.slug}`} className="inline-block group-hover:text-teal-500 transition-colors">
-                        <h3 className="text-xl font-bold mb-1 tracking-tight flex items-center gap-2">
-                          {exp.position || 'Position'} <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </h3>
-                      </Link>
-                      <p className="text-teal-500 font-bold uppercase text-[10px] tracking-widest mb-3">
-                        {exp.company || 'Company'}
-                      </p>
-                      <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">
+          <div className="grid grid-rows-2 grid-flow-col gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-8 px-4 -mx-4 md:px-0 md:mx-0">
+            {Array.isArray(experiences) && experiences.length > 0 ? (
+              experiences.map((exp, idx) => {
+                const isBig = idx === 0 || idx % 3 === 0;
+                return (
+                  <div 
+                    key={exp.id} 
+                    className={`relative p-6 md:p-8 rounded-[2rem] snap-center flex flex-col group transition-all duration-500 ${
+                      isBig 
+                        ? 'row-span-2 w-[85vw] md:w-[45vw] lg:w-[35vw] bg-teal-500/5 border border-teal-500/20 hover:border-teal-500/50 hover:bg-teal-500/10 min-h-[300px] md:min-h-[400px]' 
+                        : 'row-span-1 w-[75vw] md:w-[35vw] lg:w-[25vw] bg-white/5 border border-white/10 hover:border-white/30 min-h-[140px] md:min-h-[190px]'
+                    }`}
+                  >
+                    <div className="mt-auto flex flex-col h-full justify-between">
+                      <div>
+                        {isBig && idx === 0 && (
+                          <span className="inline-block px-3 py-1.5 rounded-full bg-teal-500 text-black font-bold text-[10px] uppercase tracking-widest mb-4">
+                            Latest Position
+                          </span>
+                        )}
+                        <p className={`font-bold uppercase tracking-widest mb-2 ${isBig ? 'text-teal-500 text-xs' : 'text-gray-500 text-[10px]'}`}>
+                          {exp.period || 'Period N/A'}
+                        </p>
+                        <Link href={`/experience/${exp.slug}`} className="inline-block">
+                          <h3 className={`font-black tracking-tight mb-1 flex items-center gap-2 group-hover:text-teal-500 transition-colors ${isBig ? 'text-2xl md:text-3xl' : 'text-xl'}`}>
+                            {exp.position || 'Position'} <ArrowUpRight size={isBig ? 18 : 14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </h3>
+                        </Link>
+                        <p className={`uppercase tracking-widest mb-4 ${isBig ? 'text-teal-400 font-bold text-xs' : 'text-gray-400 font-semibold text-[10px]'}`}>
+                          {exp.company || 'Company'}
+                        </p>
+                      </div>
+                      <p className={`text-gray-400 leading-relaxed line-clamp-3 ${isBig ? 'text-sm md:text-base' : 'text-xs'}`}>
                         {exp.description || ''}
                       </p>
                     </div>
                   </div>
-                ))}
+                );
+              })
+            ) : (
+              <p className="text-gray-600 italic px-4">Belum ada data pengalaman.</p>
+            )}
+          </div>
+        </div>
 
-              {(!Array.isArray(experiences) || experiences.length === 0) && (
-                <p className="text-gray-600 italic pl-10 text-sm">Belum ada data pengalaman.</p>
-              )}
+        {/* Education Section */}
+        <div className="animate-fade-in-up animation-delay-500">
+          <div className="flex items-center gap-4 mb-12">
+            <div className="p-3 bg-purple-500/10 text-purple-500 rounded-2xl">
+              <GraduationCap size={28} />
             </div>
+            <h2 className="text-3xl md:text-5xl font-black font-outfit uppercase tracking-tight">
+              Education
+            </h2>
           </div>
 
-          {/* Education Column */}
-          <div className="animate-fade-in-up animation-delay-2000">
-            <div className="flex items-center gap-4 mb-12">
-              <div className="p-3 bg-purple-500/10 text-purple-500 rounded-2xl">
-                <GraduationCap size={28} />
-              </div>
-              <h2 className="text-3xl font-black font-outfit uppercase tracking-tight">
-                Education
-              </h2>
-            </div>
-
-            <div className="space-y-12 relative before:absolute before:left-[7px] before:top-2 before:bottom-0 before:w-px before:bg-white/10">
-              {Array.isArray(educations) &&
-                educations.map((edu) => (
-                  <div key={edu.id} className="relative pl-10 group">
-                    <div className="absolute left-0 top-1.5 w-4 h-4 bg-[#0a0a0a] rounded-full border border-purple-500/50 z-10 group-hover:bg-purple-500 transition-colors"></div>
-                    <div className="pt-0.5">
-                      <p className="text-gray-500 text-[10px] font-black tracking-widest uppercase mb-1">
-                        {edu.period || edu.year || 'Period N/A'}
-                      </p>
-                      <Link href={`/education/${edu.slug}`} className="inline-block group-hover:text-purple-500 transition-colors">
-                        <h3 className="text-xl font-bold mb-1 tracking-tight flex items-center gap-2">
-                          {edu.degree || 'Degree'} <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </h3>
-                      </Link>
-                      <p className="text-purple-500 font-bold uppercase text-[10px] tracking-widest mb-3">
-                        {edu.institution || 'Institution'} {edu.major ? `• ${edu.major}` : ''}
-                      </p>
-                      <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">
+          <div className="grid grid-rows-2 grid-flow-col gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-8 px-4 -mx-4 md:px-0 md:mx-0">
+            {Array.isArray(educations) && educations.length > 0 ? (
+              educations.map((edu, idx) => {
+                const isBig = idx === 0 || idx % 3 === 0;
+                return (
+                  <div 
+                    key={edu.id} 
+                    className={`relative p-6 md:p-8 rounded-[2rem] snap-center flex flex-col group transition-all duration-500 ${
+                      isBig 
+                        ? 'row-span-2 w-[85vw] md:w-[45vw] lg:w-[35vw] bg-purple-500/5 border border-purple-500/20 hover:border-purple-500/50 hover:bg-purple-500/10 min-h-[300px] md:min-h-[400px]' 
+                        : 'row-span-1 w-[75vw] md:w-[35vw] lg:w-[25vw] bg-white/5 border border-white/10 hover:border-white/30 min-h-[140px] md:min-h-[190px]'
+                    }`}
+                  >
+                    <div className="mt-auto flex flex-col h-full justify-between">
+                      <div>
+                        {isBig && idx === 0 && (
+                          <span className="inline-block px-3 py-1.5 rounded-full bg-purple-500 text-black font-bold text-[10px] uppercase tracking-widest mb-4">
+                            Recent Education
+                          </span>
+                        )}
+                        <p className={`font-bold uppercase tracking-widest mb-2 ${isBig ? 'text-purple-500 text-xs' : 'text-gray-500 text-[10px]'}`}>
+                          {edu.period || edu.year || 'Period N/A'}
+                        </p>
+                        <Link href={`/education/${edu.slug}`} className="inline-block">
+                          <h3 className={`font-black tracking-tight mb-1 flex items-center gap-2 group-hover:text-purple-500 transition-colors ${isBig ? 'text-2xl md:text-3xl' : 'text-xl'}`}>
+                            {edu.degree || 'Degree'} <ArrowUpRight size={isBig ? 18 : 14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </h3>
+                        </Link>
+                        <p className={`uppercase tracking-widest mb-4 ${isBig ? 'text-purple-400 font-bold text-xs' : 'text-gray-400 font-semibold text-[10px]'}`}>
+                          {edu.institution || 'Institution'} {edu.major ? `• ${edu.major}` : ''}
+                        </p>
+                      </div>
+                      <p className={`text-gray-400 leading-relaxed line-clamp-3 ${isBig ? 'text-sm md:text-base' : 'text-xs'}`}>
                         {edu.description || ''}
                       </p>
                     </div>
                   </div>
-                ))}
-
-              {(!Array.isArray(educations) || educations.length === 0) && (
-                <p className="text-gray-600 italic pl-10 text-sm">Belum ada data pendidikan.</p>
-              )}
-            </div>
+                );
+              })
+            ) : (
+              <p className="text-gray-600 italic px-4">Belum ada data pendidikan.</p>
+            )}
           </div>
         </div>
+
       </div>
     </section>
   );
