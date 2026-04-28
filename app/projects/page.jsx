@@ -9,7 +9,6 @@ export default async function ProjectsPage() {
   const { data: projects } = await supabase
     .from('Project')
     .select('*')
-    .not('showOnHome', 'eq', false)
     .order('createdAt', { ascending: false });
 
   return (

@@ -3,13 +3,13 @@ import { createClient as createServerClient } from '@/utils/supabase/server';
 import Navbar from '@/components/Navbar';
 import { ImageIcon, ArrowLeft, Maximize2 } from 'lucide-react';
 import Link from 'next/link';
+import GalleryFilter from '@/components/GalleryFilter';
 
 export default async function GalleryPage() {
   const supabase = await createServerClient();
   const { data: gallery } = await supabase
     .from('Gallery')
     .select('*')
-    .not('showOnHome', 'eq', false)
     .order('createdAt', { ascending: false });
 
   return (
@@ -39,30 +39,7 @@ export default async function GalleryPage() {
         </div>
       </section>
 
-      <section className="pb-32 px-6">
-        <div className="max-w-7xl mx-auto columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-          {gallery?.map((item) => (
-            <div
-              key={item.id}
-              className="relative group rounded-[2rem] overflow-hidden bg-white/5 border border-white/10 break-inside-avoid shadow-2xl"
-            >
-              <img
-                src={item.imageUrl}
-                alt={item.title}
-                className="w-full h-auto grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 p-8 flex flex-col justify-end">
-                <h3 className="text-xl font-black font-outfit uppercase translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  {item.title}
-                </h3>
-                <p className="text-gray-400 text-xs mt-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">
-                  {item.description || 'Visual Documentation'}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <GalleryFilter items={gallery || []} />
     </div>
   );
 }
