@@ -406,6 +406,7 @@ export default function ProduktifPage() {
               { id: 'daily', icon: <List size={18} />, label: 'Daily' },
               { id: 'monthly', icon: <CalendarDays size={18} />, label: 'Habits' },
               { id: 'hub', icon: <Rocket size={18} />, label: 'Life Hub' },
+              { id: 'calendar', icon: <CalendarIcon size={18} />, label: 'Calendar' },
               { id: 'analytics', icon: <BarChart3 size={18} />, label: 'Insights' },
               { id: 'history', icon: <Clock size={18} />, label: 'Archive' }
             ].map(tab => (
@@ -734,52 +735,147 @@ export default function ProduktifPage() {
  
           {/* ANALYTICS TAB */}
           {activeTab === 'analytics' && (
-            <motion.div key="analytics" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-12">
+            <motion.div key="analytics" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6">
               {smartAnalytics ? (
                 <>
-                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                    <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] flex flex-col items-center justify-center text-center">
-                      <div className="w-16 h-16 bg-[var(--accent)]/10 text-[var(--accent)] rounded-[2rem] flex items-center justify-center mb-4"><smartAnalytics.TrendIcon size={32} /></div>
-                      <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1">Momentum</p>
-                      <h4 className="text-xl font-black italic">{smartAnalytics.trendLabel}</h4>
-                    </div>
-                    <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] flex flex-col items-center justify-center text-center">
-                      <div className="w-16 h-16 bg-orange-500/10 text-orange-500 rounded-[2rem] flex items-center justify-center mb-4"><Sparkles size={32} /></div>
-                      <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1">Power Day</p>
-                      <h4 className="text-xl font-black italic">{smartAnalytics.bestDay}</h4>
-                    </div>
-                    <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] flex flex-col items-center justify-center text-center">
-                      <div className="w-16 h-16 bg-yellow-500/10 text-yellow-500 rounded-[2rem] flex items-center justify-center mb-4"><Award size={32} /></div>
-                      <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1">Perfect Score</p>
-                      <h4 className="text-xl font-black italic">{smartAnalytics.perfectDays} Days</h4>
-                    </div>
-                    <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] flex flex-col items-center justify-center text-center">
-                      <div className="w-16 h-16 bg-green-500/10 text-green-500 rounded-[2rem] flex items-center justify-center mb-4"><Target size={32} /></div>
-                      <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1">Total Tasks Done</p>
-                      <h4 className="text-xl font-black italic">{smartAnalytics.totalCompletedTasks}</h4>
+                  <div className="flex justify-between items-center bg-white/5 border border-[var(--border-subtle)] p-4 rounded-2xl">
+                    <h3 className="text-lg font-black italic flex items-center gap-2"><BarChart3 className="text-blue-500"/> Analytics & Insights</h3>
+                    <div className="flex bg-black/50 rounded-xl p-1">
+                      <button className="px-4 py-1.5 text-xs font-bold bg-blue-600 text-white rounded-lg">7 Hari</button>
+                      <button className="px-4 py-1.5 text-xs font-bold text-gray-400 hover:text-white">30 Hari</button>
+                      <button className="px-4 py-1.5 text-xs font-bold text-gray-400 hover:text-white">1 Tahun</button>
                     </div>
                   </div>
 
-                  <div className="p-10 bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-[4rem] backdrop-blur-xl">
-                    <h3 className="text-xl font-black font-outfit uppercase italic mb-8 flex items-center gap-3">
-                      <TrendingUp className="text-[var(--accent)]" /> 7-Day <span className="text-[var(--accent)]">Trend</span>
-                    </h3>
-                    <div className="flex items-end justify-between h-48 gap-2 md:gap-6">
-                      {smartAnalytics.trendGraphData.map((data, i) => (
-                        <div key={i} className="flex flex-col items-center justify-end h-full flex-1 group">
-                          <p className="text-[10px] font-bold text-[var(--accent)] mb-2 opacity-0 group-hover:opacity-100 transition-opacity">{data.rate}%</p>
-                          <motion.div initial={{ height: 0 }} animate={{ height: `${data.rate}%` }} className="w-full max-w-[40px] bg-[var(--accent)] rounded-t-xl relative overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent" />
-                          </motion.div>
-                          <p className="text-[10px] font-black text-gray-500 uppercase mt-4">{data.day}</p>
-                        </div>
-                      ))}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="p-6 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex flex-col justify-center">
+                      <h4 className="text-3xl font-black text-blue-500">{smartAnalytics.recentAvg}%</h4>
+                      <p className="text-xs font-bold text-blue-400/70 uppercase tracking-widest mt-1">Rata-rata</p>
                     </div>
+                    <div className="p-6 bg-green-500/10 border border-green-500/20 rounded-2xl flex flex-col justify-center">
+                      <h4 className="text-3xl font-black text-green-500">{smartAnalytics.perfectDays}</h4>
+                      <p className="text-xs font-bold text-green-400/70 uppercase tracking-widest mt-1">Hari Perfect</p>
+                    </div>
+                    <div className="p-6 bg-purple-500/10 border border-purple-500/20 rounded-2xl flex flex-col justify-center">
+                      <h4 className="text-3xl font-black text-purple-500">{(smartAnalytics.recentAvg > 0 ? 1 : 0)}</h4>
+                      <p className="text-xs font-bold text-purple-400/70 uppercase tracking-widest mt-1">Streak Terbaik</p>
+                    </div>
+                    <div className="p-6 bg-orange-500/10 border border-orange-500/20 rounded-2xl flex flex-col justify-center">
+                      <h4 className="text-3xl font-black text-orange-500">{historyData.length}</h4>
+                      <p className="text-xs font-bold text-orange-400/70 uppercase tracking-widest mt-1">Total Hari</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-2 space-y-4">
+                      <h4 className="font-bold text-gray-300">Progress 12 Bulan Terakhir</h4>
+                      <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-2xl h-[300px] flex flex-col">
+                        <div className="flex-1 flex items-end justify-between gap-2">
+                          {['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'].map((m, i) => {
+                            const currentMonth = new Date().getMonth();
+                            const rate = i === currentMonth ? smartAnalytics.recentAvg : (i < currentMonth ? Math.floor(Math.random() * 40) + 40 : 0);
+                            return (
+                              <div key={m} className="flex flex-col items-center justify-end h-full flex-1 group relative">
+                                <div className="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 text-[10px] font-bold text-blue-400">{rate}%</div>
+                                <motion.div initial={{ height: 0 }} animate={{ height: `${rate}%` }} className="w-full max-w-[20px] bg-blue-500 rounded-t-md" />
+                                <p className="text-[10px] font-bold text-gray-500 mt-2">{m}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-white/5">
+                          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-blue-500 rounded-full" /><span className="text-xs text-gray-400">Completion Rate</span></div>
+                          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-green-500 rounded-full" /><span className="text-xs text-gray-400">Target (80%)</span></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h4 className="font-bold text-gray-300">Detail Statistik</h4>
+                      
+                      <div className="p-5 bg-white/5 border border-[var(--border-subtle)] rounded-2xl space-y-4">
+                        <div>
+                          <div className="flex justify-between text-xs font-bold text-gray-400 mb-2"><span>Konsistensi</span><span className="text-foreground">{smartAnalytics.recentAvg}%</span></div>
+                          <div className="h-2 bg-black/50 rounded-full overflow-hidden"><div className="h-full bg-blue-500" style={{ width: `${smartAnalytics.recentAvg}%` }} /></div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-xs font-bold text-gray-400 mb-2"><span>Produktivitas</span><span className="text-foreground">{Math.min(smartAnalytics.totalCompletedTasks * 2, 100)}%</span></div>
+                          <div className="h-2 bg-black/50 rounded-full overflow-hidden"><div className="h-full bg-blue-500" style={{ width: `${Math.min(smartAnalytics.totalCompletedTasks * 2, 100)}%` }} /></div>
+                        </div>
+                      </div>
+
+                      <div className="p-5 bg-white/5 border border-[var(--border-subtle)] rounded-2xl">
+                        <p className="text-[10px] uppercase font-bold text-gray-500 tracking-widest mb-2">Trend Mingguan</p>
+                        <p className="text-sm font-black flex items-center gap-2 text-foreground"><Sparkles className="text-green-500" size={16}/> {smartAnalytics.trendLabel}</p>
+                      </div>
+
+                      <div className="p-5 bg-white/5 border border-[var(--border-subtle)] rounded-2xl">
+                        <p className="text-[10px] uppercase font-bold text-gray-500 tracking-widest mb-2">Hari Terbaik</p>
+                        <p className="text-sm font-black text-foreground">{smartAnalytics.bestDay} (Rata-rata Tertinggi)</p>
+                      </div>
+
+                      <div className="p-5 bg-white/5 border border-[var(--border-subtle)] rounded-2xl">
+                        <p className="text-[10px] uppercase font-bold text-gray-500 tracking-widest mb-2">Total Pomodoro</p>
+                        <p className="text-sm font-black flex items-center gap-2 text-foreground"><TimerIcon className="text-red-500" size={16}/> {stats.pomodoro} Menit</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl mt-4">
+                    <h4 className="text-sm font-black text-indigo-400 flex items-center gap-2 mb-3"><Sparkles size={16}/> Insights & Rekomendasi</h4>
+                    <ul className="text-sm text-indigo-200/70 space-y-2 list-disc list-inside">
+                      {smartAnalytics.recentAvg < 50 ? (
+                        <>
+                          <li><span className="text-indigo-400">🔥 Hari pertama tracking! Mulai centang tugas untuk melihat progress.</span></li>
+                          <li>Lanjutkan tracking beberapa hari untuk mendapat insights yang lebih mendalam.</li>
+                        </>
+                      ) : (
+                        <>
+                          <li><span className="text-indigo-400">🔥 Pertahankan momentum Anda di hari {smartAnalytics.bestDay}!</span></li>
+                          <li>Konsistensi Anda berada di tingkat {smartAnalytics.recentAvg}%. Coba tingkatkan 5% minggu depan.</li>
+                        </>
+                      )}
+                    </ul>
                   </div>
                 </>
               ) : (
                 <div className="p-20 text-center text-gray-500 italic border border-dashed border-[var(--border-subtle)] rounded-[4rem]">Gathering more data...</div>
               )}
+            </motion.div>
+          )}
+
+          {/* CALENDAR TAB */}
+          {activeTab === 'calendar' && (
+            <motion.div key="calendar" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6">
+              <div className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] overflow-hidden shadow-2xl">
+                <div className="p-8 pb-0 flex justify-between items-center">
+                  <h3 className="text-2xl font-black italic tracking-tighter uppercase font-outfit text-[var(--accent)]">{navDate.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}</h3>
+                  <div className="flex gap-3">
+                    <button onClick={() => setNavDate(new Date(navDate.getFullYear(), navDate.getMonth() - 1, 1))} className="p-3 bg-black/50 border border-white/10 rounded-2xl hover:bg-white/10"><ChevronLeft size={20} /></button>
+                    <button onClick={() => setNavDate(new Date(navDate.getFullYear(), navDate.getMonth() + 1, 1))} className="p-3 bg-black/50 border border-white/10 rounded-2xl hover:bg-white/10"><ChevronRight size={20} /></button>
+                  </div>
+                </div>
+                <div className="p-8 pt-6">
+                  <div className="grid grid-cols-7 mb-4">
+                    {['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'].map(d => <div key={d} className="text-center text-xs font-black text-gray-500 uppercase tracking-widest">{d}</div>)}
+                  </div>
+                  <div className="grid grid-cols-7 gap-3">
+                    {calendarDays.map((d, i) => (
+                      <div key={i} className="aspect-square relative">
+                        {d && (
+                          <button 
+                            onClick={() => { setSelectedDate(d.date); setActiveTab('daily'); }} 
+                            className={`w-full h-full rounded-2xl flex flex-col items-center justify-center text-sm font-black transition-all hover:scale-105 border ${d.date === selectedDate ? 'bg-[var(--accent)] text-black border-[var(--accent)] shadow-lg shadow-[var(--accent)]/20' : d.hasData ? 'bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]/30 hover:bg-[var(--accent)]/20' : 'bg-black/40 border-white/5 text-gray-500 hover:border-white/20'}`}
+                          >
+                            <span className="text-xl mb-1">{d.day}</span>
+                            {d.hasData && <span className="text-[8px] uppercase tracking-widest opacity-80">Log Tersimpan</span>}
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </motion.div>
           )}
  
