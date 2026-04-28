@@ -56,9 +56,9 @@ export default function InstagramFeed() {
           </div>
         ) : error ? (
           <div className="p-8 border border-dashed border-[var(--border-subtle)] rounded-3xl text-center bg-white/5 flex flex-col items-center justify-center min-h-[300px]">
-            <AlertCircle className="w-12 h-12 text-gray-500 mb-4" />
+            <AlertCircle className="w-12 h-12 text-muted-foreground/30 mb-4" />
             <h3 className="text-xl font-bold mb-2">Instagram Belum Terhubung</h3>
-            <p className="text-gray-400 text-sm max-w-md">
+            <p className="text-muted-foreground text-sm max-w-md">
               Sistem membutuhkan <strong>Instagram Basic Display Token</strong> di file <code>.env.local</code> Anda agar bisa menarik foto secara otomatis.
             </p>
           </div>
@@ -69,7 +69,7 @@ export default function InstagramFeed() {
                 key={post.id} 
                 href={post.permalink} 
                 target="_blank" 
-                className="group relative aspect-square rounded-2xl overflow-hidden bg-[#0d0d0d] border border-[var(--border-subtle)]"
+                className="group relative aspect-square rounded-2xl overflow-hidden bg-background border border-[var(--border-subtle)]"
               >
                 <img 
                   src={post.media_url} 

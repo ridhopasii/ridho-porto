@@ -170,7 +170,7 @@ export default async function Home() {
 
       {/* Footer / Contact Section */}
       {s.show_contact !== false && (
-        <footer id="kontak" className="py-24 px-6 border-t border-white/5 bg-black">
+        <footer id="kontak" className="py-24 px-6 border-t border-[var(--border-subtle)] bg-background">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
               {/* Left: Info */}
@@ -192,7 +192,7 @@ export default async function Home() {
                     </>
                   )}
                 </h2>
-                <p className="text-gray-500 mb-10 max-w-md text-lg leading-relaxed font-medium">
+                <p className="text-muted-foreground mb-10 max-w-md text-lg leading-relaxed font-medium">
                   {data.profile?.footer_sub ||
                     "I'm currently available for freelance work and new opportunities. Let's build something amazing together."}
                 </p>
@@ -200,7 +200,7 @@ export default async function Home() {
                   {data.profile?.email && (
                     <a
                       href={`mailto:${data.profile.email}`}
-                      className="flex items-center gap-4 text-gray-400 hover:text-teal-500 transition-all group"
+                      className="flex items-center gap-4 text-muted-foreground hover:text-teal-500 transition-all group"
                     >
                       <div className="w-10 h-10 rounded-xl bg-white/5 border border-[var(--border-subtle)] flex items-center justify-center group-hover:bg-teal-500 group-hover:border-teal-500 group-hover:text-black transition-all">
                         @
@@ -209,7 +209,7 @@ export default async function Home() {
                     </a>
                   )}
                 </div>
-                <div className="mt-12 pt-12 border-t border-white/5 flex flex-wrap gap-6">
+                <div className="mt-12 pt-12 border-t border-[var(--border-subtle)] flex flex-wrap gap-6">
                   {[
                     { label: 'GitHub', href: data.profile?.github_url },
                     { label: 'LinkedIn', href: data.profile?.linkedin_url },
@@ -223,7 +223,7 @@ export default async function Home() {
                         key={idx}
                         href={social.href}
                         target="_blank"
-                        className="text-xs font-black text-gray-600 hover:text-teal-500 transition-colors uppercase tracking-widest"
+                        className="text-xs font-black text-muted-foreground/60 hover:text-teal-500 transition-colors uppercase tracking-widest"
                       >
                         {social.label}
                       </a>
@@ -236,12 +236,12 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="mt-24 pt-8 border-t border-white/5 text-gray-600 text-xs font-bold uppercase tracking-widest flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="mt-24 pt-8 border-t border-[var(--border-subtle)] text-muted-foreground text-xs font-bold uppercase tracking-widest flex flex-col md:flex-row justify-between items-center gap-4">
               <p>
                 © {new Date().getFullYear()} {data.profile?.name || 'Ridho Robbi Pasi'}. All rights
                 reserved.
               </p>
-              <p className="text-gray-800 italic">Built with Next.js + Supabase</p>
+              <p className="italic">Built with Next.js + Supabase</p>
             </div>
           </div>
         </footer>

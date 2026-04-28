@@ -4,13 +4,13 @@ import PhotoSwiper from './PhotoSwiper';
 
 export default function Achievements({ awards, publications }) {
   return (
-    <section className="py-24 px-6 bg-black relative">
+    <section className="py-24 px-6 bg-background relative">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
         {/* Awards */}
         <div>
           <h2 className="text-3xl font-black font-outfit mb-12 flex items-center gap-4 uppercase tracking-tight">
             <Trophy className="text-yellow-500" /> Awards{' '}
-            <span className="text-gray-700">& Honors</span>
+            <span className="text-muted-foreground">& Honors</span>
           </h2>
           <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 pb-8 px-4 -mx-4 md:px-0 md:mx-0">
             {Array.isArray(awards) &&
@@ -23,7 +23,7 @@ export default function Achievements({ awards, publications }) {
                     <div className="p-3 bg-yellow-500/10 text-yellow-500 rounded-2xl">
                       <Trophy size={24} />
                     </div>
-                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                       {award.date || 'Date N/A'}
                     </span>
                   </div>
@@ -69,7 +69,7 @@ export default function Achievements({ awards, publications }) {
                 </div>
               ))}
             {(!Array.isArray(awards) || awards.length === 0) && (
-              <p className="text-gray-600 italic">No awards found.</p>
+              <p className="text-muted-foreground italic">No awards found.</p>
             )}
           </div>
         </div>
@@ -78,7 +78,7 @@ export default function Achievements({ awards, publications }) {
         <div>
           <h2 className="text-3xl font-black font-outfit mb-12 flex items-center gap-4 uppercase tracking-tight">
             <FileText className="text-blue-500" /> Publications{' '}
-            <span className="text-gray-700">& Research</span>
+            <span className="text-muted-foreground">& Research</span>
           </h2>
           <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 pb-8 px-4 -mx-4 md:px-0 md:mx-0">
             {Array.isArray(publications) &&
@@ -91,7 +91,7 @@ export default function Achievements({ awards, publications }) {
                     <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl">
                       <FileText size={24} />
                     </div>
-                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                       {pub.date || 'Date N/A'}
                     </span>
                   </div>
@@ -137,7 +137,7 @@ export default function Achievements({ awards, publications }) {
               ))}
 
             {(!Array.isArray(publications) || publications.length === 0) && (
-              <p className="text-gray-600 italic">No publications found.</p>
+              <p className="text-muted-foreground italic">No publications found.</p>
             )}
           </div>
         </div>

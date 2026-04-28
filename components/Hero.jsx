@@ -96,14 +96,14 @@ export default function Hero({ profile }) {
 
           {/* Title / Typing Effect */}
           <div className="h-10 mb-8">
-            <p className="text-xl md:text-2xl text-gray-500 font-medium tracking-wide">
+            <p className="text-xl md:text-2xl text-muted-foreground font-medium tracking-wide">
               {text}
               <span className="text-teal-500 animate-pulse">|</span>
             </p>
           </div>
 
           {/* Bio */}
-          <p className="max-w-2xl mx-auto text-sm md:text-base text-gray-400 mb-12 leading-relaxed font-medium">
+          <p className="max-w-2xl mx-auto text-sm md:text-base text-muted-foreground/80 mb-12 leading-relaxed font-medium">
             {profile?.bio ||
               'Building the future of tech with innovative solutions and elegant design.'}
           </p>
@@ -174,7 +174,7 @@ export default function Hero({ profile }) {
                   key={idx}
                   href={social.href}
                   target="_blank"
-                  className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-white/5 border border-[var(--border-subtle)] text-gray-500 hover:text-teal-500 hover:border-teal-500 transition-all hover:-translate-y-2 active:scale-90"
+                  className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-white/5 border border-[var(--border-subtle)] text-muted-foreground hover:text-teal-500 hover:border-teal-500 transition-all hover:-translate-y-2 active:scale-90"
                 >
                   {social.icon}
                 </a>

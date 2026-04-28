@@ -6,7 +6,7 @@ export default function LatestBlogs({ blogs }) {
   if (!blogs || blogs.length === 0) return null;
 
   return (
-    <section id="blog" className="py-24 px-6 bg-black">
+    <section id="blog" className="py-24 px-6 bg-background">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-end mb-12">
           <div>
@@ -19,7 +19,7 @@ export default function LatestBlogs({ blogs }) {
           </div>
           <Link
             href="/blog"
-            className="hidden md:flex items-center gap-2 text-gray-400 hover:text-teal-400 transition-all font-medium"
+            className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-teal-400 transition-all font-medium"
           >
             Lihat Semua Artikel
             <ArrowRight size={18} />
@@ -31,7 +31,7 @@ export default function LatestBlogs({ blogs }) {
             <Link
               key={blog.id}
               href={`/blog/${blog.slug}`}
-              className="group bg-white/5 rounded-3xl overflow-hidden border border-white/5 hover:border-teal-500/30 transition-all duration-500 flex flex-col"
+              className="group bg-white/5 rounded-3xl overflow-hidden border border-[var(--border-subtle)] hover:border-teal-500/30 transition-all duration-500 flex flex-col"
             >
               <div className="relative aspect-[16/10] overflow-hidden">
                 {blog.imageUrl ? (
@@ -53,7 +53,7 @@ export default function LatestBlogs({ blogs }) {
               </div>
 
               <div className="p-8 flex flex-col flex-1">
-                <div className="flex items-center gap-4 text-[10px] text-gray-500 mb-4 uppercase tracking-wider">
+                <div className="flex items-center gap-4 text-[10px] text-muted-foreground mb-4 uppercase tracking-wider">
                   <div className="flex items-center gap-1.5 font-bold">
                     <Calendar size={12} className="text-teal-500" />
                     {new Date(blog.createdAt).toLocaleDateString('id-ID', {
@@ -68,7 +68,7 @@ export default function LatestBlogs({ blogs }) {
                   {blog.title}
                 </h3>
 
-                <p className="text-gray-400 text-sm mb-6 line-clamp-2 leading-relaxed">
+                <p className="text-muted-foreground text-sm mb-6 line-clamp-2 leading-relaxed">
                   {blog.excerpt || 'Klik untuk membaca artikel selengkapnya...'}
                 </p>
 

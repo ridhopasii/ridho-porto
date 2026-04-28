@@ -24,7 +24,7 @@ export default function Organizations({ organizations }) {
                 key={org.id}
                 className="group p-1 bg-white/5 rounded-[2rem] border border-[var(--border-subtle)] hover:border-teal-500/30 transition-all duration-500 flex flex-col flex-shrink-0 w-[85vw] sm:w-[45vw] lg:w-[30vw] xl:w-[22vw] snap-center h-[28rem]"
               >
-                <div className="flex flex-col p-5 h-full bg-[#0d0d0d] rounded-[1.8rem] relative overflow-hidden">
+                <div className="flex flex-col p-5 h-full bg-background rounded-[1.8rem] relative overflow-hidden">
                   
                   {/* Banner Image / Photo Swiper */}
                   <div className="w-full h-32 mb-4 rounded-xl overflow-hidden relative z-10 border border-white/5 flex-shrink-0">
@@ -37,7 +37,7 @@ export default function Organizations({ organizations }) {
                       />
                       {/* Logo Overlaid on Banner */}
                       {org.logoUrl && (
-                        <div className="absolute -bottom-4 left-4 w-12 h-12 bg-[#0d0d0d] rounded-xl overflow-hidden p-1.5 border border-[var(--border-subtle)] shadow-lg z-20">
+                        <div className="absolute -bottom-4 left-4 w-12 h-12 bg-background rounded-xl overflow-hidden p-1.5 border border-[var(--border-subtle)] shadow-lg z-20">
                           <img
                             src={org.logoUrl}
                             alt={org.name}
@@ -57,11 +57,11 @@ export default function Organizations({ organizations }) {
                       {org.role || 'Role'}
                     </p>
 
-                    <p className="text-gray-400 text-xs leading-relaxed line-clamp-3 mb-4 flex-1">
+                    <p className="text-muted-foreground text-xs leading-relaxed line-clamp-3 mb-4 flex-1">
                       {org.description || ''}
                     </p>
 
-                    <div className="flex flex-wrap gap-2 text-[8px] font-bold text-gray-500 uppercase tracking-widest mt-auto pt-4 border-t border-white/5">
+                    <div className="flex flex-wrap gap-2 text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-auto pt-4 border-t border-[var(--border-subtle)]">
                       <div className="flex items-center gap-1">
                         <Calendar size={10} className="text-teal-500" /> {org.period || 'N/A'}
                       </div>

@@ -37,7 +37,7 @@ export default function Timeline({ experiences, educations }) {
                             Latest Position
                           </span>
                         )}
-                        <p className={`font-bold uppercase tracking-widest mb-2 ${isBig ? 'text-teal-500 text-xs' : 'text-gray-500 text-[10px]'}`}>
+                        <p className={`font-bold uppercase tracking-widest mb-2 ${isBig ? 'text-teal-500 text-xs' : 'text-muted-foreground text-[10px]'}`}>
                           {exp.period || 'Period N/A'}
                         </p>
                         <Link href={`/experience/${exp.slug}`} className="inline-block">
@@ -45,11 +45,11 @@ export default function Timeline({ experiences, educations }) {
                             {exp.position || 'Position'} <ArrowUpRight size={isBig ? 18 : 14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                           </h3>
                         </Link>
-                        <p className={`uppercase tracking-widest mb-4 ${isBig ? 'text-teal-400 font-bold text-xs' : 'text-gray-400 font-semibold text-[10px]'}`}>
+                        <p className={`uppercase tracking-widest mb-4 ${isBig ? 'text-teal-400 font-bold text-xs' : 'text-muted-foreground font-semibold text-[10px]'}`}>
                           {exp.company || 'Company'}
                         </p>
                       </div>
-                      <p className={`text-gray-400 leading-relaxed line-clamp-3 ${isBig ? 'text-sm md:text-base' : 'text-xs'}`}>
+                      <p className={`text-muted-foreground leading-relaxed line-clamp-3 ${isBig ? 'text-sm md:text-base' : 'text-xs'}`}>
                         {exp.description || ''}
                       </p>
                     </div>
@@ -57,7 +57,7 @@ export default function Timeline({ experiences, educations }) {
                 );
               })
             ) : (
-              <p className="text-gray-600 italic px-4">Belum ada data pengalaman.</p>
+              <p className="text-muted-foreground italic px-4">Belum ada data pengalaman.</p>
             )}
           </div>
         </div>
@@ -93,7 +93,7 @@ export default function Timeline({ experiences, educations }) {
                             Recent Education
                           </span>
                         )}
-                        <p className={`font-bold uppercase tracking-widest mb-2 ${isBig ? 'text-purple-500 text-xs' : 'text-gray-500 text-[10px]'}`}>
+                        <p className={`font-bold uppercase tracking-widest mb-2 ${isBig ? 'text-purple-500 text-xs' : 'text-muted-foreground text-[10px]'}`}>
                           {edu.period || edu.year || 'Period N/A'}
                         </p>
                         <Link href={`/education/${edu.slug}`} className="inline-block">
@@ -101,11 +101,11 @@ export default function Timeline({ experiences, educations }) {
                             {edu.degree || 'Degree'} <ArrowUpRight size={isBig ? 18 : 14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                           </h3>
                         </Link>
-                        <p className={`uppercase tracking-widest mb-4 ${isBig ? 'text-purple-400 font-bold text-xs' : 'text-gray-400 font-semibold text-[10px]'}`}>
+                        <p className={`uppercase tracking-widest mb-4 ${isBig ? 'text-purple-400 font-bold text-xs' : 'text-muted-foreground font-semibold text-[10px]'}`}>
                           {edu.institution || 'Institution'} {edu.major ? `• ${edu.major}` : ''}
                         </p>
                       </div>
-                      <p className={`text-gray-400 leading-relaxed line-clamp-3 ${isBig ? 'text-sm md:text-base' : 'text-xs'}`}>
+                      <p className={`text-muted-foreground leading-relaxed line-clamp-3 ${isBig ? 'text-sm md:text-base' : 'text-xs'}`}>
                         {edu.description || ''}
                       </p>
                     </div>
@@ -113,7 +113,7 @@ export default function Timeline({ experiences, educations }) {
                 );
               })
             ) : (
-              <p className="text-gray-600 italic px-4">Belum ada data pendidikan.</p>
+              <p className="text-muted-foreground italic px-4">Belum ada data pendidikan.</p>
             )}
           </div>
         </div>

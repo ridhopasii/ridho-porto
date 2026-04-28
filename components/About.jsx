@@ -9,7 +9,7 @@ export default function About({ profile }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           {/* Image Part - Premium Frame */}
           <div className="relative group">
-            <div className="aspect-square rounded-[3rem] overflow-hidden border border-white/5 bg-[#111] p-4 relative z-10">
+            <div className="aspect-square rounded-[3rem] overflow-hidden border border-[var(--border-subtle)] bg-background p-4 relative z-10">
               <div className="w-full h-full rounded-[2rem] overflow-hidden group-hover:grayscale-0 transition-all duration-700">
                 <PhotoSwiper
                   images={
@@ -34,12 +34,12 @@ export default function About({ profile }) {
                 </div>
                 <div>
                   <h4 className="text-foreground font-bold font-outfit">Verified Expert</h4>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
                     {profile?.badge || 'Global Ambassador'}
                   </p>
                 </div>
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed italic">
+              <p className="text-xs text-muted-foreground leading-relaxed italic">
                 "
                 {profile?.quote ||
                   'Berkomitmen untuk membawa dampak positif melalui teknologi dan inovasi.'}
@@ -69,7 +69,7 @@ export default function About({ profile }) {
               )}
             </h3>
 
-            <p className="text-lg text-gray-400 mb-10 leading-relaxed font-medium">
+            <p className="text-lg text-muted-foreground mb-10 leading-relaxed font-medium">
               {profile?.bio ||
                 'I am a passionate TechnoPreneur with a deep interest in building scalable web applications and innovative digital solutions.'}
             </p>
@@ -99,13 +99,13 @@ export default function About({ profile }) {
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="p-6 bg-white/5 border border-white/5 rounded-2xl hover:border-teal-500/30 transition-all flex items-center gap-4 group/item"
+                  className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-2xl hover:border-teal-500/30 transition-all flex items-center gap-4 group/item"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-500 group-hover/item:bg-teal-500 group-hover/item:text-black transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-muted-foreground group-hover/item:bg-teal-500 group-hover/item:text-black transition-all">
                     {item.icon}
                   </div>
                   <div>
-                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-0.5">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-0.5">
                       {item.label}
                     </p>
                     <p className="text-foreground font-bold text-sm tracking-tight">{item.value}</p>

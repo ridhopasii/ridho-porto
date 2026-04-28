@@ -17,7 +17,7 @@ export default function Projects({ projects }) {
           </div>
           <Link
             href="/#kontak"
-            className="text-gray-500 font-bold flex items-center gap-2 cursor-pointer hover:text-teal-500 transition-all uppercase text-xs tracking-widest"
+            className="text-muted-foreground font-bold flex items-center gap-2 cursor-pointer hover:text-teal-500 transition-all uppercase text-xs tracking-widest"
           >
             Start a Project <ArrowUpRight size={18} />
           </Link>
@@ -27,7 +27,7 @@ export default function Projects({ projects }) {
           {Array.isArray(projects) &&
             projects.map((project, idx) => (
               <div key={project.id} className="group relative">
-                  <div className="relative aspect-[16/10] rounded-[2rem] overflow-hidden border border-white/5 bg-[#111]">
+                  <div className="relative aspect-[16/10] rounded-[2rem] overflow-hidden border border-[var(--border-subtle)] bg-background">
                     <PhotoSwiper
                       images={
                         Array.isArray(project.images) && project.images.length > 0
@@ -54,7 +54,7 @@ export default function Projects({ projects }) {
                     <h3 className="text-2xl font-black mb-3 text-foreground font-outfit uppercase tracking-tight group-hover:text-teal-500 transition-colors">
                       {project.title || 'Project Title'}
                     </h3>
-                    <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-2">
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-6 line-clamp-2">
                       {project.description || ''}
                     </p>
 
@@ -70,7 +70,7 @@ export default function Projects({ projects }) {
                       )}
                       <Link 
                         href={`/projects/${project.slug || project.id}`}
-                        className="py-3 px-6 bg-transparent text-gray-500 rounded-xl font-black text-[10px] uppercase tracking-widest hover:text-foreground transition-all flex items-center justify-center border border-transparent hover:border-[var(--border-subtle)]"
+                        className="py-3 px-6 bg-transparent text-muted-foreground rounded-xl font-black text-[10px] uppercase tracking-widest hover:text-foreground transition-all flex items-center justify-center border border-transparent hover:border-[var(--border-subtle)]"
                       >
                         Details
                       </Link>
@@ -82,7 +82,7 @@ export default function Projects({ projects }) {
 
         {projects?.length === 0 && (
           <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-[var(--border-subtle)]">
-            <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">
+            <p className="text-muted-foreground font-bold uppercase tracking-widest text-[10px]">
               Belum ada proyek yang dipublikasikan.
             </p>
           </div>

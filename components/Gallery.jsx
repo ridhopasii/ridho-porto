@@ -8,7 +8,7 @@ export default function Gallery({ galleryItems }) {
   const latestPhotos = galleryItems?.slice(0, 6) || [];
 
   return (
-    <section id="galeri" className="py-24 px-6 bg-black relative overflow-hidden">
+    <section id="galeri" className="py-24 px-6 bg-background relative overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
@@ -21,7 +21,7 @@ export default function Gallery({ galleryItems }) {
           </div>
           <Link
             href="/gallery"
-            className="group flex items-center gap-2 text-gray-500 font-bold uppercase text-xs tracking-widest hover:text-teal-500 transition-all"
+            className="group flex items-center gap-2 text-muted-foreground font-bold uppercase text-xs tracking-widest hover:text-teal-500 transition-all"
           >
             Lihat Semua Koleksi{' '}
             <ArrowUpRight
@@ -38,7 +38,7 @@ export default function Gallery({ galleryItems }) {
               className="group animate-fade-in-up"
               style={{ animationDelay: `${idx * 150}ms` }}
             >
-              <div className="relative rounded-[2.5rem] overflow-hidden border border-white/5 bg-[#111] hover:border-teal-500/30 transition-all duration-500 shadow-2xl">
+              <div className="relative rounded-[2.5rem] overflow-hidden border border-[var(--border-subtle)] bg-background hover:border-teal-500/30 transition-all duration-500 shadow-2xl">
                 <PhotoSwiper images={item.images} aspectRatio="aspect-[4/3]" />
 
                 <div className="p-6">
@@ -46,7 +46,7 @@ export default function Gallery({ galleryItems }) {
                     <span className="px-3 py-1 bg-teal-500/10 text-teal-500 text-[10px] font-black uppercase tracking-widest rounded-full border border-teal-500/20">
                       {item.category}
                     </span>
-                    <span className="text-[10px] text-gray-600 font-bold">{item.date}</span>
+                    <span className="text-[10px] text-muted-foreground font-bold">{item.date}</span>
                   </div>
                   <h4 className="text-lg font-bold text-foreground group-hover:text-teal-500 transition-colors">
                     {item.title}
@@ -59,8 +59,8 @@ export default function Gallery({ galleryItems }) {
 
         {latestPhotos.length === 0 && (
           <div className="text-center py-20 bg-white/5 rounded-[3rem] border border-dashed border-[var(--border-subtle)]">
-            <ImageIcon size={48} className="mx-auto text-gray-800 mb-4" />
-            <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">
+            <ImageIcon size={48} className="mx-auto text-muted-foreground/20 mb-4" />
+            <p className="text-muted-foreground font-bold uppercase tracking-widest text-[10px]">
               Galeri belum terisi.
             </p>
           </div>
