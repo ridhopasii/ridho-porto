@@ -313,29 +313,6 @@ export default function ProduktifPage() {
     setDailyConfig(newCfg);
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6 font-jakarta">
-        <div className="w-full max-w-md p-10 bg-white/5 border border-white/10 rounded-[3rem] text-center backdrop-blur-xl relative">
-          <Zap size={40} className="mx-auto mb-8 text-[var(--accent)] animate-pulse" />
-          <h1 className="text-3xl font-black mb-8 italic text-white uppercase tracking-tighter">Enter Vault</h1>
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => { 
-              setPassword(e.target.value); 
-              if (e.target.value === 'zxcvbnm') setIsAuthenticated(true); 
-            }} 
-            placeholder="••••••••" 
-            className="w-full p-5 bg-black/50 border border-white/10 rounded-2xl text-center text-xl tracking-[0.5em] focus:border-[var(--accent)] outline-none text-white transition-all" 
-          />
-        </div>
-      </div>
-    );
-  }
-
-  const formatIDR = (val) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
-
   // Group tasks by blockName for rendering
   const tasksByBlock = useMemo(() => {
     const grouped = {};
@@ -348,6 +325,34 @@ export default function ProduktifPage() {
     });
     return grouped;
   }, [tasks]);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6 font-jakarta">
+        <div className="w-full max-w-md p-10 bg-white/5 border border-white/10 rounded-[3rem] text-center backdrop-blur-xl relative">
+          <Zap size={40} className="mx-auto mb-8 text-[var(--accent)] animate-pulse" />
+          <h1 className="text-3xl font-black mb-8 italic text-white uppercase tracking-tighter">Enter Vault</h1>
+          <form onSubmit={(e) => { e.preventDefault(); if (password === 'zxcvbnm') setIsAuthenticated(true); }}>
+            <input 
+              type="password" 
+              value={password} 
+              onChange={(e) => { 
+                setPassword(e.target.value); 
+                if (e.target.value === 'zxcvbnm') setIsAuthenticated(true); 
+              }} 
+              placeholder="••••••••" 
+              className="w-full p-5 bg-black/50 border border-white/10 rounded-2xl text-center text-xl tracking-[0.5em] focus:border-[var(--accent)] outline-none text-white transition-all" 
+            />
+            <button type="submit" className="hidden">Submit</button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  const formatIDR = (val) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
+
+
 
   return (
     <div className="min-h-screen bg-[#050505] text-white font-jakarta overflow-x-hidden relative">
