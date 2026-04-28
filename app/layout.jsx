@@ -80,7 +80,7 @@ export default async function RootLayout({ children }) {
   const accentColor = settings?.value || '#14b8a6';
 
   return (
-    <html lang="id" className={`${outfit.variable} ${jakarta.variable}`} suppressHydrationWarning>
+    <html lang="id" className={`${outfit.variable} ${jakarta.variable} dark`} suppressHydrationWarning>
       <body className="bg-background text-foreground">
         <LanguageProvider>
           <AccentProvider color={accentColor}>
