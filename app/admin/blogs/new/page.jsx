@@ -17,7 +17,7 @@ export default function NewBlog() {
             Kembali ke Daftar
           </Link>
           <h1 className="text-3xl font-bold text-foreground mb-8">Tulis Artikel Baru</h1>
-          <div className="bg-[#1a1a1a] p-8 rounded-3xl border border-[var(--border-subtle)] shadow-2xl">
+          <div className="bg-background p-8 rounded-3xl border border-[var(--border-subtle)] shadow-2xl">
             <BlogForm />
           </div>
         </div>

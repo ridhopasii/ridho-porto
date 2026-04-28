@@ -19,7 +19,7 @@ export default function EditBlog() {
 
   const fetchBlog = async () => {
     const { data, error } = await supabase
-      .from('blogs')
+      .from('Article')
       .select('*')
       .eq('id', id)
       .single()
@@ -29,7 +29,7 @@ export default function EditBlog() {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-body">
       <AdminSidebar />
       <main className="flex-1 p-8">
         <div className="max-w-4xl mx-auto">
@@ -44,10 +44,10 @@ export default function EditBlog() {
           
           {loading ? (
             <div className="flex justify-center py-20">
-              <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
+              <Loader2 className="w-10 h-10 text-accent animate-spin" />
             </div>
           ) : blog ? (
-            <div className="bg-[#1a1a1a] p-8 rounded-3xl border border-white/5 shadow-2xl">
+            <div className="bg-background p-8 rounded-3xl border border-[var(--border-subtle)] shadow-2xl">
               <BlogForm initialData={blog} />
             </div>
           ) : (

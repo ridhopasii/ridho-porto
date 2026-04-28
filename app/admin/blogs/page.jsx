@@ -16,9 +16,9 @@ export default function AdminBlogs() {
 
   const fetchBlogs = async () => {
     const { data, error } = await supabase
-      .from('blogs')
+      .from('Article')
       .select('*')
-      .order('created_at', { ascending: false })
+      .order('createdAt', { ascending: false })
     
     if (data) setBlogs(data)
     setLoading(false)
@@ -27,7 +27,7 @@ export default function AdminBlogs() {
   const handleDelete = async (id) => {
     if (!confirm('Yakin ingin menghapus artikel ini?')) return
 
-    const { error } = await supabase.from('blogs').delete().eq('id', id)
+    const { error } = await supabase.from('Article').delete().eq('id', id)
     if (!error) {
       setBlogs(blogs.filter(b => b.id !== id))
     }
@@ -59,20 +59,20 @@ export default function AdminBlogs() {
           ) : (
             <div className="grid gap-4">
               {blogs.length === 0 ? (
-                <div className="bg-[#1a1a1a] p-12 rounded-2xl border border-[var(--border-subtle)] text-center">
-                  <BookOpen className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                  <p className="text-gray-400">Belum ada artikel. Ayo mulai menulis!</p>
+                <div className="bg-background p-12 rounded-2xl border border-[var(--border-subtle)] text-center">
+                  <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-400 font-medium">Belum ada artikel. Ayo mulai menulis!</p>
                 </div>
               ) : (
                 blogs.map((blog) => (
                   <div 
                     key={blog.id}
-                    className="bg-[#1a1a1a] p-6 rounded-2xl border border-[var(--border-subtle)] flex items-center justify-between hover:border-[var(--border-subtle)] transition-all group"
+                    className="bg-background p-6 rounded-2xl border border-[var(--border-subtle)] flex items-center justify-between hover:border-accent/30 transition-all group shadow-sm"
                   >
                     <div className="flex items-center gap-6">
-                      {blog.cover_image && (
+                      {blog.imageUrl && (
                         <img 
-                          src={blog.cover_image} 
+                          src={blog.imageUrl} 
                           alt={blog.title}
                           className="w-20 h-20 rounded-xl object-cover"
                         />
@@ -84,7 +84,7 @@ export default function AdminBlogs() {
                             {blog.category || 'Uncategorized'}
                           </span>
                           <span>•</span>
-                          <span>{new Date(blog.created_at).toLocaleDateString()}</span>
+                          <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
                         </div>
                       </div>
                     </div>
