@@ -1093,6 +1093,10 @@ export default function ProduktifPage() {
                     {calendarDays.map((d, i) => (
                       <div key={i} className="aspect-square relative">
                         {d && (
+                          <button 
+                            onClick={() => { setSelectedDate(d.date); setActiveTab('daily'); }} 
+                            className={`w-full h-full rounded-2xl flex flex-col items-center justify-center text-sm font-black transition-all hover:scale-105 border ${d.date === selectedDate ? 'bg-[var(--accent)] text-black border-[var(--accent)] shadow-lg shadow-[var(--accent)]/20' : d.hasData ? 'bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]/30 hover:bg-[var(--accent)]/20' : 'bg-body/40 border-[var(--border-subtle)] text-gray-500 hover:border-white/20'}`}
+                          >
                             <span className="text-xl mb-1">{d.day}</span>
                             <div className="flex flex-col gap-0.5 w-full px-1">
                               {d.dayIncome > 0 && <div className="h-1 bg-green-500 rounded-full w-full opacity-60" />}
