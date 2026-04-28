@@ -34,8 +34,10 @@ export default function ProduktifPage() {
   const [savings, setSavings] = useState([]);
   const [habitConfigs, setHabitConfigs] = useState([]);
   const [monthlyTracker, setMonthlyTracker] = useState({});
-  const [dailyConfig, setDailyConfig] = useState([]); // Now an Array for dynamic blocks
-  const [financeData, setFinanceData] = useState({ balance: 0, transactions: [] });
+  const [dailyConfig, setDailyConfig] = useState([]); 
+  const [financeData, setFinanceData] = useState({ balance: 0, transactions: [] }); // Legacy, keeping for safety
+  const [wallets, setWallets] = useState([]);
+  const [allTransactions, setAllTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   
   // Auth
@@ -147,15 +149,12 @@ export default function ProduktifPage() {
       if (newMonthTrack) setMonthlyTracker(newMonthTrack.checklist || {});
     }
 
-    // 6. Fetch Finance Data
-    const { data: finData } = await supabase.from('SiteSettings').select('value').eq('key', 'finance_data').single();
-    if (finData) {
-      try {
-        setFinanceData(JSON.parse(finData.value));
-      } catch (e) {
-        setFinanceData({ balance: 0, transactions: [] });
-      }
-    }
+    // 6. Fetch Wallets & Transactions
+    const { data: wData } = await supabase.from('Wallets').select('*').order('created_at', { ascending: true });
+    if (wData) setWallets(wData);
+
+    const { data: tData } = await supabase.from('FinancialTransactions').select('*').order('date', { ascending: false });
+    if (tData) setAllTransactions(tData);
 
     setLoading(false);
   };
@@ -329,10 +328,55 @@ export default function ProduktifPage() {
     for (let i = 1; i <= daysInMonth; i++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
       const hasData = historyData.some(h => h && h.date === dateStr);
-      days.push({ day: i, date: dateStr, hasData });
+      const dayTransactions = allTransactions.filter(t => t.date === dateStr);
+      const dayIncome = dayTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + Number(t.amount), 0);
+      const dayExpense = dayTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + Number(t.amount), 0);
+      days.push({ day: i, date: dateStr, hasData, dayIncome, dayExpense });
     }
     return days;
-  }, [navDate, historyData]);
+  }, [navDate, historyData, allTransactions]);
+
+  const addTransaction = async (tx) => {
+    const supabase = createClient();
+    
+    // 1. Insert Transaction
+    const { data: newTx, error: txError } = await supabase.from('FinancialTransactions').insert([tx]).select().single();
+    if (txError) {
+      alert("Gagal mencatat transaksi: " + txError.message);
+      return;
+    }
+
+    // 2. Update Wallet Balance
+    const wallet = wallets.find(w => w.id === tx.wallet_id);
+    if (wallet) {
+      const newBalance = tx.type === 'income' 
+        ? Number(wallet.balance) + Number(tx.amount) 
+        : Number(wallet.balance) - Number(tx.amount);
+      
+      await supabase.from('Wallets').update({ balance: newBalance }).eq('id', tx.wallet_id);
+    }
+
+    fetchAllData();
+  };
+
+  const deleteTransaction = async (tx) => {
+    const supabase = createClient();
+    
+    // 1. Delete Transaction
+    await supabase.from('FinancialTransactions').delete().eq('id', tx.id);
+
+    // 2. Revert Wallet Balance
+    const wallet = wallets.find(w => w.id === tx.wallet_id);
+    if (wallet) {
+      const newBalance = tx.type === 'income' 
+        ? Number(wallet.balance) - Number(tx.amount) 
+        : Number(wallet.balance) + Number(tx.amount);
+      
+      await supabase.from('Wallets').update({ balance: newBalance }).eq('id', tx.wallet_id);
+    }
+
+    fetchAllData();
+  };
 
   const toggleBlockDay = (blockIndex, dayNumber) => {
     const newCfg = [...dailyConfig];
@@ -505,8 +549,41 @@ export default function ProduktifPage() {
                     }} className="px-8 py-4 bg-white/5 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-white/10 transition-all">+ Add New Block</button>
                   </div>
                  </div>
-               ) : tasks.length > 0 ? (
+               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                  {/* Daily Financial Summary Integrated in Daily Tab */}
+                  {allTransactions.filter(t => t.date === selectedDate).length > 0 && (
+                    <div className="col-span-full p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] backdrop-blur-xl flex flex-col md:flex-row justify-between items-center gap-6">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-[var(--accent)]/10 text-[var(--accent)] rounded-2xl flex items-center justify-center">
+                          <TrendingUp size={20} />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black uppercase text-gray-500">Day Income</p>
+                          <h4 className="text-xl font-black text-green-500">
+                            +{formatIDR(allTransactions.filter(t => t.date === selectedDate && t.type === 'income').reduce((s, t) => s + Number(t.amount), 0))}
+                          </h4>
+                        </div>
+                      </div>
+                      <div className="h-10 w-px bg-white/10 hidden md:block" />
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center">
+                          <TrendingDown size={20} />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black uppercase text-gray-500">Day Expense</p>
+                          <h4 className="text-xl font-black text-red-500">
+                            -{formatIDR(allTransactions.filter(t => t.date === selectedDate && t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0))}
+                          </h4>
+                        </div>
+                      </div>
+                      <div className="h-10 w-px bg-white/10 hidden md:block" />
+                      <button onClick={() => setActiveTab('finance')} className="px-6 py-3 bg-white/5 border border-[var(--border-subtle)] rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">
+                        View Details
+                      </button>
+                    </div>
+                  )}
+
                   {Object.keys(tasksByBlock).map((blockName, blockNum) => (
                     <div key={blockNum} className="p-8 bg-white/[0.02] border border-[var(--border-subtle)] rounded-[3rem] backdrop-blur-sm relative group overflow-hidden">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent)]/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -542,155 +619,136 @@ export default function ProduktifPage() {
 
           {/* FINANCE TAB */}
           {activeTab === 'finance' && (
-            <motion.div key="finance" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-              {/* Finance Header Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-8 bg-gradient-to-br from-[var(--accent)]/10 to-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-[3rem] backdrop-blur-xl">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-[var(--accent)]/20 text-[var(--accent)] rounded-2xl flex items-center justify-center">
-                      <Wallet size={24} />
-                    </div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Total Balance</p>
-                  </div>
-                  <h3 className="text-3xl font-black font-outfit text-foreground">{formatIDR(financeData.balance || 0)}</h3>
-                </div>
-
-                <div className="p-8 bg-green-500/5 border border-green-500/10 rounded-[3rem] backdrop-blur-xl">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-green-500/20 text-green-500 rounded-2xl flex items-center justify-center">
-                      <TrendingUp size={24} />
-                    </div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Monthly Income</p>
-                  </div>
-                  <h3 className="text-3xl font-black font-outfit text-green-500">
-                    {formatIDR(
-                      financeData.transactions
-                        ?.filter(t => t.type === 'income' && new Date(t.date).getMonth() === new Date().getMonth())
-                        .reduce((sum, t) => sum + Number(t.amount), 0) || 0
-                    )}
+            <motion.div key="finance" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
+              
+              {/* Wallet System Section */}
+              <div className="space-y-6">
+                <div className="flex justify-between items-center px-2">
+                  <h3 className="text-xl font-black font-outfit uppercase tracking-tighter italic flex items-center gap-3">
+                    <Wallet className="text-[var(--accent)]" /> My <span className="text-[var(--accent)]">Wallets</span>
                   </h3>
                 </div>
-
-                <div className="p-8 bg-red-500/5 border border-red-500/10 rounded-[3rem] backdrop-blur-xl">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-red-500/20 text-red-500 rounded-2xl flex items-center justify-center">
-                      <TrendingDown size={24} />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {wallets.map((wallet) => (
+                    <div key={wallet.id} className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] backdrop-blur-xl relative group overflow-hidden">
+                      <div className="absolute top-0 right-0 w-32 h-32 blur-3xl rounded-full opacity-10" style={{ backgroundColor: wallet.color }} />
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-lg" style={{ backgroundColor: `${wallet.color}20`, color: wallet.color }}>
+                          {wallet.icon || '💳'}
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Available Balance</p>
+                          <h4 className="font-black text-foreground">{wallet.name}</h4>
+                        </div>
+                      </div>
+                      <h3 className="text-3xl font-black font-outfit text-foreground tracking-tight">{formatIDR(wallet.balance)}</h3>
                     </div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Monthly Expense</p>
-                  </div>
-                  <h3 className="text-3xl font-black font-outfit text-red-500">
-                    {formatIDR(
-                      financeData.transactions
-                        ?.filter(t => t.type === 'expense' && new Date(t.date).getMonth() === new Date().getMonth())
-                        .reduce((sum, t) => sum + Number(t.amount), 0) || 0
-                    )}
-                  </h3>
+                  ))}
                 </div>
               </div>
 
-              {/* Add Transaction (Only in Edit Mode) */}
-              {isEditMode && (
-                <div className="p-8 bg-white/5 border border-dashed border-[var(--border-subtle)] rounded-[3rem]">
-                  <h4 className="text-sm font-black uppercase tracking-widest mb-6 flex items-center gap-2">
-                    <Plus size={16} className="text-[var(--accent)]" /> Add New Transaction
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <input 
-                      type="date" 
-                      id="new-tx-date"
-                      defaultValue={getLocalDateString()}
-                      className="bg-body/50 border border-[var(--border-subtle)] p-4 rounded-2xl text-xs outline-none focus:border-[var(--accent)]" 
-                    />
-                    <input 
-                      type="text" 
-                      id="new-tx-desc"
-                      placeholder="Description (e.g. Salary, Coffee)" 
-                      className="bg-body/50 border border-[var(--border-subtle)] p-4 rounded-2xl text-xs outline-none focus:border-[var(--accent)]" 
-                    />
-                    <input 
-                      type="number" 
-                      id="new-tx-amount"
-                      placeholder="Amount" 
-                      className="bg-body/50 border border-[var(--border-subtle)] p-4 rounded-2xl text-xs outline-none focus:border-[var(--accent)]" 
-                    />
-                    <select 
-                      id="new-tx-type"
-                      className="bg-body/50 border border-[var(--border-subtle)] p-4 rounded-2xl text-xs outline-none focus:border-[var(--accent)]"
-                    >
+              {/* Direct Transaction Entry */}
+              <div className="p-10 bg-white/5 border border-[var(--border-subtle)] rounded-[4rem] backdrop-blur-xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-10 opacity-5">
+                  <Plus size={120} />
+                </div>
+                <h3 className="text-2xl font-black font-outfit uppercase italic mb-8 flex items-center gap-3">
+                  Quick <span className="text-[var(--accent)]">Transaction</span>
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+                  <div className="space-y-2 lg:col-span-1">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-2">Date</label>
+                    <input type="date" id="tx-date" defaultValue={getLocalDateString()} className="w-full p-5 bg-body/60 border border-[var(--border-subtle)] rounded-3xl text-xs outline-none focus:border-[var(--accent)] text-foreground" />
+                  </div>
+                  <div className="space-y-2 lg:col-span-1">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-2">Wallet</label>
+                    <select id="tx-wallet" className="w-full p-5 bg-body/60 border border-[var(--border-subtle)] rounded-3xl text-xs outline-none focus:border-[var(--accent)] text-foreground">
+                      {wallets.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
+                    </select>
+                  </div>
+                  <div className="space-y-2 lg:col-span-1">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-2">Type</label>
+                    <select id="tx-type" className="w-full p-5 bg-body/60 border border-[var(--border-subtle)] rounded-3xl text-xs outline-none focus:border-[var(--accent)] text-foreground">
                       <option value="expense">Expense (-)</option>
                       <option value="income">Income (+)</option>
                     </select>
                   </div>
-                  <button 
-                    onClick={() => {
-                      const date = document.getElementById('new-tx-date').value;
-                      const desc = document.getElementById('new-tx-desc').value;
-                      const amount = Number(document.getElementById('new-tx-amount').value);
-                      const type = document.getElementById('new-tx-type').value;
-                      
-                      if (!desc || !amount) return;
-
-                      const newTx = { id: Date.now(), date, description: desc, amount, type };
-                      const newTransactions = [newTx, ...(financeData.transactions || [])];
-                      const newBalance = type === 'income' 
-                        ? (financeData.balance || 0) + amount 
-                        : (financeData.balance || 0) - amount;
-
-                      setFinanceData({ balance: newBalance, transactions: newTransactions });
-                      
-                      // Clear inputs
-                      document.getElementById('new-tx-desc').value = '';
-                      document.getElementById('new-tx-amount').value = '';
-                    }}
-                    className="mt-6 px-8 py-4 bg-[var(--accent)] text-black font-black rounded-2xl text-[10px] uppercase tracking-widest hover:scale-105 transition-all"
-                  >
-                    Post Transaction
-                  </button>
+                  <div className="space-y-2 lg:col-span-1">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-2">Amount</label>
+                    <input type="number" id="tx-amount" placeholder="0" className="w-full p-5 bg-body/60 border border-[var(--border-subtle)] rounded-3xl text-xs outline-none focus:border-[var(--accent)] text-foreground font-black" />
+                  </div>
+                  <div className="space-y-2 lg:col-span-1">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest px-2">Description</label>
+                    <input type="text" id="tx-desc" placeholder="Details..." className="w-full p-5 bg-body/60 border border-[var(--border-subtle)] rounded-3xl text-xs outline-none focus:border-[var(--accent)] text-foreground" />
+                  </div>
                 </div>
-              )}
-
-              {/* Transaction History */}
-              <div className="p-8 md:p-10 bg-white/5 border border-[var(--border-subtle)] rounded-[4rem] backdrop-blur-xl">
-                <h3 className="text-2xl font-black font-outfit uppercase italic mb-8 flex items-center gap-3">
-                  <List className="text-[var(--accent)]" /> Transaction <span className="text-[var(--accent)]">History</span>
-                </h3>
                 
-                <div className="space-y-4">
-                  {financeData.transactions?.length > 0 ? (
-                    financeData.transactions.map((tx, idx) => (
-                      <div key={tx.id || idx} className="p-5 bg-body/40 border border-[var(--border-subtle)] rounded-3xl flex items-center justify-between group hover:border-white/20 transition-all">
-                        <div className="flex items-center gap-6">
-                          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl ${tx.type === 'income' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
-                            {tx.type === 'income' ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
+                <button 
+                  onClick={() => {
+                    const date = document.getElementById('tx-date').value;
+                    const wallet_id = document.getElementById('tx-wallet').value;
+                    const type = document.getElementById('tx-type').value;
+                    const amount = Number(document.getElementById('tx-amount').value);
+                    const description = document.getElementById('tx-desc').value;
+
+                    if (!amount || !wallet_id) {
+                      alert("Isi nominal dan pilih dompet!");
+                      return;
+                    }
+
+                    addTransaction({ date, wallet_id, type, amount, description });
+                    document.getElementById('tx-amount').value = '';
+                    document.getElementById('tx-desc').value = '';
+                  }}
+                  className="mt-8 px-10 py-5 bg-[var(--accent)] text-black font-black rounded-3xl text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl shadow-[var(--accent)]/20 w-full lg:w-auto"
+                >
+                  Record Transaction
+                </button>
+              </div>
+
+              {/* Advanced History Table */}
+              <div className="p-8 md:p-12 bg-white/5 border border-[var(--border-subtle)] rounded-[4rem] backdrop-blur-xl">
+                <div className="flex justify-between items-center mb-10">
+                   <h3 className="text-2xl font-black font-outfit uppercase italic flex items-center gap-3">
+                    <List className="text-[var(--accent)]" /> Transaction <span className="text-[var(--accent)]">Ledger</span>
+                  </h3>
+                </div>
+                
+                <div className="space-y-3">
+                  {allTransactions.length > 0 ? (
+                    allTransactions.slice(0, 50).map((tx) => {
+                      const wallet = wallets.find(w => w.id === tx.wallet_id);
+                      return (
+                        <div key={tx.id} className="p-5 bg-body/40 border border-[var(--border-subtle)] rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:bg-white/5 transition-all">
+                          <div className="flex items-center gap-6">
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl ${tx.type === 'income' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                              {tx.type === 'income' ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
+                            </div>
+                            <div>
+                              <p className="font-bold text-sm text-foreground">{tx.description || 'No Description'}</p>
+                              <div className="flex items-center gap-3 mt-1">
+                                <span className="text-[9px] font-black uppercase text-gray-500 tracking-widest">{new Date(tx.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                <span className="w-1 h-1 bg-gray-700 rounded-full" />
+                                <span className="text-[9px] font-black uppercase text-gray-500 tracking-widest flex items-center gap-1">
+                                  {wallet?.icon} {wallet?.name || 'Unknown Wallet'}
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                          <div>
-                            <p className="font-bold text-sm text-foreground">{tx.description}</p>
-                            <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">{new Date(tx.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-6">
-                          <p className={`font-black text-lg ${tx.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
-                            {tx.type === 'income' ? '+' : '-'}{formatIDR(tx.amount)}
-                          </p>
-                          {isEditMode && (
-                            <button 
-                              onClick={() => {
-                                const newTransactions = financeData.transactions.filter(t => t.id !== tx.id);
-                                const newBalance = tx.type === 'income' 
-                                  ? (financeData.balance || 0) - tx.amount 
-                                  : (financeData.balance || 0) + tx.amount;
-                                setFinanceData({ balance: newBalance, transactions: newTransactions });
-                              }}
-                              className="p-2 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <Trash2 size={18} />
+                          <div className="flex items-center justify-between md:justify-end gap-6">
+                            <p className={`font-black text-xl tracking-tight ${tx.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
+                              {tx.type === 'income' ? '+' : '-'}{formatIDR(tx.amount)}
+                            </p>
+                            <button onClick={() => { if(confirm('Hapus transaksi ini?')) deleteTransaction(tx); }} className="p-3 text-red-500/30 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all">
+                              <Trash2 size={16} />
                             </button>
-                          )}
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   ) : (
-                    <div className="text-center py-10 text-gray-500 italic">No transactions recorded yet.</div>
+                    <div className="py-20 text-center text-gray-600 italic">No financial records found in the ledger.</div>
                   )}
                 </div>
               </div>
@@ -1035,12 +1093,12 @@ export default function ProduktifPage() {
                     {calendarDays.map((d, i) => (
                       <div key={i} className="aspect-square relative">
                         {d && (
-                          <button 
-                            onClick={() => { setSelectedDate(d.date); setActiveTab('daily'); }} 
-                            className={`w-full h-full rounded-2xl flex flex-col items-center justify-center text-sm font-black transition-all hover:scale-105 border ${d.date === selectedDate ? 'bg-[var(--accent)] text-black border-[var(--accent)] shadow-lg shadow-[var(--accent)]/20' : d.hasData ? 'bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]/30 hover:bg-[var(--accent)]/20' : 'bg-body/40 border-[var(--border-subtle)] text-gray-500 hover:border-white/20'}`}
-                          >
                             <span className="text-xl mb-1">{d.day}</span>
-                            {d.hasData && <span className="text-[8px] uppercase tracking-widest opacity-80">Log Tersimpan</span>}
+                            <div className="flex flex-col gap-0.5 w-full px-1">
+                              {d.dayIncome > 0 && <div className="h-1 bg-green-500 rounded-full w-full opacity-60" />}
+                              {d.dayExpense > 0 && <div className="h-1 bg-red-500 rounded-full w-full opacity-60" />}
+                            </div>
+                            {d.hasData && d.date !== selectedDate && <div className="mt-1 w-1.5 h-1.5 bg-accent rounded-full shadow-[0_0_8px_var(--accent)]" />}
                           </button>
                         )}
                       </div>
@@ -1135,9 +1193,13 @@ export default function ProduktifPage() {
                     {calendarDays.map((d, i) => (
                       <div key={i} className="aspect-square relative">
                         {d && (
-                          <button onClick={() => { setSelectedDate(d.date); setShowCalendarModal(false); }} className={`w-full h-full rounded-xl md:rounded-2xl flex items-center justify-center text-xs md:text-sm font-black transition-all hover:scale-110 ${d.date === selectedDate ? 'bg-[var(--accent)] text-black shadow-lg shadow-[var(--accent)]/20' : 'bg-white/5 hover:bg-white/10 text-gray-500'}`}>
+                          <button onClick={() => { setSelectedDate(d.date); setShowCalendarModal(false); }} className={`w-full h-full rounded-xl md:rounded-2xl flex flex-col items-center justify-center text-xs md:text-sm font-black transition-all hover:scale-110 ${d.date === selectedDate ? 'bg-[var(--accent)] text-black shadow-lg shadow-[var(--accent)]/20' : 'bg-white/5 hover:bg-white/10 text-gray-500'}`}>
                             {d.day}
-                            {d.hasData && d.date !== selectedDate && <div className="absolute bottom-1.5 md:bottom-2.5 left-1/2 -translate-x-1/2 w-1 h-1 md:w-1.5 md:h-1.5 bg-[var(--accent)] rounded-full shadow-[0_0_8px_var(--accent)]" />}
+                            <div className="flex gap-0.5 mt-1">
+                              {d.dayIncome > 0 && <div className="w-1 h-1 bg-green-500 rounded-full" />}
+                              {d.dayExpense > 0 && <div className="w-1 h-1 bg-red-500 rounded-full" />}
+                            </div>
+                            {d.hasData && d.date !== selectedDate && <div className="absolute top-1.5 right-1.5 w-1 h-1 bg-[var(--accent)] rounded-full" />}
                           </button>
                         )}
                       </div>
