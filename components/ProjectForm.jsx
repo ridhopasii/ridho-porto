@@ -141,7 +141,7 @@ export default function ProjectForm({ initialData = null }) {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full bg-[#111] border border-white/5 rounded-2xl px-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground"
+            className="w-full bg-background border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground"
             placeholder="Contoh: Aplikasi E-Commerce"
           />
         </div>
@@ -156,7 +156,7 @@ export default function ProjectForm({ initialData = null }) {
             value={formData.description}
             onChange={handleChange}
             rows={4}
-            className="w-full bg-[#111] border border-white/5 rounded-2xl px-5 py-4 focus:border-accent focus:outline-none transition-all resize-none text-foreground"
+            className="w-full bg-background border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent focus:outline-none transition-all resize-none text-foreground"
             placeholder="Jelaskan apa yang Anda kerjakan di proyek ini..."
           />
         </div>
@@ -171,7 +171,7 @@ export default function ProjectForm({ initialData = null }) {
               name="projectUrl"
               value={formData.projectUrl}
               onChange={handleChange}
-              className="w-full bg-[#111] border border-white/5 rounded-2xl px-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground"
+              className="w-full bg-background border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground"
               placeholder="https://github.com/..."
             />
           </div>
@@ -184,7 +184,7 @@ export default function ProjectForm({ initialData = null }) {
               name="tags"
               value={formData.tags}
               onChange={handleChange}
-              className="w-full bg-[#111] border border-white/5 rounded-2xl px-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground"
+              className="w-full bg-background border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground"
               placeholder="React, Supabase, Tailwind"
             />
           </div>

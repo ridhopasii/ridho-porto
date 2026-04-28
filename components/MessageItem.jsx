@@ -64,7 +64,7 @@ export default function MessageItem({ msg }) {
         </div>
       </div>
 
-      <div className="p-6 bg-black/40 rounded-2xl mb-6 border border-white/5">
+      <div className="p-6 bg-background/40 rounded-2xl mb-6 border border-[var(--border-subtle)]">
         <p className="text-gray-300 leading-relaxed font-medium">
           <span className="text-accent font-bold mr-2">Subject:</span>{' '}
           {msg.subject || 'Tanpa Subjek'}

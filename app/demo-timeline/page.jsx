@@ -14,7 +14,7 @@ export default function DemoTimeline() {
   const [activeAcc, setActiveAcc] = useState(null);
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-jakarta">
+    <div className="min-h-screen bg-body text-foreground font-jakarta">
       <Navbar />
       
       <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto space-y-32">

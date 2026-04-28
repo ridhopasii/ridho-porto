@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react'
 
 export default function NewBlog() {
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-body">
       <AdminSidebar />
       <main className="flex-1 p-8">
         <div className="max-w-4xl mx-auto">
@@ -17,7 +17,7 @@ export default function NewBlog() {
             Kembali ke Daftar
           </Link>
           <h1 className="text-3xl font-bold text-foreground mb-8">Tulis Artikel Baru</h1>
-          <div className="bg-[#1a1a1a] p-8 rounded-3xl border border-white/5 shadow-2xl">
+          <div className="bg-[#1a1a1a] p-8 rounded-3xl border border-[var(--border-subtle)] shadow-2xl">
             <BlogForm />
           </div>
         </div>

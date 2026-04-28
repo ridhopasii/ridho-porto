@@ -34,7 +34,7 @@ export default function AdminBlogs() {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-body">
       <AdminSidebar />
       <main className="flex-1 p-8">
         <div className="max-w-6xl mx-auto">
@@ -59,7 +59,7 @@ export default function AdminBlogs() {
           ) : (
             <div className="grid gap-4">
               {blogs.length === 0 ? (
-                <div className="bg-[#1a1a1a] p-12 rounded-2xl border border-white/5 text-center">
+                <div className="bg-[#1a1a1a] p-12 rounded-2xl border border-[var(--border-subtle)] text-center">
                   <BookOpen className="w-12 h-12 text-gray-600 mx-auto mb-4" />
                   <p className="text-gray-400">Belum ada artikel. Ayo mulai menulis!</p>
                 </div>
@@ -67,7 +67,7 @@ export default function AdminBlogs() {
                 blogs.map((blog) => (
                   <div 
                     key={blog.id}
-                    className="bg-[#1a1a1a] p-6 rounded-2xl border border-white/5 flex items-center justify-between hover:border-[var(--border-subtle)] transition-all group"
+                    className="bg-[#1a1a1a] p-6 rounded-2xl border border-[var(--border-subtle)] flex items-center justify-between hover:border-[var(--border-subtle)] transition-all group"
                   >
                     <div className="flex items-center gap-6">
                       {blog.cover_image && (

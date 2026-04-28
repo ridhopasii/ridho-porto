@@ -133,7 +133,7 @@ export default async function AdminDashboard() {
     purple: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
     green: 'bg-green-500/10 text-green-500 border-green-500/20',
     yellow: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
-    orange: 'bg-orange-500/10 text-orange-500 border-orange-500/20',
+    orange: 'bg-accent/10 text-accent border-accent/20',
     pink: 'bg-pink-500/10 text-pink-500 border-pink-500/20',
     indigo: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20',
     rose: 'bg-rose-500/10 text-rose-500 border-rose-500/20',
@@ -141,7 +141,7 @@ export default async function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
+    <div className="min-h-screen bg-body text-foreground flex font-jakarta">
       <AdminSidebar />
 
       <main className="flex-1 p-8 overflow-y-auto">
@@ -251,7 +251,7 @@ export default async function AdminDashboard() {
                 recentMessages.map((msg, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5"
+                    className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-[var(--border-subtle)]"
                   >
                     <div className="w-9 h-9 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent text-xs font-black flex-shrink-0">
                       {msg.name?.[0]?.toUpperCase() || 'A'}
@@ -304,7 +304,7 @@ export default async function AdminDashboard() {
                   label: 'Edit Profil',
                   href: '/admin/profile',
                   color:
-                    'bg-orange-500/10 border-orange-500/20 hover:bg-orange-500/20 text-orange-400',
+                    'bg-accent/10 border-accent/20 hover:bg-accent/20 text-accent',
                 },
                 {
                   label: 'Lihat Pesan',

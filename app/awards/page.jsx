@@ -9,7 +9,7 @@ export default async function AwardsPage() {
   const { data: awards } = await supabase.from('Award').select('*').order('date', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-jakarta selection:bg-yellow-500/30">
+    <div className="min-h-screen bg-body text-foreground font-jakarta selection:bg-yellow-500/30">
       <Navbar />
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-yellow-500/10 blur-[120px] rounded-full -z-10" />
@@ -53,7 +53,7 @@ export default async function AwardsPage() {
                 </div>
               )}
 
-              <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-white/5">
+              <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-[var(--border-subtle)]">
                 <Link href={`/awards/${award.slug}`} className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-foreground/30 hover:text-yellow-500 transition-colors">
                   <ImageIcon size={10} /> Details
                 </Link>

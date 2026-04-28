@@ -42,7 +42,7 @@ const SECTIONS = [
     key: 'show_projects',
     label: 'Proyek',
     desc: 'Section showcase proyek & portfolio',
-    icon: <Folders size={20} className="text-orange-500" />,
+    icon: <Folders size={20} className="text-accent" />,
   },
   {
     key: 'show_blog',
@@ -108,7 +108,7 @@ export default function AdminSettings() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
+    <div className="min-h-screen bg-body text-foreground flex font-jakarta">
       <AdminSidebar />
       <main className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-2xl">
@@ -144,7 +144,7 @@ export default function AdminSettings() {
                     className={`flex items-center justify-between p-5 rounded-2xl border transition-all ${
                       isOn
                         ? 'bg-white/5 border-[var(--border-subtle)] hover:border-white/20'
-                        : 'bg-black/40 border-white/5 opacity-60'
+                        : 'bg-body/40 border-[var(--border-subtle)] opacity-60'
                     }`}
                   >
                     <div className="flex items-center gap-4">
@@ -191,7 +191,7 @@ export default function AdminSettings() {
                   setSettings((prev) => ({ ...prev, ai_prompt: e.target.value }))
                 }
                 rows={5}
-                className="w-full rounded-xl bg-black/40 border border-[var(--border-subtle)] p-4 text-sm text-gray-300 focus:outline-none focus:border-accent transition-colors"
+                className="w-full rounded-xl bg-body/40 border border-[var(--border-subtle)] p-4 text-sm text-gray-300 focus:outline-none focus:border-accent transition-colors"
                 placeholder="Tuliskan prompt AI Anda di sini..."
               />
             </div>
@@ -219,7 +219,7 @@ export default function AdminSettings() {
                   onChange={(e) =>
                     setSettings((prev) => ({ ...prev, accent_color: e.target.value }))
                   }
-                  className="w-full h-12 rounded-xl bg-black/40 border border-[var(--border-subtle)] p-1 cursor-pointer"
+                  className="w-full h-12 rounded-xl bg-body/40 border border-[var(--border-subtle)] p-1 cursor-pointer"
                 />
                 <div className="px-4 py-3 bg-white/5 border border-[var(--border-subtle)] rounded-xl font-mono text-xs text-gray-400">
                   {settings.accent_color || '#14b8a6'}

@@ -153,7 +153,7 @@ export default function ProfileForm({ initialData = null }) {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
+                  className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
                 />
               </div>
               <div>
@@ -164,7 +164,7 @@ export default function ProfileForm({ initialData = null }) {
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
-                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
+                  className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
                 />
               </div>
               <div>
@@ -175,7 +175,7 @@ export default function ProfileForm({ initialData = null }) {
                   name="badge"
                   value={formData.badge}
                   onChange={handleChange}
-                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
+                  className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
                 />
               </div>
               <div>
@@ -186,7 +186,7 @@ export default function ProfileForm({ initialData = null }) {
                   name="status_text"
                   value={formData.status_text}
                   onChange={handleChange}
-                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
+                  className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
                 />
               </div>
             </div>
@@ -208,7 +208,7 @@ export default function ProfileForm({ initialData = null }) {
               name="about_tag"
               value={formData.about_tag}
               onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground"
+              className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground"
             />
           </div>
           <div>
@@ -219,7 +219,7 @@ export default function ProfileForm({ initialData = null }) {
               name="about_title"
               value={formData.about_title}
               onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground"
+              className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground"
             />
           </div>
         </div>
@@ -232,7 +232,7 @@ export default function ProfileForm({ initialData = null }) {
             value={formData.bio}
             onChange={handleChange}
             rows={4}
-            className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground resize-none"
+            className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground resize-none"
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -244,7 +244,7 @@ export default function ProfileForm({ initialData = null }) {
               name="location"
               value={formData.location}
               onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
+              className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
             />
           </div>
           <div>
@@ -255,7 +255,7 @@ export default function ProfileForm({ initialData = null }) {
               name="education_level"
               value={formData.education_level}
               onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
+              className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
             />
           </div>
           <div>
@@ -266,7 +266,7 @@ export default function ProfileForm({ initialData = null }) {
               name="availability"
               value={formData.availability}
               onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
+              className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground transition-all"
             />
           </div>
         </div>
@@ -278,7 +278,7 @@ export default function ProfileForm({ initialData = null }) {
             name="quote"
             value={formData.quote}
             onChange={handleChange}
-            className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground"
+            className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground"
           />
         </div>
       </div>
@@ -304,7 +304,7 @@ export default function ProfileForm({ initialData = null }) {
                 name="instagram_url"
                 value={formData.instagram_url}
                 onChange={handleChange}
-                className="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 focus:border-accent focus:outline-none transition-all"
+                className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-6 py-4 focus:border-accent focus:outline-none transition-all"
                 placeholder="https://instagram.com/..."
               />
             </div>
@@ -317,7 +317,7 @@ export default function ProfileForm({ initialData = null }) {
                 name="linkedin_url"
                 value={formData.linkedin_url}
                 onChange={handleChange}
-                className="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 focus:border-accent focus:outline-none transition-all"
+                className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-6 py-4 focus:border-accent focus:outline-none transition-all"
                 placeholder="https://linkedin.com/..."
               />
             </div>
@@ -330,7 +330,7 @@ export default function ProfileForm({ initialData = null }) {
                 name="github_url"
                 value={formData.github_url}
                 onChange={handleChange}
-                className="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 focus:border-accent focus:outline-none transition-all"
+                className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-6 py-4 focus:border-accent focus:outline-none transition-all"
                 placeholder="https://github.com/..."
               />
             </div>
@@ -343,7 +343,7 @@ export default function ProfileForm({ initialData = null }) {
                 name="twitter_url"
                 value={formData.twitter_url}
                 onChange={handleChange}
-                className="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 focus:border-accent focus:outline-none transition-all"
+                className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-6 py-4 focus:border-accent focus:outline-none transition-all"
                 placeholder="https://twitter.com/..."
               />
             </div>
@@ -356,7 +356,7 @@ export default function ProfileForm({ initialData = null }) {
                 name="facebook_url"
                 value={formData.facebook_url}
                 onChange={handleChange}
-                className="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 focus:border-accent focus:outline-none transition-all"
+                className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-6 py-4 focus:border-accent focus:outline-none transition-all"
                 placeholder="https://facebook.com/..."
               />
             </div>
@@ -364,7 +364,7 @@ export default function ProfileForm({ initialData = null }) {
         </div>
 
         <div className="space-y-6">
-          <h4 className="text-[10px] font-black text-gray-600 uppercase border-b border-white/5 pb-2">
+          <h4 className="text-[10px] font-black text-gray-600 uppercase border-b border-[var(--border-subtle)] pb-2">
             Pengaturan Footer
           </h4>
           <div>
@@ -375,7 +375,7 @@ export default function ProfileForm({ initialData = null }) {
               name="footer_title"
               value={formData.footer_title}
               onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground"
+              className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground"
             />
           </div>
           <div>
@@ -387,7 +387,7 @@ export default function ProfileForm({ initialData = null }) {
               value={formData.footer_sub}
               onChange={handleChange}
               rows={3}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground resize-none"
+              className="w-full bg-background/40 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent outline-none text-foreground resize-none"
             />
           </div>
         </div>

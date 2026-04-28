@@ -12,7 +12,7 @@ export default async function TestDBPage() {
   const count = allProfiles?.length || 0
 
   return (
-    <div className="min-h-screen bg-black text-foreground p-10 font-jakarta">
+    <div className="min-h-screen bg-body text-foreground p-10 font-jakarta">
       <h1 className="text-3xl font-bold text-accent mb-6">Supabase Diagnostic</h1>
       
       <div className="grid gap-6">

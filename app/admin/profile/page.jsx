@@ -16,7 +16,7 @@ export default async function AdminProfile() {
     .maybeSingle()
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
+    <div className="min-h-screen bg-body text-foreground flex font-jakarta">
       <AdminSidebar />
 
       {/* Main Content */}

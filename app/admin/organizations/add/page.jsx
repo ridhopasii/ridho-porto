@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function AddOrganization() {
   return (
-    <div className="min-h-screen bg-background text-foreground flex">
+    <div className="min-h-screen bg-body text-foreground flex">
       <AdminSidebar />
       <main className="flex-1 p-8">
         <div className="max-w-4xl">

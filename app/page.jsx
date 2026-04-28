@@ -134,7 +134,7 @@ export default async function Home() {
   const s = data.settings || {};
 
   return (
-    <main className="min-h-screen bg-background selection:bg-accent/30 selection:text-foreground">
+    <main className="min-h-screen bg-body selection:bg-accent/30 selection:text-foreground">
       <ScrollUtils />
       <Navbar />
 
@@ -170,7 +170,7 @@ export default async function Home() {
 
       {/* Footer / Contact Section */}
       {s.show_contact !== false && (
-        <footer id="kontak" className="py-24 px-6 border-t border-[var(--border-subtle)] bg-background">
+        <footer id="kontak" className="py-24 px-6 border-t border-[var(--border-subtle)] bg-body">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
               {/* Left: Info */}

@@ -4,7 +4,7 @@ import { Home, ArrowLeft, Search } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen bg-background text-foreground flex flex-col">
+    <main className="min-h-screen bg-body text-foreground flex flex-col">
       <Navbar />
 
       <div className="flex-1 flex items-center justify-center px-6 py-32">

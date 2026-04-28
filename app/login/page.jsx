@@ -66,8 +66,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="max-w-md w-full space-y-8 p-8 bg-[#1a1a1a] rounded-2xl border border-white/5 shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-body px-4">
+      <div className="max-w-md w-full space-y-8 p-8 bg-[#1a1a1a] rounded-2xl border border-[var(--border-subtle)] shadow-2xl">
         <div className="text-center">
           <div className="mx-auto h-12 w-12 bg-accent/10 rounded-xl flex items-center justify-center mb-4">
             <LogIn className="h-6 w-6 text-accent" />
@@ -124,7 +124,7 @@ export default function LoginPage() {
         <div className="mt-6">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/10"></div>
+              <div className="w-full border-t border-[var(--border-subtle)]"></div>
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 bg-[#1a1a1a] text-gray-400">Atau masuk cepat dengan</span>
@@ -135,7 +135,7 @@ export default function LoginPage() {
             <button
               onClick={handleFaceID}
               disabled={loading}
-              className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-white/10 rounded-xl text-white bg-white/5 hover:bg-white/10 transition-all font-semibold"
+              className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-[var(--border-subtle)] rounded-xl text-white bg-white/5 hover:bg-white/10 transition-all font-semibold"
             >
               <Fingerprint className="w-5 h-5 text-accent" />
               Face ID / Touch ID

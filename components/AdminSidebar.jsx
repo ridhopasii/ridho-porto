@@ -133,7 +133,7 @@ function SidebarContent({ pathname, onClose }) {
       </nav>
 
       {/* Logout */}
-      <div className="mt-auto pt-6 border-t border-white/5">
+      <div className="mt-auto pt-6 border-t border-[var(--border-subtle)]">
         <button
           onClick={handleLogout}
           className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-xl w-full transition-all text-sm font-medium"
@@ -155,7 +155,7 @@ export default function AdminSidebar() {
       {/* Mobile Hamburger Toggle */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-black/80 backdrop-blur-xl border border-[var(--border-subtle)] rounded-2xl text-foreground shadow-xl hover:border-accent/30 transition-all"
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-background/80 backdrop-blur-xl border border-[var(--border-subtle)] rounded-2xl text-foreground shadow-xl hover:border-accent/30 transition-all"
         aria-label="Buka menu"
       >
         <Menu size={20} />
@@ -164,14 +164,14 @@ export default function AdminSidebar() {
       {/* Mobile Backdrop Overlay */}
       {mobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
+          className="lg:hidden fixed inset-0 bg-background/70 backdrop-blur-sm z-40"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       {/* Mobile Slide-in Drawer */}
       <aside
-        className={`lg:hidden fixed top-0 left-0 bottom-0 w-72 bg-[#090909] border-r border-white/5 p-6 z-50 transition-transform duration-300 ease-in-out overflow-y-auto ${
+        className={`lg:hidden fixed top-0 left-0 bottom-0 w-72 bg-[#090909] border-r border-[var(--border-subtle)] p-6 z-50 transition-transform duration-300 ease-in-out overflow-y-auto ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -179,7 +179,7 @@ export default function AdminSidebar() {
       </aside>
 
       {/* Desktop Fixed Sidebar */}
-      <aside className="hidden lg:flex w-64 border-r border-white/5 bg-black/50 backdrop-blur-xl p-6 flex-col sticky top-0 h-screen flex-shrink-0">
+      <aside className="hidden lg:flex w-64 border-r border-[var(--border-subtle)] bg-background/50 backdrop-blur-xl p-6 flex-col sticky top-0 h-screen flex-shrink-0">
         <SidebarContent pathname={pathname} onClose={null} />
       </aside>
     </>

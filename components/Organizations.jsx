@@ -27,7 +27,7 @@ export default function Organizations({ organizations }) {
                 <div className="flex flex-col p-5 h-full bg-background rounded-[1.8rem] relative overflow-hidden">
                   
                   {/* Banner Image / Photo Swiper */}
-                  <div className="w-full h-32 mb-4 rounded-xl overflow-hidden relative z-10 border border-white/5 flex-shrink-0">
+                  <div className="w-full h-32 mb-4 rounded-xl overflow-hidden relative z-10 border border-[var(--border-subtle)] flex-shrink-0">
                      <PhotoSwiper
                         images={
                           Array.isArray(org.images) && org.images.length > 0 ? org.images : []

@@ -12,16 +12,16 @@ export default async function BlogsPage() {
     .order('createdAt', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-jakarta selection:bg-orange-500/30">
+    <div className="min-h-screen bg-body text-foreground font-jakarta selection:bg-accent/30">
       <Navbar />
 
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-[500px] bg-orange-500/10 blur-[120px] rounded-full -z-10" />
+        <div className="absolute top-0 left-0 w-full h-[500px] bg-accent/10 blur-[120px] rounded-full -z-10" />
 
         <div className="max-w-7xl mx-auto">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-orange-500 text-xs font-bold uppercase tracking-widest mb-8 hover:gap-4 transition-all"
+            className="inline-flex items-center gap-2 text-accent text-xs font-bold uppercase tracking-widest mb-8 hover:gap-4 transition-all"
           >
             <ArrowLeft size={16} /> Beranda
           </Link>
@@ -45,7 +45,7 @@ export default async function BlogsPage() {
             <Link
               key={blog.id}
               href={`/blog/${blog.slug || blog.id}`}
-              className="group block p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] hover:border-orange-500/30 transition-all duration-500"
+              className="group block p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] hover:border-accent/30 transition-all duration-500"
             >
               <div className="flex flex-col md:flex-row gap-8 items-start md:items-center">
                 <div className="w-full md:w-48 aspect-square rounded-3xl overflow-hidden flex-shrink-0 border border-[var(--border-subtle)]">
@@ -58,7 +58,7 @@ export default async function BlogsPage() {
 
                 <div className="flex-1">
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="px-3 py-1 bg-orange-500/10 text-orange-500 border border-orange-500/20 rounded-lg text-[10px] font-black uppercase tracking-widest">
+                    <span className="px-3 py-1 bg-accent/10 text-accent border border-accent/20 rounded-lg text-[10px] font-black uppercase tracking-widest">
                       {blog.category || 'Article'}
                     </span>
                     <span className="text-[10px] text-gray-500 flex items-center gap-1 font-bold uppercase tracking-widest">
@@ -71,7 +71,7 @@ export default async function BlogsPage() {
                     </span>
                   </div>
 
-                  <h3 className="text-2xl md:text-3xl font-black font-outfit uppercase mb-4 group-hover:text-orange-400 transition-colors">
+                  <h3 className="text-2xl md:text-3xl font-black font-outfit uppercase mb-4 group-hover:text-accent transition-colors">
                     {blog.title}
                   </h3>
 
@@ -79,7 +79,7 @@ export default async function BlogsPage() {
                     {blog.excerpt || blog.content?.substring(0, 150) + '...'}
                   </p>
 
-                  <div className="flex items-center gap-2 text-orange-500 text-xs font-black uppercase tracking-widest group-hover:gap-4 transition-all">
+                  <div className="flex items-center gap-2 text-accent text-xs font-black uppercase tracking-widest group-hover:gap-4 transition-all">
                     Baca Selengkapnya <ChevronRight size={14} />
                   </div>
                 </div>

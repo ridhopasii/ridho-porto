@@ -9,7 +9,7 @@ export default async function EducationPage() {
   const { data: educations } = await supabase.from('Education').select('*').order('period', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-jakarta selection:bg-purple-500/30">
+    <div className="min-h-screen bg-body text-foreground font-jakarta selection:bg-purple-500/30">
       <Navbar />
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-purple-500/10 blur-[120px] rounded-full -z-10" />
@@ -48,7 +48,7 @@ export default async function EducationPage() {
                 </div>
               )}
 
-              <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-white/5">
+              <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-[var(--border-subtle)]">
                 <Link href={`/education/${edu.slug}`} className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-foreground/30 hover:text-purple-500 transition-colors">
                   <ImageIcon size={10} /> Detail
                 </Link>

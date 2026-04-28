@@ -46,11 +46,11 @@ export default function GalleryList({ galleryItems }) {
             {item.images?.[0] ? (
               <img src={item.images[0]} alt={item.title} className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full bg-black/40 flex items-center justify-center text-gray-700">
+              <div className="w-full h-full bg-background/40 flex items-center justify-center text-gray-700">
                 <ImageIcon size={48} />
               </div>
             )}
-            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-3">
+            <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-3">
               <button
                 onClick={() => toggleVisibility(item)}
                 className={`p-3 rounded-xl hover:scale-110 transition-all ${

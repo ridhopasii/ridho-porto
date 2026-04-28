@@ -347,7 +347,7 @@ export default function ProduktifPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6 font-jakarta">
+      <div className="min-h-screen bg-body flex items-center justify-center p-6 font-jakarta">
         <div className="w-full max-w-md p-10 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] text-center backdrop-blur-xl relative">
           <Zap size={40} className="mx-auto mb-8 text-[var(--accent)] animate-pulse" />
           <h1 className="text-3xl font-black mb-8 italic text-foreground uppercase tracking-tighter">Enter Vault</h1>
@@ -360,7 +360,7 @@ export default function ProduktifPage() {
                 if (e.target.value === 'zxcvbnm') setIsAuthenticated(true); 
               }} 
               placeholder="••••••••" 
-              className="w-full p-5 bg-black/50 border border-[var(--border-subtle)] rounded-2xl text-center text-xl tracking-[0.5em] focus:border-[var(--accent)] outline-none text-foreground transition-all" 
+              className="w-full p-5 bg-body/50 border border-[var(--border-subtle)] rounded-2xl text-center text-xl tracking-[0.5em] focus:border-[var(--accent)] outline-none text-foreground transition-all" 
             />
             <button type="submit" className="hidden">Submit</button>
           </form>
@@ -374,7 +374,7 @@ export default function ProduktifPage() {
 
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-jakarta overflow-x-hidden relative">
+    <div className="min-h-screen bg-body text-foreground font-jakarta overflow-x-hidden relative">
       <Navbar />
       <main className="pt-32 pb-32 px-4 md:px-6 max-w-7xl mx-auto">
         
@@ -428,7 +428,7 @@ export default function ProduktifPage() {
                {isEditMode ? (
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                    <div className="col-span-full mb-4">
-                      <div className="p-4 bg-orange-500/20 text-orange-500 border border-orange-500/30 rounded-2xl flex items-center gap-3">
+                      <div className="p-4 bg-accent/20 text-accent border border-accent/30 rounded-2xl flex items-center gap-3">
                         <AlertCircle size={20} />
                         <span className="text-sm font-bold">You are editing the Master Daily Blocks. Create custom blocks and assign them to specific days of the week!</span>
                       </div>
@@ -451,7 +451,7 @@ export default function ProduktifPage() {
                       {/* Day Assignment Toggles */}
                       <div className="flex gap-1 mb-6">
                         {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((dayChar, dayIdx) => (
-                          <button key={dayIdx} onClick={() => toggleBlockDay(blockIndex, dayIdx)} className={`flex-1 py-2 text-[10px] font-black rounded-lg transition-all ${block.activeDays.includes(dayIdx) ? 'bg-[var(--accent)] text-black' : 'bg-black/50 text-gray-500 border border-[var(--border-subtle)]'}`}>
+                          <button key={dayIdx} onClick={() => toggleBlockDay(blockIndex, dayIdx)} className={`flex-1 py-2 text-[10px] font-black rounded-lg transition-all ${block.activeDays.includes(dayIdx) ? 'bg-[var(--accent)] text-black' : 'bg-body/50 text-gray-500 border border-[var(--border-subtle)]'}`}>
                             {dayChar}
                           </button>
                         ))}
@@ -464,7 +464,7 @@ export default function ProduktifPage() {
                               const newCfg = [...dailyConfig];
                               newCfg[blockIndex].tasks[idx] = e.target.value;
                               setDailyConfig(newCfg);
-                            }} className="flex-1 bg-black/50 border border-white/5 rounded-xl p-3 text-xs outline-none focus:border-[var(--accent)]/50 text-foreground" />
+                            }} className="flex-1 bg-body/50 border border-[var(--border-subtle)] rounded-xl p-3 text-xs outline-none focus:border-[var(--accent)]/50 text-foreground" />
                             <button onClick={() => {
                               const newCfg = [...dailyConfig];
                               newCfg[blockIndex].tasks.splice(idx, 1);
@@ -493,7 +493,7 @@ export default function ProduktifPage() {
                ) : tasks.length > 0 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                   {Object.keys(tasksByBlock).map((blockName, blockNum) => (
-                    <div key={blockNum} className="p-8 bg-white/[0.02] border border-white/5 rounded-[3rem] backdrop-blur-sm relative group overflow-hidden">
+                    <div key={blockNum} className="p-8 bg-white/[0.02] border border-[var(--border-subtle)] rounded-[3rem] backdrop-blur-sm relative group overflow-hidden">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent)]/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                       <h2 className="text-xl font-black font-outfit uppercase tracking-tighter flex items-center gap-4 mb-8 italic">
                         <span className={`w-12 h-12 rounded-2xl flex items-center justify-center border bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]/20`}>0{blockNum + 1}</span>
@@ -503,7 +503,7 @@ export default function ProduktifPage() {
                         {tasksByBlock[blockName].map((task, localIdx) => {
                           const globalIdx = tasks.findIndex(t => t.name === task.name);
                           return (
-                            <button key={globalIdx} onClick={() => toggleTask(globalIdx)} className={`w-full p-5 rounded-3xl border text-left transition-all flex items-center justify-between group ${task.completed ? 'bg-[var(--accent)]/10 border-[var(--accent)]/40 text-[var(--accent)]' : 'bg-black/40 border-white/5 text-gray-400 hover:border-white/20'}`}>
+                            <button key={globalIdx} onClick={() => toggleTask(globalIdx)} className={`w-full p-5 rounded-3xl border text-left transition-all flex items-center justify-between group ${task.completed ? 'bg-[var(--accent)]/10 border-[var(--accent)]/40 text-[var(--accent)]' : 'bg-body/40 border-[var(--border-subtle)] text-gray-400 hover:border-white/20'}`}>
                               <span className="font-bold text-sm tracking-tight">{task.name}</span>
                               <div className={`w-6 h-6 rounded-xl border-2 flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-[var(--accent)] border-[var(--accent)] text-black' : 'border-[var(--border-subtle)] group-hover:border-[var(--accent)]/50'}`}>
                                 {task.completed && <CheckCircle2 size={14} strokeWidth={4} />}
@@ -538,7 +538,7 @@ export default function ProduktifPage() {
                   {['ibadah', 'kesehatan', 'produktivitas', 'pengembangan_diri'].map(category => {
                     const habitsInCategory = habitConfigs.filter(h => h.category === category);
                     return (
-                      <div key={category} className="p-6 bg-black/40 border border-white/5 rounded-[2rem]">
+                      <div key={category} className="p-6 bg-body/40 border border-[var(--border-subtle)] rounded-[2rem]">
                         <h4 className="text-xs font-black uppercase tracking-widest text-[var(--accent)] mb-6">
                           {category.replace('_', ' ')}
                         </h4>
@@ -553,12 +553,12 @@ export default function ProduktifPage() {
                                     const newHabs = [...habitConfigs];
                                     newHabs[globalIdx].icon = e.target.value;
                                     setHabitConfigs(newHabs);
-                                  }} className="w-10 h-10 bg-black/50 rounded-xl text-center" />
+                                  }} className="w-10 h-10 bg-body/50 rounded-xl text-center" />
                                   <input type="text" value={habit.name} onChange={(e) => {
                                     const newHabs = [...habitConfigs];
                                     newHabs[globalIdx].name = e.target.value;
                                     setHabitConfigs(newHabs);
-                                  }} className="flex-1 bg-black/50 p-2 rounded-xl text-xs text-foreground" />
+                                  }} className="flex-1 bg-body/50 p-2 rounded-xl text-xs text-foreground" />
                                   <button onClick={() => {
                                     const newHabs = [...habitConfigs];
                                     newHabs[globalIdx].isActive = !newHabs[globalIdx].isActive;
@@ -629,7 +629,7 @@ export default function ProduktifPage() {
                     
                     if (isEditMode) {
                       return (
-                        <div key={i} className="p-6 bg-black/60 border border-green-500/30 rounded-3xl space-y-4">
+                        <div key={i} className="p-6 bg-body/60 border border-green-500/30 rounded-3xl space-y-4">
                           <h4 className="font-bold text-sm capitalize text-green-500">{s.category.replace('_', ' ')}</h4>
                           <div>
                             <label className="text-[10px] text-gray-500 uppercase font-black">Current Amount</label>
@@ -648,7 +648,7 @@ export default function ProduktifPage() {
                     }
  
                     return (
-                      <div key={i} className="p-6 bg-black/40 border border-green-500/10 rounded-3xl space-y-5">
+                      <div key={i} className="p-6 bg-body/40 border border-green-500/10 rounded-3xl space-y-5">
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 bg-green-500/20 text-green-500 rounded-2xl flex items-center justify-center text-2xl">
                             {s.category === 'diri_sendiri' ? '🕌' : s.category === 'mahram' ? '👤' : s.category === 'keluarga' ? '👨‍👩‍👧‍👦' : '🤲'}
@@ -687,7 +687,7 @@ export default function ProduktifPage() {
                           const globalIdx = yearlyPlans.findIndex(p => p.id === plan.id);
                           if (isEditMode) {
                             return (
-                              <div key={plan.id || i} className="p-4 bg-black/60 rounded-2xl border border-[var(--accent)]/30 space-y-3">
+                              <div key={plan.id || i} className="p-4 bg-body/60 rounded-2xl border border-[var(--accent)]/30 space-y-3">
                                 <input type="text" value={plan.item} onChange={(e) => {
                                   const newP = [...yearlyPlans]; newP[globalIdx].item = e.target.value; setYearlyPlans(newP);
                                 }} className="w-full bg-white/5 p-3 rounded-xl font-bold text-sm text-foreground" />
@@ -706,10 +706,10 @@ export default function ProduktifPage() {
                             );
                           }
                           return (
-                            <div key={plan.id || i} className="p-5 bg-black/40 rounded-2xl border border-white/5 group hover:border-white/20 transition-all">
+                            <div key={plan.id || i} className="p-5 bg-body/40 rounded-2xl border border-[var(--border-subtle)] group hover:border-white/20 transition-all">
                               <p className="font-bold text-gray-200 text-sm leading-relaxed mb-3">{plan.item}</p>
                               {(plan.monthlyHabit || plan.weeklyHabit || plan.dailyHabit) && (
-                                <div className="mt-4 pt-4 border-t border-white/5 grid grid-cols-3 gap-2">
+                                <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] grid grid-cols-3 gap-2">
                                   {plan.dailyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-foreground block font-bold mb-1">Daily</span>{plan.dailyHabit}</div>}
                                   {plan.weeklyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-foreground block font-bold mb-1">Weekly</span>{plan.weeklyHabit}</div>}
                                   {plan.monthlyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-foreground block font-bold mb-1">Monthly</span>{plan.monthlyHabit}</div>}
@@ -740,7 +740,7 @@ export default function ProduktifPage() {
                 <>
                   <div className="flex justify-between items-center bg-white/5 border border-[var(--border-subtle)] p-4 rounded-2xl">
                     <h3 className="text-lg font-black italic flex items-center gap-2"><BarChart3 className="text-accent"/> Analytics & Insights</h3>
-                    <div className="flex bg-black/50 rounded-xl p-1">
+                    <div className="flex bg-body/50 rounded-xl p-1">
                       <button className="px-4 py-1.5 text-xs font-bold bg-accent text-white rounded-lg">7 Hari</button>
                       <button className="px-4 py-1.5 text-xs font-bold text-gray-400 hover:text-white">30 Hari</button>
                       <button className="px-4 py-1.5 text-xs font-bold text-gray-400 hover:text-white">1 Tahun</button>
@@ -760,9 +760,9 @@ export default function ProduktifPage() {
                       <h4 className="text-3xl font-black text-purple-500">{(smartAnalytics.recentAvg > 0 ? 1 : 0)}</h4>
                       <p className="text-xs font-bold text-purple-400/70 uppercase tracking-widest mt-1">Streak Terbaik</p>
                     </div>
-                    <div className="p-6 bg-orange-500/10 border border-orange-500/20 rounded-2xl flex flex-col justify-center">
-                      <h4 className="text-3xl font-black text-orange-500">{historyData.length}</h4>
-                      <p className="text-xs font-bold text-orange-400/70 uppercase tracking-widest mt-1">Total Hari</p>
+                    <div className="p-6 bg-accent/10 border border-accent/20 rounded-2xl flex flex-col justify-center">
+                      <h4 className="text-3xl font-black text-accent">{historyData.length}</h4>
+                      <p className="text-xs font-bold text-accent/70 uppercase tracking-widest mt-1">Total Hari</p>
                     </div>
                   </div>
 
@@ -783,7 +783,7 @@ export default function ProduktifPage() {
                             );
                           })}
                         </div>
-                        <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-white/5">
+                        <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-[var(--border-subtle)]">
                           <div className="flex items-center gap-2"><div className="w-3 h-3 bg-accent rounded-full" /><span className="text-xs text-gray-400">Completion Rate</span></div>
                           <div className="flex items-center gap-2"><div className="w-3 h-3 bg-green-500 rounded-full" /><span className="text-xs text-gray-400">Target (80%)</span></div>
                         </div>
@@ -796,11 +796,11 @@ export default function ProduktifPage() {
                       <div className="p-5 bg-white/5 border border-[var(--border-subtle)] rounded-2xl space-y-4">
                         <div>
                           <div className="flex justify-between text-xs font-bold text-gray-400 mb-2"><span>Konsistensi</span><span className="text-foreground">{smartAnalytics.recentAvg}%</span></div>
-                          <div className="h-2 bg-black/50 rounded-full overflow-hidden"><div className="h-full bg-accent" style={{ width: `${smartAnalytics.recentAvg}%` }} /></div>
+                          <div className="h-2 bg-body/50 rounded-full overflow-hidden"><div className="h-full bg-accent" style={{ width: `${smartAnalytics.recentAvg}%` }} /></div>
                         </div>
                         <div>
                           <div className="flex justify-between text-xs font-bold text-gray-400 mb-2"><span>Produktivitas</span><span className="text-foreground">{Math.min(smartAnalytics.totalCompletedTasks * 2, 100)}%</span></div>
-                          <div className="h-2 bg-black/50 rounded-full overflow-hidden"><div className="h-full bg-accent" style={{ width: `${Math.min(smartAnalytics.totalCompletedTasks * 2, 100)}%` }} /></div>
+                          <div className="h-2 bg-body/50 rounded-full overflow-hidden"><div className="h-full bg-accent" style={{ width: `${Math.min(smartAnalytics.totalCompletedTasks * 2, 100)}%` }} /></div>
                         </div>
                       </div>
 
@@ -851,8 +851,8 @@ export default function ProduktifPage() {
                 <div className="p-8 pb-0 flex justify-between items-center">
                   <h3 className="text-2xl font-black italic tracking-tighter uppercase font-outfit text-[var(--accent)]">{navDate.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}</h3>
                   <div className="flex gap-3">
-                    <button onClick={() => setNavDate(new Date(navDate.getFullYear(), navDate.getMonth() - 1, 1))} className="p-3 bg-black/50 border border-white/10 rounded-2xl hover:bg-white/10"><ChevronLeft size={20} /></button>
-                    <button onClick={() => setNavDate(new Date(navDate.getFullYear(), navDate.getMonth() + 1, 1))} className="p-3 bg-black/50 border border-white/10 rounded-2xl hover:bg-white/10"><ChevronRight size={20} /></button>
+                    <button onClick={() => setNavDate(new Date(navDate.getFullYear(), navDate.getMonth() - 1, 1))} className="p-3 bg-body/50 border border-[var(--border-subtle)] rounded-2xl hover:bg-white/10"><ChevronLeft size={20} /></button>
+                    <button onClick={() => setNavDate(new Date(navDate.getFullYear(), navDate.getMonth() + 1, 1))} className="p-3 bg-body/50 border border-[var(--border-subtle)] rounded-2xl hover:bg-white/10"><ChevronRight size={20} /></button>
                   </div>
                 </div>
                 <div className="p-8 pt-6">
@@ -865,7 +865,7 @@ export default function ProduktifPage() {
                         {d && (
                           <button 
                             onClick={() => { setSelectedDate(d.date); setActiveTab('daily'); }} 
-                            className={`w-full h-full rounded-2xl flex flex-col items-center justify-center text-sm font-black transition-all hover:scale-105 border ${d.date === selectedDate ? 'bg-[var(--accent)] text-black border-[var(--accent)] shadow-lg shadow-[var(--accent)]/20' : d.hasData ? 'bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]/30 hover:bg-[var(--accent)]/20' : 'bg-black/40 border-white/5 text-gray-500 hover:border-white/20'}`}
+                            className={`w-full h-full rounded-2xl flex flex-col items-center justify-center text-sm font-black transition-all hover:scale-105 border ${d.date === selectedDate ? 'bg-[var(--accent)] text-black border-[var(--accent)] shadow-lg shadow-[var(--accent)]/20' : d.hasData ? 'bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]/30 hover:bg-[var(--accent)]/20' : 'bg-body/40 border-[var(--border-subtle)] text-gray-500 hover:border-white/20'}`}
                           >
                             <span className="text-xl mb-1">{d.day}</span>
                             {d.hasData && <span className="text-[8px] uppercase tracking-widest opacity-80">Log Tersimpan</span>}
@@ -946,8 +946,8 @@ export default function ProduktifPage() {
         <AnimatePresence>
           {showCalendarModal && (
             <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 md:p-6">
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowCalendarModal(false)} className="absolute inset-0 bg-black/95 backdrop-blur-2xl" />
-              <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="w-full max-w-xl bg-background border border-[var(--border-subtle)] rounded-[3rem] md:rounded-[4rem] overflow-hidden relative shadow-2xl">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowCalendarModal(false)} className="absolute inset-0 bg-body/95 backdrop-blur-2xl" />
+              <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="w-full max-w-xl bg-body border border-[var(--border-subtle)] rounded-[3rem] md:rounded-[4rem] overflow-hidden relative shadow-2xl">
                 <div className="p-8 md:p-12 pb-0 flex justify-between items-center">
                   <h3 className="text-2xl md:text-4xl font-black italic tracking-tighter uppercase font-outfit">{navDate.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}</h3>
                   <div className="flex gap-2 md:gap-3">

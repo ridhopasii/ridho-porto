@@ -47,7 +47,7 @@ export default function ProjectFilter({ initialProjects }) {
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-60" />
-                <div className="absolute top-6 left-6 px-4 py-2 bg-black/50 backdrop-blur-md border border-[var(--border-subtle)] rounded-full text-[10px] font-black uppercase tracking-widest text-foreground">
+                <div className="absolute top-6 left-6 px-4 py-2 bg-background/50 backdrop-blur-md border border-[var(--border-subtle)] rounded-full text-[10px] font-black uppercase tracking-widest text-foreground">
                   {project.category || 'Development'}
                 </div>
               </div>

@@ -64,7 +64,7 @@ export default function MultiPhotoUpload({
 
       {/* Main Preview */}
       {safeImages.length > 0 && (
-        <div className="relative rounded-2xl overflow-hidden bg-[#111] border border-[var(--border-subtle)]" style={{ aspectRatio: '4/3' }}>
+        <div className="relative rounded-2xl overflow-hidden bg-background border border-[var(--border-subtle)]" style={{ aspectRatio: '4/3' }}>
           <img
             src={safeImages[previewIndex]}
             alt={`Preview ${previewIndex + 1}`}
@@ -77,7 +77,7 @@ export default function MultiPhotoUpload({
                 <Star size={10} /> Utama
               </span>
             )}
-            <span className="px-3 py-1 bg-black/60 backdrop-blur-sm text-foreground text-[10px] font-bold rounded-full">
+            <span className="px-3 py-1 bg-background/60 backdrop-blur-sm text-foreground text-[10px] font-bold rounded-full">
               {previewIndex + 1} / {safeImages.length}
             </span>
           </div>
@@ -87,12 +87,12 @@ export default function MultiPhotoUpload({
               <button
                 type="button"
                 onClick={() => setPreviewIndex((i) => (i - 1 + safeImages.length) % safeImages.length)}
-                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 backdrop-blur-sm rounded-full text-foreground flex items-center justify-center hover:bg-accent transition-all"
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-background/60 backdrop-blur-sm rounded-full text-foreground flex items-center justify-center hover:bg-accent transition-all"
               >‹</button>
               <button
                 type="button"
                 onClick={() => setPreviewIndex((i) => (i + 1) % safeImages.length)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 backdrop-blur-sm rounded-full text-foreground flex items-center justify-center hover:bg-accent transition-all"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-background/60 backdrop-blur-sm rounded-full text-foreground flex items-center justify-center hover:bg-accent transition-all"
               >›</button>
             </>
           )}

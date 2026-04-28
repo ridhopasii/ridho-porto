@@ -100,12 +100,12 @@ export default function AdminGalleryPage() {
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
+    <div className="min-h-screen bg-body text-foreground flex font-jakarta">
       <AdminSidebar />
 
       <main className="flex-1 overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 z-20 bg-background/90 backdrop-blur-xl border-b border-white/5 px-8 py-5">
+        <div className="sticky top-0 z-20 bg-body/90 backdrop-blur-xl border-b border-[var(--border-subtle)] px-8 py-5">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div>
@@ -217,7 +217,7 @@ export default function AdminGalleryPage() {
                 className="bg-white/5 border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-[10px] font-bold text-gray-300 focus:outline-none focus:border-purple-500 transition-all appearance-none cursor-pointer"
               >
                 {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value} className="bg-background">
+                  <option key={opt.value} value={opt.value} className="bg-body">
                     {opt.label}
                   </option>
                 ))}
@@ -266,12 +266,12 @@ export default function AdminGalleryPage() {
                       {imgs[0] ? (
                         <img src={imgs[0]} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" />
                       ) : (
-                        <div className="w-full h-full bg-black/30 flex items-center justify-center text-gray-700">
+                        <div className="w-full h-full bg-body/30 flex items-center justify-center text-gray-700">
                           <ImageIcon size={36} />
                         </div>
                       )}
                       {/* Action overlay */}
-                      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-3">
+                      <div className="absolute inset-0 bg-body/70 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-3">
                         <button
                           onClick={() => { setEditItem(item); setShowAddForm(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                           className="p-3 bg-white text-black rounded-xl hover:scale-110 transition-all"
@@ -296,7 +296,7 @@ export default function AdminGalleryPage() {
                       </div>
                       {/* Photo count badge */}
                       <div className="absolute top-3 right-3">
-                        <span className="px-2.5 py-1 bg-black/60 backdrop-blur-sm rounded-full text-[9px] font-black text-foreground">
+                        <span className="px-2.5 py-1 bg-body/60 backdrop-blur-sm rounded-full text-[9px] font-black text-foreground">
                           {imgs.length} foto
                         </span>
                       </div>

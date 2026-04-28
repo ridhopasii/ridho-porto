@@ -81,7 +81,7 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="id" className={`${outfit.variable} ${jakarta.variable} dark`} suppressHydrationWarning>
-      <body className="bg-background text-foreground">
+      <body className="bg-body text-foreground">
         <LanguageProvider>
           <AccentProvider color={accentColor}>
             <ErrorBoundary>

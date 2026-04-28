@@ -64,7 +64,7 @@ export default function ExperienceList({ initialExperiences }) {
                 className={`p-2.5 rounded-xl border transition-all ${
                   exp.showOnHome !== false
                     ? 'text-accent bg-accent/10 border-accent/20'
-                    : 'text-gray-500 bg-white/5 border-white/5'
+                    : 'text-gray-500 bg-white/5 border-[var(--border-subtle)]'
                 }`}
                 title={exp.showOnHome !== false ? 'Tampil di Home' : 'Disembunyikan'}
               >

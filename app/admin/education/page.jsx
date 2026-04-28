@@ -13,7 +13,7 @@ export default async function AdminEducation() {
     .order('year', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
+    <div className="min-h-screen bg-body text-foreground flex font-jakarta">
       <AdminSidebar />
 
       <main className="flex-1 p-8 overflow-y-auto">

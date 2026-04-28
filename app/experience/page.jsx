@@ -19,7 +19,7 @@ export default async function ExperiencePage() {
     .order('period', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-jakarta selection:bg-accent/30">
+    <div className="min-h-screen bg-body text-foreground font-jakarta selection:bg-accent/30">
       <Navbar />
 
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
@@ -60,7 +60,7 @@ export default async function ExperiencePage() {
             <div className="space-y-12 relative before:absolute before:left-[27px] before:top-2 before:bottom-2 before:w-[2px] before:bg-white/5">
               {experiences?.map((exp) => (
                 <div key={exp.id} className="relative pl-20 group">
-                  <div className="absolute left-0 top-0 w-14 h-14 bg-background border border-[var(--border-subtle)] rounded-2xl flex items-center justify-center z-10 group-hover:border-accent/50 transition-all">
+                  <div className="absolute left-0 top-0 w-14 h-14 bg-body border border-[var(--border-subtle)] rounded-2xl flex items-center justify-center z-10 group-hover:border-accent/50 transition-all">
                     <div className="w-2 h-2 bg-accent rounded-full group-hover:scale-150 transition-all" />
                   </div>
 
@@ -96,7 +96,7 @@ export default async function ExperiencePage() {
             <div className="space-y-12 relative before:absolute before:left-[27px] before:top-2 before:bottom-2 before:w-[2px] before:bg-white/5">
               {educations?.map((edu) => (
                 <div key={edu.id} className="relative pl-20 group">
-                  <div className="absolute left-0 top-0 w-14 h-14 bg-background border border-[var(--border-subtle)] rounded-2xl flex items-center justify-center z-10 group-hover:border-indigo-500/50 transition-all">
+                  <div className="absolute left-0 top-0 w-14 h-14 bg-body border border-[var(--border-subtle)] rounded-2xl flex items-center justify-center z-10 group-hover:border-indigo-500/50 transition-all">
                     <div className="w-2 h-2 bg-indigo-500 rounded-full group-hover:scale-150 transition-all" />
                   </div>
 

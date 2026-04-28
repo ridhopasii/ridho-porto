@@ -12,7 +12,8 @@
 @layer base {
   :root {
     --background: #ffffff;
-    --body-bg: #fafafa; /* Soft Warm/Neutral White */
+    --background-rgb: 255, 255, 255;
+    --body-bg: #fafafa; 
     --foreground: #18181b; 
     --muted: #f4f4f5; 
     --muted-foreground: #71717a; 
@@ -20,21 +21,22 @@
     --radius-xl: 28px;
     --radius-2xl: 40px;
     --border-subtle: rgba(24, 24, 27, 0.05);
-    --accent: #f97316; /* Vibrant Orange for Light Mode */
-    --accent-secondary: #fbbf24; /* Amber 400 for warm gradient */
+    --accent: #f97316; 
+    --accent-secondary: #fbbf24; 
     --accent-rgb: 249, 115, 22;
     --shadow-premium: 0 25px 60px -15px rgba(0, 0, 0, 0.05);
   }
 
   .dark {
     --background: #09090b; 
+    --background-rgb: 9, 9, 11;
     --body-bg: #020617; 
     --foreground: #fafafa; 
     --muted: #18181b; 
     --muted-foreground: #a1a1aa; 
     --border-subtle: rgba(250, 250, 250, 0.05);
-    --accent: #3b82f6; /* Keep Blue for Dark Mode */
-    --accent-secondary: #60a5fa; /* Sky 400 */
+    --accent: #3b82f6; 
+    --accent-secondary: #60a5fa; 
     --accent-rgb: 59, 130, 246;
     --shadow-premium: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
   }
@@ -78,7 +80,7 @@ body {
 
 /* Glass Effect */
 .glass {
-  background-color: rgba(var(--background), 0.7);
+  background-color: rgba(var(--background-rgb), 0.7);
   backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--border-subtle);
 }

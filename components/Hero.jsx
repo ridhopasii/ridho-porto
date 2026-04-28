@@ -73,7 +73,7 @@ export default function Hero({ profile }) {
                 })()}
               </div>
             </div>
-            <div className="absolute -bottom-2 -right-2 bg-accent-gradient text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl shadow-accent/30 border border-white/10">
+            <div className="absolute -bottom-2 -right-2 bg-accent-gradient text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl shadow-accent/30 border border-[var(--border-subtle)]">
               {profile?.badge || 'Duta Pemuda Global'}
             </div>
           </div>

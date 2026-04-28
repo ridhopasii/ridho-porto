@@ -38,7 +38,7 @@ export default function PhotoSwiper({
 
   return (
     <div
-      className={`relative group overflow-hidden ${aspectRatio} ${rounded} bg-[#111] select-none`}
+      className={`relative group overflow-hidden ${aspectRatio} ${rounded} bg-background select-none`}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -67,13 +67,13 @@ export default function PhotoSwiper({
         <>
           <button
             onClick={prev}
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 backdrop-blur-md text-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-accent hover:scale-110 shadow-lg"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-background/50 backdrop-blur-md text-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-accent hover:scale-110 shadow-lg"
           >
             <ChevronLeft size={18} />
           </button>
           <button
             onClick={next}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 backdrop-blur-md text-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-accent hover:scale-110 shadow-lg"
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-background/50 backdrop-blur-md text-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-accent hover:scale-110 shadow-lg"
           >
             <ChevronRight size={18} />
           </button>
