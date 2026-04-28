@@ -17,85 +17,65 @@ export default function Organizations({ organizations }) {
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {Array.isArray(organizations) &&
             organizations.map((org, idx) => (
               <div
                 key={org.id}
-                className="group p-1 bg-white/5 rounded-[3rem] border border-white/10 hover:border-teal-500/30 transition-all duration-500"
+                className="group p-1 bg-white/5 rounded-[2rem] border border-white/10 hover:border-teal-500/30 transition-all duration-500 flex flex-col h-full"
               >
-                <div className="flex flex-col md:flex-row gap-8 p-8 h-full bg-[#0d0d0d] rounded-[2.8rem]">
-                  {/* Org Logo & Photos */}
-                  <div className="w-full md:w-48 flex-shrink-0 space-y-4">
-                    {org.logoUrl && (
-                      <div className="w-20 h-20 bg-white/5 rounded-2xl overflow-hidden p-3 border border-white/10 group-hover:border-teal-500/30 transition-all">
-                        <img
-                          src={org.logoUrl}
-                          alt={org.name}
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
-                    )}
-                    <div className="w-full h-40">
-                      <PhotoSwiper
+                <div className="flex flex-col p-5 h-full bg-[#0d0d0d] rounded-[1.8rem] relative overflow-hidden">
+                  
+                  {/* Banner Image / Photo Swiper */}
+                  <div className="w-full h-32 mb-4 rounded-xl overflow-hidden relative z-10 border border-white/5">
+                     <PhotoSwiper
                         images={
                           Array.isArray(org.images) && org.images.length > 0 ? org.images : []
                         }
-                        aspectRatio="aspect-square"
-                        rounded="rounded-[2rem]"
+                        aspectRatio="aspect-[16/9]"
+                        rounded="rounded-none"
                       />
-                    </div>
+                      {/* Logo Overlaid on Banner */}
+                      {org.logoUrl && (
+                        <div className="absolute -bottom-4 left-4 w-12 h-12 bg-[#0d0d0d] rounded-xl overflow-hidden p-1.5 border border-white/10 shadow-lg z-20">
+                          <img
+                            src={org.logoUrl}
+                            alt={org.name}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      )}
                   </div>
 
-                  <div className="flex-1 space-y-4">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <Link href={`/organizations/${org.slug}`}>
-                          <h4 className="text-2xl font-black text-white group-hover:text-teal-500 transition-colors uppercase tracking-tight">
-                            {org.name || 'Organization Name'}
-                          </h4>
-                        </Link>
-                        <p className="text-teal-500 font-bold uppercase text-xs tracking-widest mt-1">
-                          {org.role || 'Role'}
-                        </p>
-                      </div>
-                    </div>
+                  <div className="flex-1 flex flex-col pt-2">
+                    <Link href={`/organizations/${org.slug}`}>
+                      <h4 className="text-lg font-black text-white group-hover:text-teal-500 transition-colors uppercase tracking-tight leading-tight mb-1">
+                        {org.name || 'Organization Name'}
+                      </h4>
+                    </Link>
+                    <p className="text-teal-500 font-bold uppercase text-[10px] tracking-widest mb-4">
+                      {org.role || 'Role'}
+                    </p>
 
-                    <div className="flex flex-wrap gap-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 rounded-full border border-white/5">
-                        <Calendar size={12} className="text-teal-500" />{' '}
-                        {org.period || 'Period N/A'}
-                      </div>
-                      {org.website && (
-                        <a
-                          href={org.website}
-                          target="_blank"
-                          className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-500/5 text-teal-500 rounded-full border border-teal-500/10 hover:bg-teal-500/10 transition-all"
-                        >
-                          <Globe size={12} /> Website
-                        </a>
-                      )}
-                      {org.proofUrl && (
-                        <a
-                          href={org.proofUrl}
-                          target="_blank"
-                          className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 text-gray-400 rounded-full border border-white/10 hover:bg-white/10 transition-all"
-                        >
-                          <Users size={12} /> Bukti/Dokumentasi
-                        </a>
-                      )}
-                    </div>
-
-                    <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">
+                    <p className="text-gray-400 text-xs leading-relaxed line-clamp-3 mb-4 flex-1 group-hover:line-clamp-none transition-all">
                       {org.description || ''}
                     </p>
 
-                    <Link
-                      href={`/organizations/${org.slug}`}
-                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-teal-500 transition-colors pt-2"
-                    >
-                      <ArrowRight size={12} /> View Full Report
-                    </Link>
+                    <div className="flex flex-wrap gap-2 text-[8px] font-bold text-gray-500 uppercase tracking-widest mt-auto pt-4 border-t border-white/5">
+                      <div className="flex items-center gap-1">
+                        <Calendar size={10} className="text-teal-500" /> {org.period || 'N/A'}
+                      </div>
+                      {org.website && (
+                        <a href={org.website} target="_blank" className="flex items-center gap-1 hover:text-teal-400">
+                          <Globe size={10} /> Web
+                        </a>
+                      )}
+                      {org.proofUrl && (
+                        <a href={org.proofUrl} target="_blank" className="flex items-center gap-1 hover:text-white">
+                          <Users size={10} /> Bukti
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

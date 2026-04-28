@@ -29,7 +29,8 @@ async function getData() {
     .from('Project')
     .select('*')
     .not('showOnHome', 'eq', false)
-    .order('createdAt', { ascending: false });
+    .order('createdAt', { ascending: false })
+    .limit(3);
 
   const { data: skills } = await supabase.from('Skill').select('*').not('showOnHome', 'eq', false);
 
@@ -49,13 +50,15 @@ async function getData() {
     .from('Award')
     .select('*')
     .not('showOnHome', 'eq', false)
-    .order('date', { ascending: false });
+    .order('date', { ascending: false })
+    .limit(3);
 
   const { data: publications } = await supabase
     .from('Publication')
     .select('*')
     .not('showOnHome', 'eq', false)
-    .order('date', { ascending: false });
+    .order('date', { ascending: false })
+    .limit(3);
 
   const { data: blogs } = await supabase
     .from('Article')
