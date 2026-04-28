@@ -153,13 +153,13 @@ export default function ProduktifPage() {
     try {
       const taskList = JSON.parse(taskListJson);
       if(!Array.isArray(taskList) || taskList.length === 0) return 0;
-      return Math.round((taskList.filter(t => t.completed).length / taskList.length) * 100);
+      return Math.round((taskList.filter(t => t && t.completed).length / taskList.length) * 100);
     } catch { return 0; }
   };
 
   const calculateStats = (currentTasks, pomodoro) => {
     const safeTasks = Array.isArray(currentTasks) ? currentTasks : [];
-    const completed = safeTasks.filter(t => t.completed).length;
+    const completed = safeTasks.filter(t => t && t.completed).length;
     const total = safeTasks.length;
     setStats({ 
       completion: total > 0 ? Math.round((completed / total) * 100) : 0, 
@@ -172,11 +172,13 @@ export default function ProduktifPage() {
   const toggleTask = async (index) => {
     if (isEditMode) return;
     const newTasks = [...tasks];
-    newTasks[index].completed = !newTasks[index].completed;
-    setTasks(newTasks);
-    calculateStats(newTasks, stats.pomodoro);
-    const supabase = createClient();
-    await supabase.from('Productivity').update({ tasks: JSON.stringify(newTasks) }).eq('date', selectedDate);
+    if(newTasks[index]) {
+       newTasks[index].completed = !newTasks[index].completed;
+       setTasks(newTasks);
+       calculateStats(newTasks, stats.pomodoro);
+       const supabase = createClient();
+       await supabase.from('Productivity').update({ tasks: JSON.stringify(newTasks) }).eq('date', selectedDate);
+    }
   };
 
   const toggleMonthlyHabit = async (habitId) => {
@@ -202,15 +204,17 @@ export default function ProduktifPage() {
       if (selectedDate === getLocalDateString()) {
         const targetDateObj = new Date(selectedDate);
         const dayOfWeek = targetDateObj.getDay();
-        const activeBlocks = dailyConfig.filter(b => b.activeDays.includes(dayOfWeek));
+        const activeBlocks = dailyConfig.filter(b => b && b.activeDays && b.activeDays.includes(dayOfWeek));
         const allTasks = [];
         activeBlocks.forEach((block) => {
-          block.tasks.forEach(tName => {
-            allTasks.push({ name: tName, completed: false, blockId: block.id, blockName: block.name });
-          });
+          if (block && Array.isArray(block.tasks)) {
+             block.tasks.forEach(tName => {
+               allTasks.push({ name: tName, completed: false, blockId: block.id, blockName: block.name });
+             });
+          }
         });
         const newTasksWithState = allTasks.map(nt => {
-          const existing = tasks.find(ot => ot.name === nt.name);
+          const existing = tasks.find(ot => ot && ot.name === nt.name);
           if (existing) nt.completed = existing.completed;
           return nt;
         });
@@ -219,17 +223,20 @@ export default function ProduktifPage() {
 
       // 2. Save Yearly Plans
       yearlyPlans.forEach(plan => {
+        if (!plan) return;
         if (plan.id) promises.push(supabase.from('YearlyPlan').update(plan).eq('id', plan.id));
         else promises.push(supabase.from('YearlyPlan').insert([plan]));
       });
 
       // 3. Save Savings
       savings.forEach(s => {
+        if (!s) return;
         if(s.id) promises.push(supabase.from('TabunganUmroh').update({ amount: s.amount, target: s.target }).eq('id', s.id));
       });
 
       // 4. Save Habit Configs
       habitConfigs.forEach(h => {
+        if (!h) return;
         if (h.id) promises.push(supabase.from('HabitConfig').update(h).eq('id', h.id));
         else promises.push(supabase.from('HabitConfig').insert([h]));
       });
@@ -251,8 +258,8 @@ export default function ProduktifPage() {
     if (historyData.length === 0) return null;
     const recentWeek = historyData.slice(0, 7);
     const previousWeek = historyData.slice(7, 14);
-    const recentAvg = recentWeek.length > 0 ? recentWeek.reduce((sum, item) => sum + calculateCompletionRate(item.tasks), 0) / recentWeek.length : 0;
-    const previousAvg = previousWeek.length > 0 ? previousWeek.reduce((sum, item) => sum + calculateCompletionRate(item.tasks), 0) / previousWeek.length : 0;
+    const recentAvg = recentWeek.length > 0 ? recentWeek.reduce((sum, item) => sum + calculateCompletionRate(item?.tasks), 0) / recentWeek.length : 0;
+    const previousAvg = previousWeek.length > 0 ? previousWeek.reduce((sum, item) => sum + calculateCompletionRate(item?.tasks), 0) / previousWeek.length : 0;
     
     let trendLabel = 'Stabil';
     let TrendIcon = Minus;
@@ -261,6 +268,7 @@ export default function ProduktifPage() {
     
     const dayStats = {};
     historyData.forEach(item => {
+      if (!item || !item.date) return;
       const day = new Date(item.date).getDay();
       if (!dayStats[day]) dayStats[day] = [];
       dayStats[day].push(calculateCompletionRate(item.tasks));
@@ -273,7 +281,7 @@ export default function ProduktifPage() {
     });
     
     const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-    const perfectDays = historyData.filter(item => calculateCompletionRate(item.tasks) === 100).length;
+    const perfectDays = historyData.filter(item => calculateCompletionRate(item?.tasks) === 100).length;
     
     return { trendLabel, TrendIcon, bestDay: dayNames[bestDayIdx] || '-', perfectDays, recentAvg: Math.round(recentAvg) };
   }, [historyData]);
@@ -287,7 +295,7 @@ export default function ProduktifPage() {
     for (let i = 0; i < firstDay; i++) days.push(null);
     for (let i = 1; i <= daysInMonth; i++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-      const hasData = historyData.some(h => h.date === dateStr);
+      const hasData = historyData.some(h => h && h.date === dateStr);
       days.push({ day: i, date: dateStr, hasData });
     }
     return days;
@@ -295,6 +303,7 @@ export default function ProduktifPage() {
 
   const toggleBlockDay = (blockIndex, dayNumber) => {
     const newCfg = [...dailyConfig];
+    if (!newCfg[blockIndex] || !newCfg[blockIndex].activeDays) return;
     const days = newCfg[blockIndex].activeDays;
     if (days.includes(dayNumber)) {
       newCfg[blockIndex].activeDays = days.filter(d => d !== dayNumber);
@@ -332,6 +341,7 @@ export default function ProduktifPage() {
     const grouped = {};
     if (!Array.isArray(tasks)) return grouped;
     tasks.forEach(t => {
+      if (!t) return;
       const blockName = t.blockName || 'Unassigned';
       if(!grouped[blockName]) grouped[blockName] = [];
       grouped[blockName].push(t);
@@ -728,19 +738,29 @@ export default function ProduktifPage() {
               ) : (
                 Object.entries(
                   historyData.reduce((acc, item) => {
-                    const key = new Date(item.date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
-                    if (!acc[key]) acc[key] = []; acc[key].push(item); return acc;
+                    if (!item || !item.date) return acc;
+                    try {
+                      const d = new Date(item.date);
+                      if (isNaN(d.getTime())) return acc;
+                      const key = d.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+                      if (!acc[key]) acc[key] = []; acc[key].push(item); 
+                    } catch (e) {}
+                    return acc;
                   }, {})
                 ).map(([monthKey, items]) => (
                   <div key={monthKey} className="space-y-8">
                     <div className="flex items-center gap-6"><h3 className="text-2xl font-black italic tracking-tighter text-[var(--accent)] uppercase">{monthKey}</h3><div className="h-px bg-white/10 flex-1" /></div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {items.map((day, i) => (
+                      {items.map((day, i) => {
+                        if (!day || !day.date) return null;
+                        const d = new Date(day.date);
+                        if (isNaN(d.getTime())) return null;
+                        return (
                         <div key={i} onClick={() => { setSelectedDate(day.date); setActiveTab('daily'); }} className="p-6 md:p-8 bg-white/5 border border-white/10 rounded-[2.5rem] flex items-center justify-between group hover:bg-white/10 hover:border-[var(--accent)]/30 cursor-pointer transition-all">
                           <div className="flex items-center gap-6 md:gap-8">
                             <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 border border-white/10 rounded-2xl flex flex-col items-center justify-center shadow-lg">
-                              <span className="text-lg md:text-xl font-black leading-none">{new Date(day.date).getDate()}</span>
-                              <span className="text-[8px] font-black uppercase text-gray-500">{new Date(day.date).toLocaleDateString('id-ID', { weekday: 'short' })}</span>
+                              <span className="text-lg md:text-xl font-black leading-none">{d.getDate()}</span>
+                              <span className="text-[8px] font-black uppercase text-gray-500">{d.toLocaleDateString('id-ID', { weekday: 'short' })}</span>
                             </div>
                             <p className="text-xs text-gray-500 font-medium italic hidden md:block">"{day.goals?.substring(0, 35) || 'No specific goals recorded'}..."</p>
                           </div>
@@ -752,7 +772,8 @@ export default function ProduktifPage() {
                             <ChevronRight size={18} className="text-gray-700 group-hover:translate-x-1 transition-transform" />
                           </div>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 ))
