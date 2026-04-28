@@ -12,7 +12,7 @@ export default async function ProjectsPage() {
     .order('createdAt', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-jakarta selection:bg-[var(--accent)]/30">
+    <div className="min-h-screen bg-background text-foreground font-jakarta selection:bg-[var(--accent)]/30">
       <Navbar />
 
       {/* Hero Section Page */}

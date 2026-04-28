@@ -9,7 +9,7 @@ export default async function EducationPage() {
   const { data: educations } = await supabase.from('Education').select('*').order('period', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-jakarta selection:bg-purple-500/30">
+    <div className="min-h-screen bg-background text-foreground font-jakarta selection:bg-purple-500/30">
       <Navbar />
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-purple-500/10 blur-[120px] rounded-full -z-10" />
@@ -29,12 +29,12 @@ export default async function EducationPage() {
       <section className="pb-32 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {educations?.map((edu) => (
-            <div key={edu.id} className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] group hover:border-purple-500/30 transition-all flex flex-col h-[28rem]">
+            <div key={edu.id} className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] group hover:border-purple-500/30 transition-all flex flex-col h-[28rem]">
               <p className="text-purple-500 text-xs font-bold flex items-center gap-2 mb-3">
                 <Calendar size={14} /> {edu.period || edu.year || 'Period N/A'}
               </p>
               <Link href={`/education/${edu.slug}`}>
-                <h3 className="text-2xl font-black text-white mb-2 group-hover:text-purple-500 transition-colors line-clamp-2">
+                <h3 className="text-2xl font-black text-foreground mb-2 group-hover:text-purple-500 transition-colors line-clamp-2">
                   {edu.degree || 'Degree'}
                 </h3>
               </Link>
@@ -49,11 +49,11 @@ export default async function EducationPage() {
               )}
 
               <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-white/5">
-                <Link href={`/education/${edu.slug}`} className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-purple-500 transition-colors">
+                <Link href={`/education/${edu.slug}`} className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-foreground/30 hover:text-purple-500 transition-colors">
                   <ImageIcon size={10} /> Detail
                 </Link>
                 {edu.proofUrl && (
-                  <a href={edu.proofUrl} target="_blank" className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-purple-500 hover:text-white transition-colors">
+                  <a href={edu.proofUrl} target="_blank" className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-purple-500 hover:text-foreground transition-colors">
                     <ExternalLink size={10} /> Sertifikat/Ijazah
                   </a>
                 )}

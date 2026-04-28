@@ -60,7 +60,7 @@ export default function OrganizationForm({ initialData = null }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Logo Section */}
         <div className="md:col-span-1">
-          <label className="block text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest text-white/60 flex items-center gap-2">
+          <label className="block text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest text-foreground/60 flex items-center gap-2">
             <Camera size={14} /> Logo Organisasi
           </label>
           <MultiPhotoUpload
@@ -74,7 +74,7 @@ export default function OrganizationForm({ initialData = null }) {
         {/* Main Fields Section */}
         <div className="md:col-span-2 space-y-6">
           <div>
-            <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
+            <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-foreground/60">
               Nama Organisasi
             </label>
             <input
@@ -82,14 +82,14 @@ export default function OrganizationForm({ initialData = null }) {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+              className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
               placeholder="Contoh: BUMP Pesantren"
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
+              <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-foreground/60">
                 Jabatan / Role
               </label>
               <input
@@ -97,12 +97,12 @@ export default function OrganizationForm({ initialData = null }) {
                 type="text"
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+                className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
                 placeholder="Contoh: Ketua Bagian Dokumentasi"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
+              <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-foreground/60">
                 Periode
               </label>
               <input
@@ -110,7 +110,7 @@ export default function OrganizationForm({ initialData = null }) {
                 type="text"
                 value={formData.period}
                 onChange={(e) => setFormData({ ...formData, period: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+                className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
                 placeholder="Jan 2024 - Jan 2025"
               />
             </div>
@@ -119,7 +119,7 @@ export default function OrganizationForm({ initialData = null }) {
       </div>
 
       {/* Visibility Toggle */}
-      <div className="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-3xl">
+      <div className="flex items-center justify-between p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
         <div className="flex items-center gap-4">
           <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-teal-500/20 text-teal-500' : 'bg-gray-500/20 text-gray-500'}`}>
             {formData.showOnHome ? <Eye size={20} /> : <EyeOff size={20} />}
@@ -140,46 +140,46 @@ export default function OrganizationForm({ initialData = null }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-foreground/60">
             Website / Link (Opsional)
           </label>
           <input
             type="text"
             value={formData.website || ''}
             onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
             placeholder="https://..."
           />
         </div>
         <div>
-          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-foreground/60">
             Link Bukti / Dokumentasi Online
           </label>
           <input
             type="text"
             value={formData.proofUrl || ''}
             onChange={(e) => setFormData({ ...formData, proofUrl: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
             placeholder="https://google-drive.com/sertifikat"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
+        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-foreground/60">
           Deskripsi / Kegiatan
         </label>
         <textarea
           value={formData.description || ''}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           rows={4}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all resize-none text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all resize-none text-foreground"
           placeholder="Jelaskan kontribusi Anda di organisasi ini..."
         />
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest flex items-center gap-2 text-white/60">
+        <label className="block text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest flex items-center gap-2 text-foreground/60">
           <Camera size={14} /> Foto Dokumentasi & Sertifikat (Multi-foto)
         </label>
         <MultiPhotoUpload
@@ -201,7 +201,7 @@ export default function OrganizationForm({ initialData = null }) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-8 py-4 bg-white/5 text-white font-bold rounded-xl border border-white/10 hover:bg-white/10 transition-all"
+          className="px-8 py-4 bg-white/5 text-foreground font-bold rounded-xl border border-[var(--border-subtle)] hover:bg-white/10 transition-all"
         >
           Batal
         </button>

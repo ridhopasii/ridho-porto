@@ -4,14 +4,14 @@ import Link from 'next/link';
 
 export default function Projects({ projects }) {
   return (
-    <section id="proyek" className="py-24 px-6 bg-[#0a0a0a]">
+    <section id="proyek" className="py-24 px-6 bg-background">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
           <div>
             <h2 className="text-sm font-bold text-teal-500 uppercase tracking-[0.3em] mb-3">
               Portfolio
             </h2>
-            <h3 className="text-4xl md:text-6xl font-black font-outfit tracking-tight text-white uppercase">
+            <h3 className="text-4xl md:text-6xl font-black font-outfit tracking-tight text-foreground uppercase">
               Featured <span className="text-teal-500">Work</span>
             </h3>
           </div>
@@ -45,13 +45,13 @@ export default function Projects({ projects }) {
                       {project.tags?.split(',').slice(0, 3).map((tag) => (
                         <span
                           key={tag}
-                          className="px-3 py-1 bg-white/5 rounded-full text-[8px] font-bold text-teal-500 border border-white/10 uppercase tracking-widest"
+                          className="px-3 py-1 bg-white/5 rounded-full text-[8px] font-bold text-teal-500 border border-[var(--border-subtle)] uppercase tracking-widest"
                         >
                           {tag.trim()}
                         </span>
                       ))}
                     </div>
-                    <h3 className="text-2xl font-black mb-3 text-white font-outfit uppercase tracking-tight group-hover:text-teal-500 transition-colors">
+                    <h3 className="text-2xl font-black mb-3 text-foreground font-outfit uppercase tracking-tight group-hover:text-teal-500 transition-colors">
                       {project.title || 'Project Title'}
                     </h3>
                     <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-2">
@@ -63,14 +63,14 @@ export default function Projects({ projects }) {
                         <a
                           href={project.projectUrl}
                           target="_blank"
-                          className="flex-1 py-3 bg-white/5 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-teal-500 hover:text-black transition-all flex items-center justify-center gap-2 border border-white/10 hover:border-teal-500"
+                          className="flex-1 py-3 bg-white/5 text-foreground rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-teal-500 hover:text-black transition-all flex items-center justify-center gap-2 border border-[var(--border-subtle)] hover:border-teal-500"
                         >
                           View Project <ExternalLink size={14} />
                         </a>
                       )}
                       <Link 
                         href={`/projects/${project.slug || project.id}`}
-                        className="py-3 px-6 bg-transparent text-gray-500 rounded-xl font-black text-[10px] uppercase tracking-widest hover:text-white transition-all flex items-center justify-center border border-transparent hover:border-white/10"
+                        className="py-3 px-6 bg-transparent text-gray-500 rounded-xl font-black text-[10px] uppercase tracking-widest hover:text-foreground transition-all flex items-center justify-center border border-transparent hover:border-[var(--border-subtle)]"
                       >
                         Details
                       </Link>
@@ -81,7 +81,7 @@ export default function Projects({ projects }) {
         </div>
 
         {projects?.length === 0 && (
-          <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/10">
+          <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-[var(--border-subtle)]">
             <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">
               Belum ada proyek yang dipublikasikan.
             </p>

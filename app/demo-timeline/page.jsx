@@ -14,7 +14,7 @@ export default function DemoTimeline() {
   const [activeAcc, setActiveAcc] = useState(null);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-jakarta">
+    <div className="min-h-screen bg-background text-foreground font-jakarta">
       <Navbar />
       
       <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto space-y-32">
@@ -24,8 +24,8 @@ export default function DemoTimeline() {
         </div>
 
         {/* OPSI 1: STICKY SCROLL */}
-        <section className="border border-white/10 p-8 md:p-16 rounded-[3rem] bg-white/[0.02]">
-          <h2 className="text-3xl font-black font-outfit uppercase mb-12 border-b border-white/10 pb-4">Opsi 1: Apple-Style Sticky Scroll</h2>
+        <section className="border border-[var(--border-subtle)] p-8 md:p-16 rounded-[3rem] bg-white/[0.02]">
+          <h2 className="text-3xl font-black font-outfit uppercase mb-12 border-b border-[var(--border-subtle)] pb-4">Opsi 1: Apple-Style Sticky Scroll</h2>
           <div className="relative">
             {dummyData.map((item, idx) => (
               <div key={item.id} className="flex flex-col md:flex-row gap-8 md:gap-20 mb-24 last:mb-0">
@@ -50,11 +50,11 @@ export default function DemoTimeline() {
         </section>
 
         {/* OPSI 2: ACCORDION GLASSMORPHISM */}
-        <section className="border border-white/10 p-8 md:p-16 rounded-[3rem] bg-white/[0.02]">
-          <h2 className="text-3xl font-black font-outfit uppercase mb-12 border-b border-white/10 pb-4">Opsi 2: Glassmorphism Interactive Accordion</h2>
+        <section className="border border-[var(--border-subtle)] p-8 md:p-16 rounded-[3rem] bg-white/[0.02]">
+          <h2 className="text-3xl font-black font-outfit uppercase mb-12 border-b border-[var(--border-subtle)] pb-4">Opsi 2: Glassmorphism Interactive Accordion</h2>
           <div className="space-y-4 max-w-3xl mx-auto">
             {dummyData.map((item) => (
-              <div key={item.id} className="border border-white/10 rounded-3xl overflow-hidden bg-white/5 transition-all">
+              <div key={item.id} className="border border-[var(--border-subtle)] rounded-3xl overflow-hidden bg-white/5 transition-all">
                 <button 
                   onClick={() => setActiveAcc(activeAcc === item.id ? null : item.id)}
                   className="w-full px-8 py-6 flex items-center justify-between hover:bg-white/5 transition-colors"
@@ -73,7 +73,7 @@ export default function DemoTimeline() {
                       exit={{ height: 0, opacity: 0 }}
                       className="px-8 pb-8"
                     >
-                      <div className="pt-6 border-t border-white/10">
+                      <div className="pt-6 border-t border-[var(--border-subtle)]">
                         <p className="text-teal-500 font-bold uppercase tracking-widest text-xs mb-4">{item.company}</p>
                         <p className="text-gray-400 leading-relaxed">{item.desc}</p>
                       </div>
@@ -86,8 +86,8 @@ export default function DemoTimeline() {
         </section>
 
         {/* OPSI 3: BENTO BOX GRID */}
-        <section className="border border-white/10 p-8 md:p-16 rounded-[3rem] bg-white/[0.02]">
-          <h2 className="text-3xl font-black font-outfit uppercase mb-12 border-b border-white/10 pb-4">Opsi 3: Bento Box Grid</h2>
+        <section className="border border-[var(--border-subtle)] p-8 md:p-16 rounded-[3rem] bg-white/[0.02]">
+          <h2 className="text-3xl font-black font-outfit uppercase mb-12 border-b border-[var(--border-subtle)] pb-4">Opsi 3: Bento Box Grid</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Box 1 (Paling Baru - Besar) */}
             <div className="md:col-span-2 md:row-span-2 p-8 rounded-[2rem] bg-teal-500/10 border border-teal-500/20 flex flex-col justify-end min-h-[300px]">
@@ -100,7 +100,7 @@ export default function DemoTimeline() {
             </div>
 
             {/* Box 2 (Kecil) */}
-            <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 flex flex-col min-h-[200px]">
+            <div className="p-8 rounded-[2rem] bg-white/5 border border-[var(--border-subtle)] flex flex-col min-h-[200px]">
               <span className="text-gray-500 font-bold text-[10px] uppercase tracking-widest mb-2">{dummyData[1].period}</span>
               <h3 className="text-xl font-bold mb-1">{dummyData[1].title}</h3>
               <p className="text-gray-400 text-xs uppercase tracking-widest mb-4">{dummyData[1].company}</p>
@@ -108,7 +108,7 @@ export default function DemoTimeline() {
             </div>
 
             {/* Box 3 (Kecil) */}
-            <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 flex flex-col min-h-[200px]">
+            <div className="p-8 rounded-[2rem] bg-white/5 border border-[var(--border-subtle)] flex flex-col min-h-[200px]">
               <span className="text-gray-500 font-bold text-[10px] uppercase tracking-widest mb-2">{dummyData[2].period}</span>
               <h3 className="text-xl font-bold mb-1">{dummyData[2].title}</h3>
               <p className="text-gray-400 text-xs uppercase tracking-widest mb-4">{dummyData[2].company}</p>

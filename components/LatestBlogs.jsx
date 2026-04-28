@@ -13,7 +13,7 @@ export default function LatestBlogs({ blogs }) {
             <h2 className="text-sm font-bold text-teal-500 uppercase tracking-[0.3em] mb-3">
               Journal
             </h2>
-            <h3 className="text-4xl md:text-5xl font-bold font-outfit text-white">
+            <h3 className="text-4xl md:text-5xl font-bold font-outfit text-foreground">
               Latest Thoughts
             </h3>
           </div>
@@ -64,7 +64,7 @@ export default function LatestBlogs({ blogs }) {
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-teal-400 transition-colors line-clamp-2 leading-tight">
+                <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-teal-400 transition-colors line-clamp-2 leading-tight">
                   {blog.title}
                 </h3>
 

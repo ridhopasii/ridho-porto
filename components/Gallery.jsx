@@ -15,7 +15,7 @@ export default function Gallery({ galleryItems }) {
             <h2 className="text-teal-500 font-bold uppercase tracking-[0.3em] mb-3 text-sm">
               Momen & Kegiatan
             </h2>
-            <h3 className="text-4xl md:text-6xl font-black font-outfit text-white uppercase leading-none">
+            <h3 className="text-4xl md:text-6xl font-black font-outfit text-foreground uppercase leading-none">
               Visual <span className="text-teal-500">Gallery</span>
             </h3>
           </div>
@@ -48,7 +48,7 @@ export default function Gallery({ galleryItems }) {
                     </span>
                     <span className="text-[10px] text-gray-600 font-bold">{item.date}</span>
                   </div>
-                  <h4 className="text-lg font-bold text-white group-hover:text-teal-500 transition-colors">
+                  <h4 className="text-lg font-bold text-foreground group-hover:text-teal-500 transition-colors">
                     {item.title}
                   </h4>
                 </div>
@@ -58,7 +58,7 @@ export default function Gallery({ galleryItems }) {
         </div>
 
         {latestPhotos.length === 0 && (
-          <div className="text-center py-20 bg-white/5 rounded-[3rem] border border-dashed border-white/10">
+          <div className="text-center py-20 bg-white/5 rounded-[3rem] border border-dashed border-[var(--border-subtle)]">
             <ImageIcon size={48} className="mx-auto text-gray-800 mb-4" />
             <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">
               Galeri belum terisi.

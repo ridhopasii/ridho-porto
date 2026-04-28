@@ -34,18 +34,18 @@ export default function AdminBlogs() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#0a0a0a]">
+    <div className="flex min-h-screen bg-background">
       <AdminSidebar />
       <main className="flex-1 p-8">
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">Blog Posts</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2">Blog Posts</h1>
               <p className="text-gray-400">Bagikan pemikiran dan tutorial Anda</p>
             </div>
             <Link 
               href="/admin/blogs/new"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all"
+              className="bg-blue-600 hover:bg-blue-700 text-foreground px-4 py-2 rounded-xl flex items-center gap-2 transition-all"
             >
               <Plus className="w-5 h-5" />
               Tulis Artikel
@@ -67,7 +67,7 @@ export default function AdminBlogs() {
                 blogs.map((blog) => (
                   <div 
                     key={blog.id}
-                    className="bg-[#1a1a1a] p-6 rounded-2xl border border-white/5 flex items-center justify-between hover:border-white/10 transition-all group"
+                    className="bg-[#1a1a1a] p-6 rounded-2xl border border-white/5 flex items-center justify-between hover:border-[var(--border-subtle)] transition-all group"
                   >
                     <div className="flex items-center gap-6">
                       {blog.cover_image && (
@@ -78,7 +78,7 @@ export default function AdminBlogs() {
                         />
                       )}
                       <div>
-                        <h3 className="text-xl font-bold text-white mb-1">{blog.title}</h3>
+                        <h3 className="text-xl font-bold text-foreground mb-1">{blog.title}</h3>
                         <div className="flex items-center gap-3 text-sm text-gray-400">
                           <span className="bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded text-xs">
                             {blog.category || 'Uncategorized'}
@@ -91,7 +91,7 @@ export default function AdminBlogs() {
                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
                       <Link 
                         href={`/admin/blogs/edit/${blog.id}`}
-                        className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                        className="p-2 text-gray-400 hover:text-foreground hover:bg-white/5 rounded-lg transition-all"
                       >
                         <Pencil className="w-5 h-5" />
                       </Link>

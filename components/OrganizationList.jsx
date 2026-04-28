@@ -37,7 +37,7 @@ export default function OrganizationList({ organizations }) {
       {organizations?.map((org) => (
         <div
           key={org.id}
-          className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] flex flex-col justify-between group hover:border-teal-500/30 transition-all"
+          className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] flex flex-col justify-between group hover:border-teal-500/30 transition-all"
         >
           <div>
             <div className="flex justify-between items-start mb-6">
@@ -68,14 +68,14 @@ export default function OrganizationList({ organizations }) {
                 </button>
                 <button
                   onClick={() => router.push(`/admin/organizations/edit/${org.id}`)}
-                  className="p-3 bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+                  className="p-3 bg-white/5 text-gray-400 hover:text-foreground hover:bg-white/10 rounded-xl transition-all"
                 >
                   <Edit size={18} />
                 </button>
                 <button
                   onClick={() => handleDelete(org.id)}
                   disabled={deletingId === org.id}
-                  className="p-3 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition-all disabled:opacity-50"
+                  className="p-3 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-foreground rounded-xl transition-all disabled:opacity-50"
                 >
                   {deletingId === org.id ? (
                     <div className="w-[18px] h-[18px] border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -85,7 +85,7 @@ export default function OrganizationList({ organizations }) {
                 </button>
               </div>
             </div>
-            <h3 className="text-xl font-bold text-white mb-1">{org.name}</h3>
+            <h3 className="text-xl font-bold text-foreground mb-1">{org.name}</h3>
             <p className="text-teal-500 font-bold uppercase text-[10px] tracking-widest mb-4">
               {org.role}
             </p>
@@ -101,12 +101,12 @@ export default function OrganizationList({ organizations }) {
                 <img
                   key={idx}
                   src={url}
-                  className="w-12 h-12 rounded-lg object-cover border border-white/10"
+                  className="w-12 h-12 rounded-lg object-cover border border-[var(--border-subtle)]"
                   alt="Doc"
                 />
               ))}
               {org.images.length > 3 && (
-                <div className="w-12 h-12 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-bold text-gray-500">
+                <div className="w-12 h-12 rounded-lg bg-white/5 border border-[var(--border-subtle)] flex items-center justify-center text-[10px] font-bold text-gray-500">
                   +{org.images.length - 3}
                 </div>
               )}

@@ -22,7 +22,7 @@ export default function ProjectFilter({ initialProjects }) {
             className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border ${
               activeCategory === cat
                 ? 'bg-[var(--accent)] text-black border-[var(--accent)] shadow-lg shadow-[var(--accent)]/20'
-                : 'bg-white/5 text-gray-500 border-white/10 hover:border-white/20'
+                : 'bg-white/5 text-gray-500 border-[var(--border-subtle)] hover:border-white/20'
             }`}
           >
             {cat}
@@ -38,7 +38,7 @@ export default function ProjectFilter({ initialProjects }) {
           return (
             <div
               key={project.id}
-              className="group relative bg-white/5 border border-white/10 rounded-[2.5rem] overflow-hidden hover:border-[var(--accent)]/30 transition-all duration-500"
+              className="group relative bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] overflow-hidden hover:border-[var(--accent)]/30 transition-all duration-500"
             >
               <div className="aspect-[16/10] overflow-hidden relative">
                 <img
@@ -47,7 +47,7 @@ export default function ProjectFilter({ initialProjects }) {
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-60" />
-                <div className="absolute top-6 left-6 px-4 py-2 bg-black/50 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest text-white">
+                <div className="absolute top-6 left-6 px-4 py-2 bg-black/50 backdrop-blur-md border border-[var(--border-subtle)] rounded-full text-[10px] font-black uppercase tracking-widest text-foreground">
                   {project.category || 'Development'}
                 </div>
               </div>
@@ -64,7 +64,7 @@ export default function ProjectFilter({ initialProjects }) {
                   {project.tech?.split(',').map((t, i) => (
                     <span
                       key={i}
-                      className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold text-gray-500 uppercase tracking-tight"
+                      className="px-3 py-1 bg-white/5 border border-[var(--border-subtle)] rounded-lg text-[10px] font-bold text-gray-500 uppercase tracking-tight"
                     >
                       {t.trim()}
                     </span>
@@ -85,7 +85,7 @@ export default function ProjectFilter({ initialProjects }) {
                     <a
                       href={project.repoUrl}
                       target="_blank"
-                      className="p-4 bg-white/5 border border-white/10 rounded-2xl text-white hover:bg-white/10 transition-all active:scale-95"
+                      className="p-4 bg-white/5 border border-[var(--border-subtle)] rounded-2xl text-foreground hover:bg-white/10 transition-all active:scale-95"
                     >
                       <Github size={20} />
                     </a>

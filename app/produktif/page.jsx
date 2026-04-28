@@ -347,10 +347,10 @@ export default function ProduktifPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6 font-jakarta">
-        <div className="w-full max-w-md p-10 bg-white/5 border border-white/10 rounded-[3rem] text-center backdrop-blur-xl relative">
+      <div className="min-h-screen bg-background flex items-center justify-center p-6 font-jakarta">
+        <div className="w-full max-w-md p-10 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] text-center backdrop-blur-xl relative">
           <Zap size={40} className="mx-auto mb-8 text-[var(--accent)] animate-pulse" />
-          <h1 className="text-3xl font-black mb-8 italic text-white uppercase tracking-tighter">Enter Vault</h1>
+          <h1 className="text-3xl font-black mb-8 italic text-foreground uppercase tracking-tighter">Enter Vault</h1>
           <form onSubmit={(e) => { e.preventDefault(); if (password === 'zxcvbnm') setIsAuthenticated(true); }}>
             <input 
               type="password" 
@@ -360,7 +360,7 @@ export default function ProduktifPage() {
                 if (e.target.value === 'zxcvbnm') setIsAuthenticated(true); 
               }} 
               placeholder="••••••••" 
-              className="w-full p-5 bg-black/50 border border-white/10 rounded-2xl text-center text-xl tracking-[0.5em] focus:border-[var(--accent)] outline-none text-white transition-all" 
+              className="w-full p-5 bg-black/50 border border-[var(--border-subtle)] rounded-2xl text-center text-xl tracking-[0.5em] focus:border-[var(--accent)] outline-none text-foreground transition-all" 
             />
             <button type="submit" className="hidden">Submit</button>
           </form>
@@ -374,14 +374,14 @@ export default function ProduktifPage() {
 
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-jakarta overflow-x-hidden relative">
+    <div className="min-h-screen bg-background text-foreground font-jakarta overflow-x-hidden relative">
       <Navbar />
       <main className="pt-32 pb-32 px-4 md:px-6 max-w-7xl mx-auto">
         
         {/* Navigation & Header */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-8">
           <div className="flex items-center gap-6">
-            <div onClick={() => { setNavDate(new Date(selectedDate)); setShowCalendarModal(true); }} className="p-4 bg-white/5 border border-white/10 rounded-[2rem] cursor-pointer hover:bg-white/10 transition-all flex items-center gap-5 group backdrop-blur-md">
+            <div onClick={() => { setNavDate(new Date(selectedDate)); setShowCalendarModal(true); }} className="p-4 bg-white/5 border border-[var(--border-subtle)] rounded-[2rem] cursor-pointer hover:bg-white/10 transition-all flex items-center gap-5 group backdrop-blur-md">
               <div className="w-14 h-14 bg-[var(--accent)]/10 text-[var(--accent)] rounded-2xl flex flex-col items-center justify-center shadow-lg shadow-[var(--accent)]/5">
                 <span className="text-[10px] font-black uppercase leading-none mb-1">{new Date(selectedDate).toLocaleDateString('id-ID', { month: 'short' })}</span>
                 <span className="text-2xl font-black leading-none">{new Date(selectedDate).getDate()}</span>
@@ -396,12 +396,12 @@ export default function ProduktifPage() {
             </div>
             
             {/* Edit Mode Toggle */}
-            <button onClick={() => setIsEditMode(!isEditMode)} className={`p-4 rounded-2xl border transition-all flex items-center gap-3 font-bold ${isEditMode ? 'bg-red-500/20 text-red-500 border-red-500/50' : 'bg-white/5 text-gray-400 border-white/10 hover:text-white'}`}>
+            <button onClick={() => setIsEditMode(!isEditMode)} className={`p-4 rounded-2xl border transition-all flex items-center gap-3 font-bold ${isEditMode ? 'bg-red-500/20 text-red-500 border-red-500/50' : 'bg-white/5 text-gray-400 border-[var(--border-subtle)] hover:text-foreground'}`}>
               {isEditMode ? <><X size={20} /> Exit Edit Mode</> : <><Edit3 size={20} /> CMS Mode</>}
             </button>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 p-2 bg-white/5 border border-white/10 rounded-[2rem] backdrop-blur-xl">
+          <div className="flex flex-wrap items-center gap-2 p-2 bg-white/5 border border-[var(--border-subtle)] rounded-[2rem] backdrop-blur-xl">
             {[
               { id: 'daily', icon: <List size={18} />, label: 'Daily' },
               { id: 'monthly', icon: <CalendarDays size={18} />, label: 'Habits' },
@@ -412,7 +412,7 @@ export default function ProduktifPage() {
               <button 
                 key={tab.id} 
                 onClick={() => setActiveTab(tab.id)} 
-                className={`px-4 md:px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-2 ${activeTab === tab.id ? 'bg-[var(--accent)] text-black shadow-xl shadow-[var(--accent)]/20 scale-105' : 'text-gray-500 hover:text-white'}`}
+                className={`px-4 md:px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-2 ${activeTab === tab.id ? 'bg-[var(--accent)] text-black shadow-xl shadow-[var(--accent)]/20 scale-105' : 'text-gray-500 hover:text-foreground'}`}
               >
                 {tab.icon} <span className="hidden md:inline">{tab.label}</span>
               </button>
@@ -433,7 +433,7 @@ export default function ProduktifPage() {
                       </div>
                    </div>
                    {dailyConfig.map((block, blockIndex) => (
-                    <div key={block.id || blockIndex} className="p-6 bg-white/5 border border-white/10 rounded-[2rem] flex flex-col">
+                    <div key={block.id || blockIndex} className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-[2rem] flex flex-col">
                       <div className="flex justify-between items-center mb-4">
                         <input type="text" value={block.name} onChange={(e) => {
                           const newCfg = [...dailyConfig];
@@ -450,7 +450,7 @@ export default function ProduktifPage() {
                       {/* Day Assignment Toggles */}
                       <div className="flex gap-1 mb-6">
                         {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((dayChar, dayIdx) => (
-                          <button key={dayIdx} onClick={() => toggleBlockDay(blockIndex, dayIdx)} className={`flex-1 py-2 text-[10px] font-black rounded-lg transition-all ${block.activeDays.includes(dayIdx) ? 'bg-[var(--accent)] text-black' : 'bg-black/50 text-gray-500 border border-white/10'}`}>
+                          <button key={dayIdx} onClick={() => toggleBlockDay(blockIndex, dayIdx)} className={`flex-1 py-2 text-[10px] font-black rounded-lg transition-all ${block.activeDays.includes(dayIdx) ? 'bg-[var(--accent)] text-black' : 'bg-black/50 text-gray-500 border border-[var(--border-subtle)]'}`}>
                             {dayChar}
                           </button>
                         ))}
@@ -463,7 +463,7 @@ export default function ProduktifPage() {
                               const newCfg = [...dailyConfig];
                               newCfg[blockIndex].tasks[idx] = e.target.value;
                               setDailyConfig(newCfg);
-                            }} className="flex-1 bg-black/50 border border-white/5 rounded-xl p-3 text-xs outline-none focus:border-[var(--accent)]/50 text-white" />
+                            }} className="flex-1 bg-black/50 border border-white/5 rounded-xl p-3 text-xs outline-none focus:border-[var(--accent)]/50 text-foreground" />
                             <button onClick={() => {
                               const newCfg = [...dailyConfig];
                               newCfg[blockIndex].tasks.splice(idx, 1);
@@ -475,13 +475,13 @@ export default function ProduktifPage() {
                           const newCfg = [...dailyConfig];
                           newCfg[blockIndex].tasks.push('New Task');
                           setDailyConfig(newCfg);
-                        }} className="w-full p-3 bg-white/5 border border-dashed border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-all">+ Add Task</button>
+                        }} className="w-full p-3 bg-white/5 border border-dashed border-[var(--border-subtle)] rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-foreground transition-all">+ Add Task</button>
                       </div>
                     </div>
                   ))}
 
                   {/* Add New Block Button */}
-                  <div className="p-6 bg-white/2 border border-dashed border-white/10 rounded-[2rem] flex items-center justify-center min-h-[300px]">
+                  <div className="p-6 bg-white/2 border border-dashed border-[var(--border-subtle)] rounded-[2rem] flex items-center justify-center min-h-[300px]">
                     <button onClick={() => {
                       const newCfg = [...dailyConfig];
                       newCfg.push({ id: `block_${Date.now()}`, name: 'New Block', tasks: [], activeDays: [1,2,3,4,5] });
@@ -504,7 +504,7 @@ export default function ProduktifPage() {
                           return (
                             <button key={globalIdx} onClick={() => toggleTask(globalIdx)} className={`w-full p-5 rounded-3xl border text-left transition-all flex items-center justify-between group ${task.completed ? 'bg-[var(--accent)]/10 border-[var(--accent)]/40 text-[var(--accent)]' : 'bg-black/40 border-white/5 text-gray-400 hover:border-white/20'}`}>
                               <span className="font-bold text-sm tracking-tight">{task.name}</span>
-                              <div className={`w-6 h-6 rounded-xl border-2 flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-[var(--accent)] border-[var(--accent)] text-black' : 'border-white/10 group-hover:border-[var(--accent)]/50'}`}>
+                              <div className={`w-6 h-6 rounded-xl border-2 flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-[var(--accent)] border-[var(--accent)] text-black' : 'border-[var(--border-subtle)] group-hover:border-[var(--accent)]/50'}`}>
                                 {task.completed && <CheckCircle2 size={14} strokeWidth={4} />}
                               </div>
                             </button>
@@ -515,7 +515,7 @@ export default function ProduktifPage() {
                   ))}
                 </div>
               ) : (
-                <div className="p-20 bg-white/5 border border-dashed border-white/10 rounded-[4rem] text-center backdrop-blur-md">
+                <div className="p-20 bg-white/5 border border-dashed border-[var(--border-subtle)] rounded-[4rem] text-center backdrop-blur-md">
                   <AlertCircle size={48} className="mx-auto mb-6 text-gray-700" />
                   <h3 className="text-2xl font-black uppercase mb-4 italic text-gray-400">No Routine For Today</h3>
                   <button onClick={() => fetchAllData()} className="px-10 py-5 bg-[var(--accent)] text-black font-black rounded-3xl text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl shadow-[var(--accent)]/20">Sync Templates</button>
@@ -527,7 +527,7 @@ export default function ProduktifPage() {
           {/* MONTHLY HABITS TAB */}
           {activeTab === 'monthly' && (
             <motion.div key="monthly" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-              <div className="p-8 md:p-10 bg-white/5 border border-white/10 rounded-[4rem] backdrop-blur-xl">
+              <div className="p-8 md:p-10 bg-white/5 border border-[var(--border-subtle)] rounded-[4rem] backdrop-blur-xl">
                 <h3 className="text-2xl font-black font-outfit uppercase italic mb-2 flex items-center gap-3">
                   <CalendarDays className="text-[var(--accent)]" /> Monthly <span className="text-[var(--accent)]">Habits Tracker</span>
                 </h3>
@@ -557,7 +557,7 @@ export default function ProduktifPage() {
                                     const newHabs = [...habitConfigs];
                                     newHabs[globalIdx].name = e.target.value;
                                     setHabitConfigs(newHabs);
-                                  }} className="flex-1 bg-black/50 p-2 rounded-xl text-xs text-white" />
+                                  }} className="flex-1 bg-black/50 p-2 rounded-xl text-xs text-foreground" />
                                   <button onClick={() => {
                                     const newHabs = [...habitConfigs];
                                     newHabs[globalIdx].isActive = !newHabs[globalIdx].isActive;
@@ -581,7 +581,7 @@ export default function ProduktifPage() {
                                 className={`w-full p-4 rounded-2xl flex items-center justify-between border transition-all ${
                                   monthlyTracker[habit.id] 
                                   ? 'bg-[var(--accent)]/20 border-[var(--accent)]/50 text-[var(--accent)]' 
-                                  : 'bg-white/5 border-transparent text-gray-400 hover:border-white/10 hover:bg-white/10'
+                                  : 'bg-white/5 border-transparent text-gray-400 hover:border-[var(--border-subtle)] hover:bg-white/10'
                                 }`}
                               >
                                 <div className="flex items-center gap-3">
@@ -602,7 +602,7 @@ export default function ProduktifPage() {
                               const newHabs = [...habitConfigs];
                               newHabs.push({ name: 'New Habit', category: category, icon: '✨', isActive: true, sortOrder: 99 });
                               setHabitConfigs(newHabs);
-                            }} className="w-full p-3 border border-dashed border-white/10 rounded-2xl text-[10px] font-black text-gray-500 hover:text-white">+ Add {category.replace('_', ' ')} Habit</button>
+                            }} className="w-full p-3 border border-dashed border-[var(--border-subtle)] rounded-2xl text-[10px] font-black text-gray-500 hover:text-foreground">+ Add {category.replace('_', ' ')} Habit</button>
                           )}
                         </div>
                       </div>
@@ -634,13 +634,13 @@ export default function ProduktifPage() {
                             <label className="text-[10px] text-gray-500 uppercase font-black">Current Amount</label>
                             <input type="number" value={s.amount} onChange={(e) => {
                               const newSav = [...savings]; newSav[i].amount = Number(e.target.value); setSavings(newSav);
-                            }} className="w-full p-2 bg-white/5 rounded-lg text-white mt-1" />
+                            }} className="w-full p-2 bg-white/5 rounded-lg text-foreground mt-1" />
                           </div>
                           <div>
                             <label className="text-[10px] text-gray-500 uppercase font-black">Target Amount</label>
                             <input type="number" value={s.target} onChange={(e) => {
                               const newSav = [...savings]; newSav[i].target = Number(e.target.value); setSavings(newSav);
-                            }} className="w-full p-2 bg-white/5 rounded-lg text-white mt-1" />
+                            }} className="w-full p-2 bg-white/5 rounded-lg text-foreground mt-1" />
                           </div>
                         </div>
                       );
@@ -658,7 +658,7 @@ export default function ProduktifPage() {
                           </div>
                         </div>
                         <div>
-                          <p className="text-2xl font-black text-white">{formatIDR(s.amount)}</p>
+                          <p className="text-2xl font-black text-foreground">{formatIDR(s.amount)}</p>
                           <p className="text-xs text-gray-500 font-medium mt-1">Target: {formatIDR(s.target)}</p>
                         </div>
                         <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
@@ -677,9 +677,9 @@ export default function ProduktifPage() {
                   const plans = yearlyPlans.filter(p => p.category === cat);
                   
                   return (
-                    <div key={cat} className="p-8 bg-white/5 border border-white/10 rounded-[3rem] backdrop-blur-xl relative overflow-hidden group">
+                    <div key={cat} className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] backdrop-blur-xl relative overflow-hidden group">
                       <div className="flex items-center gap-4 mb-8">
-                        <h3 className={`text-xl font-black font-outfit uppercase italic text-white`}>{cat} <span className="text-[var(--accent)]">Growth</span></h3>
+                        <h3 className={`text-xl font-black font-outfit uppercase italic text-foreground`}>{cat} <span className="text-[var(--accent)]">Growth</span></h3>
                       </div>
                       <div className="space-y-4 relative z-10">
                         {plans.map((plan, i) => {
@@ -689,7 +689,7 @@ export default function ProduktifPage() {
                               <div key={plan.id || i} className="p-4 bg-black/60 rounded-2xl border border-[var(--accent)]/30 space-y-3">
                                 <input type="text" value={plan.item} onChange={(e) => {
                                   const newP = [...yearlyPlans]; newP[globalIdx].item = e.target.value; setYearlyPlans(newP);
-                                }} className="w-full bg-white/5 p-3 rounded-xl font-bold text-sm text-white" />
+                                }} className="w-full bg-white/5 p-3 rounded-xl font-bold text-sm text-foreground" />
                                 <div className="grid grid-cols-3 gap-2">
                                   <input type="text" placeholder="Daily target" value={plan.dailyHabit || ''} onChange={(e) => {
                                     const newP = [...yearlyPlans]; newP[globalIdx].dailyHabit = e.target.value; setYearlyPlans(newP);
@@ -709,9 +709,9 @@ export default function ProduktifPage() {
                               <p className="font-bold text-gray-200 text-sm leading-relaxed mb-3">{plan.item}</p>
                               {(plan.monthlyHabit || plan.weeklyHabit || plan.dailyHabit) && (
                                 <div className="mt-4 pt-4 border-t border-white/5 grid grid-cols-3 gap-2">
-                                  {plan.dailyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-white block font-bold mb-1">Daily</span>{plan.dailyHabit}</div>}
-                                  {plan.weeklyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-white block font-bold mb-1">Weekly</span>{plan.weeklyHabit}</div>}
-                                  {plan.monthlyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-white block font-bold mb-1">Monthly</span>{plan.monthlyHabit}</div>}
+                                  {plan.dailyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-foreground block font-bold mb-1">Daily</span>{plan.dailyHabit}</div>}
+                                  {plan.weeklyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-foreground block font-bold mb-1">Weekly</span>{plan.weeklyHabit}</div>}
+                                  {plan.monthlyHabit && <div className="text-[10px] text-gray-500 font-medium"><span className="text-foreground block font-bold mb-1">Monthly</span>{plan.monthlyHabit}</div>}
                                 </div>
                               )}
                             </div>
@@ -722,7 +722,7 @@ export default function ProduktifPage() {
                             const newPlans = [...yearlyPlans];
                             newPlans.push({ item: 'New Goal', category: cat, year: 2026, sortOrder: 99 });
                             setYearlyPlans(newPlans);
-                          }} className="w-full p-4 border border-dashed border-white/10 rounded-2xl text-[10px] font-black text-gray-500 hover:text-white">+ Add {cat} Target</button>
+                          }} className="w-full p-4 border border-dashed border-[var(--border-subtle)] rounded-2xl text-[10px] font-black text-gray-500 hover:text-foreground">+ Add {cat} Target</button>
                         )}
                       </div>
                     </div>
@@ -738,22 +738,22 @@ export default function ProduktifPage() {
               {smartAnalytics ? (
                 <>
                   <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                    <div className="p-8 bg-white/5 border border-white/10 rounded-[3rem] flex flex-col items-center justify-center text-center">
+                    <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] flex flex-col items-center justify-center text-center">
                       <div className="w-16 h-16 bg-[var(--accent)]/10 text-[var(--accent)] rounded-[2rem] flex items-center justify-center mb-4"><smartAnalytics.TrendIcon size={32} /></div>
                       <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1">Momentum</p>
                       <h4 className="text-xl font-black italic">{smartAnalytics.trendLabel}</h4>
                     </div>
-                    <div className="p-8 bg-white/5 border border-white/10 rounded-[3rem] flex flex-col items-center justify-center text-center">
+                    <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] flex flex-col items-center justify-center text-center">
                       <div className="w-16 h-16 bg-orange-500/10 text-orange-500 rounded-[2rem] flex items-center justify-center mb-4"><Sparkles size={32} /></div>
                       <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1">Power Day</p>
                       <h4 className="text-xl font-black italic">{smartAnalytics.bestDay}</h4>
                     </div>
-                    <div className="p-8 bg-white/5 border border-white/10 rounded-[3rem] flex flex-col items-center justify-center text-center">
+                    <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] flex flex-col items-center justify-center text-center">
                       <div className="w-16 h-16 bg-yellow-500/10 text-yellow-500 rounded-[2rem] flex items-center justify-center mb-4"><Award size={32} /></div>
                       <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1">Perfect Score</p>
                       <h4 className="text-xl font-black italic">{smartAnalytics.perfectDays} Days</h4>
                     </div>
-                    <div className="p-8 bg-white/5 border border-white/10 rounded-[3rem] flex flex-col items-center justify-center text-center">
+                    <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] flex flex-col items-center justify-center text-center">
                       <div className="w-16 h-16 bg-green-500/10 text-green-500 rounded-[2rem] flex items-center justify-center mb-4"><Target size={32} /></div>
                       <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1">Total Tasks Done</p>
                       <h4 className="text-xl font-black italic">{smartAnalytics.totalCompletedTasks}</h4>
@@ -778,7 +778,7 @@ export default function ProduktifPage() {
                   </div>
                 </>
               ) : (
-                <div className="p-20 text-center text-gray-500 italic border border-dashed border-white/10 rounded-[4rem]">Gathering more data...</div>
+                <div className="p-20 text-center text-gray-500 italic border border-dashed border-[var(--border-subtle)] rounded-[4rem]">Gathering more data...</div>
               )}
             </motion.div>
           )}
@@ -809,9 +809,9 @@ export default function ProduktifPage() {
                         const d = new Date(day.date);
                         if (isNaN(d.getTime())) return null;
                         return (
-                        <div key={i} onClick={() => { setSelectedDate(day.date); setActiveTab('daily'); }} className="p-6 md:p-8 bg-white/5 border border-white/10 rounded-[2.5rem] flex items-center justify-between group hover:bg-white/10 hover:border-[var(--accent)]/30 cursor-pointer transition-all">
+                        <div key={i} onClick={() => { setSelectedDate(day.date); setActiveTab('daily'); }} className="p-6 md:p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] flex items-center justify-between group hover:bg-white/10 hover:border-[var(--accent)]/30 cursor-pointer transition-all">
                           <div className="flex items-center gap-6 md:gap-8">
-                            <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 border border-white/10 rounded-2xl flex flex-col items-center justify-center shadow-lg">
+                            <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 border border-[var(--border-subtle)] rounded-2xl flex flex-col items-center justify-center shadow-lg">
                               <span className="text-lg md:text-xl font-black leading-none">{d.getDate()}</span>
                               <span className="text-[8px] font-black uppercase text-gray-500">{d.toLocaleDateString('id-ID', { weekday: 'short' })}</span>
                             </div>
@@ -851,7 +851,7 @@ export default function ProduktifPage() {
           {showCalendarModal && (
             <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 md:p-6">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowCalendarModal(false)} className="absolute inset-0 bg-black/95 backdrop-blur-2xl" />
-              <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="w-full max-w-xl bg-[#0a0a0a] border border-white/10 rounded-[3rem] md:rounded-[4rem] overflow-hidden relative shadow-2xl">
+              <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="w-full max-w-xl bg-background border border-[var(--border-subtle)] rounded-[3rem] md:rounded-[4rem] overflow-hidden relative shadow-2xl">
                 <div className="p-8 md:p-12 pb-0 flex justify-between items-center">
                   <h3 className="text-2xl md:text-4xl font-black italic tracking-tighter uppercase font-outfit">{navDate.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}</h3>
                   <div className="flex gap-2 md:gap-3">

@@ -12,7 +12,7 @@ export default async function BlogsPage() {
     .order('createdAt', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-jakarta selection:bg-orange-500/30">
+    <div className="min-h-screen bg-background text-foreground font-jakarta selection:bg-orange-500/30">
       <Navbar />
 
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
@@ -45,10 +45,10 @@ export default async function BlogsPage() {
             <Link
               key={blog.id}
               href={`/blog/${blog.slug || blog.id}`}
-              className="group block p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:border-orange-500/30 transition-all duration-500"
+              className="group block p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] hover:border-orange-500/30 transition-all duration-500"
             >
               <div className="flex flex-col md:flex-row gap-8 items-start md:items-center">
-                <div className="w-full md:w-48 aspect-square rounded-3xl overflow-hidden flex-shrink-0 border border-white/10">
+                <div className="w-full md:w-48 aspect-square rounded-3xl overflow-hidden flex-shrink-0 border border-[var(--border-subtle)]">
                   <img
                     src={blog.image || 'https://via.placeholder.com/400x400?text=Blog'}
                     alt={blog.title}
@@ -88,7 +88,7 @@ export default async function BlogsPage() {
           ))}
 
           {blogs?.length === 0 && (
-            <div className="text-center py-20 p-8 bg-white/5 border border-white/10 rounded-[3rem]">
+            <div className="text-center py-20 p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem]">
               <p className="text-gray-500 italic">Belum ada artikel yang dipublikasikan.</p>
             </div>
           )}

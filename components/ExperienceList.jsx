@@ -33,7 +33,7 @@ export default function ExperienceList({ initialExperiences }) {
       {initialExperiences?.map((exp) => (
         <div
           key={exp.id}
-          className="p-6 bg-white/5 border border-white/10 rounded-3xl group hover:border-teal-500/50 transition-all"
+          className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl group hover:border-teal-500/50 transition-all"
         >
           <div className="flex justify-between items-start">
             <div className="flex gap-4">
@@ -71,7 +71,7 @@ export default function ExperienceList({ initialExperiences }) {
                 {exp.showOnHome !== false ? <Eye size={18} /> : <EyeOff size={18} />}
               </button>
 
-              <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all border-l border-white/10 pl-3">
+              <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all border-l border-[var(--border-subtle)] pl-3">
                 <Link
                   href={`/admin/experience/edit/${exp.id}`}
                   className="p-2 hover:bg-white/10 rounded-xl text-blue-400"
@@ -95,7 +95,7 @@ export default function ExperienceList({ initialExperiences }) {
         </div>
       ))}
       {initialExperiences?.length === 0 && (
-        <div className="text-center py-20 bg-white/5 border border-dashed border-white/10 rounded-3xl text-gray-500">
+        <div className="text-center py-20 bg-white/5 border border-dashed border-[var(--border-subtle)] rounded-3xl text-gray-500">
           Belum ada data pengalaman.
         </div>
       )}

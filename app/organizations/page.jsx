@@ -9,7 +9,7 @@ export default async function OrganizationsPage() {
   const { data: organizations } = await supabase.from('Organization').select('*').order('period', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-jakarta selection:bg-teal-500/30">
+    <div className="min-h-screen bg-background text-foreground font-jakarta selection:bg-teal-500/30">
       <Navbar />
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-teal-500/10 blur-[120px] rounded-full -z-10" />
@@ -29,12 +29,12 @@ export default async function OrganizationsPage() {
       <section className="pb-32 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {organizations?.map((org) => (
-            <div key={org.id} className="group p-1 bg-white/5 rounded-[2rem] border border-white/10 hover:border-teal-500/30 transition-all duration-500 flex flex-col h-[28rem]">
+            <div key={org.id} className="group p-1 bg-white/5 rounded-[2rem] border border-[var(--border-subtle)] hover:border-teal-500/30 transition-all duration-500 flex flex-col h-[28rem]">
               <div className="flex flex-col p-5 h-full bg-[#0d0d0d] rounded-[1.8rem] relative overflow-hidden">
                 <div className="w-full h-32 mb-4 rounded-xl overflow-hidden relative z-10 border border-white/5 flex-shrink-0">
                   <PhotoSwiper images={Array.isArray(org.images) && org.images.length > 0 ? org.images : []} aspectRatio="aspect-[16/9]" rounded="rounded-none" />
                   {org.logoUrl && (
-                    <div className="absolute -bottom-4 left-4 w-12 h-12 bg-[#0d0d0d] rounded-xl overflow-hidden p-1.5 border border-white/10 shadow-lg z-20">
+                    <div className="absolute -bottom-4 left-4 w-12 h-12 bg-[#0d0d0d] rounded-xl overflow-hidden p-1.5 border border-[var(--border-subtle)] shadow-lg z-20">
                       <img src={org.logoUrl} alt={org.name} className="w-full h-full object-contain" />
                     </div>
                   )}
@@ -42,7 +42,7 @@ export default async function OrganizationsPage() {
 
                 <div className="flex-1 flex flex-col pt-2 min-h-0">
                   <Link href={`/organizations/${org.slug}`}>
-                    <h4 className="text-lg font-black text-white group-hover:text-teal-500 transition-colors uppercase tracking-tight leading-tight mb-1 truncate">
+                    <h4 className="text-lg font-black text-foreground group-hover:text-teal-500 transition-colors uppercase tracking-tight leading-tight mb-1 truncate">
                       {org.name || 'Organization Name'}
                     </h4>
                   </Link>

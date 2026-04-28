@@ -122,7 +122,7 @@ export default function ProfileForm({ initialData = null }) {
       )}
 
       {/* SECTION 1: IDENTITAS UTAMA */}
-      <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
+      <div className="bg-white/5 p-8 rounded-3xl border border-[var(--border-subtle)]">
         <h3 className="text-teal-500 font-black uppercase tracking-widest text-xs mb-8 flex items-center gap-2">
           <User size={14} /> Identitas & Foto
         </h3>
@@ -130,7 +130,7 @@ export default function ProfileForm({ initialData = null }) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
           {/* Photo Upload with built-in preview */}
           <div className="lg:col-span-1">
-            <div className="p-5 bg-white/5 border border-white/10 rounded-3xl">
+            <div className="p-5 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
               <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                 <Camera size={12} /> Foto Profil
               </p>
@@ -153,7 +153,7 @@ export default function ProfileForm({ initialData = null }) {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground transition-all"
                 />
               </div>
               <div>
@@ -164,7 +164,7 @@ export default function ProfileForm({ initialData = null }) {
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
-                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground transition-all"
                 />
               </div>
               <div>
@@ -175,7 +175,7 @@ export default function ProfileForm({ initialData = null }) {
                   name="badge"
                   value={formData.badge}
                   onChange={handleChange}
-                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground transition-all"
                 />
               </div>
               <div>
@@ -186,7 +186,7 @@ export default function ProfileForm({ initialData = null }) {
                   name="status_text"
                   value={formData.status_text}
                   onChange={handleChange}
-                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground transition-all"
                 />
               </div>
             </div>
@@ -195,7 +195,7 @@ export default function ProfileForm({ initialData = null }) {
       </div>
 
       {/* SECTION 2: ABOUT & QUOTE */}
-      <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
+      <div className="bg-white/5 p-8 rounded-3xl border border-[var(--border-subtle)]">
         <h3 className="text-teal-500 font-black uppercase tracking-widest text-xs mb-8 flex items-center gap-2">
           <Layout size={14} /> Konten Halaman Tentang
         </h3>
@@ -208,7 +208,7 @@ export default function ProfileForm({ initialData = null }) {
               name="about_tag"
               value={formData.about_tag}
               onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground"
             />
           </div>
           <div>
@@ -219,7 +219,7 @@ export default function ProfileForm({ initialData = null }) {
               name="about_title"
               value={formData.about_title}
               onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground"
             />
           </div>
         </div>
@@ -232,7 +232,7 @@ export default function ProfileForm({ initialData = null }) {
             value={formData.bio}
             onChange={handleChange}
             rows={4}
-            className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white resize-none"
+            className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground resize-none"
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -244,7 +244,7 @@ export default function ProfileForm({ initialData = null }) {
               name="location"
               value={formData.location}
               onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground transition-all"
             />
           </div>
           <div>
@@ -255,7 +255,7 @@ export default function ProfileForm({ initialData = null }) {
               name="education_level"
               value={formData.education_level}
               onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground transition-all"
             />
           </div>
           <div>
@@ -266,7 +266,7 @@ export default function ProfileForm({ initialData = null }) {
               name="availability"
               value={formData.availability}
               onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white transition-all"
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground transition-all"
             />
           </div>
         </div>
@@ -278,19 +278,19 @@ export default function ProfileForm({ initialData = null }) {
             name="quote"
             value={formData.quote}
             onChange={handleChange}
-            className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
+            className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground"
           />
         </div>
       </div>
 
       {/* SECTION 3: SOCIALS & FOOTER */}
-      <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
+      <div className="bg-white/5 p-8 rounded-3xl border border-[var(--border-subtle)]">
         <h3 className="text-teal-500 font-black uppercase tracking-widest text-xs mb-8 flex items-center gap-2">
           <Globe size={14} /> Kontak & Footer
         </h3>
 
         {/* Social Media Links */}
-        <div className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] mb-8">
+        <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] mb-8">
           <h3 className="text-lg font-bold mb-8 flex items-center gap-3">
             <Globe size={20} className="text-teal-500" /> Jejaring Sosial
           </h3>
@@ -375,7 +375,7 @@ export default function ProfileForm({ initialData = null }) {
               name="footer_title"
               value={formData.footer_title}
               onChange={handleChange}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white"
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground"
             />
           </div>
           <div>
@@ -387,7 +387,7 @@ export default function ProfileForm({ initialData = null }) {
               value={formData.footer_sub}
               onChange={handleChange}
               rows={3}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-white resize-none"
+              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 outline-none text-foreground resize-none"
             />
           </div>
         </div>

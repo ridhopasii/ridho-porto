@@ -141,7 +141,7 @@ export default async function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex font-jakarta">
+    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
       <AdminSidebar />
 
       <main className="flex-1 p-8 overflow-y-auto">
@@ -157,7 +157,7 @@ export default async function AdminDashboard() {
             <Link
               href="/"
               target="_blank"
-              className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-gray-400 hover:text-teal-500 hover:border-teal-500/30 transition-all flex items-center gap-2"
+              className="px-5 py-2.5 bg-white/5 border border-[var(--border-subtle)] rounded-xl text-xs font-bold text-gray-400 hover:text-teal-500 hover:border-teal-500/30 transition-all flex items-center gap-2"
             >
               <Eye size={14} /> Lihat Website
             </Link>
@@ -174,7 +174,7 @@ export default async function AdminDashboard() {
               <Folders size={24} />
             </div>
             <div>
-              <p className="text-2xl font-black text-white">{projectsOnHome}</p>
+              <p className="text-2xl font-black text-foreground">{projectsOnHome}</p>
               <p className="text-[10px] text-teal-500 font-bold uppercase tracking-widest">
                 Proyek di Home
               </p>
@@ -182,11 +182,11 @@ export default async function AdminDashboard() {
           </div>
 
           <div className="p-6 bg-blue-500/10 border border-blue-500/20 rounded-3xl flex items-center gap-4">
-            <div className="p-3 bg-blue-500 text-white rounded-2xl">
+            <div className="p-3 bg-blue-500 text-foreground rounded-2xl">
               <BookOpen size={24} />
             </div>
             <div>
-              <p className="text-2xl font-black text-white">{blogsOnHome}</p>
+              <p className="text-2xl font-black text-foreground">{blogsOnHome}</p>
               <p className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">
                 Blog di Home
               </p>
@@ -194,15 +194,15 @@ export default async function AdminDashboard() {
           </div>
 
           <div
-            className={`p-6 border rounded-3xl flex items-center gap-4 transition-all ${unreadCount > 0 ? 'bg-red-500/20 border-red-500/40 animate-pulse' : 'bg-white/5 border-white/10'}`}
+            className={`p-6 border rounded-3xl flex items-center gap-4 transition-all ${unreadCount > 0 ? 'bg-red-500/20 border-red-500/40 animate-pulse' : 'bg-white/5 border-[var(--border-subtle)]'}`}
           >
             <div
-              className={`p-3 rounded-2xl ${unreadCount > 0 ? 'bg-red-500 text-white' : 'bg-gray-500/20 text-gray-500'}`}
+              className={`p-3 rounded-2xl ${unreadCount > 0 ? 'bg-red-500 text-foreground' : 'bg-gray-500/20 text-gray-500'}`}
             >
               <MessageSquare size={24} />
             </div>
             <div>
-              <p className="text-2xl font-black text-white">{unreadCount}</p>
+              <p className="text-2xl font-black text-foreground">{unreadCount}</p>
               <p
                 className={`text-[10px] font-bold uppercase tracking-widest ${unreadCount > 0 ? 'text-red-500' : 'text-gray-500'}`}
               >
@@ -216,7 +216,7 @@ export default async function AdminDashboard() {
             <Link
               key={stat.label}
               href={stat.href}
-              className={`p-5 bg-white/5 border border-white/10 rounded-2xl hover:border-teal-500/20 transition-all group`}
+              className={`p-5 bg-white/5 border border-[var(--border-subtle)] rounded-2xl hover:border-teal-500/20 transition-all group`}
             >
               <div
                 className={`w-10 h-10 rounded-xl border flex items-center justify-center mb-4 ${colorMap[stat.color]} transition-all group-hover:scale-110`}
@@ -226,7 +226,7 @@ export default async function AdminDashboard() {
               <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-1">
                 {stat.label}
               </p>
-              <p className="text-3xl font-black text-white">{stat.value}</p>
+              <p className="text-3xl font-black text-foreground">{stat.value}</p>
             </Link>
           ))}
         </div>
@@ -234,9 +234,9 @@ export default async function AdminDashboard() {
         {/* Recent Messages + Quick Actions */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Messages */}
-          <div className="p-6 bg-white/5 border border-white/10 rounded-3xl">
+          <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="font-bold text-white flex items-center gap-2">
+              <h2 className="font-bold text-foreground flex items-center gap-2">
                 <MessageSquare size={18} className="text-teal-500" /> Pesan Terbaru
               </h2>
               <Link
@@ -257,7 +257,7 @@ export default async function AdminDashboard() {
                       {msg.name?.[0]?.toUpperCase() || 'A'}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm font-bold text-white truncate">{msg.name}</p>
+                      <p className="text-sm font-bold text-foreground truncate">{msg.name}</p>
                       <p className="text-[10px] text-gray-500 truncate">
                         {msg.subject || msg.email}
                       </p>
@@ -273,8 +273,8 @@ export default async function AdminDashboard() {
           </div>
 
           {/* Quick Actions */}
-          <div className="p-6 bg-white/5 border border-white/10 rounded-3xl">
-            <h2 className="font-bold text-white flex items-center gap-2 mb-6">
+          <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
+            <h2 className="font-bold text-foreground flex items-center gap-2 mb-6">
               <TrendingUp size={18} className="text-teal-500" /> Aksi Cepat
             </h2>
             <div className="grid grid-cols-2 gap-3">

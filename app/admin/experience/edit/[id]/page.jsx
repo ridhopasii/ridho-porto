@@ -19,7 +19,7 @@ export default function EditExperience() {
   }, [id]);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex">
+    <div className="min-h-screen bg-background text-foreground flex">
       <AdminSidebar />
       <main className="flex-1 p-8 overflow-y-auto">
         <h1 className="text-2xl font-bold mb-8 text-teal-500">Edit Pengalaman</h1>

@@ -108,7 +108,7 @@ export default function AdminSettings() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex font-jakarta">
+    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
       <AdminSidebar />
       <main className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-2xl">
@@ -143,7 +143,7 @@ export default function AdminSettings() {
                     key={section.key}
                     className={`flex items-center justify-between p-5 rounded-2xl border transition-all ${
                       isOn
-                        ? 'bg-white/5 border-white/10 hover:border-white/20'
+                        ? 'bg-white/5 border-[var(--border-subtle)] hover:border-white/20'
                         : 'bg-black/40 border-white/5 opacity-60'
                     }`}
                   >
@@ -175,7 +175,7 @@ export default function AdminSettings() {
 
           {/* Accent Color Selection */}
           {!loading && (
-            <div className="mt-8 p-6 bg-white/5 border border-white/10 rounded-[2rem]">
+            <div className="mt-8 p-6 bg-white/5 border border-[var(--border-subtle)] rounded-[2rem]">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-purple-500/10 rounded-xl">
                   <div
@@ -195,9 +195,9 @@ export default function AdminSettings() {
                   onChange={(e) =>
                     setSettings((prev) => ({ ...prev, accent_color: e.target.value }))
                   }
-                  className="w-full h-12 rounded-xl bg-black/40 border border-white/10 p-1 cursor-pointer"
+                  className="w-full h-12 rounded-xl bg-black/40 border border-[var(--border-subtle)] p-1 cursor-pointer"
                 />
-                <div className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-mono text-xs text-gray-400">
+                <div className="px-4 py-3 bg-white/5 border border-[var(--border-subtle)] rounded-xl font-mono text-xs text-gray-400">
                   {settings.accent_color || '#14b8a6'}
                 </div>
               </div>
@@ -253,7 +253,7 @@ export default function AdminSettings() {
           )}
 
           {/* Export Data Section */}
-          <div className="mt-12 pt-8 border-t border-white/10">
+          <div className="mt-12 pt-8 border-t border-[var(--border-subtle)]">
             <ExportData />
           </div>
         </div>

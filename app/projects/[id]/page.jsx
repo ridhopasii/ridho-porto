@@ -28,7 +28,7 @@ export default async function ProjectDetailPage({ params }) {
   if (!project) return <div className="p-20 text-center">Project not found.</div>;
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-jakarta">
+    <div className="min-h-screen bg-background text-foreground font-jakarta">
       <Navbar />
 
       <section className="pt-32 pb-32 px-6">
@@ -52,12 +52,12 @@ export default async function ProjectDetailPage({ params }) {
 
               {/* Specs Grid */}
               <div className="grid grid-cols-2 gap-4 mb-12">
-                <div className="p-6 bg-white/5 border border-white/10 rounded-3xl">
+                <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
                   <Layout size={20} className="text-[var(--accent)] mb-3" />
                   <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Role</p>
                   <p className="font-bold text-sm">Full Stack Developer</p>
                 </div>
-                <div className="p-6 bg-white/5 border border-white/10 rounded-3xl">
+                <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
                   <Zap size={20} className="text-yellow-500 mb-3" />
                   <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Challenge</p>
                   <p className="font-bold text-sm">High Performance</p>
@@ -72,7 +72,7 @@ export default async function ProjectDetailPage({ params }) {
                   </a>
                 )}
                 {project.repoUrl && (
-                  <a href={project.repoUrl} target="_blank" className="px-8 py-4 bg-white/5 border border-white/10 text-white font-black rounded-2xl text-xs uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-2">
+                  <a href={project.repoUrl} target="_blank" className="px-8 py-4 bg-white/5 border border-[var(--border-subtle)] text-foreground font-black rounded-2xl text-xs uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-2">
                     Source Code <Github size={16} />
                   </a>
                 )}
@@ -82,7 +82,7 @@ export default async function ProjectDetailPage({ params }) {
             {/* Right: Gallery Layout */}
             <div className="space-y-6">
               {project.images?.map((img, idx) => (
-                <div key={idx} className="rounded-[2.5rem] overflow-hidden border border-white/10 group">
+                <div key={idx} className="rounded-[2.5rem] overflow-hidden border border-[var(--border-subtle)] group">
                   <img 
                     src={img} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
@@ -101,8 +101,8 @@ export default async function ProjectDetailPage({ params }) {
             </div>
             <div className="flex flex-wrap gap-3">
               {project.tech?.split(',').map((t, i) => (
-                <div key={i} className="px-8 py-6 bg-white/5 border border-white/10 rounded-[2rem] text-center min-w-[140px] hover:border-[var(--accent)] transition-all">
-                  <p className="text-white font-black uppercase text-xs tracking-widest">{t.trim()}</p>
+                <div key={i} className="px-8 py-6 bg-white/5 border border-[var(--border-subtle)] rounded-[2rem] text-center min-w-[140px] hover:border-[var(--accent)] transition-all">
+                  <p className="text-foreground font-black uppercase text-xs tracking-widest">{t.trim()}</p>
                 </div>
               ))}
             </div>

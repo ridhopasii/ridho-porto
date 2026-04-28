@@ -29,7 +29,7 @@ export default function Hero({ profile }) {
   }, [fullText]);
 
   return (
-    <section className="min-h-screen flex items-center justify-center pt-32 pb-20 relative overflow-hidden bg-[#030303]">
+    <section className="min-h-screen flex items-center justify-center pt-32 pb-20 relative overflow-hidden bg-background">
       {/* Background Orbs */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-teal-500/10 rounded-full blur-[140px] animate-blob"></div>
@@ -79,7 +79,7 @@ export default function Hero({ profile }) {
           </div>
 
           {/* Profile Badge */}
-          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-white/10 mb-8 animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-[var(--border-subtle)] mb-8 animate-fade-in-up">
             <span className="w-2 h-2 bg-teal-500 rounded-full pulse-ring"></span>
             <span className="text-[10px] text-teal-500 font-black tracking-[0.2em] uppercase">
               {profile?.status_text || 'Open for collaborations'}
@@ -88,7 +88,7 @@ export default function Hero({ profile }) {
 
           {/* Name */}
           <h1 className="text-4xl sm:text-6xl md:text-8xl font-black font-outfit mb-6 tracking-tighter leading-[1.1]">
-            <span className="text-white">HI, I'M </span>
+            <span className="text-foreground">HI, I'M </span>
             <span className="text-teal-500">
               {(profile?.fullName || profile?.name)?.toUpperCase() || 'RIDHO ROBBI PASI'}
             </span>
@@ -174,7 +174,7 @@ export default function Hero({ profile }) {
                   key={idx}
                   href={social.href}
                   target="_blank"
-                  className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-white/5 border border-white/10 text-gray-500 hover:text-teal-500 hover:border-teal-500 transition-all hover:-translate-y-2 active:scale-90"
+                  className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-white/5 border border-[var(--border-subtle)] text-gray-500 hover:text-teal-500 hover:border-teal-500 transition-all hover:-translate-y-2 active:scale-90"
                 >
                   {social.icon}
                 </a>

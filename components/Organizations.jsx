@@ -6,13 +6,13 @@ export default function Organizations({ organizations }) {
   if (!organizations || organizations.length === 0) return null;
 
   return (
-    <section id="organisasi" className="py-24 px-6 bg-[#0a0a0a] relative">
+    <section id="organisasi" className="py-24 px-6 bg-background relative">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
           <h2 className="text-teal-500 font-bold uppercase tracking-[0.3em] mb-3 text-sm">
             Pengalaman Organisasi
           </h2>
-          <h3 className="text-4xl md:text-6xl font-black font-outfit text-white uppercase leading-none">
+          <h3 className="text-4xl md:text-6xl font-black font-outfit text-foreground uppercase leading-none">
             Involvement <span className="text-teal-500">& Leadership</span>
           </h3>
         </div>
@@ -22,7 +22,7 @@ export default function Organizations({ organizations }) {
             organizations.map((org, idx) => (
               <div
                 key={org.id}
-                className="group p-1 bg-white/5 rounded-[2rem] border border-white/10 hover:border-teal-500/30 transition-all duration-500 flex flex-col flex-shrink-0 w-[85vw] sm:w-[45vw] lg:w-[30vw] xl:w-[22vw] snap-center h-[28rem]"
+                className="group p-1 bg-white/5 rounded-[2rem] border border-[var(--border-subtle)] hover:border-teal-500/30 transition-all duration-500 flex flex-col flex-shrink-0 w-[85vw] sm:w-[45vw] lg:w-[30vw] xl:w-[22vw] snap-center h-[28rem]"
               >
                 <div className="flex flex-col p-5 h-full bg-[#0d0d0d] rounded-[1.8rem] relative overflow-hidden">
                   
@@ -37,7 +37,7 @@ export default function Organizations({ organizations }) {
                       />
                       {/* Logo Overlaid on Banner */}
                       {org.logoUrl && (
-                        <div className="absolute -bottom-4 left-4 w-12 h-12 bg-[#0d0d0d] rounded-xl overflow-hidden p-1.5 border border-white/10 shadow-lg z-20">
+                        <div className="absolute -bottom-4 left-4 w-12 h-12 bg-[#0d0d0d] rounded-xl overflow-hidden p-1.5 border border-[var(--border-subtle)] shadow-lg z-20">
                           <img
                             src={org.logoUrl}
                             alt={org.name}
@@ -49,7 +49,7 @@ export default function Organizations({ organizations }) {
 
                   <div className="flex-1 flex flex-col pt-2 min-h-0">
                     <Link href={`/organizations/${org.slug}`}>
-                      <h4 className="text-lg font-black text-white group-hover:text-teal-500 transition-colors uppercase tracking-tight leading-tight mb-1 truncate">
+                      <h4 className="text-lg font-black text-foreground group-hover:text-teal-500 transition-colors uppercase tracking-tight leading-tight mb-1 truncate">
                         {org.name || 'Organization Name'}
                       </h4>
                     </Link>
@@ -71,7 +71,7 @@ export default function Organizations({ organizations }) {
                         </a>
                       )}
                       {org.proofUrl && (
-                        <a href={org.proofUrl} target="_blank" className="flex items-center gap-1 hover:text-white">
+                        <a href={org.proofUrl} target="_blank" className="flex items-center gap-1 hover:text-foreground">
                           <Users size={10} /> Bukti
                         </a>
                       )}

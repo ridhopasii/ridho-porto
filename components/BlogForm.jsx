@@ -69,7 +69,7 @@ export default function BlogForm({ initialData = null }) {
       )}
 
       {/* Visibility Toggle */}
-      <div className="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-3xl">
+      <div className="flex items-center justify-between p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
         <div className="flex items-center gap-4">
           <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-teal-500/20 text-teal-500' : 'bg-gray-500/20 text-gray-500'}`}>
             {formData.showOnHome ? <Eye size={20} /> : <EyeOff size={20} />}
@@ -97,7 +97,7 @@ export default function BlogForm({ initialData = null }) {
               required
               value={formData.title}
               onChange={handleTitleChange}
-              className="mt-1 block w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              className="mt-1 block w-full bg-[#1a1a1a] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
               placeholder="Contoh: Cara Belajar Next.js"
             />
           </div>
@@ -108,7 +108,7 @@ export default function BlogForm({ initialData = null }) {
               required
               value={formData.slug}
               onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-              className="mt-1 block w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              className="mt-1 block w-full bg-[#1a1a1a] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
             />
           </div>
           <div>
@@ -117,7 +117,7 @@ export default function BlogForm({ initialData = null }) {
               type="text"
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="mt-1 block w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              className="mt-1 block w-full bg-[#1a1a1a] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
               placeholder="Contoh: Tutorial, Review, Personal"
             />
           </div>
@@ -150,7 +150,7 @@ export default function BlogForm({ initialData = null }) {
           rows={2}
           value={formData.excerpt}
           onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-          className="mt-1 block w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          className="mt-1 block w-full bg-[#1a1a1a] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
           placeholder="Ringkasan singkat artikel..."
         />
       </div>
@@ -162,7 +162,7 @@ export default function BlogForm({ initialData = null }) {
           rows={10}
           value={formData.content}
           onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-          className="mt-1 block w-full bg-[#1a1a1a] border border-white/10 rounded-xl px-4 py-3 text-white font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          className="mt-1 block w-full bg-[#1a1a1a] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-foreground font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/50"
           placeholder="Tulis artikel Anda di sini..."
         />
       </div>
@@ -170,7 +170,7 @@ export default function BlogForm({ initialData = null }) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-500/20"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-foreground font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-500/20"
       >
         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
         Simpan Artikel

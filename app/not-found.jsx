@@ -4,14 +4,14 @@ import { Home, ArrowLeft, Search } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen bg-[#030303] text-white flex flex-col">
+    <main className="min-h-screen bg-background text-foreground flex flex-col">
       <Navbar />
 
       <div className="flex-1 flex items-center justify-center px-6 py-32">
         <div className="text-center max-w-2xl mx-auto">
           {/* Giant 404 */}
           <div className="relative mb-12">
-            <p className="text-[200px] md:text-[300px] font-black font-outfit leading-none text-white/5 select-none">
+            <p className="text-[200px] md:text-[300px] font-black font-outfit leading-none text-foreground/5 select-none">
               404
             </p>
             <div className="absolute inset-0 flex items-center justify-center">
@@ -43,7 +43,7 @@ export default function NotFound() {
             </Link>
             <Link
               href="/#proyek"
-              className="px-10 py-5 bg-white/5 text-white font-bold rounded-2xl border border-white/10 hover:bg-white/10 transition-all hover:scale-105 flex items-center justify-center gap-2 text-sm uppercase tracking-widest"
+              className="px-10 py-5 bg-white/5 text-foreground font-bold rounded-2xl border border-[var(--border-subtle)] hover:bg-white/10 transition-all hover:scale-105 flex items-center justify-center gap-2 text-sm uppercase tracking-widest"
             >
               <ArrowLeft size={18} /> Lihat Portofolio
             </Link>

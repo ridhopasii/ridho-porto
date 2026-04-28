@@ -54,20 +54,20 @@ export default function Chatbot() {
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            className="fixed bottom-6 right-6 w-80 md:w-96 h-[500px] bg-[#0d0d0d] border border-white/10 rounded-3xl shadow-2xl z-50 flex flex-col overflow-hidden"
+            className="fixed bottom-6 right-6 w-80 md:w-96 h-[500px] bg-[#0d0d0d] border border-[var(--border-subtle)] rounded-3xl shadow-2xl z-50 flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="p-4 bg-white/5 border-b border-white/10 flex justify-between items-center">
+            <div className="p-4 bg-white/5 border-b border-[var(--border-subtle)] flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-500">
                   <Bot size={18} />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white">Virtual Ridho</h3>
+                  <h3 className="text-sm font-bold text-foreground">Virtual Ridho</h3>
                   <p className="text-[10px] text-teal-500">AI Assistant • Online</p>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white transition-colors">
+              <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-foreground transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -95,13 +95,13 @@ export default function Chatbot() {
             </div>
 
             {/* Input */}
-            <form onSubmit={handleSend} className="p-4 bg-white/5 border-t border-white/10 flex gap-2">
+            <form onSubmit={handleSend} className="p-4 bg-white/5 border-t border-[var(--border-subtle)] flex gap-2">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Tanya sesuatu..."
-                className="flex-1 bg-black border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-teal-500 transition-colors"
+                className="flex-1 bg-black border border-[var(--border-subtle)] rounded-xl px-4 py-2 text-sm text-foreground focus:outline-none focus:border-teal-500 transition-colors"
               />
               <button
                 type="submit"

@@ -84,13 +84,13 @@ export default function ExportData() {
   };
 
   return (
-    <div className="p-6 bg-white/5 border border-white/10 rounded-3xl">
+    <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
       <div className="flex items-center gap-3 mb-4">
         <div className="p-2 bg-blue-500/10 rounded-xl">
           <Database size={20} className="text-blue-500" />
         </div>
         <div>
-          <h3 className="font-bold text-white">Export & Backup Data</h3>
+          <h3 className="font-bold text-foreground">Export & Backup Data</h3>
           <p className="text-xs text-gray-500">Download semua data dalam format JSON</p>
         </div>
       </div>
@@ -105,7 +105,7 @@ export default function ExportData() {
       <button
         onClick={exportAllData}
         disabled={loading}
-        className="w-full py-3 bg-blue-500 text-white font-bold rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+        className="w-full py-3 bg-blue-500 text-foreground font-bold rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
       >
         {loading ? (
           <>

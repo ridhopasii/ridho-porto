@@ -40,7 +40,7 @@ export default function GalleryList({ galleryItems }) {
       {galleryItems?.map((item) => (
         <div
           key={item.id}
-          className="group bg-white/5 border border-white/10 rounded-[2.5rem] overflow-hidden hover:border-purple-500/30 transition-all"
+          className="group bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] overflow-hidden hover:border-purple-500/30 transition-all"
         >
           <div className="relative aspect-video">
             {item.images?.[0] ? (
@@ -54,7 +54,7 @@ export default function GalleryList({ galleryItems }) {
               <button
                 onClick={() => toggleVisibility(item)}
                 className={`p-3 rounded-xl hover:scale-110 transition-all ${
-                  item.showOnHome !== false ? 'bg-teal-500 text-white' : 'bg-gray-500 text-white'
+                  item.showOnHome !== false ? 'bg-teal-500 text-foreground' : 'bg-gray-500 text-foreground'
                 }`}
               >
                 {item.showOnHome !== false ? <Eye size={18} /> : <EyeOff size={18} />}
@@ -68,19 +68,19 @@ export default function GalleryList({ galleryItems }) {
               <button
                 onClick={() => handleDelete(item.id)}
                 disabled={deletingId === item.id}
-                className="p-3 bg-red-500 text-white rounded-xl hover:scale-110 transition-all disabled:opacity-50"
+                className="p-3 bg-red-500 text-foreground rounded-xl hover:scale-110 transition-all disabled:opacity-50"
               >
                 <Trash2 size={18} />
               </button>
             </div>
             <div className="absolute top-4 left-4">
-              <span className="px-3 py-1 bg-purple-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">
+              <span className="px-3 py-1 bg-purple-500 text-foreground text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">
                 {item.category}
               </span>
             </div>
           </div>
           <div className="p-6">
-            <h3 className="text-lg font-bold text-white mb-2 line-clamp-1">{item.title}</h3>
+            <h3 className="text-lg font-bold text-foreground mb-2 line-clamp-1">{item.title}</h3>
             <div className="flex items-center gap-2 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
               <Calendar size={12} /> {item.date || 'No Date'}
               <span className="ml-auto text-purple-500">{item.images?.length || 0} Photos</span>

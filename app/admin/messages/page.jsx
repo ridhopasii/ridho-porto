@@ -10,7 +10,7 @@ export default async function AdminMessages() {
     .order('createdAt', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex font-jakarta">
+    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
       <AdminSidebar />
 
       <main className="flex-1 p-8 overflow-y-auto">
@@ -32,7 +32,7 @@ export default async function AdminMessages() {
           ))}
 
           {messages?.length === 0 && (
-            <div className="text-center py-20 bg-white/5 border border-dashed border-white/10 rounded-3xl">
+            <div className="text-center py-20 bg-white/5 border border-dashed border-[var(--border-subtle)] rounded-3xl">
               <p className="text-gray-500 text-sm italic">Belum ada pesan masuk.</p>
             </div>
           )}

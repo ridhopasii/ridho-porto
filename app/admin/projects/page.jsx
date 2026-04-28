@@ -12,7 +12,7 @@ export default async function AdminProjects() {
     .order('createdAt', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex font-jakarta">
+    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
       <AdminSidebar />
 
       {/* Main Content */}

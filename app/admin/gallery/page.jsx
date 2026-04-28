@@ -100,12 +100,12 @@ export default function AdminGalleryPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex font-jakarta">
+    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
       <AdminSidebar />
 
       <main className="flex-1 overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 z-20 bg-[#050505]/90 backdrop-blur-xl border-b border-white/5 px-8 py-5">
+        <div className="sticky top-0 z-20 bg-background/90 backdrop-blur-xl border-b border-white/5 px-8 py-5">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div>
@@ -131,13 +131,13 @@ export default function AdminGalleryPage() {
               <Link
                 href="/gallery"
                 target="_blank"
-                className="flex items-center gap-2 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-gray-400 hover:text-purple-400 hover:border-purple-500/30 transition-all"
+                className="flex items-center gap-2 px-4 py-2.5 bg-white/5 border border-[var(--border-subtle)] rounded-xl text-xs font-bold text-gray-400 hover:text-purple-400 hover:border-purple-500/30 transition-all"
               >
                 <Eye size={14} /> Preview
               </Link>
               <button
                 onClick={() => { setShowAddForm(true); setEditItem(null); }}
-                className="flex items-center gap-2 px-5 py-2.5 bg-purple-500 text-white font-black rounded-xl hover:bg-purple-400 transition-all text-xs uppercase tracking-widest shadow-lg shadow-purple-500/20"
+                className="flex items-center gap-2 px-5 py-2.5 bg-purple-500 text-foreground font-black rounded-xl hover:bg-purple-400 transition-all text-xs uppercase tracking-widest shadow-lg shadow-purple-500/20"
               >
                 <Plus size={16} /> Tambah Album
               </button>
@@ -153,7 +153,7 @@ export default function AdminGalleryPage() {
               { label: 'Total Foto', value: totalPhotos, color: 'text-teal-500' },
               { label: 'Kategori', value: [...new Set(items.map(i => i.category).filter(Boolean))].length, color: 'text-blue-500' },
             ].map((s) => (
-              <div key={s.label} className="p-5 bg-white/5 border border-white/10 rounded-2xl">
+              <div key={s.label} className="p-5 bg-white/5 border border-[var(--border-subtle)] rounded-2xl">
                 <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">{s.label}</p>
                 <p className={`text-3xl font-black ${s.color}`}>{s.value}</p>
               </div>
@@ -169,7 +169,7 @@ export default function AdminGalleryPage() {
                 </h2>
                 <button
                   onClick={() => { setShowAddForm(false); setEditItem(null); }}
-                  className="p-2 hover:bg-white/10 rounded-xl transition-all text-gray-500 hover:text-white"
+                  className="p-2 hover:bg-white/10 rounded-xl transition-all text-gray-500 hover:text-foreground"
                 >
                   ✕
                 </button>
@@ -199,8 +199,8 @@ export default function AdminGalleryPage() {
                     onClick={() => setActiveCategory(cat)}
                     className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                       activeCategory === cat
-                        ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20'
-                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+                        ? 'bg-purple-500 text-foreground shadow-lg shadow-purple-500/20'
+                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-[var(--border-subtle)]'
                     }`}
                   >
                     {cat} <span className="opacity-60 ml-1">({count})</span>
@@ -214,25 +214,25 @@ export default function AdminGalleryPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-[10px] font-bold text-gray-300 focus:outline-none focus:border-purple-500 transition-all appearance-none cursor-pointer"
+                className="bg-white/5 border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-[10px] font-bold text-gray-300 focus:outline-none focus:border-purple-500 transition-all appearance-none cursor-pointer"
               >
                 {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value} className="bg-[#0a0a0a]">
+                  <option key={opt.value} value={opt.value} className="bg-background">
                     {opt.label}
                   </option>
                 ))}
               </select>
 
-              <div className="flex bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+              <div className="flex bg-white/5 border border-[var(--border-subtle)] rounded-xl overflow-hidden">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`px-3 py-2 transition-all ${viewMode === 'grid' ? 'bg-purple-500 text-white' : 'text-gray-500 hover:text-white'}`}
+                  className={`px-3 py-2 transition-all ${viewMode === 'grid' ? 'bg-purple-500 text-foreground' : 'text-gray-500 hover:text-foreground'}`}
                 >
                   <LayoutGrid size={15} />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`px-3 py-2 transition-all ${viewMode === 'list' ? 'bg-purple-500 text-white' : 'text-gray-500 hover:text-white'}`}
+                  className={`px-3 py-2 transition-all ${viewMode === 'list' ? 'bg-purple-500 text-foreground' : 'text-gray-500 hover:text-foreground'}`}
                 >
                   <List size={15} />
                 </button>
@@ -246,7 +246,7 @@ export default function AdminGalleryPage() {
               <Loader2 className="animate-spin text-purple-500" size={32} />
             </div>
           ) : sorted.length === 0 ? (
-            <div className="text-center py-24 bg-white/5 rounded-3xl border border-dashed border-white/10">
+            <div className="text-center py-24 bg-white/5 rounded-3xl border border-dashed border-[var(--border-subtle)]">
               <ImageIcon size={48} className="mx-auto text-gray-800 mb-4" />
               <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">
                 {activeCategory === 'Semua' ? 'Belum ada galeri.' : `Kosong di kategori "${activeCategory}".`}
@@ -259,7 +259,7 @@ export default function AdminGalleryPage() {
                 return (
                   <div
                     key={item.id}
-                    className="group bg-white/5 border border-white/10 rounded-[2rem] overflow-hidden hover:border-purple-500/30 transition-all"
+                    className="group bg-white/5 border border-[var(--border-subtle)] rounded-[2rem] overflow-hidden hover:border-purple-500/30 transition-all"
                   >
                     {/* Thumbnail */}
                     <div className="relative aspect-video overflow-hidden">
@@ -282,7 +282,7 @@ export default function AdminGalleryPage() {
                         <button
                           onClick={() => handleDelete(item.id)}
                           disabled={deletingId === item.id}
-                          className="p-3 bg-red-500 text-white rounded-xl hover:scale-110 transition-all disabled:opacity-50"
+                          className="p-3 bg-red-500 text-foreground rounded-xl hover:scale-110 transition-all disabled:opacity-50"
                           title="Hapus"
                         >
                           {deletingId === item.id ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
@@ -296,14 +296,14 @@ export default function AdminGalleryPage() {
                       </div>
                       {/* Photo count badge */}
                       <div className="absolute top-3 right-3">
-                        <span className="px-2.5 py-1 bg-black/60 backdrop-blur-sm rounded-full text-[9px] font-black text-white">
+                        <span className="px-2.5 py-1 bg-black/60 backdrop-blur-sm rounded-full text-[9px] font-black text-foreground">
                           {imgs.length} foto
                         </span>
                       </div>
                     </div>
 
                     <div className="p-5">
-                      <h3 className="font-bold text-white line-clamp-1 mb-1">{item.title}</h3>
+                      <h3 className="font-bold text-foreground line-clamp-1 mb-1">{item.title}</h3>
                       <div className="flex items-center gap-2 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
                         <Calendar size={11} /> {item.date || '—'}
                       </div>
@@ -320,7 +320,7 @@ export default function AdminGalleryPage() {
                 return (
                   <div
                     key={item.id}
-                    className="group flex items-center gap-4 p-4 bg-white/5 border border-white/10 rounded-2xl hover:border-purple-500/30 transition-all"
+                    className="group flex items-center gap-4 p-4 bg-white/5 border border-[var(--border-subtle)] rounded-2xl hover:border-purple-500/30 transition-all"
                   >
                     {/* Thumb */}
                     <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-white/5">
@@ -335,7 +335,7 @@ export default function AdminGalleryPage() {
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-white truncate">{item.title}</h3>
+                      <h3 className="font-bold text-foreground truncate">{item.title}</h3>
                       <div className="flex items-center gap-3 mt-1">
                         <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border ${CAT_BADGE[item.category] || 'bg-white/10 border-white/20 text-gray-400'}`}>
                           {item.category}

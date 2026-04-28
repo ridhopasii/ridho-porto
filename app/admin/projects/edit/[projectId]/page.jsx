@@ -25,18 +25,18 @@ export default function EditProject() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#0a0a0a]">
+    <div className="flex min-h-screen bg-background">
       <AdminSidebar />
       <main className="flex-1 p-8">
         <div className="max-w-4xl mx-auto">
           <Link
             href="/admin/projects"
-            className="flex items-center gap-2 text-gray-500 hover:text-white transition-all mb-6 group"
+            className="flex items-center gap-2 text-gray-500 hover:text-foreground transition-all mb-6 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Kembali ke Daftar Proyek
           </Link>
-          <h1 className="text-3xl font-bold text-white mb-8">Edit Proyek</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-8">Edit Proyek</h1>
 
           {loading ? (
             <div className="flex justify-center py-20">

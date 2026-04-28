@@ -26,7 +26,7 @@ export default function GalleryFilter({ items }) {
               className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
                 filter === cat
                   ? 'bg-rose-500 text-black shadow-[0_0_20px_rgba(244,63,94,0.3)]'
-                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-foreground border border-[var(--border-subtle)]'
               }`}
             >
               {cat}
@@ -44,7 +44,7 @@ export default function GalleryFilter({ items }) {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
                 key={item.id}
-                className="relative group rounded-[2rem] overflow-hidden bg-white/5 border border-white/10 break-inside-avoid shadow-2xl"
+                className="relative group rounded-[2rem] overflow-hidden bg-white/5 border border-[var(--border-subtle)] break-inside-avoid shadow-2xl"
               >
                 <img
                   src={item.imageUrl}
@@ -65,7 +65,7 @@ export default function GalleryFilter({ items }) {
         </motion.div>
 
         {filteredItems.length === 0 && (
-          <div className="text-center py-20 p-8 bg-white/5 border border-white/10 rounded-[3rem]">
+          <div className="text-center py-20 p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[3rem]">
             <p className="text-gray-500 italic">Belum ada foto dalam kategori ini.</p>
           </div>
         )}

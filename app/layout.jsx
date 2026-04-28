@@ -6,6 +6,7 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import Chatbot from '@/components/Chatbot';
 import CustomCursor from '@/components/CustomCursor';
 import AccentProvider from '@/components/AccentProvider';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 import { createClient } from '@/utils/supabase/server';
 
 const outfit = Outfit({
@@ -80,16 +81,18 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="id" className={`${outfit.variable} ${jakarta.variable}`} suppressHydrationWarning>
-      <body className="bg-[#0a0a0a] text-white">
-        <AccentProvider color={accentColor}>
-          <ErrorBoundary>
-            <ThemeProvider>
+      <body className="bg-background text-foreground">
+        <LanguageProvider>
+          <AccentProvider color={accentColor}>
+            <ErrorBoundary>
+              <ThemeProvider>
               <Analytics />
               {children}
               <Chatbot />
             </ThemeProvider>
           </ErrorBoundary>
-        </AccentProvider>
+          </AccentProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

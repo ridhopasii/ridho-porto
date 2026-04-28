@@ -66,7 +66,7 @@ export default function ExperienceForm({ initialData = null }) {
           type="text"
           value={formData.company}
           onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
           placeholder="Contoh: Google Indonesia"
         />
       </div>
@@ -93,7 +93,7 @@ export default function ExperienceForm({ initialData = null }) {
           type="text"
           value={formData.position}
           onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
           placeholder="Contoh: Senior Web Developer"
         />
       </div>
@@ -107,7 +107,7 @@ export default function ExperienceForm({ initialData = null }) {
           type="text"
           value={formData.period}
           onChange={(e) => setFormData({ ...formData, period: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
           placeholder="Contoh: Jan 2021 - Des 2023"
         />
       </div>
@@ -120,7 +120,7 @@ export default function ExperienceForm({ initialData = null }) {
           type="text"
           value={formData.proofUrl || ''}
           onChange={(e) => setFormData({ ...formData, proofUrl: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
           placeholder="https://..."
         />
       </div>
@@ -137,7 +137,7 @@ export default function ExperienceForm({ initialData = null }) {
       </div>
 
       {/* Visibility Toggle */}
-      <div className="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-3xl">
+      <div className="flex items-center justify-between p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
         <div className="flex items-center gap-4">
           <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-teal-500/20 text-teal-500' : 'bg-gray-500/20 text-gray-500'}`}>
             {formData.showOnHome ? <Eye size={20} /> : <EyeOff size={20} />}
@@ -168,7 +168,7 @@ export default function ExperienceForm({ initialData = null }) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-8 py-4 bg-white/5 text-white font-bold rounded-xl border border-white/10 hover:bg-white/10 transition-all"
+          className="px-8 py-4 bg-white/5 text-foreground font-bold rounded-xl border border-[var(--border-subtle)] hover:bg-white/10 transition-all"
         >
           Batal
         </button>

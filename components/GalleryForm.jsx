@@ -59,7 +59,7 @@ export default function GalleryForm({ initialData = null, onSuccess }) {
       )}
 
       <div>
-        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
+        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-foreground/60">
           Judul Kegiatan / Album
         </label>
         <input
@@ -67,13 +67,13 @@ export default function GalleryForm({ initialData = null, onSuccess }) {
           type="text"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-purple-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-purple-500 focus:outline-none transition-all text-foreground"
           placeholder="Contoh: Kunjungan Global Relations"
         />
       </div>
 
       {/* Visibility Toggle */}
-      <div className="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-3xl">
+      <div className="flex items-center justify-between p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
         <div className="flex items-center gap-4">
           <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-teal-500/20 text-teal-500' : 'bg-gray-500/20 text-gray-500'}`}>
             {formData.showOnHome ? <Eye size={20} /> : <EyeOff size={20} />}
@@ -94,54 +94,54 @@ export default function GalleryForm({ initialData = null, onSuccess }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60 flex items-center gap-2">
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-foreground/60 flex items-center gap-2">
             <Tag size={14} /> Kategori
           </label>
           <select
             required
             value={formData.category}
             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-purple-500 focus:outline-none transition-all text-white appearance-none"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-purple-500 focus:outline-none transition-all text-foreground appearance-none"
           >
-            <option value="" className="bg-[#0a0a0a]">
+            <option value="" className="bg-background">
               Pilih Kategori
             </option>
-            <option value="kegiatan" className="bg-[#0a0a0a]">Kegiatan</option>
-            <option value="prestasi" className="bg-[#0a0a0a]">Prestasi</option>
-            <option value="organisasi" className="bg-[#0a0a0a]">Organisasi</option>
-            <option value="pendidikan" className="bg-[#0a0a0a]">Pendidikan</option>
-            <option value="lainnya" className="bg-[#0a0a0a]">Lainnya</option>
+            <option value="kegiatan" className="bg-background">Kegiatan</option>
+            <option value="prestasi" className="bg-background">Prestasi</option>
+            <option value="organisasi" className="bg-background">Organisasi</option>
+            <option value="pendidikan" className="bg-background">Pendidikan</option>
+            <option value="lainnya" className="bg-background">Lainnya</option>
           </select>
         </div>
         <div>
-          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-foreground/60">
             Tanggal
           </label>
           <input
             type="text"
             value={formData.date || ''}
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-purple-500 focus:outline-none transition-all text-white"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-purple-500 focus:outline-none transition-all text-foreground"
             placeholder="Contoh: 2024"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-white/60">
+        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest text-foreground/60">
           Keterangan Tambahan
         </label>
         <textarea
           value={formData.description || ''}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           rows={3}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-purple-500 focus:outline-none transition-all resize-none text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-purple-500 focus:outline-none transition-all resize-none text-foreground"
           placeholder="Jelaskan sedikit tentang momen ini..."
         />
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest flex items-center gap-2 text-white/60">
+        <label className="block text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest flex items-center gap-2 text-foreground/60">
           <Camera size={14} /> Upload Foto Galeri
         </label>
         <MultiPhotoUpload
@@ -155,7 +155,7 @@ export default function GalleryForm({ initialData = null, onSuccess }) {
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 py-4 bg-purple-600 text-white font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-purple-500/20"
+          className="flex-1 py-4 bg-purple-600 text-foreground font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-purple-500/20"
         >
           {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
           {loading ? 'Menyimpan...' : initialData ? 'Simpan Perubahan' : 'Tambah ke Galeri'}
@@ -163,7 +163,7 @@ export default function GalleryForm({ initialData = null, onSuccess }) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-8 py-4 bg-white/5 text-white font-bold rounded-xl border border-white/10 hover:bg-white/10 transition-all"
+          className="px-8 py-4 bg-white/5 text-foreground font-bold rounded-xl border border-[var(--border-subtle)] hover:bg-white/10 transition-all"
         >
           Batal
         </button>

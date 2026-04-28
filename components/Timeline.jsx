@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Timeline({ experiences, educations }) {
   return (
-    <section className="py-24 px-6 bg-[#0a0a0a] overflow-hidden">
+    <section className="py-24 px-6 bg-background overflow-hidden">
       <div className="max-w-7xl mx-auto space-y-24">
         
         {/* Experience Section */}
@@ -27,7 +27,7 @@ export default function Timeline({ experiences, educations }) {
                     className={`relative p-6 md:p-8 rounded-[2rem] snap-center flex flex-col group transition-all duration-500 ${
                       isBig 
                         ? 'row-span-2 w-[85vw] md:w-[45vw] lg:w-[35vw] bg-teal-500/5 border border-teal-500/20 hover:border-teal-500/50 hover:bg-teal-500/10 min-h-[300px] md:min-h-[400px]' 
-                        : 'row-span-1 w-[75vw] md:w-[35vw] lg:w-[25vw] bg-white/5 border border-white/10 hover:border-white/30 min-h-[140px] md:min-h-[190px]'
+                        : 'row-span-1 w-[75vw] md:w-[35vw] lg:w-[25vw] bg-white/5 border border-[var(--border-subtle)] hover:border-white/30 min-h-[140px] md:min-h-[190px]'
                     }`}
                   >
                     <div className="mt-auto flex flex-col h-full justify-between">
@@ -83,7 +83,7 @@ export default function Timeline({ experiences, educations }) {
                     className={`relative p-6 md:p-8 rounded-[2rem] snap-center flex flex-col group transition-all duration-500 ${
                       isBig 
                         ? 'row-span-2 w-[85vw] md:w-[45vw] lg:w-[35vw] bg-purple-500/5 border border-purple-500/20 hover:border-purple-500/50 hover:bg-purple-500/10 min-h-[300px] md:min-h-[400px]' 
-                        : 'row-span-1 w-[75vw] md:w-[35vw] lg:w-[25vw] bg-white/5 border border-white/10 hover:border-white/30 min-h-[140px] md:min-h-[190px]'
+                        : 'row-span-1 w-[75vw] md:w-[35vw] lg:w-[25vw] bg-white/5 border border-[var(--border-subtle)] hover:border-white/30 min-h-[140px] md:min-h-[190px]'
                     }`}
                   >
                     <div className="mt-auto flex flex-col h-full justify-between">

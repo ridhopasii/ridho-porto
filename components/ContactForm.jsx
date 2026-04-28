@@ -30,7 +30,7 @@ export default function ContactForm() {
     return (
       <div className="p-10 bg-teal-500/10 border border-teal-500/30 rounded-3xl text-center">
         <CheckCircle2 size={48} className="text-teal-500 mx-auto mb-4" />
-        <h3 className="text-xl font-black text-white mb-2 uppercase tracking-tight">
+        <h3 className="text-xl font-black text-foreground mb-2 uppercase tracking-tight">
           Pesan Terkirim!
         </h3>
         <p className="text-gray-400 text-sm">
@@ -38,7 +38,7 @@ export default function ContactForm() {
         </p>
         <button
           onClick={() => setSuccess(false)}
-          className="mt-6 px-6 py-3 bg-white/10 text-white text-xs font-bold rounded-xl hover:bg-white/20 transition-all uppercase tracking-widest"
+          className="mt-6 px-6 py-3 bg-white/10 text-foreground text-xs font-bold rounded-xl hover:bg-white/20 transition-all uppercase tracking-widest"
         >
           Kirim Pesan Lain
         </button>
@@ -66,7 +66,7 @@ export default function ContactForm() {
             placeholder="Nama Lengkap"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white placeholder:text-gray-600 text-sm font-medium"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-2xl pl-12 pr-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground placeholder:text-gray-600 text-sm font-medium"
           />
         </div>
         <div className="relative">
@@ -80,7 +80,7 @@ export default function ContactForm() {
             placeholder="Email Address"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white placeholder:text-gray-600 text-sm font-medium"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-2xl pl-12 pr-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground placeholder:text-gray-600 text-sm font-medium"
           />
         </div>
       </div>
@@ -95,7 +95,7 @@ export default function ContactForm() {
           placeholder="Perihal / Subjek"
           value={formData.subject}
           onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white placeholder:text-gray-600 text-sm font-medium"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-2xl pl-12 pr-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground placeholder:text-gray-600 text-sm font-medium"
         />
       </div>
 
@@ -105,7 +105,7 @@ export default function ContactForm() {
         placeholder="Tulis pesan Anda di sini..."
         value={formData.message}
         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white placeholder:text-gray-600 resize-none text-sm font-medium"
+        className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground placeholder:text-gray-600 resize-none text-sm font-medium"
       />
 
       <button

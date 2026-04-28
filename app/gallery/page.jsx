@@ -13,7 +13,7 @@ export default async function GalleryPage() {
     .order('createdAt', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-jakarta selection:bg-rose-500/30">
+    <div className="min-h-screen bg-background text-foreground font-jakarta selection:bg-rose-500/30">
       <Navbar />
 
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">

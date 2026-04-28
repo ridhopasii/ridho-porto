@@ -23,7 +23,7 @@ export default function EditEducationPage() {
   }, [eduId]);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex font-jakarta">
+    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
       <AdminSidebar />
       <main className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-2xl mx-auto">
@@ -35,7 +35,7 @@ export default function EditEducationPage() {
             Kembali ke Daftar Pendidikan
           </Link>
 
-          <div className="p-8 bg-white/5 border border-white/10 rounded-3xl">
+          <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
             <h1 className="text-2xl font-bold mb-2">Edit Pendidikan</h1>
             <p className="text-gray-500 text-sm mb-8">Ubah data riwayat pendidikan.</p>
 

@@ -23,7 +23,7 @@ export default async function SkillDetailPage({ params }) {
     .limit(4);
 
   return (
-    <main className="min-h-screen bg-[#030303] text-white">
+    <main className="min-h-screen bg-background text-foreground">
       <Navbar />
 
       {/* Hero Header */}
@@ -39,12 +39,12 @@ export default async function SkillDetailPage({ params }) {
           </Link>
 
           <div className="flex flex-col md:flex-row gap-8 items-center text-center md:text-left">
-            <div className="w-32 h-32 bg-white/5 border border-white/10 rounded-[2.5rem] flex items-center justify-center text-teal-500 shadow-2xl shadow-teal-500/10">
+            <div className="w-32 h-32 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] flex items-center justify-center text-teal-500 shadow-2xl shadow-teal-500/10">
               <Code2 size={64} strokeWidth={1} />
             </div>
             <div>
               <div className="flex flex-wrap gap-3 mb-4 justify-center md:justify-start">
-                <span className="px-4 py-1.5 bg-white/5 border border-white/10 text-gray-400 text-[10px] font-black uppercase tracking-widest rounded-full">
+                <span className="px-4 py-1.5 bg-white/5 border border-[var(--border-subtle)] text-gray-400 text-[10px] font-black uppercase tracking-widest rounded-full">
                   {skill.category || 'Technical Skill'}
                 </span>
                 <span className="px-4 py-1.5 bg-teal-500/10 border border-teal-500/20 text-teal-500 text-[10px] font-black uppercase tracking-widest rounded-full">
@@ -85,7 +85,7 @@ export default async function SkillDetailPage({ params }) {
                 <h2 className="text-xs font-black text-gray-500 uppercase tracking-[0.4em] mb-8 flex items-center gap-2">
                   <History size={14} className="text-teal-500" /> Applied Projects & Documentation
                 </h2>
-                <div className="rounded-[3rem] overflow-hidden border border-white/10 p-2 bg-white/5 shadow-2xl">
+                <div className="rounded-[3rem] overflow-hidden border border-[var(--border-subtle)] p-2 bg-white/5 shadow-2xl">
                   <PhotoSwiper
                     images={skill.images}
                     aspectRatio="aspect-video"
@@ -106,7 +106,7 @@ export default async function SkillDetailPage({ params }) {
                     <Link
                       key={project.id}
                       href={`/projects/${project.slug}`}
-                      className="group p-6 bg-white/5 border border-white/10 rounded-3xl hover:border-teal-500/30 transition-all"
+                      className="group p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl hover:border-teal-500/30 transition-all"
                     >
                       <div className="aspect-video rounded-2xl overflow-hidden mb-4 border border-white/5">
                         <img
@@ -115,7 +115,7 @@ export default async function SkillDetailPage({ params }) {
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                       </div>
-                      <h3 className="font-bold text-white group-hover:text-teal-500 transition-colors">
+                      <h3 className="font-bold text-foreground group-hover:text-teal-500 transition-colors">
                         {project.title}
                       </h3>
                       <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">
@@ -130,7 +130,7 @@ export default async function SkillDetailPage({ params }) {
 
           {/* Stats Sidebar */}
           <div className="space-y-8">
-            <div className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] space-y-8">
+            <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] space-y-8">
               <h3 className="text-[10px] font-black uppercase tracking-widest text-teal-500">
                 Skill Statistics
               </h3>
@@ -139,19 +139,19 @@ export default async function SkillDetailPage({ params }) {
                   <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-2">
                     Proficiency
                   </p>
-                  <p className="text-3xl font-black text-white">{skill.percentage || 100}%</p>
+                  <p className="text-3xl font-black text-foreground">{skill.percentage || 100}%</p>
                 </div>
                 <div>
                   <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-2">
                     Projects Delivered
                   </p>
-                  <p className="text-3xl font-black text-white">{relatedProjects?.length || 0}+</p>
+                  <p className="text-3xl font-black text-foreground">{relatedProjects?.length || 0}+</p>
                 </div>
                 <div>
                   <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-2">
                     Experience Level
                   </p>
-                  <p className="text-3xl font-black text-white">{skill.level || 'Expert'}</p>
+                  <p className="text-3xl font-black text-foreground">{skill.level || 'Expert'}</p>
                 </div>
               </div>
             </div>

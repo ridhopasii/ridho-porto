@@ -16,7 +16,7 @@ export default async function EditGalleryPage({ params }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex font-jakarta">
+    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
       <AdminSidebar />
 
       <main className="flex-1 p-8 overflow-y-auto">
@@ -36,7 +36,7 @@ export default async function EditGalleryPage({ params }) {
             </div>
           </header>
 
-          <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
+          <div className="bg-white/5 border border-[var(--border-subtle)] rounded-3xl p-8">
             <GalleryForm initialData={item} />
           </div>
         </div>

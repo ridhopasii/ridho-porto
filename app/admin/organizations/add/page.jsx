@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function AddOrganization() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex">
+    <div className="min-h-screen bg-background text-foreground flex">
       <AdminSidebar />
       <main className="flex-1 p-8">
         <div className="max-w-4xl">
@@ -19,7 +19,7 @@ export default function AddOrganization() {
             Tambah <span className="text-teal-500">Organisasi Baru</span>
           </h1>
 
-          <div className="bg-white/5 border border-white/10 rounded-[3rem] p-10">
+          <div className="bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] p-10">
             <OrganizationForm />
           </div>
         </div>

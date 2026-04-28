@@ -14,7 +14,7 @@ export default async function AdminOrganizations() {
     .order('order', { ascending: true });
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex">
+    <div className="min-h-screen bg-background text-foreground flex">
       <AdminSidebar />
 
       <main className="flex-1 p-8">
@@ -38,7 +38,7 @@ export default async function AdminOrganizations() {
         <OrganizationList organizations={organizations} />
 
         {(!organizations || organizations.length === 0) && (
-          <div className="text-center py-20 bg-white/5 rounded-[3rem] border border-dashed border-white/10 mt-10">
+          <div className="text-center py-20 bg-white/5 rounded-[3rem] border border-dashed border-[var(--border-subtle)] mt-10">
             <Users size={48} className="mx-auto text-gray-800 mb-4" />
             <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">
               Belum ada data organisasi.

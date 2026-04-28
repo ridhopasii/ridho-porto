@@ -71,7 +71,7 @@ export default function SkillForm({ initialData = null }) {
           type="text"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
           placeholder="Contoh: Adobe Photoshop"
         />
       </div>
@@ -85,7 +85,7 @@ export default function SkillForm({ initialData = null }) {
           <select
             value={formData.category}
             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white appearance-none"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground appearance-none"
           >
             <option value="hardskill">Hard Skill</option>
             <option value="softskill">Soft Skill</option>
@@ -101,7 +101,7 @@ export default function SkillForm({ initialData = null }) {
           <select
             value={formData.level}
             onChange={(e) => setFormData({ ...formData, level: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white appearance-none"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground appearance-none"
           >
             <option value="Beginner">Beginner</option>
             <option value="Intermediate">Intermediate</option>
@@ -141,7 +141,7 @@ export default function SkillForm({ initialData = null }) {
           rows={4}
           value={formData.description || ''}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white resize-none"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground resize-none"
           placeholder="Jelaskan pengalaman Anda menggunakan skill ini..."
         />
       </div>
@@ -159,7 +159,7 @@ export default function SkillForm({ initialData = null }) {
       </div>
 
       {/* Visibility Toggle */}
-      <div className="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-3xl">
+      <div className="flex items-center justify-between p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
         <div className="flex items-center gap-4">
           <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-teal-500/20 text-teal-500' : 'bg-gray-500/20 text-gray-500'}`}>
             {formData.showOnHome ? <Eye size={20} /> : <EyeOff size={20} />}
@@ -190,7 +190,7 @@ export default function SkillForm({ initialData = null }) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-8 py-4 bg-white/5 text-white font-bold rounded-xl border border-white/10 hover:bg-white/10 transition-all"
+          className="px-8 py-4 bg-white/5 text-foreground font-bold rounded-xl border border-[var(--border-subtle)] hover:bg-white/10 transition-all"
         >
           Batal
         </button>

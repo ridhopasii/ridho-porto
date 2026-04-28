@@ -33,7 +33,7 @@ export default async function BlogDetailPage({ params }) {
   if (!blog) return <div className="p-20 text-center">Blog not found.</div>;
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-jakarta selection:bg-[var(--accent)]/30">
+    <div className="min-h-screen bg-background text-foreground font-jakarta selection:bg-[var(--accent)]/30">
       <ReadingProgress />
       <Navbar />
 
@@ -66,7 +66,7 @@ export default async function BlogDetailPage({ params }) {
             {blog.title}
           </h1>
 
-          <div className="w-full aspect-[21/9] rounded-[3rem] overflow-hidden border border-white/10 mb-16">
+          <div className="w-full aspect-[21/9] rounded-[3rem] overflow-hidden border border-[var(--border-subtle)] mb-16">
             <img
               src={blog.image || 'https://via.placeholder.com/1200x600'}
               alt={blog.title}

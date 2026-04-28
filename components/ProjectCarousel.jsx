@@ -46,13 +46,13 @@ export default function ProjectCarousel({ images, title }) {
         <>
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 backdrop-blur-md text-white rounded-full opacity-0 group-hover/carousel:opacity-100 transition-all hover:bg-teal-500 hover:text-black z-10"
+            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 backdrop-blur-md text-foreground rounded-full opacity-0 group-hover/carousel:opacity-100 transition-all hover:bg-teal-500 hover:text-black z-10"
           >
             <ChevronLeft size={20} />
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 backdrop-blur-md text-white rounded-full opacity-0 group-hover/carousel:opacity-100 transition-all hover:bg-teal-500 hover:text-black z-10"
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 backdrop-blur-md text-foreground rounded-full opacity-0 group-hover/carousel:opacity-100 transition-all hover:bg-teal-500 hover:text-black z-10"
           >
             <ChevronRight size={20} />
           </button>

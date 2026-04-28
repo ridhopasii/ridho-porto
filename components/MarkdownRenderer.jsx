@@ -12,8 +12,8 @@ export default function MarkdownRenderer({ content }) {
         code({ node, inline, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || '');
           return !inline && match ? (
-            <div className="my-6 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-              <div className="bg-white/5 px-4 py-2 border-b border-white/10 flex items-center justify-between">
+            <div className="my-6 rounded-2xl overflow-hidden border border-[var(--border-subtle)] shadow-2xl">
+              <div className="bg-white/5 px-4 py-2 border-b border-[var(--border-subtle)] flex items-center justify-between">
                 <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">{match[1]}</span>
                 <div className="flex gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-red-500/20" />
@@ -43,9 +43,9 @@ export default function MarkdownRenderer({ content }) {
           );
         },
         // Styling headers
-        h1: ({ children }) => <h1 className="text-3xl font-black font-outfit uppercase mt-12 mb-6 text-white">{children}</h1>,
-        h2: ({ children }) => <h2 className="text-2xl font-black font-outfit uppercase mt-10 mb-4 text-white">{children}</h2>,
-        h3: ({ children }) => <h3 className="text-xl font-black font-outfit uppercase mt-8 mb-3 text-white">{children}</h3>,
+        h1: ({ children }) => <h1 className="text-3xl font-black font-outfit uppercase mt-12 mb-6 text-foreground">{children}</h1>,
+        h2: ({ children }) => <h2 className="text-2xl font-black font-outfit uppercase mt-10 mb-4 text-foreground">{children}</h2>,
+        h3: ({ children }) => <h3 className="text-xl font-black font-outfit uppercase mt-8 mb-3 text-foreground">{children}</h3>,
         p: ({ children }) => <p className="mb-6 leading-relaxed text-gray-400">{children}</p>,
         ul: ({ children }) => <ul className="list-disc list-inside mb-6 space-y-2 text-gray-400">{children}</ul>,
         ol: ({ children }) => <ol className="list-decimal list-inside mb-6 space-y-2 text-gray-400">{children}</ol>,

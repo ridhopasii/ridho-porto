@@ -39,14 +39,14 @@ export default function SinglePhotoUpload({
   return (
     <div className="flex flex-col items-center gap-3">
       {/* Preview */}
-      <div className={`relative overflow-hidden border-2 border-white/10 bg-white/5 flex items-center justify-center ${isCircle ? 'w-24 h-24 rounded-full' : 'w-24 h-24 rounded-2xl'}`}>
+      <div className={`relative overflow-hidden border-2 border-[var(--border-subtle)] bg-white/5 flex items-center justify-center ${isCircle ? 'w-24 h-24 rounded-full' : 'w-24 h-24 rounded-2xl'}`}>
         {value ? (
           <>
             <img src={value} alt="Preview" className="w-full h-full object-cover" />
             <button
               type="button"
               onClick={() => onChange('')}
-              className="absolute top-1 right-1 p-1 bg-red-500 rounded-full text-white hover:scale-110 transition-all"
+              className="absolute top-1 right-1 p-1 bg-red-500 rounded-full text-foreground hover:scale-110 transition-all"
             >
               <X size={10} />
             </button>
@@ -64,7 +64,7 @@ export default function SinglePhotoUpload({
       )}
 
       {/* Upload Button */}
-      <label className="cursor-pointer px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:border-teal-500/50 hover:text-teal-400 transition-all flex items-center gap-2">
+      <label className="cursor-pointer px-4 py-2 bg-white/5 border border-[var(--border-subtle)] rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:border-teal-500/50 hover:text-teal-400 transition-all flex items-center gap-2">
         {uploading ? (
           <><Loader2 size={12} className="animate-spin" /> Mengupload...</>
         ) : (
@@ -86,7 +86,7 @@ export default function SinglePhotoUpload({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Atau paste URL foto..."
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-[10px] text-gray-400 focus:outline-none focus:border-teal-500 transition-all"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-[10px] text-gray-400 focus:outline-none focus:border-teal-500 transition-all"
         />
       </div>
     </div>

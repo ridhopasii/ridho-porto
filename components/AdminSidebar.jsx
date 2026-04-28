@@ -95,7 +95,7 @@ function SidebarContent({ pathname, onClose }) {
         {onClose && (
           <button
             onClick={onClose}
-            className="p-2 text-gray-500 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+            className="p-2 text-gray-500 hover:text-foreground hover:bg-white/10 rounded-xl transition-all"
           >
             <X size={20} />
           </button>
@@ -115,7 +115,7 @@ function SidebarContent({ pathname, onClose }) {
               className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${
                 isActive
                   ? 'bg-teal-500 text-black font-bold shadow-lg shadow-teal-500/20'
-                  : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                  : 'text-gray-400 hover:bg-white/5 hover:text-foreground'
               }`}
             >
               <div className="flex items-center gap-3">
@@ -123,7 +123,7 @@ function SidebarContent({ pathname, onClose }) {
                 <span className="text-sm">{item.name}</span>
               </div>
               {item.name === 'Pesan' && unreadCount > 0 && (
-                <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-red-500 text-white text-[10px] font-black rounded-full shadow-lg shadow-red-500/30 animate-pulse">
+                <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-red-500 text-foreground text-[10px] font-black rounded-full shadow-lg shadow-red-500/30 animate-pulse">
                   {unreadCount}
                 </span>
               )}
@@ -155,7 +155,7 @@ export default function AdminSidebar() {
       {/* Mobile Hamburger Toggle */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl text-white shadow-xl hover:border-teal-500/30 transition-all"
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-black/80 backdrop-blur-xl border border-[var(--border-subtle)] rounded-2xl text-foreground shadow-xl hover:border-teal-500/30 transition-all"
         aria-label="Buka menu"
       >
         <Menu size={20} />

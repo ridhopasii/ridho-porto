@@ -30,7 +30,7 @@ export default function ProjectList({ initialProjects }) {
       {initialProjects?.map((project) => (
         <div
           key={project.id}
-          className="p-4 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-between group hover:border-teal-500/50 transition-all"
+          className="p-4 bg-white/5 border border-[var(--border-subtle)] rounded-2xl flex items-center justify-between group hover:border-teal-500/50 transition-all"
         >
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-white/10 overflow-hidden">
@@ -85,7 +85,7 @@ export default function ProjectList({ initialProjects }) {
               {project.showOnHome !== false ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
 
-            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all border-l border-white/10 pl-3">
+            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all border-l border-[var(--border-subtle)] pl-3">
               <Link
                 href={`/admin/projects/edit/${project.id}`}
                 className="p-2 hover:bg-white/10 rounded-lg text-blue-400"
@@ -111,7 +111,7 @@ export default function ProjectList({ initialProjects }) {
       ))}
 
       {initialProjects?.length === 0 && (
-        <div className="text-center py-20 bg-white/5 border border-dashed border-white/10 rounded-3xl">
+        <div className="text-center py-20 bg-white/5 border border-dashed border-[var(--border-subtle)] rounded-3xl">
           <p className="text-gray-500">Belum ada proyek. Klik "Tambah Proyek" untuk memulai.</p>
         </div>
       )}

@@ -4,7 +4,7 @@ import ProjectForm from '@/components/ProjectForm'
 
 export default function NewProjectPage() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white p-8 font-jakarta">
+    <div className="min-h-screen bg-background text-foreground p-8 font-jakarta">
       <div className="max-w-3xl mx-auto">
         <header className="mb-10 flex items-center gap-4">
           <Link href="/admin/projects" className="p-2 hover:bg-white/5 rounded-full transition-all text-gray-400">
@@ -16,7 +16,7 @@ export default function NewProjectPage() {
           </div>
         </header>
 
-        <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
+        <div className="bg-white/5 border border-[var(--border-subtle)] rounded-3xl p-8">
           <ProjectForm />
         </div>
       </div>

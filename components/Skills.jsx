@@ -20,12 +20,12 @@ export default function Skills({ skills }) {
               <Link
                 key={skill.id}
                 href={`/skills/${skill.slug}`}
-                className="group p-6 bg-white/5 border border-white/10 rounded-3xl hover:border-teal-500/50 hover:bg-teal-500/5 transition-all text-center flex-shrink-0 w-[40vw] sm:w-[25vw] md:w-[18vw] lg:w-[14vw] snap-center"
+                className="group p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl hover:border-teal-500/50 hover:bg-teal-500/5 transition-all text-center flex-shrink-0 w-[40vw] sm:w-[25vw] md:w-[18vw] lg:w-[14vw] snap-center"
               >
                 <div className="w-12 h-12 mx-auto mb-4 text-gray-400 group-hover:text-teal-500 group-hover:scale-110 transition-all">
                   <Cpu size={48} strokeWidth={1} />
                 </div>
-                <h3 className="font-bold text-sm tracking-widest uppercase text-white group-hover:text-teal-500 transition-colors">
+                <h3 className="font-bold text-sm tracking-widest uppercase text-foreground group-hover:text-teal-500 transition-colors">
                   {skill.name}
                 </h3>
                 <p className="text-[10px] text-gray-600 mt-1 uppercase group-hover:text-teal-500/50 transition-colors font-black tracking-widest">

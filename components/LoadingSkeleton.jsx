@@ -2,7 +2,7 @@
 
 export default function LoadingSkeleton({ type = 'card', count = 3 }) {
   const CardSkeleton = () => (
-    <div className="p-6 bg-white/5 border border-white/10 rounded-[2.5rem] animate-pulse">
+    <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] animate-pulse">
       <div className="aspect-[16/10] bg-white/5 rounded-3xl mb-6" />
       <div className="h-8 bg-white/5 rounded-xl w-3/4 mb-4" />
       <div className="h-4 bg-white/5 rounded-lg w-full mb-2" />
@@ -15,7 +15,7 @@ export default function LoadingSkeleton({ type = 'card', count = 3 }) {
   );
 
   const ListSkeleton = () => (
-    <div className="p-6 bg-white/5 border border-white/10 rounded-3xl animate-pulse flex items-center gap-4 mb-4">
+    <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl animate-pulse flex items-center gap-4 mb-4">
       <div className="w-14 h-14 bg-white/5 rounded-2xl flex-shrink-0" />
       <div className="flex-1">
         <div className="h-5 bg-white/5 rounded-lg w-1/3 mb-2" />

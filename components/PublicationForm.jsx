@@ -56,7 +56,7 @@ export default function PublicationForm({ initialData = null }) {
       )}
 
       {/* Visibility Toggle */}
-      <div className="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-3xl">
+      <div className="flex items-center justify-between p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
         <div className="flex items-center gap-4">
           <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-teal-500/20 text-teal-500' : 'bg-gray-500/20 text-gray-500'}`}>
             {formData.showOnHome ? <Eye size={20} /> : <EyeOff size={20} />}
@@ -84,7 +84,7 @@ export default function PublicationForm({ initialData = null }) {
           type="text"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground"
           placeholder="Judul Publikasi"
         />
       </div>
@@ -99,7 +99,7 @@ export default function PublicationForm({ initialData = null }) {
             type="text"
             value={formData.outlet}
             onChange={(e) => setFormData({ ...formData, outlet: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-white"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground"
             placeholder="Contoh: Kompas, Medium, Jurnal..."
           />
         </div>
@@ -112,7 +112,7 @@ export default function PublicationForm({ initialData = null }) {
             type="text"
             value={formData.date}
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-white"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground"
             placeholder="Contoh: April 2024"
           />
         </div>
@@ -126,7 +126,7 @@ export default function PublicationForm({ initialData = null }) {
           type="text"
           value={formData.url || ''}
           onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground"
           placeholder="https://..."
         />
       </div>
@@ -139,7 +139,7 @@ export default function PublicationForm({ initialData = null }) {
           value={formData.description || ''}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           rows={3}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all resize-none text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all resize-none text-foreground"
           placeholder="Ringkasan tentang publikasi ini..."
         />
       </div>
@@ -159,7 +159,7 @@ export default function PublicationForm({ initialData = null }) {
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 py-4 bg-blue-600 text-white font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-blue-500/20"
+          className="flex-1 py-4 bg-blue-600 text-foreground font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-blue-500/20"
         >
           {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
           {loading ? 'Menyimpan...' : initialData ? 'Simpan Perubahan' : 'Tambah Publikasi'}
@@ -167,7 +167,7 @@ export default function PublicationForm({ initialData = null }) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-8 py-4 bg-white/5 text-white font-bold rounded-xl border border-white/10 hover:bg-white/10 transition-all"
+          className="px-8 py-4 bg-white/5 text-foreground font-bold rounded-xl border border-[var(--border-subtle)] hover:bg-white/10 transition-all"
         >
           Batal
         </button>

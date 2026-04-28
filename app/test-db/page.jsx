@@ -12,12 +12,12 @@ export default async function TestDBPage() {
   const count = allProfiles?.length || 0
 
   return (
-    <div className="min-h-screen bg-black text-white p-10 font-jakarta">
+    <div className="min-h-screen bg-black text-foreground p-10 font-jakarta">
       <h1 className="text-3xl font-bold text-accent mb-6">Supabase Diagnostic</h1>
       
       <div className="grid gap-6">
         {/* Status Koneksi */}
-        <div className="p-6 bg-white/5 border border-white/10 rounded-2xl">
+        <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-2xl">
           <h2 className="text-xl font-bold mb-4">Database Info</h2>
           <p className="mb-2">Jumlah Baris Ditemukan: <span className="text-accent font-bold">{count}</span></p>
           
@@ -31,7 +31,7 @@ export default async function TestDBPage() {
 
         {/* Detail Data */}
         {profile ? (
-          <div className="p-6 bg-white/5 border border-white/10 rounded-2xl border-teal-500/30">
+          <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-2xl border-teal-500/30">
             <p className="text-teal-400 font-bold mb-2">✅ Data Berhasil Dibaca!</p>
             <div className="space-y-2">
               <p><span className="text-gray-500">Nama:</span> {profile.fullName}</p>

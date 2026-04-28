@@ -12,7 +12,7 @@ export default async function AdminPublications() {
     .order('year', { ascending: false })
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex font-jakarta">
+    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
       <AdminSidebar />
 
       <main className="flex-1 p-8 overflow-y-auto">
@@ -25,7 +25,7 @@ export default async function AdminPublications() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1">
-            <div className="p-6 bg-white/5 border border-white/10 rounded-3xl sticky top-8">
+            <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl sticky top-8">
               <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
                 <Plus size={20} className="text-blue-500" /> Tambah Publikasi
               </h2>
@@ -35,7 +35,7 @@ export default async function AdminPublications() {
 
           <div className="lg:col-span-2 space-y-4">
             {publications?.map((pub) => (
-              <div key={pub.id} className="p-4 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-between group hover:border-blue-500/30 transition-all">
+              <div key={pub.id} className="p-4 bg-white/5 border border-[var(--border-subtle)] rounded-2xl flex items-center justify-between group hover:border-blue-500/30 transition-all">
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-blue-500/10 text-blue-500 rounded-lg">
                     <FileText size={20} />

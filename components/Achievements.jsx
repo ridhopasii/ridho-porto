@@ -17,7 +17,7 @@ export default function Achievements({ awards, publications }) {
               awards.map((award) => (
                 <div
                   key={award.id}
-                  className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] group hover:border-yellow-500/30 transition-all flex-shrink-0 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[100%] xl:w-[22vw] snap-center flex flex-col h-[28rem]"
+                  className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] group hover:border-yellow-500/30 transition-all flex-shrink-0 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[100%] xl:w-[22vw] snap-center flex flex-col h-[28rem]"
                 >
                   <div className="flex justify-between items-start mb-6">
                     <div className="p-3 bg-yellow-500/10 text-yellow-500 rounded-2xl">
@@ -29,7 +29,7 @@ export default function Achievements({ awards, publications }) {
                   </div>
 
                   <Link href={`/awards/${award.slug}`}>
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-500 transition-colors">
+                    <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-yellow-500 transition-colors">
                       {award.title || 'Award Title'}
                     </h3>
                   </Link>
@@ -52,7 +52,7 @@ export default function Achievements({ awards, publications }) {
                   <div className="flex flex-wrap gap-4 mt-auto pt-4">
                     <Link
                       href={`/awards/${award.slug}`}
-                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-yellow-500 transition-colors"
+                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-foreground/30 hover:text-yellow-500 transition-colors"
                     >
                       <ImageIcon size={12} /> View Full Record
                     </Link>
@@ -60,7 +60,7 @@ export default function Achievements({ awards, publications }) {
                       <a
                         href={award.proofUrl}
                         target="_blank"
-                        className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-yellow-500 hover:text-white transition-colors"
+                        className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-yellow-500 hover:text-foreground transition-colors"
                       >
                         <ExternalLink size={12} /> Credentials
                       </a>
@@ -85,7 +85,7 @@ export default function Achievements({ awards, publications }) {
               publications.map((pub) => (
                 <div
                   key={pub.id}
-                  className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] group hover:border-blue-500/30 transition-all flex-shrink-0 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[100%] xl:w-[22vw] snap-center flex flex-col h-[28rem]"
+                  className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] group hover:border-blue-500/30 transition-all flex-shrink-0 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[100%] xl:w-[22vw] snap-center flex flex-col h-[28rem]"
                 >
                   <div className="flex justify-between items-start mb-6">
                     <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl">
@@ -97,7 +97,7 @@ export default function Achievements({ awards, publications }) {
                   </div>
 
                   <Link href={`/publications/${pub.slug}`}>
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-500 transition-colors">
+                    <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-blue-500 transition-colors">
                       {pub.title || 'Publication Title'}
                     </h3>
                   </Link>
@@ -119,7 +119,7 @@ export default function Achievements({ awards, publications }) {
                   <div className="flex flex-wrap gap-4 mt-auto pt-4">
                     <Link
                       href={`/publications/${pub.slug}`}
-                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-blue-500 transition-colors"
+                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-foreground/30 hover:text-blue-500 transition-colors"
                     >
                       <ImageIcon size={12} /> Detail Abstract
                     </Link>
@@ -127,7 +127,7 @@ export default function Achievements({ awards, publications }) {
                       <a
                         href={pub.url}
                         target="_blank"
-                        className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-500 hover:text-white transition-colors"
+                        className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-500 hover:text-foreground transition-colors"
                       >
                         <ArrowRight size={12} /> Read Full Text
                       </a>

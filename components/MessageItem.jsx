@@ -28,7 +28,7 @@ export default function MessageItem({ msg }) {
       onClick={markAsRead}
       className={`p-6 border rounded-3xl transition-all relative group cursor-pointer ${
         msg.isRead
-          ? 'bg-white/5 border-white/10 grayscale-[0.5] opacity-70'
+          ? 'bg-white/5 border-[var(--border-subtle)] grayscale-[0.5] opacity-70'
           : 'bg-teal-500/5 border-teal-500/30 shadow-lg shadow-teal-500/5'
       }`}
     >

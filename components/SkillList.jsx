@@ -30,7 +30,7 @@ export default function SkillList({ initialSkills }) {
       {initialSkills?.map((skill) => (
         <div
           key={skill.id}
-          className="p-4 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-between group hover:border-teal-500/50 transition-all"
+          className="p-4 bg-white/5 border border-[var(--border-subtle)] rounded-2xl flex items-center justify-between group hover:border-teal-500/50 transition-all"
         >
           <div className="flex items-center gap-3">
             <div className="p-2 bg-teal-500/10 text-teal-500 rounded-lg">

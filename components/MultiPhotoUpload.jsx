@@ -64,7 +64,7 @@ export default function MultiPhotoUpload({
 
       {/* Main Preview */}
       {safeImages.length > 0 && (
-        <div className="relative rounded-2xl overflow-hidden bg-[#111] border border-white/10" style={{ aspectRatio: '4/3' }}>
+        <div className="relative rounded-2xl overflow-hidden bg-[#111] border border-[var(--border-subtle)]" style={{ aspectRatio: '4/3' }}>
           <img
             src={safeImages[previewIndex]}
             alt={`Preview ${previewIndex + 1}`}
@@ -77,7 +77,7 @@ export default function MultiPhotoUpload({
                 <Star size={10} /> Utama
               </span>
             )}
-            <span className="px-3 py-1 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold rounded-full">
+            <span className="px-3 py-1 bg-black/60 backdrop-blur-sm text-foreground text-[10px] font-bold rounded-full">
               {previewIndex + 1} / {safeImages.length}
             </span>
           </div>
@@ -87,12 +87,12 @@ export default function MultiPhotoUpload({
               <button
                 type="button"
                 onClick={() => setPreviewIndex((i) => (i - 1 + safeImages.length) % safeImages.length)}
-                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 backdrop-blur-sm rounded-full text-white flex items-center justify-center hover:bg-teal-500 transition-all"
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 backdrop-blur-sm rounded-full text-foreground flex items-center justify-center hover:bg-teal-500 transition-all"
               >‹</button>
               <button
                 type="button"
                 onClick={() => setPreviewIndex((i) => (i + 1) % safeImages.length)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 backdrop-blur-sm rounded-full text-white flex items-center justify-center hover:bg-teal-500 transition-all"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 backdrop-blur-sm rounded-full text-foreground flex items-center justify-center hover:bg-teal-500 transition-all"
               >›</button>
             </>
           )}
@@ -108,7 +108,7 @@ export default function MultiPhotoUpload({
               type="button"
               onClick={() => setPreviewIndex(i)}
               className={`relative flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
-                i === previewIndex ? 'border-teal-500 scale-105' : 'border-white/10 opacity-60 hover:opacity-100'
+                i === previewIndex ? 'border-teal-500 scale-105' : 'border-[var(--border-subtle)] opacity-60 hover:opacity-100'
               }`}
             >
               <img src={url} className="w-full h-full object-cover" />
@@ -149,7 +149,7 @@ export default function MultiPhotoUpload({
         className={`flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border-2 border-dashed cursor-pointer transition-all ${
           dragOver
             ? 'border-teal-500 bg-teal-500/10 scale-[1.01]'
-            : 'border-white/10 hover:border-teal-500/40 hover:bg-white/5'
+            : 'border-[var(--border-subtle)] hover:border-teal-500/40 hover:bg-white/5'
         }`}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
@@ -166,7 +166,7 @@ export default function MultiPhotoUpload({
               <Upload size={20} className="text-gray-400" />
             </div>
             <div className="text-center">
-              <p className="text-sm font-bold text-white">
+              <p className="text-sm font-bold text-foreground">
                 {safeImages.length > 0 ? 'Tambah Foto Lagi' : 'Upload Foto'}
               </p>
               <p className="text-[11px] text-gray-500 mt-1">

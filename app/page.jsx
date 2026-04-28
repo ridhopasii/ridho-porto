@@ -11,6 +11,7 @@ import Gallery from '@/components/Gallery';
 import Organizations from '@/components/Organizations';
 import ScrollUtils from '@/components/ScrollUtils';
 import ContactForm from '@/components/ContactForm';
+import InstagramFeed from '@/components/InstagramFeed';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -133,7 +134,7 @@ export default async function Home() {
   const s = data.settings || {};
 
   return (
-    <main className="min-h-screen bg-[#0a0a0a] selection:bg-teal-500/30 selection:text-white">
+    <main className="min-h-screen bg-background selection:bg-teal-500/30 selection:text-foreground">
       <ScrollUtils />
       <Navbar />
 
@@ -164,6 +165,9 @@ export default async function Home() {
         </section>
       )}
 
+      {/* Instagram Feed */}
+      <InstagramFeed />
+
       {/* Footer / Contact Section */}
       {s.show_contact !== false && (
         <footer id="kontak" className="py-24 px-6 border-t border-white/5 bg-black">
@@ -174,7 +178,7 @@ export default async function Home() {
                 <p className="text-teal-500 font-bold uppercase tracking-[0.3em] mb-4 text-sm">
                   Contact
                 </p>
-                <h2 className="text-4xl md:text-6xl font-black mb-8 font-outfit tracking-tighter uppercase text-white">
+                <h2 className="text-4xl md:text-6xl font-black mb-8 font-outfit tracking-tighter uppercase text-foreground">
                   {data.profile?.footer_title ? (
                     <>
                       {data.profile.footer_title.split(' ').slice(0, -1).join(' ')}{' '}
@@ -198,7 +202,7 @@ export default async function Home() {
                       href={`mailto:${data.profile.email}`}
                       className="flex items-center gap-4 text-gray-400 hover:text-teal-500 transition-all group"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-teal-500 group-hover:border-teal-500 group-hover:text-black transition-all">
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-[var(--border-subtle)] flex items-center justify-center group-hover:bg-teal-500 group-hover:border-teal-500 group-hover:text-black transition-all">
                         @
                       </div>
                       <span className="text-sm font-medium">{data.profile.email}</span>

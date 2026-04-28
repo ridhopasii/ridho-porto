@@ -67,7 +67,7 @@ export default function EducationForm({ initialData = null }) {
           type="text"
           value={formData.institution}
           onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
           placeholder="Contoh: Universitas Indonesia"
         />
       </div>
@@ -94,7 +94,7 @@ export default function EducationForm({ initialData = null }) {
           type="text"
           value={formData.degree}
           onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
           placeholder="Contoh: Sarjana Komputer"
         />
       </div>
@@ -108,7 +108,7 @@ export default function EducationForm({ initialData = null }) {
           type="text"
           value={formData.major}
           onChange={(e) => setFormData({ ...formData, major: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
           placeholder="Contoh: Teknik Informatika"
         />
       </div>
@@ -122,7 +122,7 @@ export default function EducationForm({ initialData = null }) {
           type="text"
           value={formData.period}
           onChange={(e) => setFormData({ ...formData, period: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
           placeholder="Contoh: 2018 - 2022"
         />
       </div>
@@ -135,7 +135,7 @@ export default function EducationForm({ initialData = null }) {
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           rows={4}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all resize-none text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all resize-none text-foreground"
           placeholder="Jelaskan konsentrasi studi atau pencapaian akademik..."
         />
       </div>
@@ -148,7 +148,7 @@ export default function EducationForm({ initialData = null }) {
           type="text"
           value={formData.proofUrl || ''}
           onChange={(e) => setFormData({ ...formData, proofUrl: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-white"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
           placeholder="https://..."
         />
       </div>
@@ -165,7 +165,7 @@ export default function EducationForm({ initialData = null }) {
       </div>
 
       {/* Visibility Toggle */}
-      <div className="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-3xl">
+      <div className="flex items-center justify-between p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
         <div className="flex items-center gap-4">
           <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-teal-500/20 text-teal-500' : 'bg-gray-500/20 text-gray-500'}`}>
             {formData.showOnHome ? <Eye size={20} /> : <EyeOff size={20} />}
@@ -196,7 +196,7 @@ export default function EducationForm({ initialData = null }) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-8 py-4 bg-white/5 text-white font-bold rounded-xl border border-white/10 hover:bg-white/10 transition-all"
+          className="px-8 py-4 bg-white/5 text-foreground font-bold rounded-xl border border-[var(--border-subtle)] hover:bg-white/10 transition-all"
         >
           Batal
         </button>

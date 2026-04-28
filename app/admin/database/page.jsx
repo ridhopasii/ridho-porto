@@ -15,7 +15,7 @@ export default async function DatabaseDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex font-jakarta">
+    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
       <AdminSidebar />
       <main className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-5xl mx-auto">
@@ -30,17 +30,17 @@ export default async function DatabaseDashboard() {
           </header>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem]">
+            <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem]">
               <Zap className="text-yellow-500 mb-4" />
               <h3 className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Status Koneksi</h3>
               <p className="text-2xl font-black text-green-500">CONNECTED</p>
             </div>
-            <div className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem]">
+            <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem]">
               <HardDrive className="text-purple-500 mb-4" />
               <h3 className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Total Entri Data</h3>
               <p className="text-4xl font-black">{stats.reduce((a, b) => a + b.count, 0)}</p>
             </div>
-            <div className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem]">
+            <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem]">
               <RefreshCcw className="text-blue-500 mb-4" />
               <h3 className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Sync Status</h3>
               <p className="text-2xl font-black">AUTOMATIC</p>
@@ -53,7 +53,7 @@ export default async function DatabaseDashboard() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {stats.map((table) => (
-              <div key={table.name} className="p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-white/20 transition-all group">
+              <div key={table.name} className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl flex items-center justify-between hover:border-white/20 transition-all group">
                 <div>
                   <p className="text-gray-400 font-bold text-sm">{table.name}</p>
                   <p className="text-[10px] text-gray-600 font-black uppercase tracking-widest mt-1">Production Table</p>

@@ -27,7 +27,7 @@ export default function OptimizedImage({
   if (!src || hasError) {
     return (
       <div
-        className={`flex items-center justify-center bg-white/5 border border-white/10 ${className}`}
+        className={`flex items-center justify-center bg-white/5 border border-[var(--border-subtle)] ${className}`}
         style={fill ? {} : { width, height }}
       >
         <ImageIcon size={32} className="text-gray-600" />

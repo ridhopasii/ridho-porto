@@ -9,7 +9,7 @@ export default async function AdminSkills() {
   const { data: skills } = await supabase.from('Skill').select('*').order('name');
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex font-jakarta">
+    <div className="min-h-screen bg-background text-foreground flex font-jakarta">
       <AdminSidebar />
 
       <main className="flex-1 p-8 overflow-y-auto">
@@ -25,7 +25,7 @@ export default async function AdminSkills() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Form Tambah Skill */}
           <div className="lg:col-span-1">
-            <div className="p-6 bg-white/5 border border-white/10 rounded-3xl sticky top-8">
+            <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl sticky top-8">
               <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
                 <Plus size={20} className="text-teal-500" /> Tambah Skill
               </h2>
