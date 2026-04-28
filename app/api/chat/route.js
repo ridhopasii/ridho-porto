@@ -9,7 +9,7 @@ export async function POST(req) {
 
     if (apiKey) {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       
       const prompt = `Kamu adalah Virtual Asisten cerdas untuk portofolio milik Ridho Robbi Pasi (seorang Full Stack Web Developer & UI/UX). Jawab dengan singkat, sopan, dan dalam bahasa Indonesia. User bertanya: ${message}`;
       
