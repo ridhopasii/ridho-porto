@@ -173,6 +173,30 @@ export default function AdminSettings() {
             )}
           </div>
 
+          {/* AI Settings Section */}
+          {!loading && (
+            <div className="mt-8 p-6 bg-white/5 border border-[var(--border-subtle)] rounded-[2rem]">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-blue-500/10 rounded-xl">
+                  <User size={24} className="text-blue-500" />
+                </div>
+                <div>
+                  <p className="font-bold text-sm">Pelatihan Asisten AI (Chatbot)</p>
+                  <p className="text-gray-500 text-xs">Atur kepribadian dan pengetahuan spesifik yang dimiliki oleh Virtual Asisten Anda.</p>
+                </div>
+              </div>
+              <textarea
+                value={settings.ai_prompt || 'Kamu adalah Virtual Asisten cerdas untuk portofolio milik Ridho Robbi Pasi (seorang Full Stack Web Developer & UI/UX). Jawab dengan singkat, sopan, dan dalam bahasa Indonesia.'}
+                onChange={(e) =>
+                  setSettings((prev) => ({ ...prev, ai_prompt: e.target.value }))
+                }
+                rows={5}
+                className="w-full rounded-xl bg-black/40 border border-[var(--border-subtle)] p-4 text-sm text-gray-300 focus:outline-none focus:border-teal-500 transition-colors"
+                placeholder="Tuliskan prompt AI Anda di sini..."
+              />
+            </div>
+          )}
+
           {/* Accent Color Selection */}
           {!loading && (
             <div className="mt-8 p-6 bg-white/5 border border-[var(--border-subtle)] rounded-[2rem]">
@@ -228,6 +252,17 @@ export default function AdminSettings() {
                     {
                       key: 'accent_color',
                       value: settings.accent_color || '#14b8a6',
+                      updatedAt: new Date().toISOString(),
+                    },
+                    { onConflict: 'key' }
+                  );
+                // Save AI Prompt
+                await supabase
+                  .from('SiteSettings')
+                  .upsert(
+                    {
+                      key: 'ai_prompt',
+                      value: settings.ai_prompt || 'Kamu adalah Virtual Asisten cerdas untuk portofolio milik Ridho Robbi Pasi (seorang Full Stack Web Developer & UI/UX). Jawab dengan singkat, sopan, dan dalam bahasa Indonesia.',
                       updatedAt: new Date().toISOString(),
                     },
                     { onConflict: 'key' }

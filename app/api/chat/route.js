@@ -1,17 +1,27 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { createClient } from '@/utils/supabase/server';
 
 export async function POST(req) {
   try {
     const { message } = await req.json();
-
     const apiKey = process.env.GEMINI_API_KEY;
+
+    // Fetch dynamic AI prompt from Database
+    const supabase = await createClient();
+    const { data: promptData } = await supabase
+      .from('SiteSettings')
+      .select('value')
+      .eq('key', 'ai_prompt')
+      .single();
+
+    let aiPrompt = promptData?.value || `Kamu adalah Virtual Asisten cerdas untuk portofolio milik Ridho Robbi Pasi (seorang Full Stack Web Developer & UI/UX). Jawab dengan singkat, sopan, dan dalam bahasa Indonesia.`;
 
     if (apiKey) {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
       
-      const prompt = `Kamu adalah Virtual Asisten cerdas untuk portofolio milik Ridho Robbi Pasi (seorang Full Stack Web Developer & UI/UX). Jawab dengan singkat, sopan, dan dalam bahasa Indonesia. User bertanya: ${message}`;
+      const prompt = `${aiPrompt}\n\nUser bertanya: ${message}`;
       
       const result = await model.generateContent(prompt);
       const responseText = result.response.text();
