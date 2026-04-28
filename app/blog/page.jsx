@@ -44,7 +44,7 @@ export default async function BlogsPage() {
           {blogs?.map((blog) => (
             <Link
               key={blog.id}
-              href={`/blogs/${blog.slug || blog.id}`}
+              href={`/blog/${blog.slug || blog.id}`}
               className="group block p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:border-orange-500/30 transition-all duration-500"
             >
               <div className="flex flex-col md:flex-row gap-8 items-start md:items-center">

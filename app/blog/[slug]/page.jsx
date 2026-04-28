@@ -1,13 +1,15 @@
 import { createClient } from '@/utils/supabase/server';
 import Navbar from '@/components/Navbar';
 import ReadingProgress from '@/components/ReadingProgress';
+import MarkdownRenderer from '@/components/MarkdownRenderer';
 import { ArrowLeft, Clock, Calendar, User } from 'lucide-react';
 import Link from 'next/link';
 
 // DYNAMIC SEO METADATA
 export async function generateMetadata({ params }) {
   const supabase = await createClient();
-  const { data: blog } = await supabase.from('Article').select('*').eq('id', params.id).single();
+  const { slug } = params;
+  const { data: blog } = await supabase.from('Article').select('*').eq('slug', slug).single();
   
   if (!blog) return { title: 'Blog Not Found' };
 
@@ -24,9 +26,9 @@ export async function generateMetadata({ params }) {
 
 export default async function BlogDetailPage({ params }) {
   const supabase = await createClient();
-  const { id } = params;
+  const { slug } = params;
 
-  const { data: blog } = await supabase.from('Article').select('*').eq('id', id).single();
+  const { data: blog } = await supabase.from('Article').select('*').eq('slug', slug).single();
 
   if (!blog) return <div className="p-20 text-center">Blog not found.</div>;
 
@@ -40,7 +42,7 @@ export default async function BlogDetailPage({ params }) {
 
         <div className="max-w-4xl mx-auto">
           <Link
-            href="/blogs"
+            href="/blog"
             className="inline-flex items-center gap-2 text-[var(--accent)] text-xs font-bold uppercase tracking-widest mb-12 hover:gap-4 transition-all"
           >
             <ArrowLeft size={16} /> Kembali ke Blog
