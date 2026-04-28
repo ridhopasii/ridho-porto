@@ -35,6 +35,7 @@ export default function ProduktifPage() {
   const [habitConfigs, setHabitConfigs] = useState([]);
   const [monthlyTracker, setMonthlyTracker] = useState({});
   const [dailyConfig, setDailyConfig] = useState([]); // Now an Array for dynamic blocks
+  const [financeData, setFinanceData] = useState({ balance: 0, transactions: [] });
   const [loading, setLoading] = useState(true);
   
   // Auth
@@ -146,6 +147,16 @@ export default function ProduktifPage() {
       if (newMonthTrack) setMonthlyTracker(newMonthTrack.checklist || {});
     }
 
+    // 6. Fetch Finance Data
+    const { data: finData } = await supabase.from('SiteSettings').select('value').eq('key', 'finance_data').single();
+    if (finData) {
+      try {
+        setFinanceData(JSON.parse(finData.value));
+      } catch (e) {
+        setFinanceData({ balance: 0, transactions: [] });
+      }
+    }
+
     setLoading(false);
   };
 
@@ -244,6 +255,9 @@ export default function ProduktifPage() {
           else promises.push(supabase.from('HabitConfig').insert([{ name: h.name, category: h.category, icon: h.icon, isActive: h.isActive, sortOrder: h.sortOrder }]));
         }
       });
+
+      // 5. Save Finance Data
+      promises.push(supabase.from('SiteSettings').upsert({ key: 'finance_data', value: JSON.stringify(financeData) }));
 
       await Promise.all(promises);
 
@@ -405,6 +419,7 @@ export default function ProduktifPage() {
             {[
               { id: 'daily', icon: <List size={18} />, label: 'Daily' },
               { id: 'monthly', icon: <CalendarDays size={18} />, label: 'Habits' },
+              { id: 'finance', icon: <Wallet size={18} />, label: 'Finance' },
               { id: 'hub', icon: <Rocket size={18} />, label: 'Life Hub' },
               { id: 'calendar', icon: <CalendarIcon size={18} />, label: 'Calendar' },
               { id: 'analytics', icon: <BarChart3 size={18} />, label: 'Insights' },
@@ -522,6 +537,163 @@ export default function ProduktifPage() {
                   <button onClick={() => fetchAllData()} className="px-10 py-5 bg-[var(--accent)] text-black font-black rounded-3xl text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl shadow-[var(--accent)]/20">Sync Templates</button>
                 </div>
               )}
+            </motion.div>
+          )}
+
+          {/* FINANCE TAB */}
+          {activeTab === 'finance' && (
+            <motion.div key="finance" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+              {/* Finance Header Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="p-8 bg-gradient-to-br from-[var(--accent)]/10 to-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-[3rem] backdrop-blur-xl">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 bg-[var(--accent)]/20 text-[var(--accent)] rounded-2xl flex items-center justify-center">
+                      <Wallet size={24} />
+                    </div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Total Balance</p>
+                  </div>
+                  <h3 className="text-3xl font-black font-outfit text-foreground">{formatIDR(financeData.balance || 0)}</h3>
+                </div>
+
+                <div className="p-8 bg-green-500/5 border border-green-500/10 rounded-[3rem] backdrop-blur-xl">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 bg-green-500/20 text-green-500 rounded-2xl flex items-center justify-center">
+                      <TrendingUp size={24} />
+                    </div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Monthly Income</p>
+                  </div>
+                  <h3 className="text-3xl font-black font-outfit text-green-500">
+                    {formatIDR(
+                      financeData.transactions
+                        ?.filter(t => t.type === 'income' && new Date(t.date).getMonth() === new Date().getMonth())
+                        .reduce((sum, t) => sum + Number(t.amount), 0) || 0
+                    )}
+                  </h3>
+                </div>
+
+                <div className="p-8 bg-red-500/5 border border-red-500/10 rounded-[3rem] backdrop-blur-xl">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 bg-red-500/20 text-red-500 rounded-2xl flex items-center justify-center">
+                      <TrendingDown size={24} />
+                    </div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Monthly Expense</p>
+                  </div>
+                  <h3 className="text-3xl font-black font-outfit text-red-500">
+                    {formatIDR(
+                      financeData.transactions
+                        ?.filter(t => t.type === 'expense' && new Date(t.date).getMonth() === new Date().getMonth())
+                        .reduce((sum, t) => sum + Number(t.amount), 0) || 0
+                    )}
+                  </h3>
+                </div>
+              </div>
+
+              {/* Add Transaction (Only in Edit Mode) */}
+              {isEditMode && (
+                <div className="p-8 bg-white/5 border border-dashed border-[var(--border-subtle)] rounded-[3rem]">
+                  <h4 className="text-sm font-black uppercase tracking-widest mb-6 flex items-center gap-2">
+                    <Plus size={16} className="text-[var(--accent)]" /> Add New Transaction
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <input 
+                      type="date" 
+                      id="new-tx-date"
+                      defaultValue={getLocalDateString()}
+                      className="bg-body/50 border border-[var(--border-subtle)] p-4 rounded-2xl text-xs outline-none focus:border-[var(--accent)]" 
+                    />
+                    <input 
+                      type="text" 
+                      id="new-tx-desc"
+                      placeholder="Description (e.g. Salary, Coffee)" 
+                      className="bg-body/50 border border-[var(--border-subtle)] p-4 rounded-2xl text-xs outline-none focus:border-[var(--accent)]" 
+                    />
+                    <input 
+                      type="number" 
+                      id="new-tx-amount"
+                      placeholder="Amount" 
+                      className="bg-body/50 border border-[var(--border-subtle)] p-4 rounded-2xl text-xs outline-none focus:border-[var(--accent)]" 
+                    />
+                    <select 
+                      id="new-tx-type"
+                      className="bg-body/50 border border-[var(--border-subtle)] p-4 rounded-2xl text-xs outline-none focus:border-[var(--accent)]"
+                    >
+                      <option value="expense">Expense (-)</option>
+                      <option value="income">Income (+)</option>
+                    </select>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      const date = document.getElementById('new-tx-date').value;
+                      const desc = document.getElementById('new-tx-desc').value;
+                      const amount = Number(document.getElementById('new-tx-amount').value);
+                      const type = document.getElementById('new-tx-type').value;
+                      
+                      if (!desc || !amount) return;
+
+                      const newTx = { id: Date.now(), date, description: desc, amount, type };
+                      const newTransactions = [newTx, ...(financeData.transactions || [])];
+                      const newBalance = type === 'income' 
+                        ? (financeData.balance || 0) + amount 
+                        : (financeData.balance || 0) - amount;
+
+                      setFinanceData({ balance: newBalance, transactions: newTransactions });
+                      
+                      // Clear inputs
+                      document.getElementById('new-tx-desc').value = '';
+                      document.getElementById('new-tx-amount').value = '';
+                    }}
+                    className="mt-6 px-8 py-4 bg-[var(--accent)] text-black font-black rounded-2xl text-[10px] uppercase tracking-widest hover:scale-105 transition-all"
+                  >
+                    Post Transaction
+                  </button>
+                </div>
+              )}
+
+              {/* Transaction History */}
+              <div className="p-8 md:p-10 bg-white/5 border border-[var(--border-subtle)] rounded-[4rem] backdrop-blur-xl">
+                <h3 className="text-2xl font-black font-outfit uppercase italic mb-8 flex items-center gap-3">
+                  <List className="text-[var(--accent)]" /> Transaction <span className="text-[var(--accent)]">History</span>
+                </h3>
+                
+                <div className="space-y-4">
+                  {financeData.transactions?.length > 0 ? (
+                    financeData.transactions.map((tx, idx) => (
+                      <div key={tx.id || idx} className="p-5 bg-body/40 border border-[var(--border-subtle)] rounded-3xl flex items-center justify-between group hover:border-white/20 transition-all">
+                        <div className="flex items-center gap-6">
+                          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl ${tx.type === 'income' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                            {tx.type === 'income' ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
+                          </div>
+                          <div>
+                            <p className="font-bold text-sm text-foreground">{tx.description}</p>
+                            <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">{new Date(tx.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-6">
+                          <p className={`font-black text-lg ${tx.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
+                            {tx.type === 'income' ? '+' : '-'}{formatIDR(tx.amount)}
+                          </p>
+                          {isEditMode && (
+                            <button 
+                              onClick={() => {
+                                const newTransactions = financeData.transactions.filter(t => t.id !== tx.id);
+                                const newBalance = tx.type === 'income' 
+                                  ? (financeData.balance || 0) - tx.amount 
+                                  : (financeData.balance || 0) + tx.amount;
+                                setFinanceData({ balance: newBalance, transactions: newTransactions });
+                              }}
+                              className="p-2 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-10 text-gray-500 italic">No transactions recorded yet.</div>
+                  )}
+                </div>
+              </div>
             </motion.div>
           )}
 
