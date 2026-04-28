@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import PhotoSwiper from './PhotoSwiper';
+import Magnetic from './Magnetic';
 import {
   Globe,
   Share2,
@@ -109,23 +110,27 @@ export default function Hero({ profile }) {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center w-full px-4">
-            <Link
-              href="/#proyek"
-              className="w-full sm:w-auto px-10 py-5 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-2xl transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 group shadow-xl shadow-teal-500/20 text-xs uppercase tracking-widest"
-            >
-              View Portfolio
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
+            <Magnetic>
+              <Link
+                href="/#proyek"
+                className="w-full sm:w-auto px-10 py-5 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-2xl transition-all hover:scale-105 flex items-center justify-center gap-2 group shadow-xl shadow-teal-500/20 text-xs uppercase tracking-widest"
+              >
+                View Portfolio
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Magnetic>
 
             {profile?.cvLink && (
-              <a
-                href={profile.cvLink}
-                target="_blank"
-                className="w-full sm:w-auto px-10 py-5 bg-white text-black font-black rounded-2xl transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 group shadow-xl shadow-white/10 text-xs uppercase tracking-widest"
-              >
-                Download CV
-                <Download size={18} className="group-hover:translate-y-1 transition-transform" />
-              </a>
+              <Magnetic>
+                <a
+                  href={profile.cvLink}
+                  target="_blank"
+                  className="w-full sm:w-auto px-10 py-5 bg-white text-black font-black rounded-2xl transition-all hover:scale-105 flex items-center justify-center gap-2 group shadow-xl shadow-white/10 text-xs uppercase tracking-widest"
+                >
+                  Download CV
+                  <Download size={18} className="group-hover:translate-y-1 transition-transform" />
+                </a>
+              </Magnetic>
             )}
           </div>
 

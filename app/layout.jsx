@@ -1,8 +1,12 @@
 import './globals.css';
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import Analytics from '@/components/Analytics';
+import { Analytics } from '@vercel/analytics/react';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import Chatbot from '@/components/Chatbot';
+import CustomCursor from '@/components/CustomCursor';
+import AccentProvider from '@/components/AccentProvider';
+import { createClient } from '@/utils/supabase/server';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -65,10 +69,6 @@ export const metadata = {
   },
 };
 
-import CustomCursor from '@/components/CustomCursor';
-import AccentProvider from '@/components/AccentProvider';
-import { createClient } from '@/utils/supabase/server';
-
 export default async function RootLayout({ children }) {
   const supabase = await createClient();
   const { data: settings } = await supabase
@@ -86,6 +86,7 @@ export default async function RootLayout({ children }) {
             <ThemeProvider>
               <Analytics />
               {children}
+              <Chatbot />
             </ThemeProvider>
           </ErrorBoundary>
         </AccentProvider>
