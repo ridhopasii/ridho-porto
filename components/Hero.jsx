@@ -29,10 +29,10 @@ export default function Hero({ profile }) {
   }, [fullText]);
 
   return (
-    <section className="min-h-screen flex items-center justify-center pt-32 pb-20 relative overflow-hidden bg-background">
+    <section className="min-h-screen flex items-center justify-center pt-32 pb-20 relative overflow-hidden bg-transparent">
       {/* Background Orbs */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-teal-500/10 rounded-full blur-[140px] animate-blob"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-500/10 rounded-full blur-[140px] animate-blob"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-blue-500/10 rounded-full blur-[140px] animate-blob animation-delay-4000"></div>
       </div>
 
@@ -40,8 +40,8 @@ export default function Hero({ profile }) {
         <div className="flex flex-col items-center text-center">
           {/* Profile Photo */}
           <div className="relative mb-12 animate-fade-in-up">
-            <div className="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-teal-500/30 p-2 bg-gradient-to-tr from-teal-500/20 to-transparent">
-              <div className="w-full h-full rounded-full overflow-hidden border-2 border-teal-500">
+            <div className="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-blue-500/30 p-2 bg-gradient-to-tr from-blue-500/20 to-transparent">
+              <div className="w-full h-full rounded-full overflow-hidden border-2 border-blue-500 shadow-2xl">
                 {(() => {
                   // Parse images: bisa array JSONB atau string JSON dari DB
                   let imgs = profile?.images;
@@ -58,8 +58,8 @@ export default function Hero({ profile }) {
                   
                   if (finalImgs.length === 0) {
                     return (
-                      <div className="w-full h-full bg-gradient-to-br from-teal-500/20 to-teal-900/40 flex items-center justify-center">
-                        <Users className="w-16 h-16 text-teal-500/50" />
+                      <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-blue-900/40 flex items-center justify-center">
+                        <Users className="w-16 h-16 text-blue-500/50" />
                       </div>
                     );
                   }
@@ -73,15 +73,15 @@ export default function Hero({ profile }) {
                 })()}
               </div>
             </div>
-            <div className="absolute -bottom-2 -right-2 bg-teal-500 text-black px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg shadow-teal-500/40">
+            <div className="absolute -bottom-2 -right-2 bg-accent-gradient text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl shadow-blue-500/30 border border-white/10">
               {profile?.badge || 'Duta Pemuda Global'}
             </div>
           </div>
 
           {/* Profile Badge */}
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-[var(--border-subtle)] mb-8 animate-fade-in-up">
-            <span className="w-2 h-2 bg-teal-500 rounded-full pulse-ring"></span>
-            <span className="text-[10px] text-teal-500 font-black tracking-[0.2em] uppercase">
+            <span className="w-2 h-2 bg-blue-500 rounded-full pulse-ring"></span>
+            <span className="text-[10px] text-blue-500 font-black tracking-[0.2em] uppercase">
               {profile?.status_text || 'Open for collaborations'}
             </span>
           </div>
@@ -89,7 +89,7 @@ export default function Hero({ profile }) {
           {/* Name */}
           <h1 className="text-4xl sm:text-6xl md:text-8xl font-black font-outfit mb-6 tracking-tighter leading-[1.1]">
             <span className="text-foreground">HI, I'M </span>
-            <span className="text-teal-500">
+            <span className="text-blue-500">
               {(profile?.fullName || profile?.name)?.toUpperCase() || 'RIDHO ROBBI PASI'}
             </span>
           </h1>
@@ -98,7 +98,7 @@ export default function Hero({ profile }) {
           <div className="h-10 mb-8">
             <p className="text-xl md:text-2xl text-muted-foreground font-medium tracking-wide">
               {text}
-              <span className="text-teal-500 animate-pulse">|</span>
+              <span className="text-blue-500 animate-pulse">|</span>
             </p>
           </div>
 
@@ -113,19 +113,19 @@ export default function Hero({ profile }) {
             <Magnetic>
               <Link
                 href="/#proyek"
-                className="w-full sm:w-auto px-10 py-5 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-2xl transition-all hover:scale-105 flex items-center justify-center gap-2 group shadow-xl shadow-teal-500/20 text-xs uppercase tracking-widest"
+                className="w-full sm:w-auto px-12 py-5 bg-accent-gradient text-white font-black rounded-full transition-all hover:scale-105 flex items-center justify-center gap-3 group shadow-2xl shadow-blue-500/30 text-xs uppercase tracking-widest"
               >
                 View Portfolio
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </Magnetic>
-
+ 
             {profile?.cvLink && (
               <Magnetic>
                 <a
                   href={profile.cvLink}
                   target="_blank"
-                  className="w-full sm:w-auto px-10 py-5 bg-white text-black font-black rounded-2xl transition-all hover:scale-105 flex items-center justify-center gap-2 group shadow-xl shadow-white/10 text-xs uppercase tracking-widest"
+                  className="w-full sm:w-auto px-12 py-5 bg-background text-foreground border border-[var(--border-subtle)] font-black rounded-full transition-all hover:scale-105 flex items-center justify-center gap-3 group shadow-xl hover:border-blue-500/50 text-xs uppercase tracking-widest"
                 >
                   Download CV
                   <Download size={18} className="group-hover:translate-y-1 transition-transform" />
@@ -174,7 +174,7 @@ export default function Hero({ profile }) {
                   key={idx}
                   href={social.href}
                   target="_blank"
-                  className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-white/5 border border-[var(--border-subtle)] text-muted-foreground hover:text-teal-500 hover:border-teal-500 transition-all hover:-translate-y-2 active:scale-90"
+                  className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-white/5 border border-[var(--border-subtle)] text-muted-foreground hover:text-blue-500 hover:border-blue-500 transition-all hover:-translate-y-2 active:scale-90"
                 >
                   {social.icon}
                 </a>

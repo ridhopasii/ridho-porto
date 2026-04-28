@@ -27,7 +27,7 @@ export default async function AdminSkills() {
           <div className="lg:col-span-1">
             <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl sticky top-8">
               <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                <Plus size={20} className="text-teal-500" /> Tambah Skill
+                <Plus size={20} className="text-blue-500" /> Tambah Skill
               </h2>
               <SkillForm />
             </div>

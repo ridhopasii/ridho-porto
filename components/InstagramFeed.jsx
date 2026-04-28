@@ -30,7 +30,7 @@ export default function InstagramFeed() {
   }, []);
 
   return (
-    <section className="py-24 px-6 bg-background border-t border-[var(--border-subtle)]">
+    <section className="py-24 px-6 bg-transparent border-t border-[var(--border-subtle)]">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-4 mb-12 animate-fade-in-up">
           <div className="p-3 bg-pink-500/10 text-pink-500 rounded-2xl">

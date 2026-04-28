@@ -31,8 +31,8 @@ export default async function TestDBPage() {
 
         {/* Detail Data */}
         {profile ? (
-          <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-2xl border-teal-500/30">
-            <p className="text-teal-400 font-bold mb-2">✅ Data Berhasil Dibaca!</p>
+          <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-2xl border-blue-500/30">
+            <p className="text-blue-400 font-bold mb-2">✅ Data Berhasil Dibaca!</p>
             <div className="space-y-2">
               <p><span className="text-gray-500">Nama:</span> {profile.fullName}</p>
               <p><span className="text-gray-500">Title:</span> {profile.title}</p>

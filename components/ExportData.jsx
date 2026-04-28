@@ -96,7 +96,7 @@ export default function ExportData() {
       </div>
 
       {success && (
-        <div className="mb-4 p-3 bg-teal-500/10 border border-teal-500/30 rounded-xl flex items-center gap-2 text-teal-400 text-sm">
+        <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-xl flex items-center gap-2 text-blue-400 text-sm">
           <CheckCircle2 size={16} />
           Data berhasil diexport!
         </div>

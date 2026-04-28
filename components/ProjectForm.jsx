@@ -89,7 +89,7 @@ export default function ProjectForm({ initialData = null }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {success && (
-        <div className="flex items-center gap-2 p-4 bg-teal-500/10 border border-teal-500/50 text-teal-400 rounded-xl animate-fade-in-up">
+        <div className="flex items-center gap-2 p-4 bg-blue-500/10 border border-blue-500/50 text-blue-400 rounded-xl animate-fade-in-up">
           <CheckCircle2 size={20} />
           Proyek berhasil disimpan! Mengalihkan...
         </div>
@@ -98,7 +98,7 @@ export default function ProjectForm({ initialData = null }) {
       {/* Upload Galeri Proyek */}
       <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem]">
         <label className="block text-sm font-bold text-gray-400 mb-6 uppercase tracking-widest flex items-center gap-2">
-          <ImageIcon size={18} className="text-teal-500" /> Galeri Foto Proyek
+          <ImageIcon size={18} className="text-blue-500" /> Galeri Foto Proyek
         </label>
         <MultiPhotoUpload
           images={formData.images}
@@ -113,7 +113,7 @@ export default function ProjectForm({ initialData = null }) {
       {/* Visibility Toggle */}
       <div className="flex items-center justify-between p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
         <div className="flex items-center gap-4">
-          <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-teal-500/20 text-teal-500' : 'bg-gray-500/20 text-gray-500'}`}>
+          <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-blue-500/20 text-blue-500' : 'bg-gray-500/20 text-gray-500'}`}>
             {formData.showOnHome ? <Eye size={20} /> : <EyeOff size={20} />}
           </div>
           <div>
@@ -124,7 +124,7 @@ export default function ProjectForm({ initialData = null }) {
         <button
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, showOnHome: !prev.showOnHome }))}
-          className={`relative w-14 h-7 rounded-full transition-all ${formData.showOnHome ? 'bg-teal-500' : 'bg-white/10'}`}
+          className={`relative w-14 h-7 rounded-full transition-all ${formData.showOnHome ? 'bg-blue-500' : 'bg-white/10'}`}
         >
           <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all ${formData.showOnHome ? 'left-8' : 'left-1'}`} />
         </button>
@@ -141,7 +141,7 @@ export default function ProjectForm({ initialData = null }) {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full bg-[#111] border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
+            className="w-full bg-[#111] border border-white/5 rounded-2xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground"
             placeholder="Contoh: Aplikasi E-Commerce"
           />
         </div>
@@ -156,7 +156,7 @@ export default function ProjectForm({ initialData = null }) {
             value={formData.description}
             onChange={handleChange}
             rows={4}
-            className="w-full bg-[#111] border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all resize-none text-foreground"
+            className="w-full bg-[#111] border border-white/5 rounded-2xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all resize-none text-foreground"
             placeholder="Jelaskan apa yang Anda kerjakan di proyek ini..."
           />
         </div>
@@ -171,7 +171,7 @@ export default function ProjectForm({ initialData = null }) {
               name="projectUrl"
               value={formData.projectUrl}
               onChange={handleChange}
-              className="w-full bg-[#111] border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
+              className="w-full bg-[#111] border border-white/5 rounded-2xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground"
               placeholder="https://github.com/..."
             />
           </div>
@@ -184,7 +184,7 @@ export default function ProjectForm({ initialData = null }) {
               name="tags"
               value={formData.tags}
               onChange={handleChange}
-              className="w-full bg-[#111] border border-white/5 rounded-2xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
+              className="w-full bg-[#111] border border-white/5 rounded-2xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground"
               placeholder="React, Supabase, Tailwind"
             />
           </div>
@@ -195,7 +195,7 @@ export default function ProjectForm({ initialData = null }) {
         <button
           type="submit"
           disabled={loading || uploading}
-          className="flex-1 py-4 bg-teal-500 text-black font-bold rounded-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-teal-500/20"
+          className="flex-1 py-4 bg-blue-500 text-black font-bold rounded-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-blue-500/20"
         >
           {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
           {loading ? 'Sedang Menyimpan...' : initialData ? 'Simpan Perubahan' : 'Terbitkan Proyek'}

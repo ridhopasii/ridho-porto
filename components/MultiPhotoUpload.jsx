@@ -73,7 +73,7 @@ export default function MultiPhotoUpload({
           {/* Overlay info */}
           <div className="absolute top-3 left-3 flex items-center gap-2">
             {previewIndex === 0 && (
-              <span className="px-3 py-1 bg-teal-500 text-black text-[10px] font-black uppercase rounded-full flex items-center gap-1">
+              <span className="px-3 py-1 bg-blue-500 text-black text-[10px] font-black uppercase rounded-full flex items-center gap-1">
                 <Star size={10} /> Utama
               </span>
             )}
@@ -87,12 +87,12 @@ export default function MultiPhotoUpload({
               <button
                 type="button"
                 onClick={() => setPreviewIndex((i) => (i - 1 + safeImages.length) % safeImages.length)}
-                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 backdrop-blur-sm rounded-full text-foreground flex items-center justify-center hover:bg-teal-500 transition-all"
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 backdrop-blur-sm rounded-full text-foreground flex items-center justify-center hover:bg-blue-500 transition-all"
               >‹</button>
               <button
                 type="button"
                 onClick={() => setPreviewIndex((i) => (i + 1) % safeImages.length)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 backdrop-blur-sm rounded-full text-foreground flex items-center justify-center hover:bg-teal-500 transition-all"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 backdrop-blur-sm rounded-full text-foreground flex items-center justify-center hover:bg-blue-500 transition-all"
               >›</button>
             </>
           )}
@@ -108,12 +108,12 @@ export default function MultiPhotoUpload({
               type="button"
               onClick={() => setPreviewIndex(i)}
               className={`relative flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
-                i === previewIndex ? 'border-teal-500 scale-105' : 'border-[var(--border-subtle)] opacity-60 hover:opacity-100'
+                i === previewIndex ? 'border-blue-500 scale-105' : 'border-[var(--border-subtle)] opacity-60 hover:opacity-100'
               }`}
             >
               <img src={url} className="w-full h-full object-cover" />
               {i === 0 && (
-                <div className="absolute bottom-0 left-0 right-0 bg-teal-500 text-[8px] font-black text-black text-center py-0.5">
+                <div className="absolute bottom-0 left-0 right-0 bg-blue-500 text-[8px] font-black text-black text-center py-0.5">
                   UTAMA
                 </div>
               )}
@@ -136,7 +136,7 @@ export default function MultiPhotoUpload({
             <button
               type="button"
               onClick={() => setAsMain(previewIndex)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-500/10 border border-teal-500/20 text-teal-400 rounded-xl text-[11px] font-bold hover:bg-teal-500/20 transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl text-[11px] font-bold hover:bg-blue-500/20 transition-all"
             >
               <Star size={12} /> Jadikan Utama
             </button>
@@ -148,15 +148,15 @@ export default function MultiPhotoUpload({
       <label
         className={`flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border-2 border-dashed cursor-pointer transition-all ${
           dragOver
-            ? 'border-teal-500 bg-teal-500/10 scale-[1.01]'
-            : 'border-[var(--border-subtle)] hover:border-teal-500/40 hover:bg-white/5'
+            ? 'border-blue-500 bg-blue-500/10 scale-[1.01]'
+            : 'border-[var(--border-subtle)] hover:border-blue-500/40 hover:bg-white/5'
         }`}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
       >
         {uploading ? (
-          <div className="flex items-center gap-2 text-teal-500">
+          <div className="flex items-center gap-2 text-blue-500">
             <Loader2 size={20} className="animate-spin" />
             <span className="text-sm font-bold">Mengupload foto...</span>
           </div>
@@ -187,7 +187,7 @@ export default function MultiPhotoUpload({
 
       {/* Count badge */}
       {safeImages.length > 0 && (
-        <div className="flex items-center gap-2 text-[11px] text-teal-500 font-bold">
+        <div className="flex items-center gap-2 text-[11px] text-blue-500 font-bold">
           <CheckCircle2 size={14} />
           {safeImages.length} foto tersimpan · foto pertama tampil sebagai utama
         </div>

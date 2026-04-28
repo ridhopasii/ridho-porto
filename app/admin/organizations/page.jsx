@@ -21,7 +21,7 @@ export default async function AdminOrganizations() {
         <header className="flex justify-between items-center mb-10">
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-3">
-              <Users className="text-teal-500" /> Manajemen Organisasi
+              <Users className="text-blue-500" /> Manajemen Organisasi
             </h1>
             <p className="text-gray-500 mt-2 text-sm uppercase tracking-widest font-bold">
               Kelola pengalaman organisasi dan kepemimpinan Anda.
@@ -29,7 +29,7 @@ export default async function AdminOrganizations() {
           </div>
           <Link
             href="/admin/organizations/add"
-            className="px-6 py-4 bg-teal-500 text-black font-black rounded-2xl flex items-center gap-2 hover:scale-105 transition-all shadow-xl shadow-teal-500/20 uppercase tracking-widest text-xs"
+            className="px-6 py-4 bg-blue-500 text-black font-black rounded-2xl flex items-center gap-2 hover:scale-105 transition-all shadow-xl shadow-blue-500/20 uppercase tracking-widest text-xs"
           >
             <Plus size={18} /> Tambah Organisasi
           </Link>

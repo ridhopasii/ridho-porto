@@ -137,7 +137,7 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-white/10 rounded-xl text-white bg-white/5 hover:bg-white/10 transition-all font-semibold"
             >
-              <Fingerprint className="w-5 h-5 text-teal-400" />
+              <Fingerprint className="w-5 h-5 text-blue-400" />
               Face ID / Touch ID
             </button>
           </div>

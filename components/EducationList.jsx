@@ -30,7 +30,7 @@ export default function EducationList({ initialEducations }) {
       {initialEducations?.map((edu) => (
         <div
           key={edu.id}
-          className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl group hover:border-teal-500/50 transition-all"
+          className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl group hover:border-blue-500/50 transition-all"
         >
           <div className="flex justify-between items-start">
             <div className="flex gap-4">
@@ -58,7 +58,7 @@ export default function EducationList({ initialEducations }) {
                 }}
                 className={`p-2.5 rounded-xl border transition-all ${
                   edu.showOnHome !== false
-                    ? 'text-teal-500 bg-teal-500/10 border-teal-500/20'
+                    ? 'text-blue-500 bg-blue-500/10 border-blue-500/20'
                     : 'text-gray-500 bg-white/5 border-white/5'
                 }`}
                 title={edu.showOnHome !== false ? 'Tampil di Home' : 'Disembunyikan'}

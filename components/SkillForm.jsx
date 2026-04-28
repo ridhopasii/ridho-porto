@@ -55,7 +55,7 @@ export default function SkillForm({ initialData = null }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {success && (
-        <div className="flex items-center gap-2 p-4 bg-teal-500/10 border border-teal-500/50 text-teal-400 rounded-xl animate-fade-in-up">
+        <div className="flex items-center gap-2 p-4 bg-blue-500/10 border border-blue-500/50 text-blue-400 rounded-xl animate-fade-in-up">
           <CheckCircle2 size={20} />
           Skill berhasil disimpan!
         </div>
@@ -71,7 +71,7 @@ export default function SkillForm({ initialData = null }) {
           type="text"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground"
           placeholder="Contoh: Adobe Photoshop"
         />
       </div>
@@ -85,7 +85,7 @@ export default function SkillForm({ initialData = null }) {
           <select
             value={formData.category}
             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground appearance-none"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground appearance-none"
           >
             <option value="hardskill">Hard Skill</option>
             <option value="softskill">Soft Skill</option>
@@ -101,7 +101,7 @@ export default function SkillForm({ initialData = null }) {
           <select
             value={formData.level}
             onChange={(e) => setFormData({ ...formData, level: e.target.value })}
-            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground appearance-none"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground appearance-none"
           >
             <option value="Beginner">Beginner</option>
             <option value="Intermediate">Intermediate</option>
@@ -114,7 +114,7 @@ export default function SkillForm({ initialData = null }) {
       {/* Percentage */}
       <div>
         <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">
-          Persentase Kemahiran: <span className="text-teal-500">{formData.percentage}%</span>
+          Persentase Kemahiran: <span className="text-blue-500">{formData.percentage}%</span>
         </label>
         <input
           type="range"
@@ -123,7 +123,7 @@ export default function SkillForm({ initialData = null }) {
           step="5"
           value={formData.percentage}
           onChange={(e) => setFormData({ ...formData, percentage: parseInt(e.target.value) })}
-          className="w-full accent-teal-500"
+          className="w-full accent-blue-500"
         />
         <div className="flex justify-between text-[10px] text-gray-600 mt-1 font-bold uppercase">
           <span>10%</span>
@@ -141,7 +141,7 @@ export default function SkillForm({ initialData = null }) {
           rows={4}
           value={formData.description || ''}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-teal-500 focus:outline-none transition-all text-foreground resize-none"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground resize-none"
           placeholder="Jelaskan pengalaman Anda menggunakan skill ini..."
         />
       </div>
@@ -161,7 +161,7 @@ export default function SkillForm({ initialData = null }) {
       {/* Visibility Toggle */}
       <div className="flex items-center justify-between p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
         <div className="flex items-center gap-4">
-          <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-teal-500/20 text-teal-500' : 'bg-gray-500/20 text-gray-500'}`}>
+          <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-blue-500/20 text-blue-500' : 'bg-gray-500/20 text-gray-500'}`}>
             {formData.showOnHome ? <Eye size={20} /> : <EyeOff size={20} />}
           </div>
           <div>
@@ -172,7 +172,7 @@ export default function SkillForm({ initialData = null }) {
         <button
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, showOnHome: !prev.showOnHome }))}
-          className={`relative w-14 h-7 rounded-full transition-all ${formData.showOnHome ? 'bg-teal-500' : 'bg-white/10'}`}
+          className={`relative w-14 h-7 rounded-full transition-all ${formData.showOnHome ? 'bg-blue-500' : 'bg-white/10'}`}
         >
           <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all ${formData.showOnHome ? 'left-8' : 'left-1'}`} />
         </button>
@@ -182,7 +182,7 @@ export default function SkillForm({ initialData = null }) {
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 py-4 bg-teal-500 text-black font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-teal-500/20"
+          className="flex-1 py-4 bg-blue-500 text-black font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-blue-500/20"
         >
           {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
           {loading ? 'Menyimpan...' : initialData ? 'Simpan Perubahan' : 'Tambah Skill'}

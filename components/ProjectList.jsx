@@ -30,7 +30,7 @@ export default function ProjectList({ initialProjects }) {
       {initialProjects?.map((project) => (
         <div
           key={project.id}
-          className="p-4 bg-white/5 border border-[var(--border-subtle)] rounded-2xl flex items-center justify-between group hover:border-teal-500/50 transition-all"
+          className="p-4 bg-white/5 border border-[var(--border-subtle)] rounded-2xl flex items-center justify-between group hover:border-blue-500/50 transition-all"
         >
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-white/10 overflow-hidden">
@@ -51,7 +51,7 @@ export default function ProjectList({ initialProjects }) {
               <div className="flex items-center gap-3">
                 <p className="text-sm text-gray-500 line-clamp-1 max-w-md">{project.description}</p>
                 {project.showOnHome !== false ? (
-                  <span className="flex items-center gap-1 text-[10px] bg-teal-500/10 text-teal-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">
+                  <span className="flex items-center gap-1 text-[10px] bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">
                     <Eye size={10} /> Home
                   </span>
                 ) : (
@@ -77,7 +77,7 @@ export default function ProjectList({ initialProjects }) {
               }}
               className={`p-2.5 rounded-xl border transition-all ${
                 project.showOnHome !== false 
-                  ? 'text-teal-500 bg-teal-500/10 border-teal-500/20' 
+                  ? 'text-blue-500 bg-blue-500/10 border-blue-500/20' 
                   : 'text-gray-500 bg-white/5 border-white/5'
               }`}
               title={project.showOnHome !== false ? "Tampil di Home" : "Disembunyikan"}

@@ -4,7 +4,7 @@ import PhotoSwiper from './PhotoSwiper';
 
 export default function Achievements({ awards, publications }) {
   return (
-    <section className="py-24 px-6 bg-background relative">
+    <section className="py-24 px-6 bg-transparent relative">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
         {/* Awards */}
         <div>

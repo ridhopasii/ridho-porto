@@ -31,13 +31,13 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2.5 rounded-full bg-white/5 border border-[var(--border-subtle)] hover:border-teal-500/50 hover:bg-teal-500/10 text-gray-400 hover:text-teal-400 transition-all duration-300"
+      className="p-2.5 rounded-full bg-white/5 border border-[var(--border-subtle)] hover:border-blue-500/50 hover:bg-blue-500/10 text-gray-400 hover:text-blue-400 transition-all duration-300"
       aria-label="Toggle Theme"
     >
       {isDark ? (
         <Sun size={18} className="animate-in fade-in zoom-in duration-300" />
       ) : (
-        <Moon size={18} className="animate-in fade-in zoom-in duration-300 text-teal-600" />
+        <Moon size={18} className="animate-in fade-in zoom-in duration-300 text-blue-600" />
       )}
     </button>
   )

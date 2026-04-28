@@ -6,14 +6,14 @@ export default function Organizations({ organizations }) {
   if (!organizations || organizations.length === 0) return null;
 
   return (
-    <section id="organisasi" className="py-24 px-6 bg-background relative">
+    <section id="organisasi" className="py-24 px-6 bg-transparent relative">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
-          <h2 className="text-teal-500 font-bold uppercase tracking-[0.3em] mb-3 text-sm">
+          <h2 className="text-blue-500 font-bold uppercase tracking-[0.3em] mb-3 text-sm">
             Pengalaman Organisasi
           </h2>
           <h3 className="text-4xl md:text-6xl font-black font-outfit text-foreground uppercase leading-none">
-            Involvement <span className="text-teal-500">& Leadership</span>
+            Involvement <span className="text-blue-500">& Leadership</span>
           </h3>
         </div>
 
@@ -22,7 +22,7 @@ export default function Organizations({ organizations }) {
             organizations.map((org, idx) => (
               <div
                 key={org.id}
-                className="group p-1 bg-white/5 rounded-[2rem] border border-[var(--border-subtle)] hover:border-teal-500/30 transition-all duration-500 flex flex-col flex-shrink-0 w-[85vw] sm:w-[45vw] lg:w-[30vw] xl:w-[22vw] snap-center h-[28rem]"
+                className="group p-1 bg-white/5 rounded-[2rem] border border-[var(--border-subtle)] hover:border-blue-500/30 transition-all duration-500 flex flex-col flex-shrink-0 w-[85vw] sm:w-[45vw] lg:w-[30vw] xl:w-[22vw] snap-center h-[28rem]"
               >
                 <div className="flex flex-col p-5 h-full bg-background rounded-[1.8rem] relative overflow-hidden">
                   
@@ -49,11 +49,11 @@ export default function Organizations({ organizations }) {
 
                   <div className="flex-1 flex flex-col pt-2 min-h-0">
                     <Link href={`/organizations/${org.slug}`}>
-                      <h4 className="text-lg font-black text-foreground group-hover:text-teal-500 transition-colors uppercase tracking-tight leading-tight mb-1 truncate">
+                      <h4 className="text-lg font-black text-foreground group-hover:text-blue-500 transition-colors uppercase tracking-tight leading-tight mb-1 truncate">
                         {org.name || 'Organization Name'}
                       </h4>
                     </Link>
-                    <p className="text-teal-500 font-bold uppercase text-[10px] tracking-widest mb-4 truncate">
+                    <p className="text-blue-500 font-bold uppercase text-[10px] tracking-widest mb-4 truncate">
                       {org.role || 'Role'}
                     </p>
 
@@ -63,10 +63,10 @@ export default function Organizations({ organizations }) {
 
                     <div className="flex flex-wrap gap-2 text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-auto pt-4 border-t border-[var(--border-subtle)]">
                       <div className="flex items-center gap-1">
-                        <Calendar size={10} className="text-teal-500" /> {org.period || 'N/A'}
+                        <Calendar size={10} className="text-blue-500" /> {org.period || 'N/A'}
                       </div>
                       {org.website && (
-                        <a href={org.website} target="_blank" className="flex items-center gap-1 hover:text-teal-400">
+                        <a href={org.website} target="_blank" className="flex items-center gap-1 hover:text-blue-400">
                           <Globe size={10} /> Web
                         </a>
                       )}
@@ -84,7 +84,7 @@ export default function Organizations({ organizations }) {
       </div>
 
       {/* Decorative Blob */}
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-500/5 blur-[100px] rounded-full -translate-x-1/2 translate-y-1/2"></div>
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/5 blur-[100px] rounded-full -translate-x-1/2 translate-y-1/2"></div>
     </section>
   );
 }

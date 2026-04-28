@@ -58,7 +58,7 @@ export default function PublicationForm({ initialData = null }) {
       {/* Visibility Toggle */}
       <div className="flex items-center justify-between p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
         <div className="flex items-center gap-4">
-          <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-teal-500/20 text-teal-500' : 'bg-gray-500/20 text-gray-500'}`}>
+          <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-blue-500/20 text-blue-500' : 'bg-gray-500/20 text-gray-500'}`}>
             {formData.showOnHome ? <Eye size={20} /> : <EyeOff size={20} />}
           </div>
           <div>
@@ -69,7 +69,7 @@ export default function PublicationForm({ initialData = null }) {
         <button
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, showOnHome: !prev.showOnHome }))}
-          className={`relative w-14 h-7 rounded-full transition-all ${formData.showOnHome ? 'bg-teal-500' : 'bg-white/10'}`}
+          className={`relative w-14 h-7 rounded-full transition-all ${formData.showOnHome ? 'bg-blue-500' : 'bg-white/10'}`}
         >
           <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all ${formData.showOnHome ? 'left-8' : 'left-1'}`} />
         </button>

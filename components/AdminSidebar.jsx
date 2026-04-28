@@ -81,13 +81,13 @@ function SidebarContent({ pathname, onClose }) {
       <div className="mb-10 flex items-center justify-between">
         <div>
           <div className="text-xl font-bold font-outfit tracking-tighter mb-1">
-            RIDHO<span className="text-teal-500">ADMIN.</span>
+            RIDHO<span className="text-blue-500">ADMIN.</span>
           </div>
           <Link
             href="/"
             target="_blank"
             onClick={onClose}
-            className="flex items-center gap-1.5 text-[10px] text-gray-600 hover:text-teal-500 transition-colors font-bold uppercase tracking-widest"
+            className="flex items-center gap-1.5 text-[10px] text-gray-600 hover:text-blue-500 transition-colors font-bold uppercase tracking-widest"
           >
             <ExternalLink size={10} /> Lihat Website
           </Link>
@@ -114,7 +114,7 @@ function SidebarContent({ pathname, onClose }) {
               onClick={onClose}
               className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${
                 isActive
-                  ? 'bg-teal-500 text-black font-bold shadow-lg shadow-teal-500/20'
+                  ? 'bg-blue-500 text-black font-bold shadow-lg shadow-blue-500/20'
                   : 'text-gray-400 hover:bg-white/5 hover:text-foreground'
               }`}
             >
@@ -155,7 +155,7 @@ export default function AdminSidebar() {
       {/* Mobile Hamburger Toggle */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-black/80 backdrop-blur-xl border border-[var(--border-subtle)] rounded-2xl text-foreground shadow-xl hover:border-teal-500/30 transition-all"
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-black/80 backdrop-blur-xl border border-[var(--border-subtle)] rounded-2xl text-foreground shadow-xl hover:border-blue-500/30 transition-all"
         aria-label="Buka menu"
       >
         <Menu size={20} />

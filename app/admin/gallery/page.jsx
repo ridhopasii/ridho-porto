@@ -114,8 +114,8 @@ export default function AdminGalleryPage() {
                   Manajemen Galeri
                 </h1>
                 <div className="flex items-center gap-3 mt-1">
-                  <span className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest ${realtimeStatus === 'live' ? 'text-teal-500' : 'text-yellow-500'}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${realtimeStatus === 'live' ? 'bg-teal-500 animate-pulse' : 'bg-yellow-500'}`} />
+                  <span className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest ${realtimeStatus === 'live' ? 'text-blue-500' : 'text-yellow-500'}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${realtimeStatus === 'live' ? 'bg-blue-500 animate-pulse' : 'bg-yellow-500'}`} />
                     {realtimeStatus === 'live' ? 'Realtime Aktif' : 'Menghubungkan...'}
                   </span>
                   {lastUpdated && (
@@ -150,7 +150,7 @@ export default function AdminGalleryPage() {
           <div className="grid grid-cols-3 gap-4 mb-8">
             {[
               { label: 'Total Album', value: items.length, color: 'text-purple-500' },
-              { label: 'Total Foto', value: totalPhotos, color: 'text-teal-500' },
+              { label: 'Total Foto', value: totalPhotos, color: 'text-blue-500' },
               { label: 'Kategori', value: [...new Set(items.map(i => i.category).filter(Boolean))].length, color: 'text-blue-500' },
             ].map((s) => (
               <div key={s.label} className="p-5 bg-white/5 border border-[var(--border-subtle)] rounded-2xl">

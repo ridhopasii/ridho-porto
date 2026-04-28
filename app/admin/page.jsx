@@ -59,7 +59,7 @@ export default async function AdminDashboard() {
       label: 'Proyek',
       value: projectCount || 0,
       icon: <Folders size={22} />,
-      color: 'teal',
+      color: 'blue',
       href: '/admin/projects',
     },
     {
@@ -128,7 +128,7 @@ export default async function AdminDashboard() {
   ];
 
   const colorMap = {
-    teal: 'bg-teal-500/10 text-teal-500 border-teal-500/20',
+    blue: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
     blue: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
     purple: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
     green: 'bg-green-500/10 text-green-500 border-green-500/20',
@@ -150,18 +150,18 @@ export default async function AdminDashboard() {
           <div>
             <h1 className="text-3xl font-black font-outfit uppercase tracking-tight">Dashboard</h1>
             <p className="text-gray-500 text-sm mt-1">
-              Selamat datang kembali, <span className="text-teal-500 font-bold">Ridho</span>
+              Selamat datang kembali, <span className="text-blue-500 font-bold">Ridho</span>
             </p>
           </div>
           <div className="flex items-center gap-4">
             <Link
               href="/"
               target="_blank"
-              className="px-5 py-2.5 bg-white/5 border border-[var(--border-subtle)] rounded-xl text-xs font-bold text-gray-400 hover:text-teal-500 hover:border-teal-500/30 transition-all flex items-center gap-2"
+              className="px-5 py-2.5 bg-white/5 border border-[var(--border-subtle)] rounded-xl text-xs font-bold text-gray-400 hover:text-blue-500 hover:border-blue-500/30 transition-all flex items-center gap-2"
             >
               <Eye size={14} /> Lihat Website
             </Link>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center font-black text-black shadow-lg shadow-teal-500/20">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center font-black text-black shadow-lg shadow-blue-500/20">
               R
             </div>
           </div>
@@ -169,13 +169,13 @@ export default async function AdminDashboard() {
 
         {/* Quick Status Bar */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div className="p-6 bg-teal-500/10 border border-teal-500/20 rounded-3xl flex items-center gap-4">
-            <div className="p-3 bg-teal-500 text-black rounded-2xl">
+          <div className="p-6 bg-blue-500/10 border border-blue-500/20 rounded-3xl flex items-center gap-4">
+            <div className="p-3 bg-blue-500 text-black rounded-2xl">
               <Folders size={24} />
             </div>
             <div>
               <p className="text-2xl font-black text-foreground">{projectsOnHome}</p>
-              <p className="text-[10px] text-teal-500 font-bold uppercase tracking-widest">
+              <p className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">
                 Proyek di Home
               </p>
             </div>
@@ -216,7 +216,7 @@ export default async function AdminDashboard() {
             <Link
               key={stat.label}
               href={stat.href}
-              className={`p-5 bg-white/5 border border-[var(--border-subtle)] rounded-2xl hover:border-teal-500/20 transition-all group`}
+              className={`p-5 bg-white/5 border border-[var(--border-subtle)] rounded-2xl hover:border-blue-500/20 transition-all group`}
             >
               <div
                 className={`w-10 h-10 rounded-xl border flex items-center justify-center mb-4 ${colorMap[stat.color]} transition-all group-hover:scale-110`}
@@ -237,11 +237,11 @@ export default async function AdminDashboard() {
           <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-bold text-foreground flex items-center gap-2">
-                <MessageSquare size={18} className="text-teal-500" /> Pesan Terbaru
+                <MessageSquare size={18} className="text-blue-500" /> Pesan Terbaru
               </h2>
               <Link
                 href="/admin/messages"
-                className="text-[10px] text-teal-500 font-bold uppercase tracking-widest hover:text-teal-400 flex items-center gap-1"
+                className="text-[10px] text-blue-500 font-bold uppercase tracking-widest hover:text-blue-400 flex items-center gap-1"
               >
                 Lihat Semua <ArrowRight size={12} />
               </Link>
@@ -253,7 +253,7 @@ export default async function AdminDashboard() {
                     key={i}
                     className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5"
                   >
-                    <div className="w-9 h-9 rounded-full bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-500 text-xs font-black flex-shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 text-xs font-black flex-shrink-0">
                       {msg.name?.[0]?.toUpperCase() || 'A'}
                     </div>
                     <div className="min-w-0">
@@ -275,14 +275,14 @@ export default async function AdminDashboard() {
           {/* Quick Actions */}
           <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
             <h2 className="font-bold text-foreground flex items-center gap-2 mb-6">
-              <TrendingUp size={18} className="text-teal-500" /> Aksi Cepat
+              <TrendingUp size={18} className="text-blue-500" /> Aksi Cepat
             </h2>
             <div className="grid grid-cols-2 gap-3">
               {[
                 {
                   label: 'Tambah Proyek',
                   href: '/admin/projects',
-                  color: 'bg-teal-500/10 border-teal-500/20 hover:bg-teal-500/20 text-teal-400',
+                  color: 'bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20 text-blue-400',
                 },
                 {
                   label: 'Tulis Artikel',

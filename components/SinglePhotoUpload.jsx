@@ -58,13 +58,13 @@ export default function SinglePhotoUpload({
 
       {/* Status */}
       {value ? (
-        <span className="text-[10px] text-teal-500 font-black uppercase tracking-widest">✓ Foto Tersimpan</span>
+        <span className="text-[10px] text-blue-500 font-black uppercase tracking-widest">✓ Foto Tersimpan</span>
       ) : (
         <span className="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Belum ada foto</span>
       )}
 
       {/* Upload Button */}
-      <label className="cursor-pointer px-4 py-2 bg-white/5 border border-[var(--border-subtle)] rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:border-teal-500/50 hover:text-teal-400 transition-all flex items-center gap-2">
+      <label className="cursor-pointer px-4 py-2 bg-white/5 border border-[var(--border-subtle)] rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:border-blue-500/50 hover:text-blue-400 transition-all flex items-center gap-2">
         {uploading ? (
           <><Loader2 size={12} className="animate-spin" /> Mengupload...</>
         ) : (
@@ -86,7 +86,7 @@ export default function SinglePhotoUpload({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Atau paste URL foto..."
-          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-[10px] text-gray-400 focus:outline-none focus:border-teal-500 transition-all"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-[10px] text-gray-400 focus:outline-none focus:border-blue-500 transition-all"
         />
       </div>
     </div>

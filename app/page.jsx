@@ -134,7 +134,7 @@ export default async function Home() {
   const s = data.settings || {};
 
   return (
-    <main className="min-h-screen bg-background selection:bg-teal-500/30 selection:text-foreground">
+    <main className="min-h-screen bg-background selection:bg-blue-500/30 selection:text-foreground">
       <ScrollUtils />
       <Navbar />
 
@@ -175,20 +175,20 @@ export default async function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
               {/* Left: Info */}
               <div>
-                <p className="text-teal-500 font-bold uppercase tracking-[0.3em] mb-4 text-sm">
+                <p className="text-blue-500 font-bold uppercase tracking-[0.3em] mb-4 text-sm">
                   Contact
                 </p>
                 <h2 className="text-4xl md:text-6xl font-black mb-8 font-outfit tracking-tighter uppercase text-foreground">
                   {data.profile?.footer_title ? (
                     <>
                       {data.profile.footer_title.split(' ').slice(0, -1).join(' ')}{' '}
-                      <span className="text-teal-500">
+                      <span className="text-blue-500">
                         {data.profile.footer_title.split(' ').pop()}
                       </span>
                     </>
                   ) : (
                     <>
-                      LET&apos;S WORK <span className="text-teal-500">TOGETHER</span>
+                      LET&apos;S WORK <span className="text-blue-500">TOGETHER</span>
                     </>
                   )}
                 </h2>
@@ -200,9 +200,9 @@ export default async function Home() {
                   {data.profile?.email && (
                     <a
                       href={`mailto:${data.profile.email}`}
-                      className="flex items-center gap-4 text-muted-foreground hover:text-teal-500 transition-all group"
+                      className="flex items-center gap-4 text-muted-foreground hover:text-blue-500 transition-all group"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-[var(--border-subtle)] flex items-center justify-center group-hover:bg-teal-500 group-hover:border-teal-500 group-hover:text-black transition-all">
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-[var(--border-subtle)] flex items-center justify-center group-hover:bg-blue-500 group-hover:border-blue-500 group-hover:text-black transition-all">
                         @
                       </div>
                       <span className="text-sm font-medium">{data.profile.email}</span>
@@ -223,7 +223,7 @@ export default async function Home() {
                         key={idx}
                         href={social.href}
                         target="_blank"
-                        className="text-xs font-black text-muted-foreground/60 hover:text-teal-500 transition-colors uppercase tracking-widest"
+                        className="text-xs font-black text-muted-foreground/60 hover:text-blue-500 transition-colors uppercase tracking-widest"
                       >
                         {social.label}
                       </a>

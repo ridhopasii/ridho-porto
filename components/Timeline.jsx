@@ -3,13 +3,13 @@ import Link from 'next/link';
 
 export default function Timeline({ experiences, educations }) {
   return (
-    <section className="py-24 px-6 bg-background overflow-hidden">
+    <section className="py-24 px-6 bg-transparent overflow-hidden">
       <div className="max-w-7xl mx-auto space-y-24">
         
         {/* Experience Section */}
         <div className="animate-fade-in-up">
           <div className="flex items-center gap-4 mb-12">
-            <div className="p-3 bg-teal-500/10 text-teal-500 rounded-2xl">
+            <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl">
               <Briefcase size={28} />
             </div>
             <h2 className="text-3xl md:text-5xl font-black font-outfit uppercase tracking-tight">
@@ -26,26 +26,26 @@ export default function Timeline({ experiences, educations }) {
                     key={exp.id} 
                     className={`relative p-6 md:p-8 rounded-[2rem] snap-center flex flex-col group transition-all duration-500 ${
                       isBig 
-                        ? 'row-span-2 w-[85vw] md:w-[45vw] lg:w-[35vw] bg-teal-500/5 border border-teal-500/20 hover:border-teal-500/50 hover:bg-teal-500/10 min-h-[300px] md:min-h-[400px]' 
+                        ? 'row-span-2 w-[85vw] md:w-[45vw] lg:w-[35vw] bg-blue-500/5 border border-blue-500/20 hover:border-blue-500/50 hover:bg-blue-500/10 min-h-[300px] md:min-h-[400px]' 
                         : 'row-span-1 w-[75vw] md:w-[35vw] lg:w-[25vw] bg-white/5 border border-[var(--border-subtle)] hover:border-white/30 min-h-[140px] md:min-h-[190px]'
                     }`}
                   >
                     <div className="mt-auto flex flex-col h-full justify-between">
                       <div>
                         {isBig && idx === 0 && (
-                          <span className="inline-block px-3 py-1.5 rounded-full bg-teal-500 text-black font-bold text-[10px] uppercase tracking-widest mb-4">
+                          <span className="inline-block px-3 py-1.5 rounded-full bg-blue-500 text-black font-bold text-[10px] uppercase tracking-widest mb-4">
                             Latest Position
                           </span>
                         )}
-                        <p className={`font-bold uppercase tracking-widest mb-2 ${isBig ? 'text-teal-500 text-xs' : 'text-muted-foreground text-[10px]'}`}>
+                        <p className={`font-bold uppercase tracking-widest mb-2 ${isBig ? 'text-blue-500 text-xs' : 'text-muted-foreground text-[10px]'}`}>
                           {exp.period || 'Period N/A'}
                         </p>
                         <Link href={`/experience/${exp.slug}`} className="inline-block">
-                          <h3 className={`font-black tracking-tight mb-1 flex items-center gap-2 group-hover:text-teal-500 transition-colors ${isBig ? 'text-2xl md:text-3xl' : 'text-xl'}`}>
+                          <h3 className={`font-black tracking-tight mb-1 flex items-center gap-2 group-hover:text-blue-500 transition-colors ${isBig ? 'text-2xl md:text-3xl' : 'text-xl'}`}>
                             {exp.position || 'Position'} <ArrowUpRight size={isBig ? 18 : 14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                           </h3>
                         </Link>
-                        <p className={`uppercase tracking-widest mb-4 ${isBig ? 'text-teal-400 font-bold text-xs' : 'text-muted-foreground font-semibold text-[10px]'}`}>
+                        <p className={`uppercase tracking-widest mb-4 ${isBig ? 'text-blue-400 font-bold text-xs' : 'text-muted-foreground font-semibold text-[10px]'}`}>
                           {exp.company || 'Company'}
                         </p>
                       </div>
