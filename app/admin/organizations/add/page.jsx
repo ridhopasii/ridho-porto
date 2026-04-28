@@ -11,12 +11,12 @@ export default function AddOrganization() {
         <div className="max-w-4xl">
           <Link
             href="/admin/organizations"
-            className="inline-flex items-center gap-2 text-gray-500 hover:text-blue-500 mb-8 transition-colors uppercase text-[10px] font-black tracking-widest"
+            className="inline-flex items-center gap-2 text-gray-500 hover:text-accent mb-8 transition-colors uppercase text-[10px] font-black tracking-widest"
           >
             <ArrowLeft size={16} /> Kembali ke Daftar
           </Link>
           <h1 className="text-3xl font-black mb-10 font-outfit uppercase tracking-tight">
-            Tambah <span className="text-blue-500">Organisasi Baru</span>
+            Tambah <span className="text-accent">Organisasi Baru</span>
           </h1>
 
           <div className="bg-white/5 border border-[var(--border-subtle)] rounded-[3rem] p-10">

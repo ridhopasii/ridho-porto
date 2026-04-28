@@ -26,7 +26,7 @@ const SORT_OPTIONS = [
   { value: 'name_desc', label: 'Nama Z–A' },
 ];
 const CAT_BADGE = {
-  kegiatan: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  kegiatan: 'bg-accent/10 text-accent border-accent/20',
   prestasi: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
   organisasi: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
   pendidikan: 'bg-green-500/10 text-green-400 border-green-500/20',
@@ -114,8 +114,8 @@ export default function AdminGalleryPage() {
                   Manajemen Galeri
                 </h1>
                 <div className="flex items-center gap-3 mt-1">
-                  <span className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest ${realtimeStatus === 'live' ? 'text-blue-500' : 'text-yellow-500'}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${realtimeStatus === 'live' ? 'bg-blue-500 animate-pulse' : 'bg-yellow-500'}`} />
+                  <span className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest ${realtimeStatus === 'live' ? 'text-accent' : 'text-yellow-500'}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${realtimeStatus === 'live' ? 'bg-accent animate-pulse' : 'bg-yellow-500'}`} />
                     {realtimeStatus === 'live' ? 'Realtime Aktif' : 'Menghubungkan...'}
                   </span>
                   {lastUpdated && (
@@ -150,8 +150,8 @@ export default function AdminGalleryPage() {
           <div className="grid grid-cols-3 gap-4 mb-8">
             {[
               { label: 'Total Album', value: items.length, color: 'text-purple-500' },
-              { label: 'Total Foto', value: totalPhotos, color: 'text-blue-500' },
-              { label: 'Kategori', value: [...new Set(items.map(i => i.category).filter(Boolean))].length, color: 'text-blue-500' },
+              { label: 'Total Foto', value: totalPhotos, color: 'text-accent' },
+              { label: 'Kategori', value: [...new Set(items.map(i => i.category).filter(Boolean))].length, color: 'text-accent' },
             ].map((s) => (
               <div key={s.label} className="p-5 bg-white/5 border border-[var(--border-subtle)] rounded-2xl">
                 <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">{s.label}</p>
@@ -353,7 +353,7 @@ export default function AdminGalleryPage() {
                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
                       <button
                         onClick={() => { setEditItem(item); setShowAddForm(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                        className="p-2 bg-white/10 rounded-xl hover:bg-white/20 transition-all text-blue-400"
+                        className="p-2 bg-white/10 rounded-xl hover:bg-white/20 transition-all text-accent"
                       >
                         <Edit size={15} />
                       </button>

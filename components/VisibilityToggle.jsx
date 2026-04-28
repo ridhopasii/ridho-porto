@@ -29,7 +29,7 @@ export default function VisibilityToggle({ id, tableName, initialValue }) {
       onClick={toggle}
       disabled={loading}
       className={`p-2 rounded-lg transition-all ${
-        isOn ? 'text-blue-500 bg-blue-500/10' : 'text-gray-600 bg-white/5'
+        isOn ? 'text-accent bg-accent/10' : 'text-gray-600 bg-white/5'
       }`}
       title={isOn ? "Tampil di Home" : "Disembunyikan"}
     >

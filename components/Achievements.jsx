@@ -77,7 +77,7 @@ export default function Achievements({ awards, publications }) {
         {/* Publications */}
         <div>
           <h2 className="text-3xl font-black font-outfit mb-12 flex items-center gap-4 uppercase tracking-tight">
-            <FileText className="text-blue-500" /> Publications{' '}
+            <FileText className="text-accent" /> Publications{' '}
             <span className="text-muted-foreground">& Research</span>
           </h2>
           <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 pb-8 px-4 -mx-4 md:px-0 md:mx-0">
@@ -85,10 +85,10 @@ export default function Achievements({ awards, publications }) {
               publications.map((pub) => (
                 <div
                   key={pub.id}
-                  className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] group hover:border-blue-500/30 transition-all flex-shrink-0 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[100%] xl:w-[22vw] snap-center flex flex-col h-[28rem]"
+                  className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] group hover:border-accent/30 transition-all flex-shrink-0 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[100%] xl:w-[22vw] snap-center flex flex-col h-[28rem]"
                 >
                   <div className="flex justify-between items-start mb-6">
-                    <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl">
+                    <div className="p-3 bg-accent/10 text-accent rounded-2xl">
                       <FileText size={24} />
                     </div>
                     <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -97,11 +97,11 @@ export default function Achievements({ awards, publications }) {
                   </div>
 
                   <Link href={`/publications/${pub.slug}`}>
-                    <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-blue-500 transition-colors">
+                    <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
                       {pub.title || 'Publication Title'}
                     </h3>
                   </Link>
-                  <p className="text-blue-500/80 font-bold uppercase text-[10px] tracking-widest mb-6">
+                  <p className="text-accent/80 font-bold uppercase text-[10px] tracking-widest mb-6">
                     {pub.outlet || 'Publisher'}
                   </p>
 
@@ -119,7 +119,7 @@ export default function Achievements({ awards, publications }) {
                   <div className="flex flex-wrap gap-4 mt-auto pt-4">
                     <Link
                       href={`/publications/${pub.slug}`}
-                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-foreground/30 hover:text-blue-500 transition-colors"
+                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-foreground/30 hover:text-accent transition-colors"
                     >
                       <ImageIcon size={12} /> Detail Abstract
                     </Link>
@@ -127,7 +127,7 @@ export default function Achievements({ awards, publications }) {
                       <a
                         href={pub.url}
                         target="_blank"
-                        className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-500 hover:text-foreground transition-colors"
+                        className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent hover:text-foreground transition-colors"
                       >
                         <ArrowRight size={12} /> Read Full Text
                       </a>

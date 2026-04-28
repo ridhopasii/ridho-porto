@@ -739,18 +739,18 @@ export default function ProduktifPage() {
               {smartAnalytics ? (
                 <>
                   <div className="flex justify-between items-center bg-white/5 border border-[var(--border-subtle)] p-4 rounded-2xl">
-                    <h3 className="text-lg font-black italic flex items-center gap-2"><BarChart3 className="text-blue-500"/> Analytics & Insights</h3>
+                    <h3 className="text-lg font-black italic flex items-center gap-2"><BarChart3 className="text-accent"/> Analytics & Insights</h3>
                     <div className="flex bg-black/50 rounded-xl p-1">
-                      <button className="px-4 py-1.5 text-xs font-bold bg-blue-600 text-white rounded-lg">7 Hari</button>
+                      <button className="px-4 py-1.5 text-xs font-bold bg-accent text-white rounded-lg">7 Hari</button>
                       <button className="px-4 py-1.5 text-xs font-bold text-gray-400 hover:text-white">30 Hari</button>
                       <button className="px-4 py-1.5 text-xs font-bold text-gray-400 hover:text-white">1 Tahun</button>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="p-6 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex flex-col justify-center">
-                      <h4 className="text-3xl font-black text-blue-500">{smartAnalytics.recentAvg}%</h4>
-                      <p className="text-xs font-bold text-blue-400/70 uppercase tracking-widest mt-1">Rata-rata</p>
+                    <div className="p-6 bg-accent/10 border border-accent/20 rounded-2xl flex flex-col justify-center">
+                      <h4 className="text-3xl font-black text-accent">{smartAnalytics.recentAvg}%</h4>
+                      <p className="text-xs font-bold text-accent/70 uppercase tracking-widest mt-1">Rata-rata</p>
                     </div>
                     <div className="p-6 bg-green-500/10 border border-green-500/20 rounded-2xl flex flex-col justify-center">
                       <h4 className="text-3xl font-black text-green-500">{smartAnalytics.perfectDays}</h4>
@@ -776,15 +776,15 @@ export default function ProduktifPage() {
                             const rate = i === currentMonth ? smartAnalytics.recentAvg : (i < currentMonth ? Math.floor(Math.random() * 40) + 40 : 0);
                             return (
                               <div key={m} className="flex flex-col items-center justify-end h-full flex-1 group relative">
-                                <div className="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 text-[10px] font-bold text-blue-400">{rate}%</div>
-                                <motion.div initial={{ height: 0 }} animate={{ height: `${rate}%` }} className="w-full max-w-[20px] bg-blue-500 rounded-t-md" />
+                                <div className="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 text-[10px] font-bold text-accent">{rate}%</div>
+                                <motion.div initial={{ height: 0 }} animate={{ height: `${rate}%` }} className="w-full max-w-[20px] bg-accent rounded-t-md" />
                                 <p className="text-[10px] font-bold text-gray-500 mt-2">{m}</p>
                               </div>
                             );
                           })}
                         </div>
                         <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-white/5">
-                          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-blue-500 rounded-full" /><span className="text-xs text-gray-400">Completion Rate</span></div>
+                          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-accent rounded-full" /><span className="text-xs text-gray-400">Completion Rate</span></div>
                           <div className="flex items-center gap-2"><div className="w-3 h-3 bg-green-500 rounded-full" /><span className="text-xs text-gray-400">Target (80%)</span></div>
                         </div>
                       </div>
@@ -796,11 +796,11 @@ export default function ProduktifPage() {
                       <div className="p-5 bg-white/5 border border-[var(--border-subtle)] rounded-2xl space-y-4">
                         <div>
                           <div className="flex justify-between text-xs font-bold text-gray-400 mb-2"><span>Konsistensi</span><span className="text-foreground">{smartAnalytics.recentAvg}%</span></div>
-                          <div className="h-2 bg-black/50 rounded-full overflow-hidden"><div className="h-full bg-blue-500" style={{ width: `${smartAnalytics.recentAvg}%` }} /></div>
+                          <div className="h-2 bg-black/50 rounded-full overflow-hidden"><div className="h-full bg-accent" style={{ width: `${smartAnalytics.recentAvg}%` }} /></div>
                         </div>
                         <div>
                           <div className="flex justify-between text-xs font-bold text-gray-400 mb-2"><span>Produktivitas</span><span className="text-foreground">{Math.min(smartAnalytics.totalCompletedTasks * 2, 100)}%</span></div>
-                          <div className="h-2 bg-black/50 rounded-full overflow-hidden"><div className="h-full bg-blue-500" style={{ width: `${Math.min(smartAnalytics.totalCompletedTasks * 2, 100)}%` }} /></div>
+                          <div className="h-2 bg-black/50 rounded-full overflow-hidden"><div className="h-full bg-accent" style={{ width: `${Math.min(smartAnalytics.totalCompletedTasks * 2, 100)}%` }} /></div>
                         </div>
                       </div>
 

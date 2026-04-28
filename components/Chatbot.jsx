@@ -42,7 +42,7 @@ export default function Chatbot() {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-black shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:scale-110 transition-transform z-50 ${isOpen ? 'hidden' : ''}`}
+        className={`fixed bottom-6 right-6 w-14 h-14 bg-accent rounded-full flex items-center justify-center text-black shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:scale-110 transition-transform z-50 ${isOpen ? 'hidden' : ''}`}
       >
         <MessageSquare size={24} />
       </button>
@@ -59,12 +59,12 @@ export default function Chatbot() {
             {/* Header */}
             <div className="p-4 bg-white/5 border-b border-[var(--border-subtle)] flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500">
+                <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent">
                   <Bot size={18} />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-foreground">Virtual Ridho</h3>
-                  <p className="text-[10px] text-blue-500">AI Assistant • Online</p>
+                  <p className="text-[10px] text-accent">AI Assistant • Online</p>
                 </div>
               </div>
               <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-foreground transition-colors">
@@ -77,7 +77,7 @@ export default function Chatbot() {
               {messages.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${
-                    msg.role === 'user' ? 'bg-blue-500 text-black rounded-tr-sm' : 'bg-white/10 text-gray-200 rounded-tl-sm'
+                    msg.role === 'user' ? 'bg-accent text-black rounded-tr-sm' : 'bg-white/10 text-gray-200 rounded-tl-sm'
                   }`}>
                     {msg.content}
                   </div>
@@ -86,9 +86,9 @@ export default function Chatbot() {
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="max-w-[80%] p-4 rounded-2xl bg-white/10 text-gray-200 rounded-tl-sm flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></span>
-                    <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce delay-75"></span>
-                    <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce delay-150"></span>
+                    <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce"></span>
+                    <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce delay-75"></span>
+                    <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce delay-150"></span>
                   </div>
                 </div>
               )}
@@ -101,12 +101,12 @@ export default function Chatbot() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Tanya sesuatu..."
-                className="flex-1 bg-black border border-[var(--border-subtle)] rounded-xl px-4 py-2 text-sm text-foreground focus:outline-none focus:border-blue-500 transition-colors"
+                className="flex-1 bg-black border border-[var(--border-subtle)] rounded-xl px-4 py-2 text-sm text-foreground focus:outline-none focus:border-accent transition-colors"
               />
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center text-black disabled:opacity-50"
+                className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center text-black disabled:opacity-50"
               >
                 <Send size={16} />
               </button>

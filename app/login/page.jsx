@@ -69,8 +69,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="max-w-md w-full space-y-8 p-8 bg-[#1a1a1a] rounded-2xl border border-white/5 shadow-2xl">
         <div className="text-center">
-          <div className="mx-auto h-12 w-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-4">
-            <LogIn className="h-6 w-6 text-blue-500" />
+          <div className="mx-auto h-12 w-12 bg-accent/10 rounded-xl flex items-center justify-center mb-4">
+            <LogIn className="h-6 w-6 text-accent" />
           </div>
           <h2 className="text-3xl font-bold text-foreground">Admin Login</h2>
           <p className="mt-2 text-sm text-gray-400">Silakan masuk untuk mengelola portofolio</p>
@@ -91,7 +91,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full bg-[#2a2a2a] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                className="mt-1 block w-full bg-[#2a2a2a] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
                 placeholder="email@example.com"
               />
             </div>
@@ -102,7 +102,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full bg-[#2a2a2a] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                className="mt-1 block w-full bg-[#2a2a2a] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
                 placeholder="••••••••"
               />
             </div>
@@ -111,7 +111,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-foreground bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all disabled:opacity-50"
+            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-foreground bg-accent hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition-all disabled:opacity-50"
           >
             {loading ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -137,7 +137,7 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-white/10 rounded-xl text-white bg-white/5 hover:bg-white/10 transition-all font-semibold"
             >
-              <Fingerprint className="w-5 h-5 text-blue-400" />
+              <Fingerprint className="w-5 h-5 text-accent" />
               Face ID / Touch ID
             </button>
           </div>

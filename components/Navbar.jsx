@@ -75,7 +75,7 @@ export default function Navbar() {
             <div className="hidden md:flex gap-2">
               <button 
                 onClick={toggleLanguage}
-                className="p-2.5 bg-white/5 rounded-full text-muted-foreground hover:text-blue-400 border border-[var(--border-subtle)] hover:bg-blue-500/10 transition-all font-bold text-xs uppercase"
+                className="p-2.5 bg-white/5 rounded-full text-muted-foreground hover:text-accent border border-[var(--border-subtle)] hover:bg-accent/10 transition-all font-bold text-xs uppercase"
               >
                 {lang}
               </button>
@@ -84,13 +84,13 @@ export default function Navbar() {
             
             <Link 
               href="/produktif" 
-              className="p-2.5 bg-white/5 rounded-full text-foreground border border-[var(--border-subtle)] hover:bg-blue-500 hover:text-black hover:scale-110 active:scale-90 transition-all flex items-center justify-center group"
+              className="p-2.5 bg-white/5 rounded-full text-foreground border border-[var(--border-subtle)] hover:bg-accent hover:text-black hover:scale-110 active:scale-90 transition-all flex items-center justify-center group"
               title="Productivity Dashboard"
             >
               <Zap size={18} className="group-hover:fill-current" />
             </Link>
 
-            <Link href="/#kontak" className="hidden md:flex bg-accent-gradient text-white px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest hover:scale-105 transition-all items-center gap-2 group shadow-lg shadow-blue-500/20">
+            <Link href="/#kontak" className="hidden md:flex bg-accent-gradient text-white px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest hover:scale-105 transition-all items-center gap-2 group shadow-lg shadow-accent/20">
               Talk
               <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform" />
             </Link>
@@ -107,13 +107,13 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="fixed inset-0 bg-background z-[90] flex flex-col pt-32 px-10 gap-8 md:hidden">
-            <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent opacity-30" />
+            <div className="absolute inset-0 bg-gradient-to-b from-accent/10 to-transparent opacity-30" />
             <div className="flex-1 overflow-y-auto hide-scrollbar space-y-4">
               {allLinks.map((link, i) => (
                 <motion.div key={link.name} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
-                  <Link onClick={() => setIsOpen(false)} href={link.href} className="text-3xl font-black italic uppercase tracking-tighter hover:text-blue-500 transition-colors flex items-center justify-between group py-2">
+                  <Link onClick={() => setIsOpen(false)} href={link.href} className="text-3xl font-black italic uppercase tracking-tighter hover:text-accent transition-colors flex items-center justify-between group py-2">
                     {link.name}
-                    <ChevronRight size={24} className="text-muted-foreground/30 group-hover:text-blue-500" />
+                    <ChevronRight size={24} className="text-muted-foreground/30 group-hover:text-accent" />
                   </Link>
                 </motion.div>
               ))}

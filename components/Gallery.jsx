@@ -12,16 +12,16 @@ export default function Gallery({ galleryItems }) {
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
-            <h2 className="text-blue-500 font-bold uppercase tracking-[0.3em] mb-3 text-sm">
+            <h2 className="text-accent font-bold uppercase tracking-[0.3em] mb-3 text-sm">
               Momen & Kegiatan
             </h2>
             <h3 className="text-4xl md:text-6xl font-black font-outfit text-foreground uppercase leading-none">
-              Visual <span className="text-blue-500">Gallery</span>
+              Visual <span className="text-accent">Gallery</span>
             </h3>
           </div>
           <Link
             href="/gallery"
-            className="group flex items-center gap-2 text-muted-foreground font-bold uppercase text-xs tracking-widest hover:text-blue-500 transition-all"
+            className="group flex items-center gap-2 text-muted-foreground font-bold uppercase text-xs tracking-widest hover:text-accent transition-all"
           >
             Lihat Semua Koleksi{' '}
             <ArrowUpRight
@@ -38,17 +38,17 @@ export default function Gallery({ galleryItems }) {
               className="group animate-fade-in-up"
               style={{ animationDelay: `${idx * 150}ms` }}
             >
-              <div className="relative rounded-[2.5rem] overflow-hidden border border-[var(--border-subtle)] bg-background hover:border-blue-500/30 transition-all duration-500 shadow-2xl">
+              <div className="relative rounded-[2.5rem] overflow-hidden border border-[var(--border-subtle)] bg-background hover:border-accent/30 transition-all duration-500 shadow-2xl">
                 <PhotoSwiper images={item.images} aspectRatio="aspect-[4/3]" />
 
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-2">
-                    <span className="px-3 py-1 bg-blue-500/10 text-blue-500 text-[10px] font-black uppercase tracking-widest rounded-full border border-blue-500/20">
+                    <span className="px-3 py-1 bg-accent/10 text-accent text-[10px] font-black uppercase tracking-widest rounded-full border border-accent/20">
                       {item.category}
                     </span>
                     <span className="text-[10px] text-muted-foreground font-bold">{item.date}</span>
                   </div>
-                  <h4 className="text-lg font-bold text-foreground group-hover:text-blue-500 transition-colors">
+                  <h4 className="text-lg font-bold text-foreground group-hover:text-accent transition-colors">
                     {item.title}
                   </h4>
                 </div>
@@ -68,7 +68,7 @@ export default function Gallery({ galleryItems }) {
       </div>
 
       {/* Decorative Background */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
     </section>
   );
 }

@@ -21,8 +21,8 @@ export default async function DatabaseDashboard() {
         <div className="max-w-5xl mx-auto">
           <header className="mb-12">
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-3 bg-blue-500/10 rounded-2xl">
-                <Database size={24} className="text-blue-500" />
+              <div className="p-3 bg-accent/10 rounded-2xl">
+                <Database size={24} className="text-accent" />
               </div>
               <h1 className="text-3xl font-black font-outfit uppercase tracking-tighter">Database Control Center</h1>
             </div>
@@ -41,7 +41,7 @@ export default async function DatabaseDashboard() {
               <p className="text-4xl font-black">{stats.reduce((a, b) => a + b.count, 0)}</p>
             </div>
             <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem]">
-              <RefreshCcw className="text-blue-500 mb-4" />
+              <RefreshCcw className="text-accent mb-4" />
               <h3 className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Sync Status</h3>
               <p className="text-2xl font-black">AUTOMATIC</p>
             </div>
@@ -65,8 +65,8 @@ export default async function DatabaseDashboard() {
             ))}
           </div>
 
-          <div className="mt-12 p-8 bg-blue-500/10 border border-blue-500/20 rounded-[2.5rem]">
-            <h3 className="font-bold text-blue-400 mb-2">💡 Tips Database</h3>
+          <div className="mt-12 p-8 bg-accent/10 border border-accent/20 rounded-[2.5rem]">
+            <h3 className="font-bold text-accent mb-2">💡 Tips Database</h3>
             <p className="text-sm text-blue-300/70 leading-relaxed">
               Selalu lakukan backup berkala jika ingin melakukan manipulasi data besar. Kamu bisa melihat log aktivitas lengkap langsung di Dashboard Supabase Cloud jika membutuhkan debugging mendalam.
             </p>

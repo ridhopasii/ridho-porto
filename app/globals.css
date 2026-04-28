@@ -6,31 +6,34 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
 }
 
 @layer base {
   :root {
-    --background: #ffffff; /* Cards stay white for contrast */
-    --body-bg: #f4f4f5; /* Soft Zinc 100 - Not too bright, comfortable for eyes */
-    --foreground: #18181b; /* Softened Zinc 950 */
-    --muted: #e4e4e7; /* Zinc 200 */
-    --muted-foreground: #71717a; /* Zinc 500 */
+    --background: #ffffff;
+    --body-bg: #fafafa; /* Soft Warm/Neutral White */
+    --foreground: #18181b; 
+    --muted: #f4f4f5; 
+    --muted-foreground: #71717a; 
     --radius-lg: 16px;
     --radius-xl: 28px;
     --radius-2xl: 40px;
     --border-subtle: rgba(24, 24, 27, 0.05);
-    --accent: #2563eb; /* Slightly more professional Blue */
-    --accent-rgb: 37, 99, 235;
+    --accent: #f97316; /* Vibrant Orange for Light Mode */
+    --accent-rgb: 249, 115, 22;
     --shadow-premium: 0 25px 60px -15px rgba(0, 0, 0, 0.05);
   }
 
   .dark {
-    --background: #09090b; /* Deep Zinc 950 */
-    --body-bg: #020617; /* Very deep blue-black background */
-    --foreground: #fafafa; /* Zinc 50 */
-    --muted: #18181b; /* Zinc 900 */
-    --muted-foreground: #a1a1aa; /* Zinc 400 */
+    --background: #09090b; 
+    --body-bg: #020617; 
+    --foreground: #fafafa; 
+    --muted: #18181b; 
+    --muted-foreground: #a1a1aa; 
     --border-subtle: rgba(250, 250, 250, 0.05);
+    --accent: #3b82f6; /* Keep Blue for Dark Mode or switch to orange? User said overhaul light mode. */
+    --accent-rgb: 59, 130, 246;
     --shadow-premium: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
   }
 }

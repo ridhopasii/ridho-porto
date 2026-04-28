@@ -19,23 +19,23 @@ export default async function ExperiencePage() {
     .order('period', { ascending: false });
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-jakarta selection:bg-blue-500/30">
+    <div className="min-h-screen bg-background text-foreground font-jakarta selection:bg-accent/30">
       <Navbar />
 
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-full h-[500px] bg-blue-500/10 blur-[120px] rounded-full -z-10" />
+        <div className="absolute top-0 right-0 w-full h-[500px] bg-accent/10 blur-[120px] rounded-full -z-10" />
 
         <div className="max-w-7xl mx-auto">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-blue-500 text-xs font-bold uppercase tracking-widest mb-8 hover:gap-4 transition-all"
+            className="inline-flex items-center gap-2 text-accent text-xs font-bold uppercase tracking-widest mb-8 hover:gap-4 transition-all"
           >
             <ArrowLeft size={16} /> Beranda
           </Link>
 
           <h1 className="text-5xl md:text-8xl font-black font-outfit tracking-tighter uppercase mb-6 leading-none">
             Journey{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-600">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-indigo-600">
               & Growth.
             </span>
           </h1>
@@ -51,7 +51,7 @@ export default async function ExperiencePage() {
           {/* Experience Column */}
           <div>
             <h2 className="text-2xl font-black font-outfit uppercase mb-12 flex items-center gap-4">
-              <span className="p-3 bg-blue-500/20 text-blue-500 rounded-2xl">
+              <span className="p-3 bg-accent/20 text-accent rounded-2xl">
                 <Briefcase size={24} />
               </span>
               Work Experience
@@ -60,13 +60,13 @@ export default async function ExperiencePage() {
             <div className="space-y-12 relative before:absolute before:left-[27px] before:top-2 before:bottom-2 before:w-[2px] before:bg-white/5">
               {experiences?.map((exp) => (
                 <div key={exp.id} className="relative pl-20 group">
-                  <div className="absolute left-0 top-0 w-14 h-14 bg-background border border-[var(--border-subtle)] rounded-2xl flex items-center justify-center z-10 group-hover:border-blue-500/50 transition-all">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full group-hover:scale-150 transition-all" />
+                  <div className="absolute left-0 top-0 w-14 h-14 bg-background border border-[var(--border-subtle)] rounded-2xl flex items-center justify-center z-10 group-hover:border-accent/50 transition-all">
+                    <div className="w-2 h-2 bg-accent rounded-full group-hover:scale-150 transition-all" />
                   </div>
 
                   <div className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-3xl group-hover:bg-white/[0.08] transition-all">
                     <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                      <span className="px-4 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-[10px] font-black uppercase tracking-widest">
+                      <span className="px-4 py-1.5 bg-accent/10 text-accent border border-accent/20 rounded-full text-[10px] font-black uppercase tracking-widest">
                         {exp.period}
                       </span>
                       <span className="text-xs text-gray-500 flex items-center gap-1 font-bold italic">
@@ -74,7 +74,7 @@ export default async function ExperiencePage() {
                       </span>
                     </div>
                     <h3 className="text-xl font-black text-foreground uppercase mb-1">{exp.role}</h3>
-                    <p className="text-blue-500 font-bold text-sm mb-4">{exp.company}</p>
+                    <p className="text-accent font-bold text-sm mb-4">{exp.company}</p>
                     <p className="text-gray-400 text-sm leading-relaxed font-medium">
                       {exp.description}
                     </p>

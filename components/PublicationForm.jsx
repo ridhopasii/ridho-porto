@@ -49,7 +49,7 @@ export default function PublicationForm({ initialData = null }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {success && (
-        <div className="flex items-center gap-2 p-4 bg-blue-500/10 border border-blue-500/50 text-blue-400 rounded-xl animate-fade-in-up">
+        <div className="flex items-center gap-2 p-4 bg-accent/10 border border-accent/50 text-accent rounded-xl animate-fade-in-up">
           <CheckCircle2 size={20} />
           Publikasi berhasil disimpan!
         </div>
@@ -58,7 +58,7 @@ export default function PublicationForm({ initialData = null }) {
       {/* Visibility Toggle */}
       <div className="flex items-center justify-between p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
         <div className="flex items-center gap-4">
-          <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-blue-500/20 text-blue-500' : 'bg-gray-500/20 text-gray-500'}`}>
+          <div className={`p-2 rounded-xl ${formData.showOnHome ? 'bg-accent/20 text-accent' : 'bg-gray-500/20 text-gray-500'}`}>
             {formData.showOnHome ? <Eye size={20} /> : <EyeOff size={20} />}
           </div>
           <div>
@@ -69,7 +69,7 @@ export default function PublicationForm({ initialData = null }) {
         <button
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, showOnHome: !prev.showOnHome }))}
-          className={`relative w-14 h-7 rounded-full transition-all ${formData.showOnHome ? 'bg-blue-500' : 'bg-white/10'}`}
+          className={`relative w-14 h-7 rounded-full transition-all ${formData.showOnHome ? 'bg-accent' : 'bg-white/10'}`}
         >
           <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all ${formData.showOnHome ? 'left-8' : 'left-1'}`} />
         </button>
@@ -84,7 +84,7 @@ export default function PublicationForm({ initialData = null }) {
           type="text"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground"
           placeholder="Judul Publikasi"
         />
       </div>
@@ -99,7 +99,7 @@ export default function PublicationForm({ initialData = null }) {
             type="text"
             value={formData.outlet}
             onChange={(e) => setFormData({ ...formData, outlet: e.target.value })}
-            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground"
             placeholder="Contoh: Kompas, Medium, Jurnal..."
           />
         </div>
@@ -112,7 +112,7 @@ export default function PublicationForm({ initialData = null }) {
             type="text"
             value={formData.date}
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground"
             placeholder="Contoh: April 2024"
           />
         </div>
@@ -126,7 +126,7 @@ export default function PublicationForm({ initialData = null }) {
           type="text"
           value={formData.url || ''}
           onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground"
           placeholder="https://..."
         />
       </div>
@@ -139,7 +139,7 @@ export default function PublicationForm({ initialData = null }) {
           value={formData.description || ''}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           rows={3}
-          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all resize-none text-foreground"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-5 py-4 focus:border-accent focus:outline-none transition-all resize-none text-foreground"
           placeholder="Ringkasan tentang publikasi ini..."
         />
       </div>
@@ -159,7 +159,7 @@ export default function PublicationForm({ initialData = null }) {
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 py-4 bg-blue-600 text-foreground font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-blue-500/20"
+          className="flex-1 py-4 bg-accent text-foreground font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-xl shadow-accent/20"
         >
           {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
           {loading ? 'Menyimpan...' : initialData ? 'Simpan Perubahan' : 'Tambah Publikasi'}

@@ -7,8 +7,8 @@ export default function ProjectCarousel({ images, title }) {
 
   if (!images || images.length === 0)
     return (
-      <div className="w-full h-full bg-blue-500/10 flex items-center justify-center">
-        <span className="text-blue-500/20 font-bold">NO IMAGE</span>
+      <div className="w-full h-full bg-accent/10 flex items-center justify-center">
+        <span className="text-accent/20 font-bold">NO IMAGE</span>
       </div>
     );
 
@@ -46,13 +46,13 @@ export default function ProjectCarousel({ images, title }) {
         <>
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 backdrop-blur-md text-foreground rounded-full opacity-0 group-hover/carousel:opacity-100 transition-all hover:bg-blue-500 hover:text-black z-10"
+            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 backdrop-blur-md text-foreground rounded-full opacity-0 group-hover/carousel:opacity-100 transition-all hover:bg-accent hover:text-black z-10"
           >
             <ChevronLeft size={20} />
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 backdrop-blur-md text-foreground rounded-full opacity-0 group-hover/carousel:opacity-100 transition-all hover:bg-blue-500 hover:text-black z-10"
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 backdrop-blur-md text-foreground rounded-full opacity-0 group-hover/carousel:opacity-100 transition-all hover:bg-accent hover:text-black z-10"
           >
             <ChevronRight size={20} />
           </button>
@@ -63,7 +63,7 @@ export default function ProjectCarousel({ images, title }) {
               <div
                 key={index}
                 className={`w-1.5 h-1.5 rounded-full transition-all ${
-                  currentIndex === index ? 'bg-blue-500 w-4' : 'bg-white/30'
+                  currentIndex === index ? 'bg-accent w-4' : 'bg-white/30'
                 }`}
               />
             ))}

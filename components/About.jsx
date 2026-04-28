@@ -29,7 +29,7 @@ export default function About({ profile }) {
             {/* Glassmorphism Floating Card */}
             <div className="absolute -bottom-10 -right-4 md:-right-10 glass p-8 rounded-3xl z-20 shadow-2xl max-w-[280px] animate-fade-in-up">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-blue-500 flex items-center justify-center text-black">
+                <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center text-black">
                   <CheckCircle2 size={24} />
                 </div>
                 <div>
@@ -48,23 +48,23 @@ export default function About({ profile }) {
             </div>
 
             {/* Background Decoration */}
-            <div className="absolute -top-10 -left-10 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] -z-10"></div>
+            <div className="absolute -top-10 -left-10 w-64 h-64 bg-accent/10 rounded-full blur-[80px] -z-10"></div>
           </div>
 
           {/* Text Part */}
           <div>
-            <h2 className="text-sm font-bold text-blue-500 uppercase tracking-[0.3em] mb-4">
+            <h2 className="text-sm font-bold text-accent uppercase tracking-[0.3em] mb-4">
               {profile?.about_tag || 'Discovery'}
             </h2>
             <h3 className="text-4xl md:text-6xl font-black mb-8 font-outfit tracking-tighter text-foreground uppercase">
               {profile?.about_title ? (
                 <>
                   {profile.about_title.split(' ').slice(0, -1).join(' ')}{' '}
-                  <span className="text-blue-500">{profile.about_title.split(' ').pop()}</span>
+                  <span className="text-accent">{profile.about_title.split(' ').pop()}</span>
                 </>
               ) : (
                 <>
-                  ABOUT <span className="text-blue-500">ME</span>
+                  ABOUT <span className="text-accent">ME</span>
                 </>
               )}
             </h3>
@@ -99,9 +99,9 @@ export default function About({ profile }) {
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-2xl hover:border-blue-500/30 transition-all flex items-center gap-4 group/item"
+                  className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-2xl hover:border-accent/30 transition-all flex items-center gap-4 group/item"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-muted-foreground group-hover/item:bg-blue-500 group-hover/item:text-black transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-muted-foreground group-hover/item:bg-accent group-hover/item:text-black transition-all">
                     {item.icon}
                   </div>
                   <div>

@@ -86,8 +86,8 @@ export default function ExportData() {
   return (
     <div className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl">
       <div className="flex items-center gap-3 mb-4">
-        <div className="p-2 bg-blue-500/10 rounded-xl">
-          <Database size={20} className="text-blue-500" />
+        <div className="p-2 bg-accent/10 rounded-xl">
+          <Database size={20} className="text-accent" />
         </div>
         <div>
           <h3 className="font-bold text-foreground">Export & Backup Data</h3>
@@ -96,7 +96,7 @@ export default function ExportData() {
       </div>
 
       {success && (
-        <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-xl flex items-center gap-2 text-blue-400 text-sm">
+        <div className="mb-4 p-3 bg-accent/10 border border-accent/30 rounded-xl flex items-center gap-2 text-accent text-sm">
           <CheckCircle2 size={16} />
           Data berhasil diexport!
         </div>
@@ -105,7 +105,7 @@ export default function ExportData() {
       <button
         onClick={exportAllData}
         disabled={loading}
-        className="w-full py-3 bg-blue-500 text-foreground font-bold rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+        className="w-full py-3 bg-accent text-foreground font-bold rounded-xl hover:bg-accent transition-all flex items-center justify-center gap-2 disabled:opacity-50"
       >
         {loading ? (
           <>

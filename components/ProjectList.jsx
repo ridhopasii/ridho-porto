@@ -30,7 +30,7 @@ export default function ProjectList({ initialProjects }) {
       {initialProjects?.map((project) => (
         <div
           key={project.id}
-          className="p-4 bg-white/5 border border-[var(--border-subtle)] rounded-2xl flex items-center justify-between group hover:border-blue-500/50 transition-all"
+          className="p-4 bg-white/5 border border-[var(--border-subtle)] rounded-2xl flex items-center justify-between group hover:border-accent/50 transition-all"
         >
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-white/10 overflow-hidden">
@@ -51,7 +51,7 @@ export default function ProjectList({ initialProjects }) {
               <div className="flex items-center gap-3">
                 <p className="text-sm text-gray-500 line-clamp-1 max-w-md">{project.description}</p>
                 {project.showOnHome !== false ? (
-                  <span className="flex items-center gap-1 text-[10px] bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">
+                  <span className="flex items-center gap-1 text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">
                     <Eye size={10} /> Home
                   </span>
                 ) : (
@@ -77,7 +77,7 @@ export default function ProjectList({ initialProjects }) {
               }}
               className={`p-2.5 rounded-xl border transition-all ${
                 project.showOnHome !== false 
-                  ? 'text-blue-500 bg-blue-500/10 border-blue-500/20' 
+                  ? 'text-accent bg-accent/10 border-accent/20' 
                   : 'text-gray-500 bg-white/5 border-white/5'
               }`}
               title={project.showOnHome !== false ? "Tampil di Home" : "Disembunyikan"}
@@ -88,7 +88,7 @@ export default function ProjectList({ initialProjects }) {
             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all border-l border-[var(--border-subtle)] pl-3">
               <Link
                 href={`/admin/projects/edit/${project.id}`}
-                className="p-2 hover:bg-white/10 rounded-lg text-blue-400"
+                className="p-2 hover:bg-white/10 rounded-lg text-accent"
                 title="Edit"
               >
                 <Edit size={20} />

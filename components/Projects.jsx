@@ -8,16 +8,16 @@ export default function Projects({ projects }) {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
           <div>
-            <h2 className="text-sm font-bold text-blue-500 uppercase tracking-[0.3em] mb-3">
+            <h2 className="text-sm font-bold text-accent uppercase tracking-[0.3em] mb-3">
               Portfolio
             </h2>
             <h3 className="text-4xl md:text-6xl font-black font-outfit tracking-tight text-foreground uppercase">
-              Featured <span className="text-blue-500">Work</span>
+              Featured <span className="text-accent">Work</span>
             </h3>
           </div>
           <Link
             href="/#kontak"
-            className="text-muted-foreground font-bold flex items-center gap-2 cursor-pointer hover:text-blue-500 transition-all uppercase text-xs tracking-widest"
+            className="text-muted-foreground font-bold flex items-center gap-2 cursor-pointer hover:text-accent transition-all uppercase text-xs tracking-widest"
           >
             Start a Project <ArrowUpRight size={18} />
           </Link>
@@ -45,13 +45,13 @@ export default function Projects({ projects }) {
                       {project.tags?.split(',').slice(0, 3).map((tag) => (
                         <span
                           key={tag}
-                          className="px-3 py-1 bg-white/5 rounded-full text-[8px] font-bold text-blue-500 border border-[var(--border-subtle)] uppercase tracking-widest"
+                          className="px-3 py-1 bg-white/5 rounded-full text-[8px] font-bold text-accent border border-[var(--border-subtle)] uppercase tracking-widest"
                         >
                           {tag.trim()}
                         </span>
                       ))}
                     </div>
-                    <h3 className="text-2xl font-black mb-3 text-foreground font-outfit uppercase tracking-tight group-hover:text-blue-500 transition-colors">
+                    <h3 className="text-2xl font-black mb-3 text-foreground font-outfit uppercase tracking-tight group-hover:text-accent transition-colors">
                       {project.title || 'Project Title'}
                     </h3>
                     <p className="text-muted-foreground text-sm leading-relaxed mb-6 line-clamp-2">
@@ -63,7 +63,7 @@ export default function Projects({ projects }) {
                         <a
                           href={project.projectUrl}
                           target="_blank"
-                          className="flex-1 py-3 bg-white/5 text-foreground rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-500 hover:text-black transition-all flex items-center justify-center gap-2 border border-[var(--border-subtle)] hover:border-blue-500"
+                          className="flex-1 py-3 bg-white/5 text-foreground rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-accent hover:text-black transition-all flex items-center justify-center gap-2 border border-[var(--border-subtle)] hover:border-accent"
                         >
                           View Project <ExternalLink size={14} />
                         </a>

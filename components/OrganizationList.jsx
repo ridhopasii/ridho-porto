@@ -37,11 +37,11 @@ export default function OrganizationList({ organizations }) {
       {organizations?.map((org) => (
         <div
           key={org.id}
-          className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] flex flex-col justify-between group hover:border-blue-500/30 transition-all"
+          className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] flex flex-col justify-between group hover:border-accent/30 transition-all"
         >
           <div>
             <div className="flex justify-between items-start mb-6">
-              <div className="p-4 bg-blue-500/10 text-blue-500 rounded-2xl">
+              <div className="p-4 bg-accent/10 text-accent rounded-2xl">
                 <Users size={24} />
               </div>
               <div className="flex gap-2">
@@ -59,7 +59,7 @@ export default function OrganizationList({ organizations }) {
                   }}
                   className={`p-3 transition-all rounded-xl ${
                     org.showOnHome !== false
-                      ? 'bg-blue-500/10 text-blue-500'
+                      ? 'bg-accent/10 text-accent'
                       : 'bg-white/5 text-gray-500'
                   }`}
                   title={org.showOnHome !== false ? 'Sembunyikan' : 'Tampilkan'}
@@ -86,7 +86,7 @@ export default function OrganizationList({ organizations }) {
               </div>
             </div>
             <h3 className="text-xl font-bold text-foreground mb-1">{org.name}</h3>
-            <p className="text-blue-500 font-bold uppercase text-[10px] tracking-widest mb-4">
+            <p className="text-accent font-bold uppercase text-[10px] tracking-widest mb-4">
               {org.role}
             </p>
             <div className="flex items-center gap-2 text-xs text-gray-500 font-medium mb-4">

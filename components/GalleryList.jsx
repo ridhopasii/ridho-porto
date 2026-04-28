@@ -54,7 +54,7 @@ export default function GalleryList({ galleryItems }) {
               <button
                 onClick={() => toggleVisibility(item)}
                 className={`p-3 rounded-xl hover:scale-110 transition-all ${
-                  item.showOnHome !== false ? 'bg-blue-500 text-foreground' : 'bg-gray-500 text-foreground'
+                  item.showOnHome !== false ? 'bg-accent text-foreground' : 'bg-gray-500 text-foreground'
                 }`}
               >
                 {item.showOnHome !== false ? <Eye size={18} /> : <EyeOff size={18} />}

@@ -24,7 +24,7 @@ export default async function AdminProjects() {
           </div>
           <Link
             href="/admin/projects/new"
-            className="px-6 py-3 bg-blue-500 text-black font-bold rounded-xl flex items-center gap-2 hover:scale-105 transition-all"
+            className="px-6 py-3 bg-accent text-black font-bold rounded-xl flex items-center gap-2 hover:scale-105 transition-all"
           >
             <Plus size={20} />
             Tambah Proyek

@@ -10,8 +10,8 @@ export default function LatestBlogs({ blogs }) {
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-end mb-12">
           <div>
-            <h2 className="text-sm font-bold text-blue-500 uppercase tracking-[0.3em] mb-3">
-              Journal
+            <h2 className="text-sm font-bold text-accent uppercase tracking-[0.3em] mb-3">
+              Insights
             </h2>
             <h3 className="text-4xl md:text-5xl font-bold font-outfit text-foreground">
               Latest Thoughts
@@ -19,7 +19,7 @@ export default function LatestBlogs({ blogs }) {
           </div>
           <Link
             href="/blog"
-            className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-blue-400 transition-all font-medium"
+            className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-accent transition-all font-medium"
           >
             Lihat Semua Artikel
             <ArrowRight size={18} />
@@ -41,12 +41,12 @@ export default function LatestBlogs({ blogs }) {
                     className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
                   />
                 ) : (
-                  <div className="w-full h-full bg-blue-500/10 flex items-center justify-center">
-                    <BookOpen className="w-10 h-10 text-blue-500/20" />
+                  <div className="w-full h-full bg-accent/10 flex items-center justify-center">
+                    <BookOpen className="w-10 h-10 text-accent/20" />
                   </div>
                 )}
                 <div className="absolute top-4 left-4">
-                  <span className="bg-blue-500 text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                  <span className="bg-accent text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
                     {blog.category || 'ARTICLE'}
                   </span>
                 </div>
@@ -55,7 +55,7 @@ export default function LatestBlogs({ blogs }) {
               <div className="p-8 flex flex-col flex-1">
                 <div className="flex items-center gap-4 text-[10px] text-muted-foreground mb-4 uppercase tracking-wider">
                   <div className="flex items-center gap-1.5 font-bold">
-                    <Calendar size={12} className="text-blue-500" />
+                    <Calendar size={12} className="text-accent" />
                     {new Date(blog.createdAt).toLocaleDateString('id-ID', {
                       day: 'numeric',
                       month: 'short',
@@ -64,7 +64,7 @@ export default function LatestBlogs({ blogs }) {
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-blue-400 transition-colors line-clamp-2 leading-tight">
+                <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-accent transition-colors line-clamp-2 leading-tight">
                   {blog.title}
                 </h3>
 
@@ -72,7 +72,7 @@ export default function LatestBlogs({ blogs }) {
                   {blog.excerpt || 'Klik untuk membaca artikel selengkapnya...'}
                 </p>
 
-                <div className="mt-auto flex items-center text-blue-500 font-bold text-xs uppercase tracking-widest group/btn">
+                <div className="mt-auto flex items-center text-accent font-bold text-xs uppercase tracking-widest group/btn">
                   Read Article
                   <ArrowRight size={14} className="ml-2 group-hover/btn:ml-4 transition-all" />
                 </div>
@@ -82,7 +82,7 @@ export default function LatestBlogs({ blogs }) {
         </div>
 
         <div className="mt-12 md:hidden text-center">
-          <Link href="/blog" className="inline-flex items-center gap-2 text-blue-500 font-bold">
+          <Link href="/blog" className="inline-flex items-center gap-2 text-accent font-bold">
             Lihat Semua Artikel
             <ArrowRight size={18} />
           </Link>

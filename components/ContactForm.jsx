@@ -28,8 +28,8 @@ export default function ContactForm() {
 
   if (success) {
     return (
-      <div className="p-10 bg-blue-500/10 border border-blue-500/30 rounded-3xl text-center">
-        <CheckCircle2 size={48} className="text-blue-500 mx-auto mb-4" />
+      <div className="p-10 bg-accent/10 border border-accent/30 rounded-3xl text-center">
+        <CheckCircle2 size={48} className="text-accent mx-auto mb-4" />
         <h3 className="text-xl font-black text-foreground mb-2 uppercase tracking-tight">
           Pesan Terkirim!
         </h3>
@@ -66,7 +66,7 @@ export default function ContactForm() {
             placeholder="Nama Lengkap"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-2xl pl-12 pr-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground placeholder:text-gray-600 text-sm font-medium"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-2xl pl-12 pr-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground placeholder:text-gray-600 text-sm font-medium"
           />
         </div>
         <div className="relative">
@@ -80,7 +80,7 @@ export default function ContactForm() {
             placeholder="Email Address"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-2xl pl-12 pr-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground placeholder:text-gray-600 text-sm font-medium"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-2xl pl-12 pr-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground placeholder:text-gray-600 text-sm font-medium"
           />
         </div>
       </div>
@@ -95,7 +95,7 @@ export default function ContactForm() {
           placeholder="Perihal / Subjek"
           value={formData.subject}
           onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-2xl pl-12 pr-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground placeholder:text-gray-600 text-sm font-medium"
+          className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-2xl pl-12 pr-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground placeholder:text-gray-600 text-sm font-medium"
         />
       </div>
 
@@ -105,13 +105,13 @@ export default function ContactForm() {
         placeholder="Tulis pesan Anda di sini..."
         value={formData.message}
         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-        className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-blue-500 focus:outline-none transition-all text-foreground placeholder:text-gray-600 resize-none text-sm font-medium"
+        className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-2xl px-5 py-4 focus:border-accent focus:outline-none transition-all text-foreground placeholder:text-gray-600 resize-none text-sm font-medium"
       />
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-5 bg-blue-500 text-black font-black rounded-2xl hover:bg-blue-400 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3 text-sm uppercase tracking-widest shadow-xl shadow-blue-500/20 disabled:opacity-50"
+        className="w-full py-5 bg-accent text-black font-black rounded-2xl hover:bg-accent transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3 text-sm uppercase tracking-widest shadow-xl shadow-accent/20 disabled:opacity-50"
       >
         {loading ? (
           <>

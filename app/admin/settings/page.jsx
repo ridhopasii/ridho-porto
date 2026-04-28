@@ -24,13 +24,13 @@ const SECTIONS = [
     key: 'show_about',
     label: 'Tentang',
     desc: 'Section "About Me" di halaman utama',
-    icon: <User size={20} className="text-blue-500" />,
+    icon: <User size={20} className="text-accent" />,
   },
   {
     key: 'show_experience',
     label: 'Pengalaman',
     desc: 'Section timeline pengalaman kerja & organisasi',
-    icon: <Briefcase size={20} className="text-blue-500" />,
+    icon: <Briefcase size={20} className="text-accent" />,
   },
   {
     key: 'show_education',
@@ -114,8 +114,8 @@ export default function AdminSettings() {
         <div className="max-w-2xl">
           <header className="mb-10">
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-blue-500/10 rounded-xl">
-                <Settings size={24} className="text-blue-500" />
+              <div className="p-2 bg-accent/10 rounded-xl">
+                <Settings size={24} className="text-accent" />
               </div>
               <h1 className="text-2xl font-bold">Pengaturan Tampilan</h1>
             </div>
@@ -125,7 +125,7 @@ export default function AdminSettings() {
           </header>
 
           {saved && (
-            <div className="flex items-center gap-2 p-4 bg-blue-500 text-black font-bold rounded-2xl mb-6 animate-bounce">
+            <div className="flex items-center gap-2 p-4 bg-accent text-black font-bold rounded-2xl mb-6 animate-bounce">
               <CheckCircle2 size={20} /> Pengaturan tersimpan & langsung aktif!
             </div>
           )}
@@ -157,7 +157,7 @@ export default function AdminSettings() {
                     <button
                       onClick={() => toggle(section.key)}
                       className={`relative w-14 h-7 rounded-full transition-all duration-300 flex-shrink-0 ${
-                        isOn ? 'bg-blue-500' : 'bg-white/10'
+                        isOn ? 'bg-accent' : 'bg-white/10'
                       }`}
                     >
                       <div
@@ -177,8 +177,8 @@ export default function AdminSettings() {
           {!loading && (
             <div className="mt-8 p-6 bg-white/5 border border-[var(--border-subtle)] rounded-[2rem]">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-blue-500/10 rounded-xl">
-                  <User size={24} className="text-blue-500" />
+                <div className="p-2 bg-accent/10 rounded-xl">
+                  <User size={24} className="text-accent" />
                 </div>
                 <div>
                   <p className="font-bold text-sm">Pelatihan Asisten AI (Chatbot)</p>
@@ -191,7 +191,7 @@ export default function AdminSettings() {
                   setSettings((prev) => ({ ...prev, ai_prompt: e.target.value }))
                 }
                 rows={5}
-                className="w-full rounded-xl bg-black/40 border border-[var(--border-subtle)] p-4 text-sm text-gray-300 focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full rounded-xl bg-black/40 border border-[var(--border-subtle)] p-4 text-sm text-gray-300 focus:outline-none focus:border-accent transition-colors"
                 placeholder="Tuliskan prompt AI Anda di sini..."
               />
             </div>
@@ -273,7 +273,7 @@ export default function AdminSettings() {
                 window.location.reload(); // Reload to apply color change immediately
               }}
               disabled={saving}
-              className="mt-8 w-full py-4 bg-blue-500 text-black font-black rounded-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-xl shadow-blue-500/20 uppercase tracking-widest text-sm"
+              className="mt-8 w-full py-4 bg-accent text-black font-black rounded-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-xl shadow-accent/20 uppercase tracking-widest text-sm"
             >
               {saving ? (
                 <>

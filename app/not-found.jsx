@@ -16,10 +16,10 @@ export default function NotFound() {
             </p>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="space-y-4 text-center">
-                <div className="w-16 h-16 rounded-[2rem] bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto">
-                  <Search size={32} className="text-blue-500" />
+                <div className="w-16 h-16 rounded-[2rem] bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto">
+                  <Search size={32} className="text-accent" />
                 </div>
-                <p className="text-blue-500 text-sm font-black uppercase tracking-[0.4em]">
+                <p className="text-accent text-sm font-black uppercase tracking-[0.4em]">
                   Halaman Tidak Ditemukan
                 </p>
               </div>
@@ -27,7 +27,7 @@ export default function NotFound() {
           </div>
 
           <h1 className="text-3xl md:text-5xl font-black font-outfit uppercase tracking-tighter mb-6">
-            Ups! Halaman ini <span className="text-blue-500">Hilang</span>
+            Ups! Halaman ini <span className="text-accent">Hilang</span>
           </h1>
           <p className="text-gray-500 text-lg leading-relaxed mb-12 font-medium max-w-lg mx-auto">
             Halaman yang Anda cari tidak ada, mungkin sudah dipindahkan, atau URL yang Anda ketik
@@ -37,7 +37,7 @@ export default function NotFound() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/"
-              className="px-10 py-5 bg-blue-500 text-black font-black rounded-2xl hover:bg-blue-400 transition-all hover:scale-105 flex items-center justify-center gap-2 text-sm uppercase tracking-widest shadow-xl shadow-blue-500/20"
+              className="px-10 py-5 bg-accent text-black font-black rounded-2xl hover:bg-accent transition-all hover:scale-105 flex items-center justify-center gap-2 text-sm uppercase tracking-widest shadow-xl shadow-accent/20"
             >
               <Home size={18} /> Kembali ke Beranda
             </Link>
@@ -54,7 +54,7 @@ export default function NotFound() {
             {[...Array(8)].map((_, i) => (
               <div
                 key={i}
-                className="h-1 bg-blue-500 rounded-full"
+                className="h-1 bg-accent rounded-full"
                 style={{ opacity: Math.random() }}
               ></div>
             ))}
@@ -64,7 +64,7 @@ export default function NotFound() {
 
       {/* Background effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px]"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-[120px]"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-[120px]"></div>
       </div>
     </main>

@@ -33,16 +33,16 @@ export default function ExperienceList({ initialExperiences }) {
       {initialExperiences?.map((exp) => (
         <div
           key={exp.id}
-          className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl group hover:border-blue-500/50 transition-all"
+          className="p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl group hover:border-accent/50 transition-all"
         >
           <div className="flex justify-between items-start">
             <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
+              <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent">
                 <Briefcase size={24} />
               </div>
               <div>
                 <h3 className="font-bold text-lg">{exp.position}</h3>
-                <p className="text-blue-500 font-medium text-sm">{exp.company}</p>
+                <p className="text-accent font-medium text-sm">{exp.company}</p>
                 <p className="text-gray-500 text-xs mt-1">{exp.period}</p>
                 {exp.description && (
                   <p className="text-gray-400 text-sm mt-3 line-clamp-2">{exp.description}</p>
@@ -63,7 +63,7 @@ export default function ExperienceList({ initialExperiences }) {
                 }}
                 className={`p-2.5 rounded-xl border transition-all ${
                   exp.showOnHome !== false
-                    ? 'text-blue-500 bg-blue-500/10 border-blue-500/20'
+                    ? 'text-accent bg-accent/10 border-accent/20'
                     : 'text-gray-500 bg-white/5 border-white/5'
                 }`}
                 title={exp.showOnHome !== false ? 'Tampil di Home' : 'Disembunyikan'}
@@ -74,7 +74,7 @@ export default function ExperienceList({ initialExperiences }) {
               <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all border-l border-[var(--border-subtle)] pl-3">
                 <Link
                   href={`/admin/experience/edit/${exp.id}`}
-                  className="p-2 hover:bg-white/10 rounded-xl text-blue-400"
+                  className="p-2 hover:bg-white/10 rounded-xl text-accent"
                 >
                   <Edit size={20} />
                 </Link>

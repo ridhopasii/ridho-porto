@@ -20,7 +20,7 @@ export default async function AdminMessages() {
               Pesan Masuk
             </h1>
             <p className="text-gray-500 text-sm mt-1">
-              Anda memiliki <span className="text-blue-500 font-bold">{messages?.length || 0}</span>{' '}
+              Anda memiliki <span className="text-accent font-bold">{messages?.length || 0}</span>{' '}
               pesan dari pengunjung.
             </p>
           </div>

@@ -45,7 +45,7 @@ export default function AdminBlogs() {
             </div>
             <Link 
               href="/admin/blogs/new"
-              className="bg-blue-600 hover:bg-blue-700 text-foreground px-4 py-2 rounded-xl flex items-center gap-2 transition-all"
+              className="bg-accent hover:bg-blue-700 text-foreground px-4 py-2 rounded-xl flex items-center gap-2 transition-all"
             >
               <Plus className="w-5 h-5" />
               Tulis Artikel
@@ -54,7 +54,7 @@ export default function AdminBlogs() {
 
           {loading ? (
             <div className="flex justify-center py-20">
-              <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
+              <Loader2 className="w-10 h-10 text-accent animate-spin" />
             </div>
           ) : (
             <div className="grid gap-4">
@@ -80,7 +80,7 @@ export default function AdminBlogs() {
                       <div>
                         <h3 className="text-xl font-bold text-foreground mb-1">{blog.title}</h3>
                         <div className="flex items-center gap-3 text-sm text-gray-400">
-                          <span className="bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded text-xs">
+                          <span className="bg-accent/10 text-accent px-2 py-0.5 rounded text-xs">
                             {blog.category || 'Uncategorized'}
                           </span>
                           <span>•</span>

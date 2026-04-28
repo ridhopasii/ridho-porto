@@ -29,11 +29,11 @@ export default function MessageItem({ msg }) {
       className={`p-6 border rounded-3xl transition-all relative group cursor-pointer ${
         msg.isRead
           ? 'bg-white/5 border-[var(--border-subtle)] grayscale-[0.5] opacity-70'
-          : 'bg-blue-500/5 border-blue-500/30 shadow-lg shadow-blue-500/5'
+          : 'bg-accent/5 border-accent/30 shadow-lg shadow-accent/5'
       }`}
     >
       {!msg.isRead && (
-        <div className="absolute top-6 right-6 px-3 py-1 bg-blue-500 text-black text-[10px] font-black uppercase tracking-widest rounded-full animate-pulse">
+        <div className="absolute top-6 right-6 px-3 py-1 bg-accent text-black text-[10px] font-black uppercase tracking-widest rounded-full animate-pulse">
           Baru
         </div>
       )}
@@ -42,7 +42,7 @@ export default function MessageItem({ msg }) {
         <div className="flex items-center gap-4">
           <div
             className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
-              msg.isRead ? 'bg-white/5 text-gray-500' : 'bg-blue-500 text-black'
+              msg.isRead ? 'bg-white/5 text-gray-500' : 'bg-accent text-black'
             }`}
           >
             <Mail size={24} />
@@ -66,7 +66,7 @@ export default function MessageItem({ msg }) {
 
       <div className="p-6 bg-black/40 rounded-2xl mb-6 border border-white/5">
         <p className="text-gray-300 leading-relaxed font-medium">
-          <span className="text-blue-500 font-bold mr-2">Subject:</span>{' '}
+          <span className="text-accent font-bold mr-2">Subject:</span>{' '}
           {msg.subject || 'Tanpa Subjek'}
         </p>
         <div className="h-px bg-white/5 my-4" />
@@ -74,7 +74,7 @@ export default function MessageItem({ msg }) {
       </div>
 
       <div className="flex justify-between items-center opacity-0 group-hover:opacity-100 transition-all">
-        <div className="flex items-center gap-2 text-[10px] text-blue-500 font-bold uppercase tracking-widest">
+        <div className="flex items-center gap-2 text-[10px] text-accent font-bold uppercase tracking-widest">
           {msg.isRead && (
             <>
               <CheckCircle2 size={12} /> Sudah Dibaca

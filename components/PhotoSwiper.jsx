@@ -67,13 +67,13 @@ export default function PhotoSwiper({
         <>
           <button
             onClick={prev}
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 backdrop-blur-md text-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-blue-500 hover:scale-110 shadow-lg"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 backdrop-blur-md text-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-accent hover:scale-110 shadow-lg"
           >
             <ChevronLeft size={18} />
           </button>
           <button
             onClick={next}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 backdrop-blur-md text-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-blue-500 hover:scale-110 shadow-lg"
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 backdrop-blur-md text-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-accent hover:scale-110 shadow-lg"
           >
             <ChevronRight size={18} />
           </button>
@@ -87,7 +87,7 @@ export default function PhotoSwiper({
                 onClick={(e) => { e.preventDefault(); setCurrentIndex(idx); }}
                 className={`rounded-full transition-all duration-300 ${
                   idx === currentIndex
-                    ? 'w-5 h-1.5 bg-blue-500'
+                    ? 'w-5 h-1.5 bg-accent'
                     : 'w-1.5 h-1.5 bg-white/40 hover:bg-white/70'
                 }`}
               />
