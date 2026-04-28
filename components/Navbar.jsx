@@ -19,7 +19,7 @@ const moreLinks = [
   { name: 'Organisasi', href: '/organizations' },
 ];
 
-const allLinks = [...mainLinks, ...moreLinks, { name: 'Kontak', href: '/#kontak' }];
+const allLinks = [...mainLinks, ...moreLinks, { name: 'Produktif', href: '/produktif' }, { name: 'Kontak', href: '/#kontak' }];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -75,6 +75,15 @@ export default function Navbar() {
             <div className="hidden md:block">
               <ThemeToggle />
             </div>
+            
+            <Link 
+              href="/produktif" 
+              className="p-2.5 bg-white/5 rounded-full text-white border border-white/10 hover:bg-teal-500 hover:text-black hover:scale-110 active:scale-90 transition-all flex items-center justify-center group"
+              title="Productivity Dashboard"
+            >
+              <Zap size={18} className="group-hover:fill-current" />
+            </Link>
+
             <Link href="/#kontak" className="hidden md:flex bg-white text-black px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-teal-500 hover:text-white transition-all items-center gap-2 group">
               Talk
               <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform" />

@@ -1,5 +1,4 @@
-import { Briefcase, GraduationCap, Calendar, ExternalLink, ImageIcon } from 'lucide-react';
-import PhotoSwiper from './PhotoSwiper';
+import { Briefcase, GraduationCap, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Timeline({ experiences, educations }) {
@@ -18,58 +17,32 @@ export default function Timeline({ experiences, educations }) {
               </h2>
             </div>
 
-            <div className="space-y-12 relative before:absolute before:left-8 before:top-0 before:bottom-0 before:w-px before:bg-white/10">
+            <div className="space-y-12 relative before:absolute before:left-[7px] before:top-2 before:bottom-0 before:w-px before:bg-white/10">
               {Array.isArray(experiences) &&
                 experiences.map((exp) => (
-                  <div key={exp.id} className="relative pl-20 group">
-                    <div className="absolute left-6 top-1 w-4 h-4 bg-teal-500 rounded-full border-4 border-[#0a0a0a] z-10 group-hover:scale-125 transition-transform"></div>
-                    <div className="p-6 bg-white/5 border border-white/10 rounded-3xl group-hover:border-teal-500/30 transition-all">
-                      <p className="text-teal-500 text-sm font-bold flex items-center gap-2 mb-2">
-                        <Calendar size={14} /> {exp.period || 'Period N/A'}
+                  <div key={exp.id} className="relative pl-10 group">
+                    <div className="absolute left-0 top-1.5 w-4 h-4 bg-[#0a0a0a] rounded-full border border-teal-500/50 z-10 group-hover:bg-teal-500 transition-colors"></div>
+                    <div className="pt-0.5">
+                      <p className="text-gray-500 text-[10px] font-black tracking-widest uppercase mb-1">
+                        {exp.period || 'Period N/A'}
                       </p>
-                      <h3 className="text-xl font-bold mb-1">{exp.position || 'Position'}</h3>
-                      <p className="text-teal-500 font-medium mb-4 uppercase text-xs tracking-widest">
+                      <Link href={`/experience/${exp.slug}`} className="inline-block group-hover:text-teal-500 transition-colors">
+                        <h3 className="text-xl font-bold mb-1 tracking-tight flex items-center gap-2">
+                          {exp.position || 'Position'} <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </h3>
+                      </Link>
+                      <p className="text-teal-500 font-bold uppercase text-[10px] tracking-widest mb-3">
                         {exp.company || 'Company'}
                       </p>
-                      <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                      <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">
                         {exp.description || ''}
                       </p>
-
-                      {/* Documentation Photos */}
-                      {Array.isArray(exp.images) && exp.images.length > 0 && (
-                        <div className="mb-6">
-                          <PhotoSwiper
-                            images={exp.images}
-                            aspectRatio="aspect-video"
-                            rounded="rounded-2xl"
-                          />
-                        </div>
-                      )}
-
-                      {/* Details Link */}
-                      <div className="mt-6 flex flex-wrap gap-4">
-                        <Link
-                          href={`/experience/${exp.slug}`}
-                          className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-teal-500 transition-colors"
-                        >
-                          <ImageIcon size={12} /> Full Details
-                        </Link>
-                        {exp.proofUrl && (
-                          <a
-                            href={exp.proofUrl}
-                            target="_blank"
-                            className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-teal-500 hover:text-white transition-colors"
-                          >
-                            <ExternalLink size={12} /> View Credentials
-                          </a>
-                        )}
-                      </div>
                     </div>
                   </div>
                 ))}
 
               {(!Array.isArray(experiences) || experiences.length === 0) && (
-                <p className="text-gray-600 italic pl-10">Belum ada data pengalaman.</p>
+                <p className="text-gray-600 italic pl-10 text-sm">Belum ada data pengalaman.</p>
               )}
             </div>
           </div>
@@ -85,58 +58,32 @@ export default function Timeline({ experiences, educations }) {
               </h2>
             </div>
 
-            <div className="space-y-12 relative before:absolute before:left-8 before:top-0 before:bottom-0 before:w-px before:bg-white/10">
+            <div className="space-y-12 relative before:absolute before:left-[7px] before:top-2 before:bottom-0 before:w-px before:bg-white/10">
               {Array.isArray(educations) &&
                 educations.map((edu) => (
-                  <div key={edu.id} className="relative pl-20 group">
-                    <div className="absolute left-6 top-1 w-4 h-4 bg-purple-500 rounded-full border-4 border-[#0a0a0a] z-10 group-hover:scale-125 transition-transform"></div>
-                    <div className="p-6 bg-white/5 border border-white/10 rounded-3xl group-hover:border-purple-500/30 transition-all">
-                      <p className="text-purple-500 text-sm font-bold flex items-center gap-2 mb-2">
-                        <Calendar size={14} /> {edu.period || edu.year || 'Period N/A'}
+                  <div key={edu.id} className="relative pl-10 group">
+                    <div className="absolute left-0 top-1.5 w-4 h-4 bg-[#0a0a0a] rounded-full border border-purple-500/50 z-10 group-hover:bg-purple-500 transition-colors"></div>
+                    <div className="pt-0.5">
+                      <p className="text-gray-500 text-[10px] font-black tracking-widest uppercase mb-1">
+                        {edu.period || edu.year || 'Period N/A'}
                       </p>
-                      <h3 className="text-xl font-bold mb-1">{edu.degree || 'Degree'}</h3>
-                      <p className="text-purple-500 font-medium mb-2 uppercase text-xs tracking-widest">
+                      <Link href={`/education/${edu.slug}`} className="inline-block group-hover:text-purple-500 transition-colors">
+                        <h3 className="text-xl font-bold mb-1 tracking-tight flex items-center gap-2">
+                          {edu.degree || 'Degree'} <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </h3>
+                      </Link>
+                      <p className="text-purple-500 font-bold uppercase text-[10px] tracking-widest mb-3">
                         {edu.institution || 'Institution'} {edu.major ? `• ${edu.major}` : ''}
                       </p>
-                      <p className="text-gray-400 text-sm mb-6 line-clamp-2">
+                      <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">
                         {edu.description || ''}
                       </p>
-
-                      {/* Documentation Photos */}
-                      {Array.isArray(edu.images) && edu.images.length > 0 && (
-                        <div className="mb-6">
-                          <PhotoSwiper
-                            images={edu.images}
-                            aspectRatio="aspect-video"
-                            rounded="rounded-2xl"
-                          />
-                        </div>
-                      )}
-
-                      {/* Details & Proof Link */}
-                      <div className="mt-6 flex flex-wrap gap-4">
-                        <Link
-                          href={`/education/${edu.slug}`}
-                          className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-purple-500 transition-colors"
-                        >
-                          <ImageIcon size={12} /> Academic Record
-                        </Link>
-                        {edu.proofUrl && (
-                          <a
-                            href={edu.proofUrl}
-                            target="_blank"
-                            className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-purple-500 hover:text-white transition-colors"
-                          >
-                            <ExternalLink size={12} /> View Credentials
-                          </a>
-                        )}
-                      </div>
                     </div>
                   </div>
                 ))}
 
               {(!Array.isArray(educations) || educations.length === 0) && (
-                <p className="text-gray-600 italic pl-10">Belum ada data pendidikan.</p>
+                <p className="text-gray-600 italic pl-10 text-sm">Belum ada data pendidikan.</p>
               )}
             </div>
           </div>
