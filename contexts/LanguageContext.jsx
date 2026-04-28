@@ -6,13 +6,13 @@ const LanguageContext = createContext();
 export const translations = {
   id: {
     nav: {
-      home: 'Beranda',
-      projects: 'Proyek',
+      beranda: 'Beranda',
+      proyek: 'Proyek',
       blog: 'Blog',
       gallery: 'Galeri',
-      achievements: 'Pencapaian',
-      contact: 'Kontak',
-      productivity: 'Produktivitas'
+      pencapaian: 'Pencapaian',
+      kontak: 'Kontak',
+      produktif: 'Produktivitas'
     },
     hero: {
       viewPortfolio: 'Lihat Portofolio',
@@ -21,13 +21,13 @@ export const translations = {
   },
   en: {
     nav: {
-      home: 'Home',
-      projects: 'Projects',
+      beranda: 'Home',
+      proyek: 'Projects',
       blog: 'Blog',
       gallery: 'Gallery',
-      achievements: 'Achievements',
-      contact: 'Contact',
-      productivity: 'Productivity'
+      pencapaian: 'Achievements',
+      kontak: 'Contact',
+      produktif: 'Productivity'
     },
     hero: {
       viewPortfolio: 'View Portfolio',
