@@ -58,7 +58,7 @@ export default function Hero({ profile }) {
                   
                   if (finalImgs.length === 0) {
                     return (
-                      <div className="w-full h-full bg-gradient-to-br from-accent/20 to-blue-900/40 flex items-center justify-center">
+                      <div className="w-full h-full bg-gradient-to-br from-accent/20 to-accent/40 flex items-center justify-center">
                         <Users className="w-16 h-16 text-accent/50" />
                       </div>
                     );

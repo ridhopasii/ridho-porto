@@ -67,7 +67,7 @@ export default async function DatabaseDashboard() {
 
           <div className="mt-12 p-8 bg-accent/10 border border-accent/20 rounded-[2.5rem]">
             <h3 className="font-bold text-accent mb-2">💡 Tips Database</h3>
-            <p className="text-sm text-blue-300/70 leading-relaxed">
+            <p className="text-sm text-accent/70 leading-relaxed">
               Selalu lakukan backup berkala jika ingin melakukan manipulasi data besar. Kamu bisa melihat log aktivitas lengkap langsung di Dashboard Supabase Cloud jika membutuhkan debugging mendalam.
             </p>
           </div>

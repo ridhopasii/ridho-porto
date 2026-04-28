@@ -45,7 +45,7 @@ export default function AdminBlogs() {
             </div>
             <Link 
               href="/admin/blogs/new"
-              className="bg-accent hover:bg-blue-700 text-foreground px-4 py-2 rounded-xl flex items-center gap-2 transition-all"
+              className="bg-accent hover:bg-accent text-foreground px-4 py-2 rounded-xl flex items-center gap-2 transition-all"
             >
               <Plus className="w-5 h-5" />
               Tulis Artikel

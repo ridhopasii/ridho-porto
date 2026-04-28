@@ -170,7 +170,7 @@ export default function BlogForm({ initialData = null }) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-accent hover:bg-blue-700 text-foreground font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-accent/20"
+        className="w-full bg-accent hover:bg-accent text-foreground font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-accent/20"
       >
         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
         Simpan Artikel
