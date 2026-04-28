@@ -74,7 +74,7 @@ export default function InstagramFeed() {
                 <img 
                   src={post.media_url} 
                   alt={post.caption || 'Instagram Post'} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                   <Instagram className="text-white w-6 h-6 mb-2" />
