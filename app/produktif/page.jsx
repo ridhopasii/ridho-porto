@@ -237,8 +237,12 @@ export default function ProduktifPage() {
       // 4. Save Habit Configs
       habitConfigs.forEach(h => {
         if (!h) return;
-        if (h.id) promises.push(supabase.from('HabitConfig').update(h).eq('id', h.id));
-        else promises.push(supabase.from('HabitConfig').insert([h]));
+        if (h.deleted) {
+          if (h.id) promises.push(supabase.from('HabitConfig').delete().eq('id', h.id));
+        } else {
+          if (h.id) promises.push(supabase.from('HabitConfig').update({ name: h.name, icon: h.icon, isActive: h.isActive, sortOrder: h.sortOrder }).eq('id', h.id));
+          else promises.push(supabase.from('HabitConfig').insert([{ name: h.name, category: h.category, icon: h.icon, isActive: h.isActive, sortOrder: h.sortOrder }]));
+        }
       });
 
       await Promise.all(promises);
@@ -267,11 +271,18 @@ export default function ProduktifPage() {
     else if (recentAvg < previousAvg - 5) { trendLabel = 'Menurun'; TrendIcon = TrendingDown; }
     
     const dayStats = {};
+    let totalCompletedTasks = 0;
     historyData.forEach(item => {
       if (!item || !item.date) return;
       const day = new Date(item.date).getDay();
       if (!dayStats[day]) dayStats[day] = [];
-      dayStats[day].push(calculateCompletionRate(item.tasks));
+      const rate = calculateCompletionRate(item.tasks);
+      dayStats[day].push(rate);
+      
+      try {
+        const parsed = JSON.parse(item.tasks || '[]');
+        if (Array.isArray(parsed)) totalCompletedTasks += parsed.filter(t => t && t.completed).length;
+      } catch(e) {}
     });
     
     let bestDayIdx = -1; let bestDayAvg = 0;
@@ -283,7 +294,15 @@ export default function ProduktifPage() {
     const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
     const perfectDays = historyData.filter(item => calculateCompletionRate(item?.tasks) === 100).length;
     
-    return { trendLabel, TrendIcon, bestDay: dayNames[bestDayIdx] || '-', perfectDays, recentAvg: Math.round(recentAvg) };
+    const trendGraphData = [...recentWeek].reverse().map(item => {
+      if (!item || !item.date) return { day: '-', rate: 0 };
+      return {
+        day: new Date(item.date).toLocaleDateString('id-ID', { weekday: 'short' }),
+        rate: calculateCompletionRate(item.tasks)
+      };
+    });
+
+    return { trendLabel, TrendIcon, bestDay: dayNames[bestDayIdx] || '-', perfectDays, recentAvg: Math.round(recentAvg), totalCompletedTasks, trendGraphData };
   }, [historyData]);
 
   const calendarDays = useMemo(() => {
@@ -523,12 +542,12 @@ export default function ProduktifPage() {
                           {category.replace('_', ' ')}
                         </h4>
                         <div className="space-y-3">
-                          {habitsInCategory.map((habit) => {
+                          {habitsInCategory.filter(h => !h.deleted).map((habit) => {
                             const globalIdx = habitConfigs.findIndex(item => item.id === habit.id);
                             
                             if (isEditMode) {
                               return (
-                                <div key={habit.id} className="p-3 bg-white/5 rounded-2xl flex gap-2 items-center">
+                                <div key={habit.id || globalIdx} className="p-3 bg-white/5 rounded-2xl flex gap-2 items-center">
                                   <input type="text" value={habit.icon || ''} onChange={(e) => {
                                     const newHabs = [...habitConfigs];
                                     newHabs[globalIdx].icon = e.target.value;
@@ -544,6 +563,11 @@ export default function ProduktifPage() {
                                     newHabs[globalIdx].isActive = !newHabs[globalIdx].isActive;
                                     setHabitConfigs(newHabs);
                                   }} className={`p-2 rounded-xl ${habit.isActive ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}><Zap size={14} /></button>
+                                  <button onClick={() => {
+                                    const newHabs = [...habitConfigs];
+                                    newHabs[globalIdx].deleted = true;
+                                    setHabitConfigs(newHabs);
+                                  }} className={`p-2 rounded-xl bg-red-500/20 text-red-500 hover:bg-red-500/40`}><Trash2 size={14} /></button>
                                 </div>
                               );
                             }
@@ -711,27 +735,51 @@ export default function ProduktifPage() {
           {/* ANALYTICS TAB */}
           {activeTab === 'analytics' && (
             <motion.div key="analytics" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-12">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {smartAnalytics && (
-                  <div className="lg:col-span-3 p-10 bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-[4rem] backdrop-blur-xl flex flex-wrap gap-12 items-center justify-around">
-                    <div className="flex flex-col items-center">
-                      <div className="w-20 h-20 bg-[var(--accent)]/10 text-[var(--accent)] rounded-[2.5rem] flex items-center justify-center mb-4"><smartAnalytics.TrendIcon size={40} /></div>
+              {smartAnalytics ? (
+                <>
+                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <div className="p-8 bg-white/5 border border-white/10 rounded-[3rem] flex flex-col items-center justify-center text-center">
+                      <div className="w-16 h-16 bg-[var(--accent)]/10 text-[var(--accent)] rounded-[2rem] flex items-center justify-center mb-4"><smartAnalytics.TrendIcon size={32} /></div>
                       <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1">Momentum</p>
-                      <h4 className="text-2xl font-black italic">{smartAnalytics.trendLabel}</h4>
+                      <h4 className="text-xl font-black italic">{smartAnalytics.trendLabel}</h4>
                     </div>
-                    <div className="flex flex-col items-center">
-                      <div className="w-20 h-20 bg-orange-500/10 text-orange-500 rounded-[2.5rem] flex items-center justify-center mb-4"><Sparkles size={40} /></div>
+                    <div className="p-8 bg-white/5 border border-white/10 rounded-[3rem] flex flex-col items-center justify-center text-center">
+                      <div className="w-16 h-16 bg-orange-500/10 text-orange-500 rounded-[2rem] flex items-center justify-center mb-4"><Sparkles size={32} /></div>
                       <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1">Power Day</p>
-                      <h4 className="text-2xl font-black italic">{smartAnalytics.bestDay}</h4>
+                      <h4 className="text-xl font-black italic">{smartAnalytics.bestDay}</h4>
                     </div>
-                    <div className="flex flex-col items-center">
-                      <div className="w-20 h-20 bg-yellow-500/10 text-yellow-500 rounded-[2.5rem] flex items-center justify-center mb-4"><Award size={40} /></div>
+                    <div className="p-8 bg-white/5 border border-white/10 rounded-[3rem] flex flex-col items-center justify-center text-center">
+                      <div className="w-16 h-16 bg-yellow-500/10 text-yellow-500 rounded-[2rem] flex items-center justify-center mb-4"><Award size={32} /></div>
                       <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1">Perfect Score</p>
-                      <h4 className="text-2xl font-black italic">{smartAnalytics.perfectDays} Days</h4>
+                      <h4 className="text-xl font-black italic">{smartAnalytics.perfectDays} Days</h4>
+                    </div>
+                    <div className="p-8 bg-white/5 border border-white/10 rounded-[3rem] flex flex-col items-center justify-center text-center">
+                      <div className="w-16 h-16 bg-green-500/10 text-green-500 rounded-[2rem] flex items-center justify-center mb-4"><Target size={32} /></div>
+                      <p className="text-[10px] font-black uppercase text-gray-500 tracking-widest mb-1">Total Tasks Done</p>
+                      <h4 className="text-xl font-black italic">{smartAnalytics.totalCompletedTasks}</h4>
                     </div>
                   </div>
-                )}
-              </div>
+
+                  <div className="p-10 bg-[var(--accent)]/5 border border-[var(--accent)]/20 rounded-[4rem] backdrop-blur-xl">
+                    <h3 className="text-xl font-black font-outfit uppercase italic mb-8 flex items-center gap-3">
+                      <TrendingUp className="text-[var(--accent)]" /> 7-Day <span className="text-[var(--accent)]">Trend</span>
+                    </h3>
+                    <div className="flex items-end justify-between h-48 gap-2 md:gap-6">
+                      {smartAnalytics.trendGraphData.map((data, i) => (
+                        <div key={i} className="flex flex-col items-center justify-end h-full flex-1 group">
+                          <p className="text-[10px] font-bold text-[var(--accent)] mb-2 opacity-0 group-hover:opacity-100 transition-opacity">{data.rate}%</p>
+                          <motion.div initial={{ height: 0 }} animate={{ height: `${data.rate}%` }} className="w-full max-w-[40px] bg-[var(--accent)] rounded-t-xl relative overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent" />
+                          </motion.div>
+                          <p className="text-[10px] font-black text-gray-500 uppercase mt-4">{data.day}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="p-20 text-center text-gray-500 italic border border-dashed border-white/10 rounded-[4rem]">Gathering more data...</div>
+              )}
             </motion.div>
           )}
  
