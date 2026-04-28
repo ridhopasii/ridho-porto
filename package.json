@@ -11,6 +11,7 @@
     "format": "prettier --write \"**/*.{js,jsx,json,md,css}\""
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@simplewebauthn/browser": "^13.3.0",
     "@simplewebauthn/server": "^13.3.0",
     "@supabase/ssr": "^0.5.2",
