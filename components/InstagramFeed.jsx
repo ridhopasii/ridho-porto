@@ -33,16 +33,16 @@ export default function InstagramFeed() {
     <section className="py-24 px-6 bg-transparent border-t border-[var(--border-subtle)]">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-4 mb-12 animate-fade-in-up">
-          <div className="p-3 bg-pink-500/10 text-pink-500 rounded-2xl">
+          <div className="p-3 bg-accent/10 text-accent rounded-2xl">
             <Instagram size={28} />
           </div>
           <h2 className="text-3xl md:text-5xl font-black font-outfit uppercase tracking-tight flex-1">
-            Instagram <span className="text-pink-500">Feed</span>
+            Instagram <span className="text-accent">Feed</span>
           </h2>
           <a 
             href="https://instagram.com" 
             target="_blank" 
-            className="hidden md:inline-flex px-6 py-3 bg-white/5 border border-[var(--border-subtle)] rounded-full text-xs font-bold uppercase tracking-widest hover:border-pink-500 hover:text-pink-500 transition-colors"
+            className="hidden md:inline-flex px-6 py-3 bg-white/5 border border-[var(--border-subtle)] rounded-full text-xs font-bold uppercase tracking-widest hover:border-accent hover:text-accent transition-colors"
           >
             Follow Me
           </a>
