@@ -10,23 +10,25 @@
 @layer base {
   :root {
     --background: #ffffff;
-    --foreground: #0a0a0a;
-    --muted: #f3f4f6; /* gray-100 */
-    --muted-foreground: #4b5563; /* gray-600 */
+    --foreground: #0f172a; /* Deep Slate 900 */
+    --muted: #f1f5f9; /* Slate 100 */
+    --muted-foreground: #64748b; /* Slate 500 */
     --radius-lg: 16px;
     --radius-xl: 20px;
     --radius-2xl: 24px;
-    --border-subtle: rgba(0, 0, 0, 0.08);
-    --accent: #14b8a6; /* Default Teal */
+    --border-subtle: rgba(15, 23, 42, 0.08);
+    --accent: #14b8a6; /* Teal 500 */
     --accent-rgb: 20, 184, 166;
+    --shadow-premium: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
   }
 
   .dark {
-    --background: #0a0a0a;
-    --foreground: #ffffff;
-    --muted: #1f2937; /* gray-800 */
-    --muted-foreground: #9ca3af; /* gray-400 */
-    --border-subtle: rgba(255, 255, 255, 0.08);
+    --background: #020617; /* Slate 950 - Premium Deep Blue Black */
+    --foreground: #f8fafc; /* Slate 50 */
+    --muted: #0f172a; /* Slate 900 */
+    --muted-foreground: #94a3b8; /* Slate 400 */
+    --border-subtle: rgba(248, 250, 252, 0.08);
+    --shadow-premium: 0 10px 40px -10px rgba(0, 0, 0, 0.4);
   }
 }
 
@@ -68,8 +70,28 @@ body {
 
 /* Glass Effect */
 .glass {
-  background-color: rgba(17, 17, 17, 0.8);
-  backdrop-filter: blur(40px);
+  background-color: rgba(var(--background), 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-subtle);
+}
+
+.dark .glass {
+  background-color: rgba(2, 6, 23, 0.7);
+}
+
+/* Premium Card */
+.card-premium {
+  background-color: var(--background);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-premium);
+  transition: all 0.3s ease;
+}
+
+.card-premium:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 20px 40px -15px rgba(var(--accent-rgb), 0.2);
 }
 
 /* Glow Effects */

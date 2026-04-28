@@ -26,8 +26,8 @@ export default function Projects({ projects }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {Array.isArray(projects) &&
             projects.map((project, idx) => (
-              <div key={project.id} className="group relative">
-                  <div className="relative aspect-[16/10] rounded-[2rem] overflow-hidden border border-[var(--border-subtle)] bg-background">
+              <div key={project.id} className="group card-premium p-4 flex flex-col">
+                  <div className="relative aspect-[16/10] rounded-[1.5rem] overflow-hidden border border-[var(--border-subtle)] bg-muted">
                     <PhotoSwiper
                       images={
                         Array.isArray(project.images) && project.images.length > 0

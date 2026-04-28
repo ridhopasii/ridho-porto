@@ -27,7 +27,7 @@ export default function About({ profile }) {
             </div>
 
             {/* Glassmorphism Floating Card */}
-            <div className="absolute -bottom-10 -right-4 md:-right-10 bg-white/5 backdrop-blur-2xl border border-[var(--border-subtle)] p-8 rounded-3xl z-20 shadow-2xl max-w-[280px] animate-fade-in-up">
+            <div className="absolute -bottom-10 -right-4 md:-right-10 glass p-8 rounded-3xl z-20 shadow-2xl max-w-[280px] animate-fade-in-up">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 rounded-2xl bg-teal-500 flex items-center justify-center text-black">
                   <CheckCircle2 size={24} />

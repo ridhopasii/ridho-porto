@@ -36,7 +36,7 @@ export default function Navbar() {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${scrolled ? 'py-2 md:py-4' : 'py-4 md:py-6'}`}>
       <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <div className={`flex items-center justify-between px-4 md:px-6 py-2.5 md:py-3 rounded-full border transition-all ${scrolled || isOpen ? 'bg-background/80 backdrop-blur-2xl border-[var(--border-subtle)] shadow-2xl' : 'bg-transparent border-transparent'}`}>
+        <div className={`flex items-center justify-between px-4 md:px-6 py-2.5 md:py-3 rounded-full transition-all ${scrolled || isOpen ? 'glass shadow-2xl' : 'bg-transparent border-transparent'}`}>
           {/* Logo */}
           <Link href="/" className="text-lg md:text-xl font-black font-outfit tracking-tighter group z-[110]">
             RIDHO

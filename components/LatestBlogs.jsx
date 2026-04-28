@@ -31,7 +31,7 @@ export default function LatestBlogs({ blogs }) {
             <Link
               key={blog.id}
               href={`/blog/${blog.slug}`}
-              className="group bg-white/5 rounded-3xl overflow-hidden border border-[var(--border-subtle)] hover:border-teal-500/30 transition-all duration-500 flex flex-col"
+              className="group card-premium overflow-hidden flex flex-col"
             >
               <div className="relative aspect-[16/10] overflow-hidden">
                 {blog.imageUrl ? (
