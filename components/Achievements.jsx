@@ -12,12 +12,12 @@ export default function Achievements({ awards, publications }) {
             <Trophy className="text-yellow-500" /> Awards{' '}
             <span className="text-gray-700">& Honors</span>
           </h2>
-          <div className="space-y-6">
+          <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 pb-8 px-4 -mx-4 md:px-0 md:mx-0">
             {Array.isArray(awards) &&
               awards.map((award) => (
                 <div
                   key={award.id}
-                  className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] group hover:border-yellow-500/30 transition-all"
+                  className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] group hover:border-yellow-500/30 transition-all flex-shrink-0 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[100%] xl:w-[22vw] snap-center flex flex-col h-[28rem]"
                 >
                   <div className="flex justify-between items-start mb-6">
                     <div className="p-3 bg-yellow-500/10 text-yellow-500 rounded-2xl">
@@ -39,17 +39,17 @@ export default function Achievements({ awards, publications }) {
 
                   {/* Documentation Photos */}
                   {Array.isArray(award.images) && award.images.length > 0 && (
-                    <div className="mb-6">
+                    <div className="mb-4 flex-1 min-h-0 relative">
                       <PhotoSwiper
                         images={award.images}
-                        aspectRatio="aspect-video"
+                        aspectRatio="h-full w-full absolute inset-0"
                         rounded="rounded-2xl"
                       />
                     </div>
                   )}
 
                   {/* Proof Links */}
-                  <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-wrap gap-4 mt-auto pt-4">
                     <Link
                       href={`/awards/${award.slug}`}
                       className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-yellow-500 transition-colors"
@@ -80,12 +80,12 @@ export default function Achievements({ awards, publications }) {
             <FileText className="text-blue-500" /> Publications{' '}
             <span className="text-gray-700">& Research</span>
           </h2>
-          <div className="space-y-6">
+          <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 pb-8 px-4 -mx-4 md:px-0 md:mx-0">
             {Array.isArray(publications) &&
               publications.map((pub) => (
                 <div
                   key={pub.id}
-                  className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] group hover:border-blue-500/30 transition-all"
+                  className="p-8 bg-white/5 border border-white/10 rounded-[2.5rem] group hover:border-blue-500/30 transition-all flex-shrink-0 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[100%] xl:w-[22vw] snap-center flex flex-col h-[28rem]"
                 >
                   <div className="flex justify-between items-start mb-6">
                     <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl">
@@ -107,16 +107,16 @@ export default function Achievements({ awards, publications }) {
 
                   {/* Documentation Photos */}
                   {Array.isArray(pub.images) && pub.images.length > 0 && (
-                    <div className="mb-6">
+                    <div className="mb-4 flex-1 min-h-0 relative">
                       <PhotoSwiper
                         images={pub.images}
-                        aspectRatio="aspect-video"
+                        aspectRatio="h-full w-full absolute inset-0"
                         rounded="rounded-2xl"
                       />
                     </div>
                   )}
 
-                  <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-wrap gap-4 mt-auto pt-4">
                     <Link
                       href={`/publications/${pub.slug}`}
                       className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-blue-500 transition-colors"

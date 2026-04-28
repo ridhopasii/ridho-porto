@@ -14,14 +14,13 @@ export default function Skills({ skills }) {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 pb-8 px-4 -mx-4 md:px-0 md:mx-0">
           {Array.isArray(skills) &&
             skills.map((skill, idx) => (
               <Link
                 key={skill.id}
                 href={`/skills/${skill.slug}`}
-                className="group p-6 bg-white/5 border border-white/10 rounded-3xl hover:border-teal-500/50 hover:bg-teal-500/5 transition-all text-center animate-fade-in-up"
-                style={{ animationDelay: `${idx * 100}ms` }}
+                className="group p-6 bg-white/5 border border-white/10 rounded-3xl hover:border-teal-500/50 hover:bg-teal-500/5 transition-all text-center flex-shrink-0 w-[40vw] sm:w-[25vw] md:w-[18vw] lg:w-[14vw] snap-center"
               >
                 <div className="w-12 h-12 mx-auto mb-4 text-gray-400 group-hover:text-teal-500 group-hover:scale-110 transition-all">
                   <Cpu size={48} strokeWidth={1} />

@@ -17,17 +17,17 @@ export default function Organizations({ organizations }) {
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 pb-8 px-4 -mx-4 md:px-0 md:mx-0">
           {Array.isArray(organizations) &&
             organizations.map((org, idx) => (
               <div
                 key={org.id}
-                className="group p-1 bg-white/5 rounded-[2rem] border border-white/10 hover:border-teal-500/30 transition-all duration-500 flex flex-col h-full"
+                className="group p-1 bg-white/5 rounded-[2rem] border border-white/10 hover:border-teal-500/30 transition-all duration-500 flex flex-col flex-shrink-0 w-[85vw] sm:w-[45vw] lg:w-[30vw] xl:w-[22vw] snap-center h-[28rem]"
               >
                 <div className="flex flex-col p-5 h-full bg-[#0d0d0d] rounded-[1.8rem] relative overflow-hidden">
                   
                   {/* Banner Image / Photo Swiper */}
-                  <div className="w-full h-32 mb-4 rounded-xl overflow-hidden relative z-10 border border-white/5">
+                  <div className="w-full h-32 mb-4 rounded-xl overflow-hidden relative z-10 border border-white/5 flex-shrink-0">
                      <PhotoSwiper
                         images={
                           Array.isArray(org.images) && org.images.length > 0 ? org.images : []
@@ -47,17 +47,17 @@ export default function Organizations({ organizations }) {
                       )}
                   </div>
 
-                  <div className="flex-1 flex flex-col pt-2">
+                  <div className="flex-1 flex flex-col pt-2 min-h-0">
                     <Link href={`/organizations/${org.slug}`}>
-                      <h4 className="text-lg font-black text-white group-hover:text-teal-500 transition-colors uppercase tracking-tight leading-tight mb-1">
+                      <h4 className="text-lg font-black text-white group-hover:text-teal-500 transition-colors uppercase tracking-tight leading-tight mb-1 truncate">
                         {org.name || 'Organization Name'}
                       </h4>
                     </Link>
-                    <p className="text-teal-500 font-bold uppercase text-[10px] tracking-widest mb-4">
+                    <p className="text-teal-500 font-bold uppercase text-[10px] tracking-widest mb-4 truncate">
                       {org.role || 'Role'}
                     </p>
 
-                    <p className="text-gray-400 text-xs leading-relaxed line-clamp-3 mb-4 flex-1 group-hover:line-clamp-none transition-all">
+                    <p className="text-gray-400 text-xs leading-relaxed line-clamp-3 mb-4 flex-1">
                       {org.description || ''}
                     </p>
 
