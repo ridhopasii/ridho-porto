@@ -549,7 +549,7 @@ export default function ProduktifPage() {
                     }} className="px-8 py-4 bg-white/5 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-white/10 transition-all">+ Add New Block</button>
                   </div>
                  </div>
-               ) : (
+               ) : tasks.length > 0 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                   {/* Daily Financial Summary Integrated in Daily Tab */}
                   {allTransactions.filter(t => t.date === selectedDate).length > 0 && (
