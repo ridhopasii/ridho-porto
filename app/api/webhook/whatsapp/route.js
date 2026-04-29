@@ -2,11 +2,8 @@ import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { createClient } from '@supabase/supabase-js';
 
-// Setup Supabase Client dengan Service Role Key untuk bypass RLS (karena ini webhook dari server)
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+// Setup Supabase Client akan dipanggil di dalam fungsi (runtime) untuk menghindari error build
+
 
 // 1. Meta Webhook Verification (GET)
 export async function GET(req) {
@@ -133,6 +130,11 @@ Kembalikan HANYA format JSON valid tanpa awalan/akhiran markdown (jangan pakai \
 
 async function saveToDatabase(data) {
   try {
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    );
+
     // 1. Ambil wallet pertama sebagai default wallet (Bisa di-improve dengan matching nama dompet)
     const { data: wallets, error: walletError } = await supabaseAdmin
       .from('Wallets')
