@@ -64,28 +64,33 @@ async function processFinanceWithAI(text) {
     if (!apiKey) throw new Error('GEMINI_API_KEY is not set');
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const prompt = `Kamu adalah asisten pengatur keuangan. Ekstrak data keuangan dari kalimat pengguna berikut: "${text}".
-Pahami bahasa gaul (misal: "rb" = ribu, "jt" = juta, "gajian" = income, "jajan" = expense).
-Jika kalimat tersebut tidak mengandung unsur keuangan, kembalikan JSON kosong {}.
-Kembalikan HANYA format JSON valid tanpa awalan/akhiran markdown (jangan pakai \`\`\`json):
+    const prompt = `Kamu adalah asisten pengatur keuangan profesional. 
+Tugasmu adalah mengekstrak data transaksi keuangan dari kalimat pengguna: "${text}".
+
+ATURAN:
+1. Pahami bahasa gaul (rb=ribu, jt=juta, k=ribu).
+2. Tentukan "type": "expense" untuk pengeluaran (beli, bayar, jajan) atau "income" untuk pemasukan (gaji, bonus, dapat uang).
+3. "amount" harus berupa angka bulat (integer).
+4. Jika tidak ada data keuangan, kembalikan JSON kosong {}.
+
+KEMBALIKAN HANYA JSON (Tanpa teks lain):
 {
-  "item": "nama pengeluaran/pemasukan",
-  "amount": angka numerik (integer, tanpa titik/koma),
-  "type": "expense" (jika pengeluaran) atau "income" (jika pemasukan/gaji/dapat uang),
-  "category": "kategori umum"
+  "item": "keterangan barang/kegiatan",
+  "amount": 10000,
+  "type": "expense",
+  "category": "kategori"
 }`;
 
     const result = await model.generateContent(prompt);
-    let responseText = result.response.text().trim();
+    const responseText = result.response.text().trim();
     
-    // Bersihkan jika ada sisa markdown
-    if (responseText.startsWith('```json')) responseText = responseText.replace('```json', '');
-    if (responseText.startsWith('```')) responseText = responseText.replace('```', '');
-    if (responseText.endsWith('```')) responseText = responseText.slice(0, -3);
+    // Ekstraksi JSON yang lebih aman (mencari kurung kurawal)
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return { error: true };
 
-    const data = JSON.parse(responseText.trim());
+    const data = JSON.parse(jsonMatch[0]);
 
     if (!data.item || !data.amount || !data.type) {
       return { error: true };
