@@ -46,16 +46,21 @@ export default function Hero({ profile }) {
                   // Parse images: bisa array JSONB atau string JSON dari DB
                   let imgs = profile?.images;
                   if (typeof imgs === 'string') {
-                    try { imgs = JSON.parse(imgs); } catch { imgs = []; }
+                    try {
+                      imgs = JSON.parse(imgs);
+                    } catch {
+                      imgs = [];
+                    }
                   }
                   const validImgs = Array.isArray(imgs) ? imgs.filter(Boolean) : [];
                   // Fallback chain: images[] → avatarUrl → placeholder abu-abu
-                  const finalImgs = validImgs.length > 0
-                    ? validImgs
-                    : profile?.avatarUrl
-                    ? [profile.avatarUrl]
-                    : [];
-                  
+                  const finalImgs =
+                    validImgs.length > 0
+                      ? validImgs
+                      : profile?.avatarUrl
+                        ? [profile.avatarUrl]
+                        : [];
+
                   if (finalImgs.length === 0) {
                     return (
                       <div className="w-full h-full bg-gradient-to-br from-accent/20 to-accent/40 flex items-center justify-center">
@@ -68,6 +73,7 @@ export default function Hero({ profile }) {
                       images={finalImgs}
                       aspectRatio="aspect-square"
                       rounded="rounded-full"
+                      sizes="(max-width: 768px) 160px, 192px"
                     />
                   );
                 })()}
@@ -119,7 +125,7 @@ export default function Hero({ profile }) {
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </Magnetic>
- 
+
             {profile?.cvLink && (
               <Magnetic>
                 <a
@@ -141,37 +147,37 @@ export default function Hero({ profile }) {
                 icon: <Users size={18} />,
                 href: profile?.github_url,
                 active: !!profile?.github_url,
-                label: 'GitHub'
+                label: 'GitHub',
               },
               {
                 icon: <LinkIcon size={18} />,
                 href: profile?.linkedin_url,
                 active: !!profile?.linkedin_url,
-                label: 'LinkedIn'
+                label: 'LinkedIn',
               },
               {
                 icon: <Globe size={18} />,
                 href: profile?.instagram_url,
                 active: !!profile?.instagram_url,
-                label: 'Instagram'
+                label: 'Instagram',
               },
               {
                 icon: <Share2 size={18} />,
                 href: profile?.twitter_url,
                 active: !!profile?.twitter_url,
-                label: 'Twitter'
+                label: 'Twitter',
               },
               {
                 icon: <MessageCircle size={18} />,
                 href: `https://wa.me/${profile?.phone}`,
                 active: !!profile?.phone,
-                label: 'WhatsApp'
+                label: 'WhatsApp',
               },
               {
                 icon: <Mail size={18} />,
                 href: `mailto:${profile?.email}`,
                 active: !!profile?.email,
-                label: 'Email'
+                label: 'Email',
               },
             ]
               .filter((s) => s.active)

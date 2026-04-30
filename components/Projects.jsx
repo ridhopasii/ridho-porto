@@ -27,22 +27,26 @@ export default function Projects({ projects }) {
           {Array.isArray(projects) &&
             projects.map((project, idx) => (
               <div key={project.id} className="group card-premium p-4 flex flex-col">
-                  <div className="relative aspect-[16/10] rounded-[1.5rem] overflow-hidden border border-[var(--border-subtle)] bg-muted">
-                    <PhotoSwiper
-                      images={
-                        Array.isArray(project.images) && project.images.length > 0
-                          ? project.images
-                          : [project.imageUrl || '']
-                      }
-                      aspectRatio="aspect-[16/10]"
-                      rounded="rounded-[2rem]"
-                    />
-                  </div>
+                <div className="relative aspect-[16/10] rounded-[1.5rem] overflow-hidden border border-[var(--border-subtle)] bg-muted">
+                  <PhotoSwiper
+                    images={
+                      Array.isArray(project.images) && project.images.length > 0
+                        ? project.images
+                        : [project.imageUrl || '']
+                    }
+                    aspectRatio="aspect-[16/10]"
+                    rounded="rounded-[2rem]"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                  />
+                </div>
 
-                  {/* Project Info - Always Visible */}
-                  <div className="pt-6 px-2 flex flex-col h-full">
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tags?.split(',').slice(0, 3).map((tag) => (
+                {/* Project Info - Always Visible */}
+                <div className="pt-6 px-2 flex flex-col h-full">
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags
+                      ?.split(',')
+                      .slice(0, 3)
+                      .map((tag) => (
                         <span
                           key={tag}
                           className="px-3 py-1 bg-white/5 rounded-full text-[8px] font-bold text-accent border border-[var(--border-subtle)] uppercase tracking-widest"
@@ -50,32 +54,32 @@ export default function Projects({ projects }) {
                           {tag.trim()}
                         </span>
                       ))}
-                    </div>
-                    <h3 className="text-2xl font-black mb-3 text-foreground font-outfit uppercase tracking-tight group-hover:text-accent transition-colors">
-                      {project.title || 'Project Title'}
-                    </h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed mb-6 line-clamp-2">
-                      {project.description || ''}
-                    </p>
-
-                    <div className="mt-auto flex gap-4">
-                      {project.projectUrl && (
-                        <a
-                          href={project.projectUrl}
-                          target="_blank"
-                          className="flex-1 py-3 bg-white/5 text-foreground rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-accent hover:text-black transition-all flex items-center justify-center gap-2 border border-[var(--border-subtle)] hover:border-accent"
-                        >
-                          View Project <ExternalLink size={14} />
-                        </a>
-                      )}
-                      <Link 
-                        href={`/projects/${project.slug || project.id}`}
-                        className="py-3 px-6 bg-transparent text-muted-foreground rounded-xl font-black text-[10px] uppercase tracking-widest hover:text-foreground transition-all flex items-center justify-center border border-transparent hover:border-[var(--border-subtle)]"
-                      >
-                        Details
-                      </Link>
-                    </div>
                   </div>
+                  <h3 className="text-2xl font-black mb-3 text-foreground font-outfit uppercase tracking-tight group-hover:text-accent transition-colors">
+                    {project.title || 'Project Title'}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-6 line-clamp-2">
+                    {project.description || ''}
+                  </p>
+
+                  <div className="mt-auto flex gap-4">
+                    {project.projectUrl && (
+                      <a
+                        href={project.projectUrl}
+                        target="_blank"
+                        className="flex-1 py-3 bg-white/5 text-foreground rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-accent hover:text-black transition-all flex items-center justify-center gap-2 border border-[var(--border-subtle)] hover:border-accent"
+                      >
+                        View Project <ExternalLink size={14} />
+                      </a>
+                    )}
+                    <Link
+                      href={`/projects/${project.slug || project.id}`}
+                      className="py-3 px-6 bg-transparent text-muted-foreground rounded-xl font-black text-[10px] uppercase tracking-widest hover:text-foreground transition-all flex items-center justify-center border border-transparent hover:border-[var(--border-subtle)]"
+                    >
+                      Details
+                    </Link>
+                  </div>
+                </div>
               </div>
             ))}
         </div>

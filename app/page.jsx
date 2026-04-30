@@ -21,100 +21,85 @@ export const revalidate = 0;
 async function getData() {
   const supabase = await createClient();
 
-  const { data: profile } = await supabase
-    .from('Profile')
-    .select('*')
-    .order('id', { ascending: true })
-    .limit(1)
-    .maybeSingle();
+  const [
+    { data: profile },
+    { data: projects },
+    { data: skills },
+    { data: experiences },
+    { data: educations },
+    { data: awards },
+    { data: publications },
+    { data: blogs },
+    { data: organizations },
+    { data: gallery },
+    { data: settingsData },
+  ] = await Promise.all([
+    supabase.from('Profile').select('*').order('id', { ascending: true }).limit(1).maybeSingle(),
+    supabase
+      .from('Project')
+      .select('*')
+      .not('showOnHome', 'eq', false)
+      .order('createdAt', { ascending: false })
+      .limit(3),
+    supabase.from('Skill').select('*').not('showOnHome', 'eq', false),
+    supabase
+      .from('Experience')
+      .select('*')
+      .not('showOnHome', 'eq', false)
+      .order('period', { ascending: false }),
+    supabase
+      .from('Education')
+      .select('*')
+      .not('showOnHome', 'eq', false)
+      .order('period', { ascending: false }),
+    supabase
+      .from('Award')
+      .select('*')
+      .not('showOnHome', 'eq', false)
+      .order('date', { ascending: false })
+      .limit(3),
+    supabase
+      .from('Publication')
+      .select('*')
+      .not('showOnHome', 'eq', false)
+      .order('date', { ascending: false })
+      .limit(3),
+    supabase
+      .from('Article')
+      .select('*')
+      .not('showOnHome', 'eq', false)
+      .order('createdAt', { ascending: false })
+      .limit(3),
+    supabase
+      .from('Organization')
+      .select('*')
+      .not('showOnHome', 'eq', false)
+      .order('updatedAt', { ascending: false }),
+    supabase
+      .from('Gallery')
+      .select('*')
+      .not('showOnHome', 'eq', false)
+      .order('createdAt', { ascending: false })
+      .limit(6),
+    supabase.from('SiteSettings').select('*'),
+  ]);
 
-  const { data: projects } = await supabase
-    .from('Project')
-    .select('*')
-    .not('showOnHome', 'eq', false)
-    .order('createdAt', { ascending: false })
-    .limit(3);
-
-  const { data: skills } = await supabase.from('Skill').select('*').not('showOnHome', 'eq', false);
-
-  const { data: experiences } = await supabase
-    .from('Experience')
-    .select('*')
-    .not('showOnHome', 'eq', false)
-    .order('period', { ascending: false });
-
-  const { data: educations } = await supabase
-    .from('Education')
-    .select('*')
-    .not('showOnHome', 'eq', false)
-    .order('period', { ascending: false });
-
-  const { data: awards } = await supabase
-    .from('Award')
-    .select('*')
-    .not('showOnHome', 'eq', false)
-    .order('date', { ascending: false })
-    .limit(3);
-
-  const { data: publications } = await supabase
-    .from('Publication')
-    .select('*')
-    .not('showOnHome', 'eq', false)
-    .order('date', { ascending: false })
-    .limit(3);
-
-  const { data: blogs } = await supabase
-    .from('Article')
-    .select('*')
-    .not('showOnHome', 'eq', false)
-    .order('createdAt', { ascending: false })
-    .limit(3);
-
-  const { data: organizations } = await supabase
-    .from('Organization')
-    .select('*')
-    .not('showOnHome', 'eq', false)
-    .order('updatedAt', { ascending: false });
-
-  const { data: gallery } = await supabase
-    .from('Gallery')
-    .select('*')
-    .not('showOnHome', 'eq', false)
-    .order('createdAt', { ascending: false })
-    .limit(6);
-
-  const { data: settingsData } = await supabase.from('SiteSettings').select('*');
   const settings = {};
   (settingsData || []).forEach((s) => {
     settings[s.key] = s.value;
   });
 
-  // Fallback if settings empty
-  if (Object.keys(settings).length === 0) {
-    return {
-      profile,
-      projects,
-      skills,
-      experiences,
-      educations,
-      awards,
-      publications,
-      blogs,
-      organizations,
-      gallery,
-      settings: {
-        show_about: true,
-        show_projects: true,
-        show_experience: true,
-        show_education: true,
-        show_blog: true,
-        show_gallery: true,
-        show_skills: true,
-        show_achievements: true,
-        show_contact: true,
-      },
-    };
-  }
+  const defaultSettings = {
+    show_about: true,
+    show_projects: true,
+    show_experience: true,
+    show_education: true,
+    show_blog: true,
+    show_gallery: true,
+    show_skills: true,
+    show_achievements: true,
+    show_contact: true,
+  };
 
   return {
     profile,
@@ -127,7 +112,7 @@ async function getData() {
     blogs,
     organizations,
     gallery,
-    settings,
+    settings: Object.keys(settings).length > 0 ? settings : defaultSettings,
   };
 }
 

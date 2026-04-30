@@ -7,6 +7,7 @@ export default function PhotoSwiper({
   images = [],
   aspectRatio = 'aspect-video',
   rounded = 'rounded-3xl',
+  sizes = '(max-width: 768px) 100vw, 50vw',
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const touchStartX = useRef(null);
@@ -52,12 +53,16 @@ export default function PhotoSwiper({
         }}
       >
         {safeImages.map((url, idx) => (
-          <div key={idx} className="h-full flex-shrink-0" style={{ width: `${100 / safeImages.length}%` }}>
+          <div
+            key={idx}
+            className="h-full flex-shrink-0"
+            style={{ width: `${100 / safeImages.length}%` }}
+          >
             <Image
               src={url}
               alt={`Photo ${idx + 1}`}
               fill
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes={sizes}
               className="object-cover"
               draggable={false}
               priority={idx === 0} // Add priority to the first image for LCP
@@ -91,7 +96,10 @@ export default function PhotoSwiper({
                 key={idx}
                 type="button"
                 aria-label={`Go to image ${idx + 1}`}
-                onClick={(e) => { e.preventDefault(); setCurrentIndex(idx); }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCurrentIndex(idx);
+                }}
                 className={`rounded-full transition-all duration-300 ${
                   idx === currentIndex
                     ? 'w-5 h-1.5 bg-accent'
@@ -100,8 +108,6 @@ export default function PhotoSwiper({
               />
             ))}
           </div>
-
-
         </>
       )}
     </div>

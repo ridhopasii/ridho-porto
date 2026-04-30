@@ -1,13 +1,17 @@
 import './globals.css';
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import { Analytics } from '@vercel/analytics/react';
-import ErrorBoundary from '@/components/ErrorBoundary';
-import Chatbot from '@/components/Chatbot';
-import CustomCursor from '@/components/CustomCursor';
-import AccentProvider from '@/components/AccentProvider';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { createClient } from '@/utils/supabase/server';
+import dynamic from 'next/dynamic';
+import AccentProvider from '@/components/AccentProvider';
+import ErrorBoundary from '@/components/ErrorBoundary';
+
+const Chatbot = dynamic(() => import('@/components/Chatbot'), { ssr: false });
+const CustomCursor = dynamic(() => import('@/components/CustomCursor'), { ssr: false });
+const Analytics = dynamic(() => import('@vercel/analytics/react').then((mod) => mod.Analytics), {
+  ssr: false,
+});
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -80,24 +84,24 @@ export default async function RootLayout({ children }) {
   const accentColor = settings?.value || '#14b8a6';
 
   return (
-    <html lang="id" className={`${outfit.variable} ${jakarta.variable} dark`} suppressHydrationWarning>
+    <html
+      lang="id"
+      className={`${outfit.variable} ${jakarta.variable} dark`}
+      suppressHydrationWarning
+    >
       <head>
-        {/* Preconnect to critical third-party origins to reduce LCP resource load delay */}
-        <link rel="preconnect" href="https://uuybelgxovlgozgizith.supabase.co" />
-        <link rel="dns-prefetch" href="https://uuybelgxovlgozgizith.supabase.co" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Next.js automatically handles preconnect/preload for self-hosted fonts and optimized images */}
       </head>
       <body className="bg-body text-foreground">
         <LanguageProvider>
           <AccentProvider color={accentColor}>
             <ErrorBoundary>
               <ThemeProvider>
-              <Analytics />
-              {children}
-              <Chatbot />
-            </ThemeProvider>
-          </ErrorBoundary>
+                <Analytics />
+                {children}
+                <Chatbot />
+              </ThemeProvider>
+            </ErrorBoundary>
           </AccentProvider>
         </LanguageProvider>
       </body>
