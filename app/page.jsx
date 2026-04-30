@@ -1,19 +1,19 @@
 import { createClient } from '@/utils/supabase/server';
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 import Hero from '@/components/Hero';
 import Navbar from '@/components/Navbar';
 import About from '@/components/About';
 import ScrollUtils from '@/components/ScrollUtils';
 
-const Projects = dynamic(() => import('@/components/Projects'), { ssr: true });
-const Skills = dynamic(() => import('@/components/Skills'), { ssr: true });
-const Timeline = dynamic(() => import('@/components/Timeline'), { ssr: true });
-const Achievements = dynamic(() => import('@/components/Achievements'), { ssr: true });
-const LatestBlogs = dynamic(() => import('@/components/LatestBlogs'), { ssr: true });
-const Gallery = dynamic(() => import('@/components/Gallery'), { ssr: true });
-const Organizations = dynamic(() => import('@/components/Organizations'), { ssr: true });
-const ContactForm = dynamic(() => import('@/components/ContactForm'), { ssr: true });
-const InstagramFeed = dynamic(() => import('@/components/InstagramFeed'), { ssr: false }); // client-only feed
+const Projects = nextDynamic(() => import('@/components/Projects'), { ssr: true });
+const Skills = nextDynamic(() => import('@/components/Skills'), { ssr: true });
+const Timeline = nextDynamic(() => import('@/components/Timeline'), { ssr: true });
+const Achievements = nextDynamic(() => import('@/components/Achievements'), { ssr: true });
+const LatestBlogs = nextDynamic(() => import('@/components/LatestBlogs'), { ssr: true });
+const Gallery = nextDynamic(() => import('@/components/Gallery'), { ssr: true });
+const Organizations = nextDynamic(() => import('@/components/Organizations'), { ssr: true });
+const ContactForm = nextDynamic(() => import('@/components/ContactForm'), { ssr: true });
+const InstagramFeed = nextDynamic(() => import('@/components/InstagramFeed'), { ssr: false }); // client-only feed
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
