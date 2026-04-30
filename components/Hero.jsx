@@ -141,31 +141,37 @@ export default function Hero({ profile }) {
                 icon: <Users size={18} />,
                 href: profile?.github_url,
                 active: !!profile?.github_url,
+                label: 'GitHub'
               },
               {
                 icon: <LinkIcon size={18} />,
                 href: profile?.linkedin_url,
                 active: !!profile?.linkedin_url,
+                label: 'LinkedIn'
               },
               {
                 icon: <Globe size={18} />,
                 href: profile?.instagram_url,
                 active: !!profile?.instagram_url,
+                label: 'Instagram'
               },
               {
                 icon: <Share2 size={18} />,
                 href: profile?.twitter_url,
                 active: !!profile?.twitter_url,
+                label: 'Twitter'
               },
               {
                 icon: <MessageCircle size={18} />,
                 href: `https://wa.me/${profile?.phone}`,
                 active: !!profile?.phone,
+                label: 'WhatsApp'
               },
               {
                 icon: <Mail size={18} />,
                 href: `mailto:${profile?.email}`,
                 active: !!profile?.email,
+                label: 'Email'
               },
             ]
               .filter((s) => s.active)
@@ -174,6 +180,7 @@ export default function Hero({ profile }) {
                   key={idx}
                   href={social.href}
                   target="_blank"
+                  aria-label={social.label}
                   className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-white/5 border border-[var(--border-subtle)] text-muted-foreground hover:text-accent hover:border-accent transition-all hover:-translate-y-2 active:scale-90"
                 >
                   {social.icon}

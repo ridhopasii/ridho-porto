@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import Navbar from '@/components/Navbar';
 import { ArrowLeft, ExternalLink, Github, Globe, Code2, Layout, Zap } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 // DYNAMIC SEO METADATA
@@ -82,11 +83,13 @@ export default async function ProjectDetailPage({ params }) {
             {/* Right: Gallery Layout */}
             <div className="space-y-6">
               {project.images?.map((img, idx) => (
-                <div key={idx} className="rounded-[2.5rem] overflow-hidden border border-[var(--border-subtle)] group">
-                  <img 
+                <div key={idx} className="relative aspect-[16/10] rounded-[2.5rem] overflow-hidden border border-[var(--border-subtle)] group">
+                  <Image 
                     src={img} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                    alt={`Gallery ${idx}`} 
+                    alt={`Gallery ${idx}`}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700" 
                   />
                 </div>
               ))}

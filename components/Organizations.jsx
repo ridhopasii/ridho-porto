@@ -1,5 +1,6 @@
 import PhotoSwiper from './PhotoSwiper';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Users, Calendar, MapPin, Globe, ArrowRight } from 'lucide-react';
 
 export default function Organizations({ organizations }) {
@@ -38,10 +39,12 @@ export default function Organizations({ organizations }) {
                       {/* Logo Overlaid on Banner */}
                       {org.logoUrl && (
                         <div className="absolute -bottom-4 left-4 w-12 h-12 bg-background rounded-xl overflow-hidden p-1.5 border border-[var(--border-subtle)] shadow-lg z-20">
-                          <img
+                          <Image
                             src={org.logoUrl}
                             alt={org.name}
-                            className="w-full h-full object-contain"
+                            fill
+                            sizes="48px"
+                            className="object-contain p-1.5"
                           />
                         </div>
                       )}

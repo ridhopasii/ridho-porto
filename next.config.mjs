@@ -2,7 +2,24 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['uuybelgxovlgozgizith.supabase.co'], // Allow Supabase images
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'uuybelgxovlgozgizith.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.cdninstagram.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'youthrangerindonesia.com',
+      }
+    ],
   },
 };
 

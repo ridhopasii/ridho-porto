@@ -1,17 +1,19 @@
 import { createClient } from '@/utils/supabase/server';
+import dynamic from 'next/dynamic';
 import Hero from '@/components/Hero';
 import Navbar from '@/components/Navbar';
 import About from '@/components/About';
-import Projects from '@/components/Projects';
-import Skills from '@/components/Skills';
-import Timeline from '@/components/Timeline';
-import Achievements from '@/components/Achievements';
-import LatestBlogs from '@/components/LatestBlogs';
-import Gallery from '@/components/Gallery';
-import Organizations from '@/components/Organizations';
 import ScrollUtils from '@/components/ScrollUtils';
-import ContactForm from '@/components/ContactForm';
-import InstagramFeed from '@/components/InstagramFeed';
+
+const Projects = dynamic(() => import('@/components/Projects'), { ssr: true });
+const Skills = dynamic(() => import('@/components/Skills'), { ssr: true });
+const Timeline = dynamic(() => import('@/components/Timeline'), { ssr: true });
+const Achievements = dynamic(() => import('@/components/Achievements'), { ssr: true });
+const LatestBlogs = dynamic(() => import('@/components/LatestBlogs'), { ssr: true });
+const Gallery = dynamic(() => import('@/components/Gallery'), { ssr: true });
+const Organizations = dynamic(() => import('@/components/Organizations'), { ssr: true });
+const ContactForm = dynamic(() => import('@/components/ContactForm'), { ssr: true });
+const InstagramFeed = dynamic(() => import('@/components/InstagramFeed'), { ssr: false }); // client-only feed
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -200,6 +202,7 @@ export default async function Home() {
                   {data.profile?.email && (
                     <a
                       href={`mailto:${data.profile.email}`}
+                      aria-label={`Email ${data.profile.email}`}
                       className="flex items-center gap-4 text-muted-foreground hover:text-accent transition-all group"
                     >
                       <div className="w-10 h-10 rounded-xl bg-white/5 border border-[var(--border-subtle)] flex items-center justify-center group-hover:bg-accent group-hover:border-accent group-hover:text-black transition-all">

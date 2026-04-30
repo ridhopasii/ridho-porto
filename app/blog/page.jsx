@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import Navbar from '@/components/Navbar';
 import { BookOpen, ArrowLeft, Clock, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default async function BlogsPage() {
@@ -48,11 +49,13 @@ export default async function BlogsPage() {
               className="group block p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] hover:border-accent/30 transition-all duration-500"
             >
               <div className="flex flex-col md:flex-row gap-8 items-start md:items-center">
-                <div className="w-full md:w-48 aspect-square rounded-3xl overflow-hidden flex-shrink-0 border border-[var(--border-subtle)]">
-                  <img
+                <div className="relative w-full md:w-48 aspect-square rounded-3xl overflow-hidden flex-shrink-0 border border-[var(--border-subtle)]">
+                  <Image
                     src={blog.image || 'https://via.placeholder.com/400x400?text=Blog'}
                     alt={blog.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 192px"
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                 </div>
 

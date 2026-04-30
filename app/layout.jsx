@@ -81,6 +81,13 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="id" className={`${outfit.variable} ${jakarta.variable} dark`} suppressHydrationWarning>
+      <head>
+        {/* Preconnect to critical third-party origins to reduce LCP resource load delay */}
+        <link rel="preconnect" href="https://uuybelgxovlgozgizith.supabase.co" />
+        <link rel="dns-prefetch" href="https://uuybelgxovlgozgizith.supabase.co" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body className="bg-body text-foreground">
         <LanguageProvider>
           <AccentProvider color={accentColor}>

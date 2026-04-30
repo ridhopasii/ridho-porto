@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useTransition } from 'react';
+import Image from 'next/image';
 import { Trash2, Edit, ExternalLink, Calendar, Users, Eye, EyeOff } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -98,12 +99,15 @@ export default function OrganizationList({ organizations }) {
           {org.images?.length > 0 && (
             <div className="mt-6 flex gap-2 overflow-hidden">
               {org.images.slice(0, 3).map((url, idx) => (
-                <img
-                  key={idx}
-                  src={url}
-                  className="w-12 h-12 rounded-lg object-cover border border-[var(--border-subtle)]"
-                  alt="Doc"
-                />
+                <div key={idx} className="relative w-12 h-12 flex-shrink-0">
+                  <Image
+                    src={url}
+                    alt="Doc"
+                    fill
+                    sizes="48px"
+                    className="rounded-lg object-cover border border-[var(--border-subtle)]"
+                  />
+                </div>
               ))}
               {org.images.length > 3 && (
                 <div className="w-12 h-12 rounded-lg bg-white/5 border border-[var(--border-subtle)] flex items-center justify-center text-[10px] font-bold text-gray-500">

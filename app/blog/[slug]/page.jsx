@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server';
 import Navbar from '@/components/Navbar';
 import ReadingProgress from '@/components/ReadingProgress';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
+import Image from 'next/image';
 import { ArrowLeft, Clock, Calendar, User } from 'lucide-react';
 import Link from 'next/link';
 
@@ -66,11 +67,14 @@ export default async function BlogDetailPage({ params }) {
             {blog.title}
           </h1>
 
-          <div className="w-full aspect-[21/9] rounded-[3rem] overflow-hidden border border-[var(--border-subtle)] mb-16">
-            <img
+          <div className="relative w-full aspect-[21/9] rounded-[3rem] overflow-hidden border border-[var(--border-subtle)] mb-16">
+            <Image
               src={blog.image || 'https://via.placeholder.com/1200x600'}
               alt={blog.title}
-              className="w-full h-full object-cover"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
             />
           </div>
 

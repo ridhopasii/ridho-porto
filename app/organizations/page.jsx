@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import Navbar from '@/components/Navbar';
 import { Users, ArrowLeft, Globe, Calendar } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import PhotoSwiper from '@/components/PhotoSwiper';
 
@@ -35,7 +36,7 @@ export default async function OrganizationsPage() {
                   <PhotoSwiper images={Array.isArray(org.images) && org.images.length > 0 ? org.images : []} aspectRatio="aspect-[16/9]" rounded="rounded-none" />
                   {org.logoUrl && (
                     <div className="absolute -bottom-4 left-4 w-12 h-12 bg-body rounded-xl overflow-hidden p-1.5 border border-[var(--border-subtle)] shadow-lg z-20">
-                      <img src={org.logoUrl} alt={org.name} className="w-full h-full object-contain" />
+                      <Image src={org.logoUrl} alt={org.name} fill sizes="48px" className="object-contain p-1.5" />
                     </div>
                   )}
                 </div>

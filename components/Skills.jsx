@@ -20,6 +20,7 @@ export default function Skills({ skills }) {
               <Link
                 key={skill.id}
                 href={`/skills/${skill.slug}`}
+                aria-label={`Skill: ${skill.name} (${skill.level || 'Expert'})`}
                 className="group p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl hover:border-accent/50 hover:bg-accent/5 transition-all text-center flex-shrink-0 w-[40vw] sm:w-[25vw] md:w-[18vw] lg:w-[14vw] snap-center"
               >
                 <div className="w-12 h-12 mx-auto mb-4 text-muted-foreground group-hover:text-accent group-hover:scale-110 transition-all">

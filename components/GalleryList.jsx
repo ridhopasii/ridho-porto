@@ -1,5 +1,6 @@
 'use client';
 import { Trash2, Edit, Image as ImageIcon, Calendar, Tag, Eye, EyeOff } from 'lucide-react';
+import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -44,7 +45,7 @@ export default function GalleryList({ galleryItems }) {
         >
           <div className="relative aspect-video">
             {item.images?.[0] ? (
-              <img src={item.images[0]} alt={item.title} className="w-full h-full object-cover" />
+              <Image src={item.images[0]} alt={item.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
             ) : (
               <div className="w-full h-full bg-background/40 flex items-center justify-center text-gray-700">
                 <ImageIcon size={48} />

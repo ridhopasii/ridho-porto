@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Calendar, ArrowRight, BookOpen } from 'lucide-react';
 
 export default function LatestBlogs({ blogs }) {
@@ -35,10 +36,12 @@ export default function LatestBlogs({ blogs }) {
             >
               <div className="relative aspect-[16/10] overflow-hidden">
                 {blog.imageUrl ? (
-                  <img
+                  <Image
                     src={blog.imageUrl}
                     alt={blog.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-110 transition-all duration-700"
                   />
                 ) : (
                   <div className="w-full h-full bg-accent/10 flex items-center justify-center">
@@ -46,7 +49,7 @@ export default function LatestBlogs({ blogs }) {
                   </div>
                 )}
                 <div className="absolute top-4 left-4">
-                  <span className="bg-accent text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                  <span className="bg-accent text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
                     {blog.category || 'ARTICLE'}
                   </span>
                 </div>

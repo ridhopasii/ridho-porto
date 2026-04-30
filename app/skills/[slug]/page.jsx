@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import Navbar from '@/components/Navbar';
 import PhotoSwiper from '@/components/PhotoSwiper';
+import Image from 'next/image';
 import { Cpu, ArrowLeft, Layers, History, Briefcase, ExternalLink, Code2 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -108,11 +109,13 @@ export default async function SkillDetailPage({ params }) {
                       href={`/projects/${project.slug}`}
                       className="group p-6 bg-white/5 border border-[var(--border-subtle)] rounded-3xl hover:border-teal-500/30 transition-all"
                     >
-                      <div className="aspect-video rounded-2xl overflow-hidden mb-4 border border-white/5">
-                        <img
+                      <div className="relative aspect-video rounded-2xl overflow-hidden mb-4 border border-white/5">
+                        <Image
                           src={project.imageUrl || project.images?.[0]}
                           alt={project.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                       </div>
                       <h3 className="font-bold text-foreground group-hover:text-teal-500 transition-colors">

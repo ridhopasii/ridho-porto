@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import Navbar from '@/components/Navbar';
 import PhotoSwiper from '@/components/PhotoSwiper';
+import Image from 'next/image';
 import {
   Calendar,
   GraduationCap,
@@ -41,11 +42,13 @@ export default async function EducationDetailPage({ params }) {
 
           <div className="flex flex-col md:flex-row gap-10 items-start md:items-center mb-10">
             {edu.logoUrl ? (
-              <div className="w-24 h-24 md:w-32 md:h-32 bg-white/5 rounded-[2.5rem] p-5 border border-[var(--border-subtle)] flex-shrink-0">
-                <img
+              <div className="relative w-24 h-24 md:w-32 md:h-32 bg-white/5 rounded-[2.5rem] p-5 border border-[var(--border-subtle)] flex-shrink-0">
+                <Image
                   src={edu.logoUrl}
                   alt={edu.institution}
-                  className="w-full h-full object-contain"
+                  fill
+                  sizes="128px"
+                  className="object-contain p-5"
                 />
               </div>
             ) : (

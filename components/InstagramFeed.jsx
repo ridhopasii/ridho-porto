@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Instagram, AlertCircle } from 'lucide-react';
 import PhotoSwiper from './PhotoSwiper';
 
@@ -71,12 +72,14 @@ export default function InstagramFeed() {
                 target="_blank" 
                 className="group relative aspect-square rounded-2xl overflow-hidden bg-background border border-[var(--border-subtle)]"
               >
-                <img 
+                <Image 
                   src={post.media_url} 
                   alt={post.caption || 'Instagram Post'} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                   <Instagram className="text-white w-6 h-6 mb-2" />
                   <p className="text-white text-xs line-clamp-2">{post.caption}</p>
                 </div>

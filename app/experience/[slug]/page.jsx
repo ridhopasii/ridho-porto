@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import Navbar from '@/components/Navbar';
 import PhotoSwiper from '@/components/PhotoSwiper';
+import Image from 'next/image';
 import {
   Calendar,
   Building2,
@@ -41,8 +42,8 @@ export default async function ExperienceDetailPage({ params }) {
 
           <div className="flex flex-col md:flex-row gap-10 items-start md:items-center mb-10">
             {exp.logoUrl ? (
-              <div className="w-24 h-24 md:w-32 md:h-32 bg-white/5 rounded-[2.5rem] p-5 border border-[var(--border-subtle)] flex-shrink-0">
-                <img src={exp.logoUrl} alt={exp.company} className="w-full h-full object-contain" />
+              <div className="relative w-24 h-24 md:w-32 md:h-32 bg-white/5 rounded-[2.5rem] p-5 border border-[var(--border-subtle)] flex-shrink-0">
+                <Image src={exp.logoUrl} alt={exp.company} fill sizes="128px" className="object-contain p-5" />
               </div>
             ) : (
               <div className="w-24 h-24 md:w-32 md:h-32 bg-teal-500/10 rounded-[2.5rem] flex items-center justify-center border border-teal-500/20 flex-shrink-0">

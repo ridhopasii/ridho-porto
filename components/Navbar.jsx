@@ -96,7 +96,7 @@ export default function Navbar() {
             </Link>
             
             {/* Mobile Toggle */}
-            <button onClick={() => setIsOpen(!isOpen)} className="p-2.5 bg-white/5 rounded-full text-foreground md:hidden border border-[var(--border-subtle)] active:scale-90 transition-transform">
+            <button onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu" className="p-2.5 bg-white/5 rounded-full text-foreground md:hidden border border-[var(--border-subtle)] active:scale-90 transition-transform">
               {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>

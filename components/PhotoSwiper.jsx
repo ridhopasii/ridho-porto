@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function PhotoSwiper({
@@ -52,11 +53,14 @@ export default function PhotoSwiper({
       >
         {safeImages.map((url, idx) => (
           <div key={idx} className="h-full flex-shrink-0" style={{ width: `${100 / safeImages.length}%` }}>
-            <img
+            <Image
               src={url}
               alt={`Photo ${idx + 1}`}
-              className="w-full h-full object-cover"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
               draggable={false}
+              priority={idx === 0} // Add priority to the first image for LCP
             />
           </div>
         ))}
@@ -67,12 +71,14 @@ export default function PhotoSwiper({
         <>
           <button
             onClick={prev}
+            aria-label="Previous image"
             className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-background/50 backdrop-blur-md text-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-accent hover:scale-110 shadow-lg"
           >
             <ChevronLeft size={18} />
           </button>
           <button
             onClick={next}
+            aria-label="Next image"
             className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-background/50 backdrop-blur-md text-foreground rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-accent hover:scale-110 shadow-lg"
           >
             <ChevronRight size={18} />
@@ -84,6 +90,7 @@ export default function PhotoSwiper({
               <button
                 key={idx}
                 type="button"
+                aria-label={`Go to image ${idx + 1}`}
                 onClick={(e) => { e.preventDefault(); setCurrentIndex(idx); }}
                 className={`rounded-full transition-all duration-300 ${
                   idx === currentIndex

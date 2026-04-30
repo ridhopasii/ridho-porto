@@ -63,6 +63,7 @@ export default function ContactForm() {
           <input
             required
             type="text"
+            aria-label="Nama Lengkap"
             placeholder="Nama Lengkap"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -77,6 +78,7 @@ export default function ContactForm() {
           <input
             required
             type="email"
+            aria-label="Email Address"
             placeholder="Email Address"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -92,6 +94,7 @@ export default function ContactForm() {
         />
         <input
           type="text"
+          aria-label="Perihal / Subjek"
           placeholder="Perihal / Subjek"
           value={formData.subject}
           onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
@@ -102,6 +105,7 @@ export default function ContactForm() {
       <textarea
         required
         rows={5}
+        aria-label="Tulis pesan Anda di sini"
         placeholder="Tulis pesan Anda di sini..."
         value={formData.message}
         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -110,6 +114,7 @@ export default function ContactForm() {
 
       <button
         type="submit"
+        aria-label="Kirim Pesan"
         disabled={loading}
         className="w-full py-5 bg-accent text-black font-black rounded-2xl hover:bg-accent transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3 text-sm uppercase tracking-widest shadow-xl shadow-accent/20 disabled:opacity-50"
       >

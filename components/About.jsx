@@ -33,7 +33,7 @@ export default function About({ profile }) {
                   <CheckCircle2 size={24} />
                 </div>
                 <div>
-                  <h4 className="text-foreground font-bold font-outfit">Verified Expert</h4>
+                  <p className="text-foreground font-bold font-outfit text-sm">Verified Expert</p>
                   <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
                     {profile?.badge || 'Global Ambassador'}
                   </p>

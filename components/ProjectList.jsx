@@ -1,6 +1,7 @@
 'use client';
 import { Plus, Edit, Trash2, ExternalLink, Folders, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -35,10 +36,12 @@ export default function ProjectList({ initialProjects }) {
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-xl bg-white/10 overflow-hidden">
               {project.imageUrl ? (
-                <img
+                <Image
                   src={project.imageUrl}
                   alt={project.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="64px"
+                  className="object-cover"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-gray-600">

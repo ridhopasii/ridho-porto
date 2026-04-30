@@ -42,6 +42,7 @@ export default function Chatbot() {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
+        aria-label="Open chat"
         className={`fixed bottom-6 right-6 w-14 h-14 bg-accent rounded-full flex items-center justify-center text-black shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:scale-110 transition-transform z-50 ${isOpen ? 'hidden' : ''}`}
       >
         <MessageSquare size={24} />
@@ -67,7 +68,7 @@ export default function Chatbot() {
                   <p className="text-[10px] text-accent">AI Assistant • Online</p>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-foreground transition-colors">
+              <button onClick={() => setIsOpen(false)} aria-label="Close chat" className="text-gray-400 hover:text-foreground transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -105,6 +106,7 @@ export default function Chatbot() {
               />
               <button
                 type="submit"
+                aria-label="Send message"
                 disabled={isLoading}
                 className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center text-black disabled:opacity-50"
               >

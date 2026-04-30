@@ -17,7 +17,7 @@ export default function Achievements({ awards, publications }) {
               awards.map((award) => (
                 <div
                   key={award.id}
-                  className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] group hover:border-yellow-500/30 transition-all flex-shrink-0 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[100%] xl:w-[22vw] snap-center flex flex-col h-[28rem]"
+                  className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] group hover:shadow-[0_0_0_1px_rgba(234,179,8,0.3)] transition-all flex-shrink-0 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[100%] xl:w-[22vw] snap-center flex flex-col h-[28rem]"
                 >
                   <div className="flex justify-between items-start mb-6">
                     <div className="p-3 bg-yellow-500/10 text-yellow-500 rounded-2xl">
@@ -52,7 +52,7 @@ export default function Achievements({ awards, publications }) {
                   <div className="flex flex-wrap gap-4 mt-auto pt-4">
                     <Link
                       href={`/awards/${award.slug}`}
-                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-foreground/30 hover:text-yellow-500 transition-colors"
+                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-foreground/70 hover:text-yellow-500 transition-colors"
                     >
                       <ImageIcon size={12} /> View Full Record
                     </Link>
@@ -85,7 +85,7 @@ export default function Achievements({ awards, publications }) {
               publications.map((pub) => (
                 <div
                   key={pub.id}
-                  className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] group hover:border-accent/30 transition-all flex-shrink-0 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[100%] xl:w-[22vw] snap-center flex flex-col h-[28rem]"
+                  className="p-8 bg-white/5 border border-[var(--border-subtle)] rounded-[2.5rem] group hover:shadow-[0_0_0_1px_var(--accent)] transition-all flex-shrink-0 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[100%] xl:w-[22vw] snap-center flex flex-col h-[28rem]"
                 >
                   <div className="flex justify-between items-start mb-6">
                     <div className="p-3 bg-accent/10 text-accent rounded-2xl">
@@ -119,7 +119,7 @@ export default function Achievements({ awards, publications }) {
                   <div className="flex flex-wrap gap-4 mt-auto pt-4">
                     <Link
                       href={`/publications/${pub.slug}`}
-                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-foreground/30 hover:text-accent transition-colors"
+                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-foreground/70 hover:text-accent transition-colors"
                     >
                       <ImageIcon size={12} /> Detail Abstract
                     </Link>

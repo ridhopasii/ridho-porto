@@ -26,8 +26,8 @@ export default function Timeline({ experiences, educations }) {
                     key={exp.id} 
                     className={`relative p-6 md:p-8 rounded-[2rem] snap-center flex flex-col group transition-all duration-500 ${
                       isBig 
-                        ? 'row-span-2 w-[85vw] md:w-[45vw] lg:w-[35vw] bg-accent/5 border border-accent/20 hover:border-accent/50 hover:bg-accent/10 min-h-[300px] md:min-h-[400px]' 
-                        : 'row-span-1 w-[75vw] md:w-[35vw] lg:w-[25vw] bg-white/5 border border-[var(--border-subtle)] hover:border-white/30 min-h-[140px] md:min-h-[190px]'
+                        ? 'row-span-2 w-[85vw] md:w-[45vw] lg:w-[35vw] bg-accent/5 border border-accent/20 hover:shadow-[0_0_0_1px_var(--accent)] hover:bg-accent/10 min-h-[300px] md:min-h-[400px]' 
+                        : 'row-span-1 w-[75vw] md:w-[35vw] lg:w-[25vw] bg-white/5 border border-[var(--border-subtle)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2)] min-h-[140px] md:min-h-[190px]'
                     }`}
                   >
                     <div className="mt-auto flex flex-col h-full justify-between">
@@ -82,8 +82,8 @@ export default function Timeline({ experiences, educations }) {
                     key={edu.id} 
                     className={`relative p-6 md:p-8 rounded-[2rem] snap-center flex flex-col group transition-all duration-500 ${
                       isBig 
-                        ? 'row-span-2 w-[85vw] md:w-[45vw] lg:w-[35vw] bg-purple-500/5 border border-purple-500/20 hover:border-purple-500/50 hover:bg-purple-500/10 min-h-[300px] md:min-h-[400px]' 
-                        : 'row-span-1 w-[75vw] md:w-[35vw] lg:w-[25vw] bg-white/5 border border-[var(--border-subtle)] hover:border-white/30 min-h-[140px] md:min-h-[190px]'
+                        ? 'row-span-2 w-[85vw] md:w-[45vw] lg:w-[35vw] bg-purple-500/5 border border-purple-500/20 hover:shadow-[0_0_0_1px_rgb(168,85,247,0.5)] hover:bg-purple-500/10 min-h-[300px] md:min-h-[400px]' 
+                        : 'row-span-1 w-[75vw] md:w-[35vw] lg:w-[25vw] bg-white/5 border border-[var(--border-subtle)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2)] min-h-[140px] md:min-h-[190px]'
                     }`}
                   >
                     <div className="mt-auto flex flex-col h-full justify-between">
