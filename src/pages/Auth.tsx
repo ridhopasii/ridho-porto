@@ -19,8 +19,8 @@ export default function Auth() {
         // on success, reload or redirect to home
         window.location.href = '/'
       }
-    } catch (err: any) {
-      setError(err?.message || 'Unknown error')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Unknown error')
     } finally {
       setLoading(false)
     }

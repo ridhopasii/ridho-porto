@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment & local config
+.env
+.env.*
+!.env.example
+*.local
+
+# Agents and local DBs
+.agents/
+prisma/*.db
+prisma/*.db-journal
+skills-lock.json

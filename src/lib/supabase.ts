@@ -1,13 +1,40 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
+const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL as string) || ''
+const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY as string) || ''
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Supabase environment variables not set. Check .env or .env.local')
+const createMockSupabaseClient = () => {
+  const mockAuth = {
+    getUser: async () => ({ data: { user: null }, error: null }),
+    signInWithPassword: async () => ({ data: { user: null }, error: new Error('Supabase not configured') }),
+    signOut: async () => ({ error: null }),
+    signUp: async () => ({ data: { user: null }, error: new Error('Supabase not configured') }),
+  }
+  return {
+    auth: mockAuth,
+    from: () => ({
+      select: () => ({
+        order: () => Promise.resolve({ data: [], error: null }),
+        insert: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
+      }),
+      insert: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
+    }),
+  } as unknown as SupabaseClient
 }
 
-const supabase: SupabaseClient = createClient(supabaseUrl ?? '', supabaseAnonKey ?? '')
+let supabase: SupabaseClient
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.warn('Supabase environment variables not set. Using mock fallback client.')
+  supabase = createMockSupabaseClient()
+} else {
+  try {
+    supabase = createClient(supabaseUrl, supabaseAnonKey)
+  } catch (error) {
+    console.error('Failed to initialize Supabase client:', error)
+    supabase = createMockSupabaseClient()
+  }
+}
 
 export default supabase
 
@@ -23,3 +50,4 @@ export const getUser = async () => {
   const { data } = await supabase.auth.getUser()
   return data?.user ?? null
 }
+

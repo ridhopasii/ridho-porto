@@ -18,8 +18,8 @@ function PublicLayout() {
       <Navigation />
       <div className="lg:ml-[240px] min-h-screen">
         <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 lg:pt-12 pb-12">
-          <Routes>
-            <Suspense fallback={<div className="p-4">Memuat...</div>}>
+          <Suspense fallback={<div className="p-4">Memuat...</div>}>
+            <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/resume" element={<Resume />} />
               <Route path="/projects" element={<Projects />} />
@@ -28,8 +28,8 @@ function PublicLayout() {
               <Route path="/chats" element={<Chats />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/register" element={<Register />} />
-            </Suspense>
-          </Routes>
+            </Routes>
+          </Suspense>
         </main>
       </div>
     </>

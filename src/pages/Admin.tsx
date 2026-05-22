@@ -163,9 +163,22 @@ function Dashboard() {
 function ProfileEditor() {
   const { data, updateProfile } = useData();
   const [form, setForm] = useState<Profile>({ ...data.profile });
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'success' | 'error' | null>(null);
 
-  const handleSave = () => {
-    updateProfile(form);
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveStatus(null);
+    try {
+      await updateProfile(form);
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus(null), 3000);
+    } catch (e) {
+      console.error(e);
+      setSaveStatus('error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const fieldClass = "w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20";
@@ -175,10 +188,22 @@ function ProfileEditor() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Edit Profile</h2>
-        <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-          <Save size={16} />
-          Save Changes
-        </button>
+        <div className="flex items-center gap-3">
+          {saveStatus === 'success' && <span className="text-xs text-green-500 font-medium">Changes saved!</span>}
+          {saveStatus === 'error' && <span className="text-xs text-red-500 font-medium">Failed to save!</span>}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -235,6 +260,8 @@ function ProfileEditor() {
 function ExperienceEditor() {
   const { data, updateExperiences } = useData();
   const [items, setItems] = useState<WorkExperience[]>([...data.experiences]);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'success' | 'error' | null>(null);
 
   const addItem = () => {
     const newItem: WorkExperience = {
@@ -259,22 +286,43 @@ function ExperienceEditor() {
     setItems(items.filter((i) => i.id !== id));
   };
 
-  const handleSave = () => {
-    updateExperiences(items);
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveStatus(null);
+    try {
+      await updateExperiences(items);
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus(null), 3000);
+    } catch (e) {
+      console.error(e);
+      setSaveStatus('error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Edit Experience</h2>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-3">
+          {saveStatus === 'success' && <span className="text-xs text-green-500 font-medium">Saved!</span>}
+          {saveStatus === 'error' && <span className="text-xs text-red-500 font-medium">Failed!</span>}
           <button onClick={addItem} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors">
             <Plus size={16} />
             Add
           </button>
-          <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-            <Save size={16} />
-            Save
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
+            {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
@@ -346,6 +394,8 @@ function ExperienceEditor() {
 function EducationEditor() {
   const { data, updateEducations } = useData();
   const [items, setItems] = useState<Education[]>([...data.educations]);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'success' | 'error' | null>(null);
 
   const addItem = () => {
     const newItem: Education = {
@@ -369,22 +419,43 @@ function EducationEditor() {
     setItems(items.filter((i) => i.id !== id));
   };
 
-  const handleSave = () => {
-    updateEducations(items);
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveStatus(null);
+    try {
+      await updateEducations(items);
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus(null), 3000);
+    } catch (e) {
+      console.error(e);
+      setSaveStatus('error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Edit Education</h2>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-3">
+          {saveStatus === 'success' && <span className="text-xs text-green-500 font-medium">Saved!</span>}
+          {saveStatus === 'error' && <span className="text-xs text-red-500 font-medium">Failed!</span>}
           <button onClick={addItem} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors">
             <Plus size={16} />
             Add
           </button>
-          <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-            <Save size={16} />
-            Save
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
+            {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
@@ -420,6 +491,8 @@ function EducationEditor() {
 function ActivityEditor() {
   const { data, updateActivities } = useData();
   const [items, setItems] = useState<Activity[]>([...data.activities]);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'success' | 'error' | null>(null);
 
   const addItem = () => {
     const newItem: Activity = {
@@ -441,22 +514,43 @@ function ActivityEditor() {
     setItems(items.filter((i) => i.id !== id));
   };
 
-  const handleSave = () => {
-    updateActivities(items);
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveStatus(null);
+    try {
+      await updateActivities(items);
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus(null), 3000);
+    } catch (e) {
+      console.error(e);
+      setSaveStatus('error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Edit Activities</h2>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-3">
+          {saveStatus === 'success' && <span className="text-xs text-green-500 font-medium">Saved!</span>}
+          {saveStatus === 'error' && <span className="text-xs text-red-500 font-medium">Failed!</span>}
           <button onClick={addItem} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors">
             <Plus size={16} />
             Add
           </button>
-          <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-            <Save size={16} />
-            Save
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
+            {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
@@ -487,6 +581,8 @@ function ActivityEditor() {
 function ProjectsEditor() {
   const { data, updateProjects } = useData();
   const [items, setItems] = useState<Project[]>([...data.projects]);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'success' | 'error' | null>(null);
 
   const addItem = () => {
     const newItem: Project = {
@@ -511,22 +607,43 @@ function ProjectsEditor() {
     setItems(items.filter((i) => i.id !== id));
   };
 
-  const handleSave = () => {
-    updateProjects(items);
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveStatus(null);
+    try {
+      await updateProjects(items);
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus(null), 3000);
+    } catch (e) {
+      console.error(e);
+      setSaveStatus('error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Edit Projects</h2>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-3">
+          {saveStatus === 'success' && <span className="text-xs text-green-500 font-medium">Saved!</span>}
+          {saveStatus === 'error' && <span className="text-xs text-red-500 font-medium">Failed!</span>}
           <button onClick={addItem} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors">
             <Plus size={16} />
             Add
           </button>
-          <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-            <Save size={16} />
-            Save
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
+            {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
@@ -568,6 +685,8 @@ function ProjectsEditor() {
 function BlogEditor() {
   const { data, updateBlogPosts } = useData();
   const [items, setItems] = useState<BlogPost[]>([...data.blogPosts]);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'success' | 'error' | null>(null);
 
   const addItem = () => {
     const newItem: BlogPost = {
@@ -597,22 +716,43 @@ function BlogEditor() {
     setItems(items.filter((i) => i.id !== id));
   };
 
-  const handleSave = () => {
-    updateBlogPosts(items);
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveStatus(null);
+    try {
+      await updateBlogPosts(items);
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus(null), 3000);
+    } catch (e) {
+      console.error(e);
+      setSaveStatus('error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Edit Blog Posts</h2>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-3">
+          {saveStatus === 'success' && <span className="text-xs text-green-500 font-medium">Saved!</span>}
+          {saveStatus === 'error' && <span className="text-xs text-red-500 font-medium">Failed!</span>}
           <button onClick={addItem} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors">
             <Plus size={16} />
             Add
           </button>
-          <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-            <Save size={16} />
-            Save
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
+            {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
@@ -650,6 +790,8 @@ function BlogEditor() {
 function ContactsEditor() {
   const { data, updateContacts } = useData();
   const [items, setItems] = useState<ContactType[]>([...data.contacts]);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'success' | 'error' | null>(null);
 
   const addItem = () => {
     const newItem: ContactType = {
@@ -671,22 +813,43 @@ function ContactsEditor() {
     setItems(items.filter((i) => i.id !== id));
   };
 
-  const handleSave = () => {
-    updateContacts(items);
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveStatus(null);
+    try {
+      await updateContacts(items);
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus(null), 3000);
+    } catch (e) {
+      console.error(e);
+      setSaveStatus('error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Edit Contacts</h2>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-3">
+          {saveStatus === 'success' && <span className="text-xs text-green-500 font-medium">Saved!</span>}
+          {saveStatus === 'error' && <span className="text-xs text-red-500 font-medium">Failed!</span>}
           <button onClick={addItem} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors">
             <Plus size={16} />
             Add
           </button>
-          <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-            <Save size={16} />
-            Save
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
+            {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
@@ -718,6 +881,8 @@ function ContactsEditor() {
 function RecommendationsEditor() {
   const { data, updateRecommendations } = useData();
   const [items, setItems] = useState<Recommendation[]>([...data.recommendations]);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'success' | 'error' | null>(null);
 
   const addItem = () => {
     const newItem: Recommendation = {
@@ -741,22 +906,43 @@ function RecommendationsEditor() {
     setItems(items.filter((i) => i.id !== id));
   };
 
-  const handleSave = () => {
-    updateRecommendations(items);
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveStatus(null);
+    try {
+      await updateRecommendations(items);
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus(null), 3000);
+    } catch (e) {
+      console.error(e);
+      setSaveStatus('error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Edit Recommendations</h2>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-3">
+          {saveStatus === 'success' && <span className="text-xs text-green-500 font-medium">Saved!</span>}
+          {saveStatus === 'error' && <span className="text-xs text-red-500 font-medium">Failed!</span>}
           <button onClick={addItem} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors">
             <Plus size={16} />
             Add
           </button>
-          <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-            <Save size={16} />
-            Save
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
+            {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
@@ -791,6 +977,8 @@ function ChatEditor() {
   const { data, updateChatMessages, updatePinnedMessage } = useData();
   const [items, setItems] = useState<ChatMessage[]>([...data.chatMessages]);
   const [pinned, setPinned] = useState<PinnedMessage>({ ...data.pinnedMessage });
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'success' | 'error' | null>(null);
 
   const addItem = () => {
     const newItem: ChatMessage = {
@@ -812,19 +1000,44 @@ function ChatEditor() {
     setItems(items.filter((i) => i.id !== id));
   };
 
-  const handleSave = () => {
-    updateChatMessages(items);
-    updatePinnedMessage(pinned);
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveStatus(null);
+    try {
+      await Promise.all([
+        updateChatMessages(items),
+        updatePinnedMessage(pinned)
+      ]);
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus(null), 3000);
+    } catch (e) {
+      console.error(e);
+      setSaveStatus('error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Edit Guestbook</h2>
-        <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-          <Save size={16} />
-          Save
-        </button>
+        <div className="flex items-center gap-3">
+          {saveStatus === 'success' && <span className="text-xs text-green-500 font-medium">Saved!</span>}
+          {saveStatus === 'error' && <span className="text-xs text-red-500 font-medium">Failed!</span>}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
+            {saving ? 'Saving...' : 'Save'}
+          </button>
+        </div>
       </div>
 
       {/* Pinned Message */}
@@ -874,6 +1087,8 @@ function TechStacksEditor() {
   const { data, updateTechStacks } = useData();
   const [items, setItems] = useState<string[]>([...data.techStacks]);
   const [newItem, setNewItem] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'success' | 'error' | null>(null);
 
   const addItem = () => {
     if (!newItem.trim()) return;
@@ -885,18 +1100,41 @@ function TechStacksEditor() {
     setItems(items.filter((_, i) => i !== index));
   };
 
-  const handleSave = () => {
-    updateTechStacks(items);
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveStatus(null);
+    try {
+      await updateTechStacks(items);
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus(null), 3000);
+    } catch (e) {
+      console.error(e);
+      setSaveStatus('error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Edit Tech Stacks</h2>
-        <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-          <Save size={16} />
-          Save
-        </button>
+        <div className="flex items-center gap-3">
+          {saveStatus === 'success' && <span className="text-xs text-green-500 font-medium">Saved!</span>}
+          {saveStatus === 'error' && <span className="text-xs text-red-500 font-medium">Failed!</span>}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
+            {saving ? 'Saving...' : 'Save'}
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-2">
@@ -931,9 +1169,22 @@ function SettingsEditor() {
   const { data, updateSettings, resetToDefaults } = useData();
   const [form, setForm] = useState<SiteSettings>({ ...data.settings });
   const [showReset, setShowReset] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'success' | 'error' | null>(null);
 
-  const handleSave = () => {
-    updateSettings(form);
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveStatus(null);
+    try {
+      await updateSettings(form);
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus(null), 3000);
+    } catch (e) {
+      console.error(e);
+      setSaveStatus('error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleReset = () => {
@@ -945,10 +1196,22 @@ function SettingsEditor() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Site Settings</h2>
-        <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-          <Save size={16} />
-          Save Changes
-        </button>
+        <div className="flex items-center gap-3">
+          {saveStatus === 'success' && <span className="text-xs text-green-500 font-medium">Saved!</span>}
+          {saveStatus === 'error' && <span className="text-xs text-red-500 font-medium">Failed!</span>}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1013,6 +1276,7 @@ export default function Admin() {
     return localStorage.getItem('admin_authenticated') === 'true';
   });
   const { theme, toggleTheme } = useTheme();
+  const { loading } = useData();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -1025,6 +1289,17 @@ export default function Admin() {
     setIsAuthenticated(false);
     navigate('/admin');
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
+          <p className="text-sm text-muted-foreground font-medium">Memuat data dari database...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <AdminLogin onLogin={() => setIsAuthenticated(true)} />;
