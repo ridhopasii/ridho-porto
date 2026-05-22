@@ -6,7 +6,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vite.dev/config/
 export default defineConfig(({mode}) => ({
-  base: './',
+  base: '/',
   plugins: [
     // enable the inspect plugin only during development to avoid extra overhead in production builds
     ...(mode === 'development' ? [inspectAttr()] : []),
@@ -22,17 +22,4 @@ export default defineConfig(({mode}) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('react')) return 'vendor_react'
-            if (id.includes('@supabase')) return 'vendor_supabase'
-            return 'vendor_misc'
-          }
-        }
-      }
-    }
-  }
 }));
