@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useData } from '@/contexts/DataContext';
 import { useState } from 'react';
 import {
   Home,
@@ -26,8 +27,15 @@ const navItems = [
 
 export default function Navigation() {
   const { theme, toggleTheme } = useTheme();
+  const { data } = useData();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const profile = data.profile;
+  const nameInitial = profile.name ? profile.name.charAt(0).toUpperCase() : 'R';
+  const siteDomain = profile.email && profile.email.includes('@')
+    ? profile.email.split('@')[1]
+    : 'ridhorobbipasi.my.id';
 
   const isAdminPage = location.pathname.startsWith('/admin');
   if (isAdminPage) return null;
@@ -39,11 +47,11 @@ export default function Navigation() {
         <div className="p-6">
           <NavLink to="/" className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">J</span>
+              <span className="text-primary-foreground font-bold text-sm">{nameInitial}</span>
             </div>
             <div>
-              <h1 className="font-semibold text-sm">Jody Yuantoro</h1>
-              <p className="text-xs text-muted-foreground">xyzuan.com</p>
+              <h1 className="font-semibold text-sm">{profile.name}</h1>
+              <p className="text-xs text-muted-foreground">{siteDomain}</p>
             </div>
           </NavLink>
         </div>
@@ -92,9 +100,9 @@ export default function Navigation() {
       <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-md border-b border-border z-50 flex items-center justify-between px-4">
         <NavLink to="/" className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-xs">J</span>
+            <span className="text-primary-foreground font-bold text-xs">{nameInitial}</span>
           </div>
-          <span className="font-semibold text-sm">xyzuan.com</span>
+          <span className="font-semibold text-sm">{siteDomain}</span>
         </NavLink>
 
         <div className="flex items-center gap-2">

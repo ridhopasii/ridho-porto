@@ -325,6 +325,13 @@ export function DataProvider({ children }: { children: ReactNode }) {
     }
   }, [data, loading]);
 
+  // Dynamically update document title based on profile name
+  useEffect(() => {
+    if (data.profile.name) {
+      document.title = `${data.profile.name} Portfolio`;
+    }
+  }, [data.profile.name]);
+
   const updateProfile = useCallback(async (profile: AppData['profile']) => {
     setData((prev) => ({ ...prev, profile }));
     try {
