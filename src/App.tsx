@@ -8,9 +8,12 @@ const Projects = React.lazy(() => import('@/pages/Projects'))
 const Blogs = React.lazy(() => import('@/pages/Blogs'))
 const Contacts = React.lazy(() => import('@/pages/Contacts'))
 const Chats = React.lazy(() => import('@/pages/Chats'))
+const InstagramFeed = React.lazy(() => import('@/pages/InstagramFeed'))
 const Admin = React.lazy(() => import('@/pages/Admin'))
 const Auth = React.lazy(() => import('@/pages/Auth'))
 const Register = React.lazy(() => import('@/pages/Register'))
+
+import ChatbotSidebar from '@/components/ChatbotSidebar';
 
 function PublicLayout() {
   return (
@@ -26,12 +29,14 @@ function PublicLayout() {
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/chats" element={<Chats />} />
+              <Route path="/socials" element={<InstagramFeed />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/register" element={<Register />} />
             </Routes>
           </Suspense>
         </main>
       </div>
+      <ChatbotSidebar />
     </>
   );
 }

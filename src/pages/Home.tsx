@@ -13,6 +13,7 @@ import {
   MessageSquare,
   Eye,
 } from 'lucide-react';
+import InstagramSidebar from '@/components/InstagramSidebar';
 
 export default function Home() {
   const { data } = useData();
@@ -153,6 +154,21 @@ export default function Home() {
             </motion.article>
           ))}
         </div>
+      </section>
+
+      {/* Instagram Section */}
+      <section>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold">Social Feed</h2>
+          <NavLink
+            to="/socials"
+            className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+          >
+            View Instagram
+            <ArrowRight size={14} />
+          </NavLink>
+        </div>
+        <InstagramSidebar />
       </section>
 
       {/* Tech Stacks Section */}

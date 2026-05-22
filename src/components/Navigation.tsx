@@ -14,6 +14,7 @@ import {
   Shield,
   Menu,
   X,
+  Instagram,
 } from 'lucide-react';
 
 const navItems = [
@@ -23,6 +24,7 @@ const navItems = [
   { path: '/blogs', label: 'Blogs', icon: BookOpen },
   { path: '/contacts', label: 'Contacts', icon: Mail },
   { path: '/chats', label: 'Chats', icon: MessageSquare },
+  { path: '/socials', label: 'Socials', icon: Instagram },
 ];
 
 export default function Navigation() {
