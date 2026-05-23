@@ -217,12 +217,17 @@
   "Navigation": {
     "Home": "Beranda",
     "About": "Tentang",
+    "Creations": "Kreasi",
     "Contents": "Konten",
     "Achievements": "Pencapaian",
     "Projects": "Proyek",
     "Dashboard": "Dasbor",
+    "Guestbook": "Buku Tamu",
+    "Uses": "Peralatan",
     "Chat Room": "Ruang Obrolan",
     "Contact": "Kontak",
+    "Links": "Tautan",
+    "Changelog": "Catatan Perubahan",
     "Smart Talk": "Smart Talk"
   },
   "NotFoundPage": {

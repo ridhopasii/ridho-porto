@@ -217,12 +217,17 @@
   "Navigation": {
     "Home": "Home",
     "About": "About",
+    "Creations": "Creations",
     "Contents": "Contents",
     "Achievements": "Achievements",
     "Projects": "Projects",
     "Dashboard": "Dashboard",
+    "Guestbook": "Guestbook",
+    "Uses": "Uses",
     "Chat Room": "Chat Room",
     "Contact": "Contact",
+    "Links": "Links",
+    "Changelog": "Changelog",
     "Smart Talk": "Smart Talk"
   },
   "NotFoundPage": {
