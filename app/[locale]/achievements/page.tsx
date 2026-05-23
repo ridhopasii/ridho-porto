@@ -6,9 +6,15 @@ import PageHeading from "@/common/components/elements/PageHeading";
 import Achievements from "@/modules/achievements";
 import { METADATA } from "@/common/constants/metadata";
 import { Suspense } from "react";
+import {
+  getAchievementsData,
+  getAchivementCategories,
+  getAchivementTypes,
+} from "@/services/achievements";
 
 interface AchievementsPageProps {
   params: { locale: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export async function generateMetadata({
@@ -28,14 +34,30 @@ export async function generateMetadata({
 
 const AchievementsPage = async ({
   params: { locale },
+  searchParams,
 }: AchievementsPageProps) => {
   const t = await getTranslations({ locale, namespace: "AchievementsPage" });
+
+  const category =
+    typeof searchParams.category === "string" ? searchParams.category : undefined;
+  const search =
+    typeof searchParams.search === "string" ? searchParams.search : undefined;
+
+  const [achievements, categoriesData, typesData] = await Promise.all([
+    getAchievementsData({ category, search }),
+    getAchivementCategories(),
+    getAchivementTypes(),
+  ]);
 
   return (
     <Container data-aos="fade-up">
       <PageHeading title={t("title")} description={t("description")} />
       <Suspense>
-        <Achievements />
+        <Achievements
+          achievements={achievements}
+          categoriesData={categoriesData}
+          typesData={typesData}
+        />
       </Suspense>
     </Container>
   );

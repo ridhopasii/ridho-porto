@@ -24,8 +24,12 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NODE_ENV === "development"
       ? "http://localhost:3000"
-      : process.env.DOMAIN || "",
+      : process.env.DOMAIN || "https://ridhorobbipasi.my.id",
   ),
+  title: {
+    default: METADATA.creator,
+    template: `%s ${METADATA.exTitle}`,
+  },
   description: METADATA.description,
   keywords: METADATA.keyword,
   creator: METADATA.creator,

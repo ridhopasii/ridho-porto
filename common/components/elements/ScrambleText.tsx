@@ -1,9 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { SplitText } from "gsap/SplitText";
-import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
+"use client";
 
-gsap.registerPlugin(SplitText, ScrambleTextPlugin);
+import React, { useEffect, useRef, useState } from "react";
 
 export interface ScrambledTextProps {
   radius?: number;
@@ -25,51 +22,54 @@ const ScrambledText: React.FC<ScrambledTextProps> = ({
   children,
 }) => {
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const text = typeof children === "string" ? children : "";
 
   useEffect(() => {
-    if (!rootRef.current) return;
+    if (!rootRef.current || !text) return;
 
-    const split = SplitText.create(rootRef.current.querySelector("p"), {
-      type: "chars",
-      charsClass: "inline-block will-change-transform",
-    });
-
-    split.chars.forEach((el) => {
-      const c = el as HTMLElement;
-      gsap.set(c, { attr: { "data-content": c.innerHTML } });
-    });
+    const el = rootRef.current;
+    const chars = Array.from(el.querySelectorAll(".scramble-char")) as HTMLElement[];
 
     const handleMove = (e: PointerEvent) => {
-      split.chars.forEach((el) => {
-        const c = el as HTMLElement;
+      chars.forEach((c) => {
         const { left, top, width, height } = c.getBoundingClientRect();
         const dx = e.clientX - (left + width / 2);
         const dy = e.clientY - (top + height / 2);
         const dist = Math.hypot(dx, dy);
 
         if (dist < radius) {
-          gsap.to(c, {
-            overwrite: true,
-            duration: duration * (1 - dist / radius),
-            scrambleText: {
-              text: c.dataset.content || "",
-              chars: scrambleChars,
-              speed,
-            },
-            ease: "none",
-          });
+          const original = c.dataset.content || "";
+          // If already scrambling, ignore to prevent reset
+          if (c.dataset.scrambling === "true") return;
+          
+          c.dataset.scrambling = "true";
+          const totalFrames = (duration * (1 - dist / radius)) * 60;
+          let frame = 0;
+          
+          const scramble = () => {
+            if (frame >= totalFrames) {
+              c.innerText = original;
+              c.dataset.scrambling = "false";
+              return;
+            }
+            if (frame % Math.max(1, Math.floor(1 / speed)) === 0) {
+               c.innerText = scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+            }
+            frame++;
+            requestAnimationFrame(scramble);
+          };
+          
+          requestAnimationFrame(scramble);
         }
       });
     };
 
-    const el = rootRef.current;
     el.addEventListener("pointermove", handleMove);
 
     return () => {
       el.removeEventListener("pointermove", handleMove);
-      split.revert();
     };
-  }, [radius, duration, speed, scrambleChars]);
+  }, [radius, duration, speed, scrambleChars, text]);
 
   return (
     <div
@@ -77,7 +77,17 @@ const ScrambledText: React.FC<ScrambledTextProps> = ({
       className={`m-[7vw] max-w-[800px] font-mono text-[clamp(14px,4vw,32px)] text-white ${className}`}
       style={style}
     >
-      <p>{children}</p>
+      <p>
+        {text.split("").map((char, i) => (
+          <span
+            key={i}
+            className="scramble-char inline-block will-change-transform"
+            data-content={char}
+          >
+            {char === " " ? "\u00A0" : char}
+          </span>
+        ))}
+      </p>
     </div>
   );
 };

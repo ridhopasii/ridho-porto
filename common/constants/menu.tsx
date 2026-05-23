@@ -3,12 +3,14 @@ import {
   BiUser as AboutIcon,
   BiCollection as ProjectIcon,
   BiCategory as DashboardIcon,
-  BiBook as ContactIcon,
+  BiBook as GuestbookIcon,
+  BiEnvelope as ContactIcon,
+  BiLink as LinksIcon,
+  BiHistory as ChangelogIcon,
+  BiBriefcase as UsesIcon,
+  BiLayer as CreationsIcon,
 } from "react-icons/bi";
-import { IoPhonePortraitOutline as ContentIcon } from "react-icons/io5";
-import { PiChatTeardropDotsBold as ChatRoomIcon } from "react-icons/pi";
 import { PiCertificate as AchievementIcon } from "react-icons/pi";
-import { VscHubot as SmartChatIcon } from "react-icons/vsc";
 
 import { MenuItemProps } from "../types/menu";
 
@@ -32,12 +34,12 @@ export const MENU_ITEMS: MenuItemProps[] = [
     eventName: "Pages: About",
   },
   {
-    title: "Contents",
-    href: "/contents",
-    icon: <ContentIcon size={iconSize} />,
+    title: "Creations",
+    href: "/creations",
+    icon: <CreationsIcon size={iconSize} />,
     isShow: true,
     isExternal: false,
-    eventName: "Pages: Contents",
+    eventName: "Pages: Creations",
   },
   {
     title: "Achievements",
@@ -64,12 +66,20 @@ export const MENU_ITEMS: MenuItemProps[] = [
     eventName: "Pages: Dashboard",
   },
   {
-    title: "Chat Room",
-    href: "/chat",
-    icon: <ChatRoomIcon size={iconSize} />,
+    title: "Guestbook",
+    href: "/guestbook",
+    icon: <GuestbookIcon size={iconSize} />,
     isShow: true,
     isExternal: false,
-    eventName: "Pages: Chat Room",
+    eventName: "Pages: Guestbook",
+  },
+  {
+    title: "Uses",
+    href: "/uses",
+    icon: <UsesIcon size={iconSize} />,
+    isShow: true,
+    isExternal: false,
+    eventName: "Pages: Uses",
   },
   {
     title: "Contact",
@@ -80,12 +90,19 @@ export const MENU_ITEMS: MenuItemProps[] = [
     eventName: "Pages: Contact",
   },
   {
-    title: "Smart Talk",
-    href: "/smart-talk",
-    icon: <SmartChatIcon size={iconSize} />,
-    isShow: false,
+    title: "Links",
+    href: "/links",
+    icon: <LinksIcon size={iconSize} />,
+    isShow: true,
     isExternal: false,
-    eventName: "Pages: Dashboard",
-    isExclusive: true,
+    eventName: "Pages: Links",
+  },
+  {
+    title: "Changelog",
+    href: "/changelog",
+    icon: <ChangelogIcon size={iconSize} />,
+    isShow: true,
+    isExternal: false,
+    eventName: "Pages: Changelog",
   },
 ];

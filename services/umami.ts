@@ -1,6 +1,29 @@
 import axios from "axios";
 import { UMAMI_ACCOUNT } from "@/common/constants/umami";
 import { UmamiResponse, UmamiDataPoint } from "@/common/types/umami";
+import { z } from "zod";
+
+const UmamiDataPointSchema = z.object({
+  x: z.string(),
+  y: z.number(),
+});
+
+const UmamiStatSchema = z.object({
+  value: z.number().default(0),
+});
+
+const UmamiWebsiteStatsSchema = z.object({
+  pageviews: UmamiStatSchema.default({ value: 0 }),
+  visitors: UmamiStatSchema.default({ value: 0 }),
+  visits: UmamiStatSchema.default({ value: 0 }),
+  countries: UmamiStatSchema.default({ value: 0 }),
+  events: UmamiStatSchema.default({ value: 0 }),
+}).passthrough();
+
+const UmamiPageviewsResponseSchema = z.object({
+  pageviews: z.array(UmamiDataPointSchema).default([]),
+  sessions: z.array(UmamiDataPointSchema).default([]),
+}).passthrough();
 
 const { api_key, endpoint, base_url, parameters, websites } = UMAMI_ACCOUNT;
 
@@ -14,7 +37,7 @@ export const getPageViewsByDataRange = async (domain: string) => {
   if (!website_id) {
     return {
       status: 404,
-      data: {},
+      data: { pageviews: [], sessions: [] },
       error: `Website not found for domain "${domain}"`,
     };
   }
@@ -30,14 +53,23 @@ export const getPageViewsByDataRange = async (domain: string) => {
       params: parameters,
     });
 
+    const parsed = UmamiPageviewsResponseSchema.safeParse(response.data);
+    if (!parsed.success) {
+      console.error("Umami Pageviews Validation Error:", parsed.error);
+      return {
+        status: response.status,
+        data: { pageviews: [], sessions: [] },
+      };
+    }
+
     return {
       status: response.status,
-      data: response.data,
+      data: parsed.data,
     };
   } catch (error: any) {
     return {
       status: error?.response?.status || 500,
-      data: {},
+      data: { pageviews: [], sessions: [] },
       error: error?.message || "Unknown error",
     };
   }
@@ -48,7 +80,13 @@ export const getWebsiteStats = async (domain: string) => {
   if (!website_id) {
     return {
       status: 404,
-      data: {},
+      data: {
+        pageviews: { value: 0 },
+        visitors: { value: 0 },
+        visits: { value: 0 },
+        countries: { value: 0 },
+        events: { value: 0 },
+      },
       error: `Website not found for domain "${domain}"`,
     };
   }
@@ -64,14 +102,35 @@ export const getWebsiteStats = async (domain: string) => {
       params: { startAt: parameters.startAt, endAt: parameters.endAt },
     });
 
+    const parsed = UmamiWebsiteStatsSchema.safeParse(response.data);
+    if (!parsed.success) {
+      console.error("Umami Stats Validation Error:", parsed.error);
+      return {
+        status: response.status,
+        data: {
+          pageviews: { value: 0 },
+          visitors: { value: 0 },
+          visits: { value: 0 },
+          countries: { value: 0 },
+          events: { value: 0 },
+        },
+      };
+    }
+
     return {
       status: response.status,
-      data: response.data,
+      data: parsed.data,
     };
   } catch (error: any) {
     return {
       status: error?.response?.status || 500,
-      data: {},
+      data: {
+        pageviews: { value: 0 },
+        visitors: { value: 0 },
+        visits: { value: 0 },
+        countries: { value: 0 },
+        events: { value: 0 },
+      },
       error: error?.message || "Unknown error",
     };
   }

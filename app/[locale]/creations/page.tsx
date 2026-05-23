@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import Container from "@/common/components/elements/Container";
 import PageHeading from "@/common/components/elements/PageHeading";
-import Tiktok from "@/modules/contents/Tiktok";
+import Creations from "@/modules/creations/Creations";
 import { METADATA } from "@/common/constants/metadata";
 
 type Props = {
@@ -19,20 +19,20 @@ export async function generateMetadata({
     title: `${t("title")} ${METADATA.exTitle}`,
     description: t("description"),
     alternates: {
-      canonical: `${process.env.DOMAIN}/${locale}/contents`,
+      canonical: `${process.env.DOMAIN}/${locale}/creations`,
     },
   };
 }
 
-const ContentsPage = async ({ params: { locale } }: Props) => {
+const CreationsPage = async ({ params: { locale } }: Props) => {
   const t = await getTranslations({ locale, namespace: "ContentsPage" });
 
   return (
     <Container data-aos="fade-up">
       <PageHeading title={t("title")} description={t("description")} />
-      <Tiktok />
+      <Creations />
     </Container>
   );
 };
 
-export default ContentsPage;
+export default CreationsPage;

@@ -77,6 +77,42 @@ export async function getValidAccessToken() {
   return record.access_token;
 }
 
+import { z } from "zod";
+
+const TiktokProfileSchema = z.object({
+  avatar_large_url: z.string().or(z.string().default("")),
+  follower_count: z.number().default(0),
+  following_count: z.number().default(0),
+  profile_deep_link: z.string().or(z.string().default("")),
+  username: z.string().default(""),
+  bio_description: z.string().default(""),
+  display_name: z.string().default(""),
+  likes_count: z.number().default(0),
+  video_count: z.number().default(0),
+}).passthrough();
+
+const TiktokVideoItemSchema = z.object({
+  comment_count: z.number().default(0),
+  cover_image_url: z.string().or(z.string().default("")),
+  embed_html: z.string().default(""),
+  embed_link: z.string().default(""),
+  height: z.number().default(0),
+  share_count: z.number().default(0),
+  share_url: z.string().or(z.string().default("")),
+  width: z.number().default(0),
+  create_time: z.number().default(0),
+  id: z.string(),
+  like_count: z.number().default(0),
+  title: z.string().default(""),
+  view_count: z.number().default(0),
+}).passthrough();
+
+const TiktokVideosResponseSchema = z.object({
+  videos: z.array(TiktokVideoItemSchema).default([]),
+  has_more: z.boolean().default(false),
+  cursor: z.number().default(0),
+}).passthrough();
+
 export async function getTikTokProfile() {
   const token = await getValidAccessToken();
 
@@ -87,7 +123,16 @@ export async function getTikTokProfile() {
     },
   );
 
-  return response.data.data?.user || null;
+  const userData = response.data?.data?.user;
+  if (!userData) return null;
+
+  const parsed = TiktokProfileSchema.safeParse(userData);
+  if (!parsed.success) {
+    console.error("TikTok Profile Validation Error:", parsed.error);
+    return null;
+  }
+
+  return parsed.data;
 }
 
 export async function getTikTokVideos(
@@ -107,5 +152,11 @@ export async function getTikTokVideos(
     },
   );
 
-  return response.data.data || { videos: [], has_more: false, cursor: 0 };
+  const parsed = TiktokVideosResponseSchema.safeParse(response.data?.data);
+  if (!parsed.success) {
+    console.error("TikTok Videos Validation Error:", parsed.error);
+    return { videos: [], has_more: false, cursor: 0 };
+  }
+
+  return parsed.data;
 }

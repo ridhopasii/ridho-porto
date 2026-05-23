@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
-import { gsap } from "gsap";
+import { animate, AnimationPlaybackControls } from "framer-motion";
 
 import "@/common/styles/MagicBento.css";
 
@@ -104,7 +104,7 @@ const ParticleCard: React.FC<{
   const isHoveredRef = useRef(false);
   const memoizedParticles = useRef<HTMLDivElement[]>([]);
   const particlesInitialized = useRef(false);
-  const magnetismAnimationRef = useRef<gsap.core.Tween | null>(null);
+  const magnetismAnimationRef = useRef<AnimationPlaybackControls | null>(null);
 
   const initializeParticles = useCallback(() => {
     if (particlesInitialized.current || !cardRef.current) return;
@@ -123,18 +123,20 @@ const ParticleCard: React.FC<{
   const clearAllParticles = useCallback(() => {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
-    magnetismAnimationRef.current?.kill();
+    magnetismAnimationRef.current?.stop();
 
     particlesRef.current.forEach((particle) => {
-      gsap.to(particle, {
-        scale: 0,
-        opacity: 0,
-        duration: 0.3,
-        ease: "back.in(1.7)",
-        onComplete: () => {
-          particle.parentNode?.removeChild(particle);
-        },
-      });
+      animate(
+        particle,
+        { scale: 0, opacity: 0 },
+        {
+          duration: 0.3,
+          ease: "backIn",
+          onComplete: () => {
+            particle.parentNode?.removeChild(particle);
+          },
+        }
+      );
     });
     particlesRef.current = [];
   }, []);
@@ -154,29 +156,40 @@ const ParticleCard: React.FC<{
         cardRef.current.appendChild(clone);
         particlesRef.current.push(clone);
 
-        gsap.fromTo(
+        clone.style.transform = "scale(0)";
+        clone.style.opacity = "0";
+
+        animate(
           clone,
-          { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)" },
+          { scale: 1, opacity: 1 },
+          { duration: 0.3, ease: "backOut" }
         );
 
-        gsap.to(clone, {
-          x: (Math.random() - 0.5) * 100,
-          y: (Math.random() - 0.5) * 100,
-          rotation: Math.random() * 360,
-          duration: 2 + Math.random() * 2,
-          ease: "none",
-          repeat: -1,
-          yoyo: true,
-        });
+        animate(
+          clone,
+          {
+            x: (Math.random() - 0.5) * 100,
+            y: (Math.random() - 0.5) * 100,
+            rotate: Math.random() * 360,
+          },
+          {
+            duration: 2 + Math.random() * 2,
+            ease: "linear",
+            repeat: Infinity,
+            repeatType: "mirror",
+          }
+        );
 
-        gsap.to(clone, {
-          opacity: 0.3,
-          duration: 1.5,
-          ease: "power2.inOut",
-          repeat: -1,
-          yoyo: true,
-        });
+        animate(
+          clone,
+          { opacity: 0.3 },
+          {
+            duration: 1.5,
+            ease: "easeInOut",
+            repeat: Infinity,
+            repeatType: "mirror",
+          }
+        );
       }, index * 100);
 
       timeoutsRef.current.push(timeoutId);
@@ -193,13 +206,11 @@ const ParticleCard: React.FC<{
       animateParticles();
 
       if (enableTilt) {
-        gsap.to(element, {
-          rotateX: 5,
-          rotateY: 5,
-          duration: 0.3,
-          ease: "power2.out",
-          transformPerspective: 1000,
-        });
+        animate(
+          element,
+          { rotateX: 5, rotateY: 5, transformPerspective: 1000 } as any,
+          { duration: 0.3, ease: "easeOut" }
+        );
       }
     };
 
@@ -208,21 +219,19 @@ const ParticleCard: React.FC<{
       clearAllParticles();
 
       if (enableTilt) {
-        gsap.to(element, {
-          rotateX: 0,
-          rotateY: 0,
-          duration: 0.3,
-          ease: "power2.out",
-        });
+        animate(
+          element,
+          { rotateX: 0, rotateY: 0 } as any,
+          { duration: 0.3, ease: "easeOut" }
+        );
       }
 
       if (enableMagnetism) {
-        gsap.to(element, {
-          x: 0,
-          y: 0,
-          duration: 0.3,
-          ease: "power2.out",
-        });
+        animate(
+          element,
+          { x: 0, y: 0 } as any,
+          { duration: 0.3, ease: "easeOut" }
+        );
       }
     };
 
@@ -239,25 +248,22 @@ const ParticleCard: React.FC<{
         const rotateX = ((y - centerY) / centerY) * -10;
         const rotateY = ((x - centerX) / centerX) * 10;
 
-        gsap.to(element, {
-          rotateX,
-          rotateY,
-          duration: 0.1,
-          ease: "power2.out",
-          transformPerspective: 1000,
-        });
+        animate(
+          element,
+          { rotateX, rotateY, transformPerspective: 1000 } as any,
+          { duration: 0.1, ease: "easeOut" }
+        );
       }
 
       if (enableMagnetism) {
         const magnetX = (x - centerX) * 0.05;
         const magnetY = (y - centerY) * 0.05;
 
-        magnetismAnimationRef.current = gsap.to(element, {
-          x: magnetX,
-          y: magnetY,
-          duration: 0.3,
-          ease: "power2.out",
-        });
+        magnetismAnimationRef.current = animate(
+          element,
+          { x: magnetX, y: magnetY } as any,
+          { duration: 0.3, ease: "easeOut" }
+        );
       }
     };
 
@@ -290,19 +296,17 @@ const ParticleCard: React.FC<{
 
       element.appendChild(ripple);
 
-      gsap.fromTo(
+      ripple.style.transform = "scale(0)";
+      ripple.style.opacity = "1";
+
+      animate(
         ripple,
+        { scale: 1, opacity: 0 },
         {
-          scale: 0,
-          opacity: 1,
-        },
-        {
-          scale: 1,
-          opacity: 0,
           duration: 0.8,
-          ease: "power2.out",
+          ease: "easeOut",
           onComplete: () => ripple.remove(),
-        },
+        }
       );
     };
 
@@ -399,11 +403,11 @@ const GlobalSpotlight: React.FC<{
       const cards = gridRef.current.querySelectorAll(".card");
 
       if (!mouseInside) {
-        gsap.to(spotlightRef.current, {
-          opacity: 0,
-          duration: 0.3,
-          ease: "power2.out",
-        });
+        animate(
+          spotlightRef.current,
+          { opacity: 0 },
+          { duration: 0.3, ease: "easeOut" }
+        );
         cards.forEach((card) => {
           (card as HTMLElement).style.setProperty("--glow-intensity", "0");
         });
@@ -443,12 +447,11 @@ const GlobalSpotlight: React.FC<{
         );
       });
 
-      gsap.to(spotlightRef.current, {
-        left: e.clientX,
-        top: e.clientY,
-        duration: 0.1,
-        ease: "power2.out",
-      });
+      animate(
+        spotlightRef.current,
+        { left: e.clientX, top: e.clientY },
+        { duration: 0.1, ease: "easeOut" }
+      );
 
       const targetOpacity =
         minDistance <= proximity
@@ -457,11 +460,11 @@ const GlobalSpotlight: React.FC<{
             ? ((fadeDistance - minDistance) / (fadeDistance - proximity)) * 0.8
             : 0;
 
-      gsap.to(spotlightRef.current, {
-        opacity: targetOpacity,
-        duration: targetOpacity > 0 ? 0.2 : 0.5,
-        ease: "power2.out",
-      });
+      animate(
+        spotlightRef.current,
+        { opacity: targetOpacity },
+        { duration: targetOpacity > 0 ? 0.2 : 0.5, ease: "easeOut" }
+      );
     };
 
     const handleMouseLeave = () => {
@@ -470,11 +473,11 @@ const GlobalSpotlight: React.FC<{
         (card as HTMLElement).style.setProperty("--glow-intensity", "0");
       });
       if (spotlightRef.current) {
-        gsap.to(spotlightRef.current, {
-          opacity: 0,
-          duration: 0.3,
-          ease: "power2.out",
-        });
+        animate(
+          spotlightRef.current,
+          { opacity: 0 },
+          { duration: 0.3, ease: "easeOut" }
+        );
       }
     };
 
@@ -621,25 +624,22 @@ const MagicBento: React.FC<BentoProps> = ({
                       const rotateX = ((y - centerY) / centerY) * -10;
                       const rotateY = ((x - centerX) / centerX) * 10;
 
-                      gsap.to(el, {
-                        rotateX,
-                        rotateY,
-                        duration: 0.1,
-                        ease: "power2.out",
-                        transformPerspective: 1000,
-                      });
+                      animate(
+                        el,
+                        { rotateX, rotateY, transformPerspective: 1000 } as any,
+                        { duration: 0.1, ease: "easeOut" }
+                      );
                     }
 
                     if (enableMagnetism) {
                       const magnetX = (x - centerX) * 0.05;
                       const magnetY = (y - centerY) * 0.05;
 
-                      gsap.to(el, {
-                        x: magnetX,
-                        y: magnetY,
-                        duration: 0.3,
-                        ease: "power2.out",
-                      });
+                      animate(
+                        el,
+                        { x: magnetX, y: magnetY } as any,
+                        { duration: 0.3, ease: "easeOut" }
+                      );
                     }
                   };
 
@@ -647,21 +647,19 @@ const MagicBento: React.FC<BentoProps> = ({
                     if (shouldDisableAnimations) return;
 
                     if (enableTilt) {
-                      gsap.to(el, {
-                        rotateX: 0,
-                        rotateY: 0,
-                        duration: 0.3,
-                        ease: "power2.out",
-                      });
+                      animate(
+                        el,
+                        { rotateX: 0, rotateY: 0 } as any,
+                        { duration: 0.3, ease: "easeOut" }
+                      );
                     }
 
                     if (enableMagnetism) {
-                      gsap.to(el, {
-                        x: 0,
-                        y: 0,
-                        duration: 0.3,
-                        ease: "power2.out",
-                      });
+                      animate(
+                        el,
+                        { x: 0, y: 0 } as any,
+                        { duration: 0.3, ease: "easeOut" }
+                      );
                     }
                   };
 
@@ -694,19 +692,17 @@ const MagicBento: React.FC<BentoProps> = ({
 
                     el.appendChild(ripple);
 
-                    gsap.fromTo(
+                    ripple.style.transform = "scale(0)";
+                    ripple.style.opacity = "1";
+
+                    animate(
                       ripple,
+                      { scale: 1, opacity: 0 },
                       {
-                        scale: 0,
-                        opacity: 1,
-                      },
-                      {
-                        scale: 1,
-                        opacity: 0,
                         duration: 0.8,
-                        ease: "power2.out",
+                        ease: "easeOut",
                         onComplete: () => ripple.remove(),
-                      },
+                      }
                     );
                   };
 
