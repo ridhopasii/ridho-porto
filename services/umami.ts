@@ -150,17 +150,23 @@ const mergeData = (allResults: UmamiResponse[]): UmamiResponse => {
   };
 
   allResults.forEach((result) => {
-    combined.websiteStats.pageviews.value +=
-      result.websiteStats.pageviews.value;
-    combined.websiteStats.visitors.value += result.websiteStats.visitors.value;
-    combined.websiteStats.visits.value += result.websiteStats.visits.value;
-    combined.websiteStats.events.value += result.websiteStats.events.value;
-    combined.websiteStats.countries.value = Math.max(
-      combined.websiteStats.countries.value,
-      result.websiteStats.countries.value,
-    );
+    if (result?.websiteStats) {
+      combined.websiteStats.pageviews.value +=
+        result.websiteStats.pageviews?.value ?? 0;
+      combined.websiteStats.visitors.value +=
+        result.websiteStats.visitors?.value ?? 0;
+      combined.websiteStats.visits.value +=
+        result.websiteStats.visits?.value ?? 0;
+      combined.websiteStats.events.value +=
+        result.websiteStats.events?.value ?? 0;
+      combined.websiteStats.countries.value = Math.max(
+        combined.websiteStats.countries.value,
+        result.websiteStats.countries?.value ?? 0,
+      );
+    }
 
     const mergeChart = (target: UmamiDataPoint[], source: UmamiDataPoint[]) => {
+      if (!source) return;
       source.forEach((item) => {
         const existing = target.find((p) => p.x === item.x);
         if (existing) existing.y += item.y;
@@ -168,8 +174,8 @@ const mergeData = (allResults: UmamiResponse[]): UmamiResponse => {
       });
     };
 
-    mergeChart(combined.pageviews, result.pageviews);
-    mergeChart(combined.sessions, result.sessions);
+    mergeChart(combined.pageviews, result?.pageviews || []);
+    mergeChart(combined.sessions, result?.sessions || []);
   });
 
   combined.pageviews.sort(
