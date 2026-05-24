@@ -35,6 +35,7 @@ const Image = (props: ImageProps) => {
         "overflow-hidden",
         isLoading ? "animate-pulse" : "",
         rounded,
+        props.fill ? "relative w-full h-full" : "",
       )}
     >
       <NextImage
