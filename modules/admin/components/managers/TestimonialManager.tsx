@@ -23,8 +23,15 @@ export default function TestimonialManager() {
 
   const fetchData = async () => {
     setLoading(true);
-    const { data } = await supabase.from("Testimonial").select("*").order("id", { ascending: false });
-    if (data) setItems(data);
+    try {
+      const res = await fetch("/api/admin/testimonials");
+      if (res.ok) {
+        const data = await res.json();
+        setItems(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
     setLoading(false);
   };
 

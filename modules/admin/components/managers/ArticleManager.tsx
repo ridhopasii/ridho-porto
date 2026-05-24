@@ -23,8 +23,15 @@ export default function ArticleManager() {
 
   const fetchData = async () => {
     setLoading(true);
-    const { data } = await supabase.from("Article").select("*").order("createdAt", { ascending: false });
-    if (data) setItems(data);
+    try {
+      const res = await fetch("/api/admin/articles");
+      if (res.ok) {
+        const data = await res.json();
+        setItems(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
     setLoading(false);
   };
 
