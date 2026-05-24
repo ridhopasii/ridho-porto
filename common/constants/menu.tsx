@@ -10,6 +10,7 @@ import {
   BiBriefcase as UsesIcon,
   BiLayer as CreationsIcon,
   BiMessageSquareDetail as SmartTalkIcon,
+  BiBookOpen as BlogIcon,
 } from "react-icons/bi";
 import { PiCertificate as AchievementIcon } from "react-icons/pi";
 
@@ -57,6 +58,14 @@ export const MENU_ITEMS: MenuItemProps[] = [
     isShow: true,
     isExternal: false,
     eventName: "Pages: Projects",
+  },
+  {
+    title: "Blog",
+    href: "/blog",
+    icon: <BlogIcon size={iconSize} />,
+    isShow: true,
+    isExternal: false,
+    eventName: "Pages: Blog",
   },
   {
     title: "Dashboard",

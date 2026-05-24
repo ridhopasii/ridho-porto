@@ -1,9 +1,11 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { MdVerified as VerifiedIcon } from "react-icons/md";
+import useSWR from "swr";
 
 import useIsMobile from "@/hooks/useIsMobile";
 import { useMenu } from "@/common/stores/menu";
+import { fetcher } from "@/services/fetcher";
 
 import ThemeToggle from "./sidebar/ThemeToggle";
 import MobileMenuButton from "./sidebar/MobileMenuButton";
@@ -11,10 +13,16 @@ import MobileMenu from "./sidebar/MobileMenu";
 import Tooltip from "../elements/Tooltip";
 import Image from "../elements/Image";
 
+const DEFAULT_AVATAR = "https://i.pinimg.com/736x/87/84/f1/8784f1837e28bbaefae93c7d63259160.jpg";
+
 const MobileHeader = () => {
   const isMobile = useIsMobile();
   const { isOpen, toggleMenu } = useMenu();
   const imageSize = isMobile ? 40 : 100;
+
+  const { data } = useSWR("/api/profile", fetcher);
+  const avatarUrl = data?.avatarUrl || DEFAULT_AVATAR;
+  const fullName = data?.fullName || "Ridho Robbi Pasi";
 
   return (
     <div className="flex flex-col rounded-b-md px-4 py-4 shadow-sm lg:hidden">
@@ -26,8 +34,8 @@ const MobileHeader = () => {
         >
           <div className="z-10 w-max rounded-full border-2 border-white shadow-md dark:border-neutral-800">
             <Image
-              src={"/images/satria.jpg"}
-              alt="profile"
+              src={avatarUrl}
+              alt={fullName}
               width={isOpen ? 80 : imageSize * 0.9}
               height={isOpen ? 80 : imageSize * 0.9}
               rounded="rounded-full"
@@ -36,7 +44,7 @@ const MobileHeader = () => {
           <div className="mt-1 flex items-center gap-2">
             <Link href="/" passHref>
               <h2 className="flex-grow whitespace-nowrap text-lg font-medium lg:text-xl">
-                Satria Bahari
+                {fullName}
               </h2>
             </Link>
             <Tooltip title="Verified">

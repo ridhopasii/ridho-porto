@@ -15,6 +15,9 @@ import {
 } from "react-icons/bs";
 import { HiOutlineExternalLink } from "react-icons/hi";
 
+import useSWR from "swr";
+import { fetcher } from "@/services/fetcher";
+
 import RotatingText from "@/common/components/elements/RotatingText";
 
 const socialLinks = [
@@ -37,6 +40,11 @@ const socialLinks = [
 
 const HeroSection = () => {
   const t = useTranslations("HomePage");
+  const { data: profile } = useSWR("/api/profile", fetcher);
+
+  const avatarUrl = profile?.avatarUrl || "https://i.pinimg.com/736x/87/84/f1/8784f1837e28bbaefae93c7d63259160.jpg";
+  const fullName = profile?.fullName || "Ridho Robbi Pasi";
+  const location = profile?.location || "Aceh, Indonesia";
 
   return (
     <section className="space-y-8">
@@ -46,7 +54,7 @@ const HeroSection = () => {
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <h3 className="text-2xl font-semibold tracking-tight">
-                Ridho Robbi Pasi
+                {fullName}
               </h3>
               <VerifiedIcon size={18} className="text-blue-400" />
             </div>
@@ -57,8 +65,8 @@ const HeroSection = () => {
           <div className="flex-shrink-0">
             <div className="relative w-[72px] h-[72px]">
               <Image
-                src="https://i.pinimg.com/736x/87/84/f1/8784f1837e28bbaefae93c7d63259160.jpg"
-                alt="Ridho Robbi Pasi"
+                src={avatarUrl}
+                alt={fullName}
                 fill
                 className="rounded-full object-cover border-2 border-neutral-200 dark:border-neutral-700"
               />
@@ -69,7 +77,7 @@ const HeroSection = () => {
         {/* Mobile Location + Status */}
         <div className="flex items-center gap-2 mt-3 text-sm text-neutral-600 dark:text-neutral-400">
           <LocationIcon size={15} />
-          <span>Aceh, Indonesia 🇮🇩</span>
+          <span>{location}</span>
           <span className="mx-1 text-neutral-300 dark:text-neutral-700">·</span>
           <span className="flex items-center gap-1.5">
             <motion.span

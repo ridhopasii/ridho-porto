@@ -1,3 +1,5 @@
+"use client";
+
 import { HTMLProps, useEffect, useRef } from "react";
 import { animate, AnimationPlaybackControls } from "framer-motion";
 

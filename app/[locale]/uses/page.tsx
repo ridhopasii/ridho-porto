@@ -1,9 +1,10 @@
 import Container from "@/common/components/elements/Container";
 import PageHeading from "@/common/components/elements/PageHeading";
 import { supabaseServer } from "@/common/libs/supabase-server";
+import { METADATA } from "@/common/constants/metadata";
 
 export const metadata = {
-  title: "Uses - Satria Bahari",
+  title: `Uses ${METADATA.exTitle}`,
 };
 
 export const revalidate = 60; // ISR cache every 60s

@@ -14,9 +14,10 @@ const Image = (props: ImageProps) => {
 
   // Normalize image source to prevent Next.js image parsing errors
   let validSrc = src;
+  const DEFAULT_AVATAR = "https://i.pinimg.com/736x/87/84/f1/8784f1837e28bbaefae93c7d63259160.jpg";
   if (typeof src === "string") {
     if (!src) {
-      validSrc = "/images/satria.jpg";
+      validSrc = DEFAULT_AVATAR;
     } else if (
       !src.startsWith("/") &&
       !src.startsWith("http://") &&
@@ -26,7 +27,7 @@ const Image = (props: ImageProps) => {
       validSrc = `/${src}`;
     }
   } else if (!src) {
-    validSrc = "/images/satria.jpg";
+    validSrc = DEFAULT_AVATAR;
   }
 
   return (

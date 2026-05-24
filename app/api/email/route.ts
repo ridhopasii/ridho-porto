@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 import * as nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
+import { getProfileData } from "@/services/profile";
 
 export const POST = async (request: Request) => {
   try {
@@ -13,6 +14,10 @@ export const POST = async (request: Request) => {
         { status: 400 },
       );
     }
+
+    const profile = await getProfileData();
+    const targetEmail = profile?.email || process.env.NODEMAILER_EMAIL || "satriaaxel7703@gmail.com";
+    const ownerName = profile?.fullName || "Ridho Robbi Pasi";
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -43,7 +48,7 @@ export const POST = async (request: Request) => {
         </div>
 
         <footer style="margin-top: 30px; font-size: 12px; color: #aaa; text-align: center;">
-          Pesan ini dikirim via sistem otomatis Portfolio Satria.
+          Pesan ini dikirim via sistem otomatis Portfolio ${ownerName}.
         </footer>
       </div>
     `;
@@ -51,7 +56,7 @@ export const POST = async (request: Request) => {
     await transporter.sendMail({
       from: `"${name}" <${process.env.NODEMAILER_EMAIL}>`,
       replyTo: email,
-      to: "satriaaxel7703@gmail.com",
+      to: targetEmail,
       subject: `🚀 Contact Form: ${name}`,
       text: `${message} | Dikirim oleh: ${email}`,
       html: htmlTemplate,

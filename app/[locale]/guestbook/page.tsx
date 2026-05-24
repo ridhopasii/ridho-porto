@@ -3,8 +3,10 @@ import PageHeading from "@/common/components/elements/PageHeading";
 import Guestbook from "@/modules/guestbook/components/Guestbook";
 import { supabaseServer } from "@/common/libs/supabase-server";
 
+import { METADATA } from "@/common/constants/metadata";
+
 export const metadata = {
-  title: "Guestbook - Satria Bahari",
+  title: `Guestbook ${METADATA.exTitle}`,
 };
 
 export const revalidate = 60; // ISR cache every 60s

@@ -68,6 +68,18 @@
     "error": "Terjadi kesalahan pada server.",
     "no_data": "Proyek tidak tersedia."
   },
+  "BlogPage": {
+    "title": "Blog",
+    "description": "Opini, tutorial, panduan, dan wawasan teknologi dari perjalanan koding saya.",
+    "search_placeholder": "Cari artikel...",
+    "all_categories": "Semua Kategori",
+    "no_results": "Artikel tidak ditemukan.",
+    "back_button": "Kembali ke Blog",
+    "read_time": "menit baca",
+    "error": "Gagal memuat daftar artikel.",
+    "no_data": "Belum ada artikel yang diterbitkan.",
+    "related_posts": "Artikel Terkait"
+  },
   "DashboardPage": {
     "title": "Dasbor",
     "description": "Dasbor pribadi saya yang dibangun dengan rute API Next.js, memvisualisasikan statistik pengembangan dan kontribusi secara real-time.",
@@ -225,6 +237,7 @@
     "Contents": "Konten",
     "Achievements": "Pencapaian",
     "Projects": "Proyek",
+    "Blog": "Blog",
     "Dashboard": "Dasbor",
     "Guestbook": "Buku Tamu",
     "Uses": "Peralatan",

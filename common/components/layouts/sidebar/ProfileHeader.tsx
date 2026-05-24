@@ -1,10 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { MdVerified as VerifiedIcon } from "react-icons/md";
+import useSWR from "swr";
 
 import ThemeToggle from "./ThemeToggle";
 import IntlToggle from "./IntlToggle";
 import Tooltip from "../../elements/Tooltip";
 import Image from "../../elements/Image";
+import { fetcher } from "@/services/fetcher";
 
 import cn from "@/common/libs/clsxm";
 
@@ -13,7 +17,14 @@ interface ProfileHeaderProps {
   imageSize: number;
 }
 
+const DEFAULT_AVATAR = "https://i.pinimg.com/736x/87/84/f1/8784f1837e28bbaefae93c7d63259160.jpg";
+
 const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
+  const { data } = useSWR("/api/profile", fetcher);
+  
+  const avatarUrl = data?.avatarUrl || DEFAULT_AVATAR;
+  const fullName = data?.fullName || "Ridho Robbi Pasi";
+
   return (
     <div
       className={cn(
@@ -22,10 +33,10 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
       )}
     >
       <Image
-        src={"https://i.pinimg.com/736x/87/84/f1/8784f1837e28bbaefae93c7d63259160.jpg"}
+        src={avatarUrl}
         width={expandMenu ? 80 : imageSize * 1}
         height={expandMenu ? 80 : imageSize * 1}
-        alt="Ridho Robbi Pasi"
+        alt={fullName}
         className="border-2 border-neutral-400 dark:border-neutral-600 lg:hover:scale-105"
         rounded="rounded-full"
       />
@@ -33,7 +44,7 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
       <div className="mt-1 flex items-center gap-2 lg:mt-4">
         <Link href="/" passHref>
           <h2 className="flex-grow text-lg font-medium lg:text-xl">
-            Ridho Robbi Pasi
+            {fullName}
           </h2>
         </Link>
 
@@ -55,3 +66,4 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
 };
 
 export default ProfileHeader;
+

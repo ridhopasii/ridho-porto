@@ -2,10 +2,12 @@ import Image from "next/image";
 import { differenceInDays, format } from "date-fns";
 import { motion, Variants } from "framer-motion";
 import { useTranslations } from "next-intl";
+import useSWR from "swr";
 
 import Tooltip from "@/common/components/elements/Tooltip";
 import SpotlightCard from "@/common/components/elements/SpotlightCard";
 import { MonkeytypeData } from "@/common/types/monkeytype";
+import { fetcher } from "@/services/fetcher";
 
 interface ProfileProps {
   data: MonkeytypeData;
@@ -15,6 +17,8 @@ interface ItemProps {
   label?: string;
   value?: number | string;
 }
+
+const DEFAULT_AVATAR = "https://i.pinimg.com/736x/87/84/f1/8784f1837e28bbaefae93c7d63259160.jpg";
 
 const Item = ({ label, value }: ItemProps) => (
   <div className="flex flex-col items-center">
@@ -27,6 +31,10 @@ const Item = ({ label, value }: ItemProps) => (
 
 const Profile = ({ data }: ProfileProps) => {
   const t = useTranslations("DashboardPage.monkeytype");
+  const { data: profile } = useSWR("/api/profile", fetcher);
+
+  const avatarUrl = profile?.avatarUrl || DEFAULT_AVATAR;
+  const fullName = profile?.fullName || "Ridho Robbi Pasi";
 
   if (!data || !data.typingStats) {
     return null;
@@ -93,10 +101,10 @@ const Profile = ({ data }: ProfileProps) => {
         <div className="flex gap-x-4">
           <div className="flex items-center">
             <Image
-              src={"/images/satria.jpg"}
+              src={avatarUrl}
               width={80}
               height={80}
-              alt="Satria Bahari"
+              alt={fullName}
               className="rounded-full border-2 border-neutral-400 transition-all duration-300 dark:border-neutral-600 lg:hover:scale-105"
             />
           </div>

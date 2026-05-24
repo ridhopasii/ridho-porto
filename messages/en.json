@@ -68,6 +68,18 @@
     "error": "An error occurred on the server.",
     "no_data": "No data available."
   },
+  "BlogPage": {
+    "title": "Blog",
+    "description": "Thoughts, tutorials, guides, and tech insights from my coding journey.",
+    "search_placeholder": "Search articles...",
+    "all_categories": "All Categories",
+    "no_results": "No articles found matching your query.",
+    "back_button": "Back to Blog",
+    "read_time": "min read",
+    "error": "An error occurred while loading articles.",
+    "no_data": "No articles published yet.",
+    "related_posts": "Related Posts"
+  },
   "DashboardPage": {
     "title": "Dashboard",
     "description": "My personal dashboard built with Next.js API routes, visualizing development statistics and contributions in real-time.",
@@ -225,6 +237,7 @@
     "Contents": "Contents",
     "Achievements": "Achievements",
     "Projects": "Projects",
+    "Blog": "Blog",
     "Dashboard": "Dashboard",
     "Guestbook": "Guestbook",
     "Uses": "Uses",
