@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import Container from "@/common/components/elements/Container";
 import PageHeading from "@/common/components/elements/PageHeading";
 import AdminDashboard from "@/modules/admin/components/AdminDashboard";
+import AdminLogin from "@/modules/admin/components/AdminLogin";
+import { checkAdminAuth } from "@/common/libs/adminAuth";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Ridho",
@@ -10,10 +12,12 @@ export const metadata: Metadata = {
 };
 
 const AdminPage = () => {
+  const isAuthenticated = checkAdminAuth();
+
   return (
     <Container data-aos="fade-up">
       <PageHeading title="Admin" description="Manage your content and images." />
-      <AdminDashboard />
+      {isAuthenticated ? <AdminDashboard /> : <AdminLogin />}
     </Container>
   );
 };
