@@ -185,6 +185,10 @@
         "title": "Join the Fun",
         "description": "Watch engaging and fun content."
       },
+      "facebook": {
+        "title": "Let's be Friends",
+        "description": "Connect with me on Facebook."
+      },
       "github": {
         "title": "Explore the Code",
         "description": "Explore my open-source work."

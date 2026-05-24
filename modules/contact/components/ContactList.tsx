@@ -25,7 +25,7 @@ const ContactList = async () => {
             key={media.title} 
             title={media.title} 
             description={media.description} 
-            name={media.name} 
+            name={media.name || media.platform?.toLowerCase()} 
             href={media.url} 
             icon={<DynamicIcon name={media.icon} />}
             backgroundColor={media.background_color}
