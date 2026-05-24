@@ -1,6 +1,7 @@
 import NextTopLoader from "nextjs-toploader";
 import Script from "next/script";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/common/libs/auth";
 import { Analytics } from "@vercel/analytics/react";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -62,7 +63,7 @@ const RootLayout = async ({
   setRequestLocale(locale);
 
   const messages = await getMessages();
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
 
   return (
     <html lang={locale} suppressHydrationWarning={true}>
