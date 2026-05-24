@@ -1,7 +1,12 @@
 import { Metadata } from "next";
-import AdminDashboard from "@/modules/admin/components/AdminDashboard";
-import AdminLogin from "@/modules/admin/components/AdminLogin";
+import dynamic from "next/dynamic";
 import { checkAdminAuth } from "@/common/libs/adminAuth";
+import AdminLogin from "@/modules/admin/components/AdminLogin";
+
+const AdminDashboard = dynamic(
+  () => import("@/modules/admin/components/AdminDashboard"),
+  { ssr: false }
+);
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Ridho",
