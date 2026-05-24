@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import ImageUploader from "./ImageUploader";
 
 interface AwardFormModalProps {
   award?: any;
@@ -112,8 +113,12 @@ export default function AwardFormModal({ award, onClose, onSuccess }: AwardFormM
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Certificate URL</label>
-              <input name="certificateUrl" value={formData.certificateUrl} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
+              <ImageUploader 
+                label="Certificate Image"
+                value={formData.certificateUrl} 
+                onChange={(url) => setFormData({...formData, certificateUrl: url})} 
+                path="awards"
+              />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Proof URL</label>

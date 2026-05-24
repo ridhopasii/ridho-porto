@@ -1,19 +1,40 @@
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
-import { SOCIAL_MEDIA } from "@/common/constants/socialMedia";
+import { supabaseServer } from "@/common/libs/supabase-server";
 
 import ContactCard from "./ContactCard";
+import DynamicIcon from "@/common/components/DynamicIcon";
 
-const ContactList = () => {
-  const filteredSocialMedia = SOCIAL_MEDIA?.filter((social) => social?.isShow);
-  const t = useTranslations("ContactPage");
+const ContactList = async () => {
+  const t = await getTranslations("ContactPage");
+
+  const { data: socialMedia } = await supabaseServer
+    .from("Social")
+    .select("*")
+    .eq("is_show", true)
+    .order("id", { ascending: true });
+
+  const filteredSocialMedia = socialMedia || [];
 
   return (
     <div className="flex flex-col space-y-4">
       <h2>{t("social_media.title")}</h2>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {filteredSocialMedia.map((media) => (
-          <ContactCard key={media.title} {...media} />
+          <ContactCard 
+            key={media.title} 
+            title={media.title} 
+            description={media.description} 
+            name={media.name} 
+            href={media.url} 
+            icon={<DynamicIcon name={media.icon} />}
+            backgroundColor={media.background_color}
+            textColor={media.text_color}
+            borderColor={media.border_color}
+            backgroundGradientColor={media.background_gradient_color}
+            colSpan={media.col_span}
+            isShow={media.is_show}
+          />
         ))}
       </div>
     </div>

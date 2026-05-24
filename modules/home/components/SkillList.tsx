@@ -1,22 +1,22 @@
 import { BiCodeAlt as SkillsIcon } from "react-icons/bi";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 import SectionHeading from "@/common/components/elements/SectionHeading";
 import SectionSubHeading from "@/common/components/elements/SectionSubHeading";
 import GlassIcon from "@/common/components/elements/GlassIcon";
-import { STACKS } from "@/common/constants/stacks";
+import DynamicIcon from "@/common/components/DynamicIcon";
+import { supabaseServer } from "@/common/libs/supabase-server";
 
-const SkillList = () => {
-  const t = useTranslations("HomePage");
+const SkillList = async () => {
+  const t = await getTranslations("HomePage");
 
-  const stacksInArray: Array<
-    [string, { icon: JSX.Element; background: string }]
-  > = Object.entries(STACKS)
-    .filter(([, value]) => value.isActive)
-    .map(([name, value]) => [
-      name,
-      { icon: value.icon, background: value.background },
-    ]);
+  const { data: skills } = await supabaseServer
+    .from("Skill")
+    .select("*")
+    .eq("showOnHome", true)
+    .order("name", { ascending: true });
+
+  const stacksInArray = skills || [];
 
   return (
     <section className="space-y-6">
@@ -28,12 +28,12 @@ const SkillList = () => {
       </div>
 
       <div className="grid w-full grid-cols-6 gap-x-[1em] gap-y-[2.7em] py-2 md:grid-cols-10 lg:grid-cols-11">
-        {stacksInArray.map(([name, { icon, background }], index) => (
+        {stacksInArray.map((skill, index) => (
           <GlassIcon
             key={index}
-            name={name}
-            icon={icon}
-            background={background}
+            name={skill.name}
+            icon={<DynamicIcon name={skill.icon} />}
+            background={skill.background}
           />
         ))}
       </div>

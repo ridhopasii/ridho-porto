@@ -1,3 +1,4 @@
+import React from "react";
 import {
   BsGithub as GithubIcon,
   BsInstagram as InstagramIcon,

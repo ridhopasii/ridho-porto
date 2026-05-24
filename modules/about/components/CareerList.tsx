@@ -1,18 +1,22 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { HiOutlineBriefcase as CareerIcon } from "react-icons/hi";
 
 import SectionHeading from "@/common/components/elements/SectionHeading";
 import SectionSubHeading from "@/common/components/elements/SectionSubHeading";
-import { CAREERS } from "@/common/constants/carreers";
+import { supabaseServer } from "@/common/libs/supabase-server";
 
 import CareerCard from "./CareerCard";
 
-const CareerList = () => {
-  const t = useTranslations("AboutPage.career");
+const CareerList = async () => {
+  const t = await getTranslations("AboutPage.career");
 
-  const filteredCareers = CAREERS?.filter((career) => career.isShow);
+  const { data: careers } = await supabaseServer
+    .from("Experience")
+    .select("*")
+    .eq("showOnHome", true)
+    .order("start_date", { ascending: false });
+
+  const filteredCareers = careers || [];
 
   return (
     <section className="space-y-6">
@@ -24,7 +28,7 @@ const CareerList = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-4">
-        {filteredCareers?.map((career, index) => (
+        {filteredCareers.map((career, index) => (
           <CareerCard key={index} indexCareer={index} {...career} />
         ))}
       </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import ImageUploader from "./ImageUploader";
 
 interface ProjectFormModalProps {
   project?: any;
@@ -22,6 +23,7 @@ export default function ProjectFormModal({ project, onClose, onSuccess }: Projec
     repoUrl: project?.repoUrl || "",
     showOnHome: project?.showOnHome ?? true,
     featured: project?.featured ?? false,
+    imageUrl: project?.imageUrl || "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -107,6 +109,15 @@ export default function ProjectFormModal({ project, onClose, onSuccess }: Projec
               <label className="block text-sm font-medium mb-1">Repo URL</label>
               <input name="repoUrl" value={formData.repoUrl} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
             </div>
+          </div>
+
+          <div>
+            <ImageUploader 
+              label="Project Thumbnail"
+              value={formData.imageUrl} 
+              onChange={(url) => setFormData({...formData, imageUrl: url})} 
+              path="projects"
+            />
           </div>
 
           <div className="flex gap-6 mt-4">

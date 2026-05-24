@@ -1,3 +1,4 @@
+import React from "react";
 import { BiLogoPostgresql } from "react-icons/bi";
 import { BsFillBootstrapFill, BsRobot } from "react-icons/bs";
 import { TbBeach, TbBrandFramerMotion } from "react-icons/tb";
