@@ -12,6 +12,23 @@ const Image = (props: ImageProps) => {
   const { alt, src, className, rounded, ...rest } = props;
   const [isLoading, setLoading] = useState(true);
 
+  // Normalize image source to prevent Next.js image parsing errors
+  let validSrc = src;
+  if (typeof src === "string") {
+    if (!src) {
+      validSrc = "/images/satria.jpg";
+    } else if (
+      !src.startsWith("/") &&
+      !src.startsWith("http://") &&
+      !src.startsWith("https://") &&
+      !src.startsWith("data:")
+    ) {
+      validSrc = `/${src}`;
+    }
+  } else if (!src) {
+    validSrc = "/images/satria.jpg";
+  }
+
   return (
     <div
       className={clsx(
@@ -29,7 +46,7 @@ const Image = (props: ImageProps) => {
           rounded,
           className,
         )}
-        src={src}
+        src={validSrc}
         alt={alt}
         loading="lazy"
         quality={75}
