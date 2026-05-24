@@ -71,11 +71,14 @@ export async function POST(request: Request) {
     );
 
     if (!response.ok) {
-      const errText = await response.text();
-      console.error("Gemini API Error:", errText);
+      // Jika Gemini API gagal, kirimkan respons fallback yang ramah pengguna
+      console.error("Gemini API Error (fallback):", await response.text());
       return NextResponse.json(
-        { error: "Gagal berkomunikasi dengan Gemini AI." },
-        { status: 502 }
+        {
+          success: false,
+          reply: "Maaf, AI tidak tersedia saat ini. Silakan coba lagi nanti.",
+        },
+        { status: 200 }
       );
     }
 
