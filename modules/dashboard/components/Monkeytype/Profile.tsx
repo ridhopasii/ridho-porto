@@ -28,6 +28,10 @@ const Item = ({ label, value }: ItemProps) => (
 const Profile = ({ data }: ProfileProps) => {
   const t = useTranslations("DashboardPage.monkeytype");
 
+  if (!data || !data.typingStats) {
+    return null;
+  }
+
   const date = new Date(data?.addedAt);
   const endDate = new Date();
   const durationDays = differenceInDays(endDate, date);

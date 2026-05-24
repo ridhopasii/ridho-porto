@@ -82,7 +82,7 @@ const Calendar = ({ data }: CalendarProps) => {
           {weeks?.map((week) => (
             <div key={week.firstDay}>
               {week.contributionDays.map((contribution) => {
-                const colorIndex = data?.colors.indexOf(contribution.color);
+                const colorIndex = data?.colors ? data.colors.indexOf(contribution.color) : -1;
                 const customColor =
                   colorIndex !== -1 ? contributionColors[colorIndex!] : null;
 

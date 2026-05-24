@@ -11,6 +11,10 @@ interface OverviewProps {
 const Overview = ({ data }: OverviewProps) => {
   const t = useTranslations("DashboardPage.codewars");
 
+  if (!data || !data.ranks) {
+    return null;
+  }
+
   return (
     <div>
       <div className="grid grid-cols-2 gap-3 py-2 sm:grid-cols-4">

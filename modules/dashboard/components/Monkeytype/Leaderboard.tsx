@@ -17,6 +17,10 @@ interface ItemProps {
 const Leaderboard = ({ data }: LeaderboardProps) => {
   const t = useTranslations("DashboardPage.monkeytype");
 
+  if (!data || !data.allTimeLbs) {
+    return null;
+  }
+
   const datas = Object.values(data.allTimeLbs.time) || [];
 
   const Item = ({ label, value, percent }: ItemProps) => {

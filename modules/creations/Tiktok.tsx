@@ -51,7 +51,7 @@ const Tiktok = () => {
     );
   }
 
-  if (videoError) return <EmptyState message={t("error")} />;
+  if (videoError || !profile?.data) return <EmptyState message={t("error")} />;
 
   if (allVideos.length === 0) return <EmptyState message={t("no_data")} />;
 
