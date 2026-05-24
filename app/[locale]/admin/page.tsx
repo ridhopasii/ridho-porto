@@ -1,6 +1,4 @@
 import { Metadata } from "next";
-import Container from "@/common/components/elements/Container";
-import PageHeading from "@/common/components/elements/PageHeading";
 import AdminDashboard from "@/modules/admin/components/AdminDashboard";
 import AdminLogin from "@/modules/admin/components/AdminLogin";
 import { checkAdminAuth } from "@/common/libs/adminAuth";
@@ -15,10 +13,9 @@ const AdminPage = () => {
   const isAuthenticated = checkAdminAuth();
 
   return (
-    <Container data-aos="fade-up">
-      <PageHeading title="Admin" description="Manage your content and images." />
+    <>
       {isAuthenticated ? <AdminDashboard /> : <AdminLogin />}
-    </Container>
+    </>
   );
 };
 

@@ -17,6 +17,11 @@ const Layouts = ({ children }: LayoutsProps) => {
   const pathname = usePathname();
 
   const isShowChatButton = pathname !== "/chat";
+  const isAdminPage = pathname.endsWith("/admin");
+
+  if (isAdminPage) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="mx-auto max-w-7xl lg:px-12">
