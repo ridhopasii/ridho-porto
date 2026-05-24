@@ -9,9 +9,10 @@ interface ImageUploaderProps {
   value?: string;
   onChange: (url: string) => void;
   label?: string;
+  path?: string;
 }
 
-export default function ImageUploader({ value, onChange, label = "Upload Image" }: ImageUploaderProps) {
+export default function ImageUploader({ value, onChange, label = "Upload Image", path = "uploads" }: ImageUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -21,6 +22,7 @@ export default function ImageUploader({ value, onChange, label = "Upload Image" 
 
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("path", path);
 
     setUploading(true);
     const toastId = toast.loading("Converting & Uploading...");

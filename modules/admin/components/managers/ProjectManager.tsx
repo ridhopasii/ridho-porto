@@ -107,7 +107,7 @@ export default function ProjectManager() {
                 {project.imageUrl && (
                   <img src={project.imageUrl} alt={project.title} className="w-full h-32 object-cover rounded-md mb-3" />
                 )}
-                <ImageUploader onUploadSuccess={(url) => handleUpdateImage(project.id, url)} />
+                <ImageUploader onChange={(url) => handleUpdateImage(project.id, url)} path="projects" />
               </div>
             </div>
           ))}

@@ -70,7 +70,7 @@ export default function ServiceManager() {
                 {item.icon?.startsWith("http") || item.icon?.startsWith("/") ? (
                   <img src={item.icon} alt={item.title} className="w-8 h-8 object-contain" />
                 ) : (
-                  <DynamicIcon iconName={item.icon || "HiOutlineBriefcase"} size={24} />
+                  <DynamicIcon name={item.icon || "HiOutlineBriefcase"} size={24} />
                 )}
               </div>
               <div className="flex-1">

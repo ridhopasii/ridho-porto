@@ -102,7 +102,7 @@ export default function AwardManager() {
                 {award.images && (
                   <img src={award.images} alt={award.title} className="w-full h-32 object-contain rounded-md mb-3 bg-neutral-50 dark:bg-neutral-800" />
                 )}
-                <ImageUploader onUploadSuccess={(url) => handleUpdateImage(award.id, url)} />
+                <ImageUploader onChange={(url) => handleUpdateImage(award.id, url)} path="awards" />
               </div>
             </div>
           ))}
