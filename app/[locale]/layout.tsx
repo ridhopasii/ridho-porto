@@ -3,6 +3,7 @@ import Script from "next/script";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/common/libs/auth";
 import { Analytics } from "@vercel/analytics/react";
+import { Toaster } from "react-hot-toast";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -75,6 +76,7 @@ const RootLayout = async ({
         />
       </head>
       <body className={inter.className}>
+        <Toaster position="top-center" />
         <NextTopLoader
           color="#fbe400"
           initialPosition={0.08}
