@@ -1,7 +1,7 @@
 -- Update Mobile Attendance App project to be more comprehensive and trustworthy.
 -- This script safely updates the project if it exists.
 
-UPDATE project
+UPDATE "Project"
 SET
   description = 'An internal, RFID-integrated mobile attendance ecosystem built for high reliability and real-time tracking, resolving manual data entry bottlenecks.',
   content = '### Problem Statement

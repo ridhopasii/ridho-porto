@@ -153,7 +153,7 @@ const HeroSection = ({ content }: HeroSectionProps) => {
           <h1 className="text-3xl font-bold leading-tight text-neutral-900 dark:text-neutral-50">
             {readPageContent(content, "intro", t("intro"))}
           </h1>
-          <div className="flex items-center gap-2 text-xl text-neutral-600 dark:text-neutral-400">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xl text-neutral-600 dark:text-neutral-400">
             <span className="font-light">A</span>
             <span className="overflow-hidden font-semibold text-neutral-800 dark:text-neutral-200">
               <RotatingText

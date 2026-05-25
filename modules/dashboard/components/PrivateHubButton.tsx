@@ -23,7 +23,7 @@ export default function PrivateHubButton() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 left-5 z-[60] inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/90 px-4 py-3 text-sm font-semibold text-neutral-800 shadow-lg backdrop-blur-md transition hover:-translate-y-0.5 hover:shadow-xl dark:border-neutral-800 dark:bg-neutral-950/90 dark:text-neutral-100"
+        className="fixed bottom-5 right-5 z-[60] hidden md:inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/90 px-4 py-3 text-sm font-semibold text-neutral-800 shadow-lg backdrop-blur-md transition hover:-translate-y-0.5 hover:shadow-xl dark:border-neutral-800 dark:bg-neutral-950/90 dark:text-neutral-100"
       >
         <BiLockAlt size={18} />
         Private Hub

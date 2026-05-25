@@ -23,6 +23,7 @@ const MobileHeader = () => {
   const { data } = useSWR("/api/profile", fetcher);
   const avatarUrl = data?.avatarUrl || DEFAULT_AVATAR;
   const fullName = data?.fullName || "Ridho Robbi Pasi";
+  const firstName = fullName.split(" ")[0];
 
   return (
     <div className="flex flex-col rounded-b-md px-4 py-4 shadow-sm lg:hidden">
@@ -36,20 +37,17 @@ const MobileHeader = () => {
             <Image
               src={avatarUrl}
               alt={fullName}
-              width={isOpen ? 80 : imageSize * 0.9}
-              height={isOpen ? 80 : imageSize * 0.9}
+              width={isOpen ? 80 : 36}
+              height={isOpen ? 80 : 36}
               rounded="rounded-full"
             />
           </div>
-          <div className="mt-1 flex items-center gap-2">
+          <div className="flex items-center">
             <Link href="/" passHref>
-              <h2 className="flex-grow whitespace-nowrap text-lg font-medium lg:text-xl">
-                {fullName}
+              <h2 className="whitespace-nowrap text-lg font-medium">
+                {firstName}
               </h2>
             </Link>
-            <Tooltip title="Verified">
-              <VerifiedIcon size={18} className="text-blue-400" />
-            </Tooltip>
           </div>
         </div>
         {isMobile && (

@@ -24,6 +24,19 @@ const formatDate = (dateStr: string) => {
   });
 };
 
+const getRelativeTime = (dateStr: string) => {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 3600 * 24));
+  
+  if (diffInDays === 0) return "Hari ini";
+  if (diffInDays === 1) return "Kemarin";
+  if (diffInDays < 7) return `${diffInDays} hari lalu`;
+  if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} minggu lalu`;
+  if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} bulan lalu`;
+  return `${Math.floor(diffInDays / 365)} tahun lalu`;
+};
+
 const RecentPosts = async () => {
   const { data: articles } = await supabaseServer
     .from("Article")
@@ -98,7 +111,7 @@ const RecentPosts = async () => {
               <div className="flex items-center gap-3 mt-2 text-xs text-neutral-400 dark:text-neutral-600">
                 <span className="flex items-center gap-1">
                   <BiCalendar size={12} />
-                  {article.createdAt ? formatDate(article.createdAt) : ""}
+                  {article.createdAt ? `${formatDate(article.createdAt)} • ${getRelativeTime(article.createdAt)}` : ""}
                 </span>
               </div>
             </div>

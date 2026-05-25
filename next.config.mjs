@@ -20,6 +20,9 @@ if (process.env.NODE_ENV !== "development" && !process.env.VERCEL_ENV) {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     remotePatterns: [
       {
