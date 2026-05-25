@@ -49,9 +49,9 @@ const HeroSection = ({ content }: HeroSectionProps) => {
 
   const avatarUrl =
     profile?.avatarUrl ||
-    "https://i.pinimg.com/736x/87/84/f1/8784f1837e28bbaefae93c7d63259160.jpg";
+    "https://github.com/ridhopasii.png";
   const fullName = profile?.fullName || "Ridho Robbi Pasi";
-  const location = profile?.location || "Aceh, Indonesia";
+  const location = profile?.location || "Jambi, Indonesia";
 
   return (
     <section className="space-y-8">
@@ -172,7 +172,7 @@ const HeroSection = ({ content }: HeroSectionProps) => {
                 elementLevelClassName="text-violet-500 dark:text-violet-400"
               />
             </span>
-            <span className="font-light">based in Aceh</span>
+            <span className="font-light">based in Jambi</span>
           </div>
         </div>
 

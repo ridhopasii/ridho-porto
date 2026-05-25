@@ -1,10 +1,10 @@
 {
   "HomePage": {
     "intro": "Hi, I'm Ridho Robbi Pasi",
-    "location": "Based in Aceh, Indonesia 🇮🇩",
+    "location": "Based in Jambi, Indonesia 🇮🇩",
     "location_type": "Onsite",
     "resume": {
-      "paragraph_1": "A Student in Informatics Engineering at UNIMAL passionate about Web Development, UI/UX Design, and Network Engineering.",
+      "paragraph_1": "A Student at Universitas Jambi (UNJA) passionate about Web Development, UI/UX Design, and Network Engineering.",
       "paragraph_2": "I'm always enthusiastic about learning new technologies and applying them to solve real-world problems."
     },
     "skills": {
@@ -22,7 +22,7 @@
     "title": "About",
     "description": "A brief introduction to who I am.",
     "resume": {
-      "paragraph_1": "I'm Ridho Robbi Pasi, a student in Informatics Engineering at UNIMAL. Passionate in Web Development, UI/UX Design, and Network Engineering.",
+      "paragraph_1": "I'm Ridho Robbi Pasi, a student at Universitas Jambi (UNJA). Passionate in Web Development, UI/UX Design, and Network Engineering.",
       "paragraph_2": "I'm always enthusiastic about learning new technologies and applying them to solve real-world problems.",
       "paragraph_3": "I believe that good design and architecture lead to excellent user experiences.",
       "paragraph_4": "Best regards,"

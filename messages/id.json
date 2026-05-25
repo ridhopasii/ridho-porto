@@ -1,10 +1,10 @@
 {
   "HomePage": {
     "intro": "Halo, saya Ridho Robbi Pasi",
-    "location": "Berdomisili di Aceh, Indonesia 🇮🇩",
+    "location": "Berdomisili di Jambi, Indonesia 🇮🇩",
     "location_type": "Onsite",
     "resume": {
-      "paragraph_1": "Seorang mahasiswa Teknik Informatika UNIMAL yang passionate dalam Web Development, UI/UX Design, dan Network Engineering.",
+      "paragraph_1": "Seorang mahasiswa Universitas Jambi (UNJA) yang passionate dalam Web Development, UI/UX Design, dan Network Engineering.",
       "paragraph_2": "Saya selalu antusias dalam mempelajari teknologi baru dan menerapkannya dalam memecahkan masalah nyata."
     },
     "skills": {
@@ -22,7 +22,7 @@
     "title": "Tentang",
     "description": "Pengenalan singkat mengenai siapa saya.",
     "resume": {
-      "paragraph_1": "Saya Ridho Robbi Pasi, mahasiswa Teknik Informatika UNIMAL. Passionate dalam Web Development, UI/UX Design, dan Network Engineering.",
+      "paragraph_1": "Saya Ridho Robbi Pasi, mahasiswa Universitas Jambi (UNJA). Passionate dalam Web Development, UI/UX Design, dan Network Engineering.",
       "paragraph_2": "Saya selalu antusias dalam mempelajari teknologi baru dan menerapkannya dalam memecahkan masalah nyata.",
       "paragraph_3": "Saya percaya bahwa desain dan arsitektur yang baik akan menghasilkan pengalaman pengguna yang luar biasa.",
       "paragraph_4": "Salam hangat,"

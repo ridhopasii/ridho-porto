@@ -18,7 +18,13 @@ export const getAchievementsData = async (params?: { category?: string; search?:
   if (error) throw new Error(error.message);
   if (!data) return [];
 
-  return data.map((item) => {
+  const validData = data.filter((item) => {
+    const isDummyDate = item.createdAt?.includes("2026-04");
+    const isDummyImage = !item.images || item.images.includes("placeholder");
+    return !isDummyDate && !isDummyImage;
+  });
+
+  return validData.map((item) => {
     return {
       id: item.id,
       credential_id: item.credentialId || "",

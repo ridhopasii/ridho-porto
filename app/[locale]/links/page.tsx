@@ -33,8 +33,8 @@ export default async function LinksPage({ params }: Props) {
   const defaultProfile = {
     fullName: "Ridho Robbi Pasi",
     title: "Fullstack Developer",
-    bio: "Teknik Informatika UNIMAL Student",
-    location: "Aceh, Indonesia",
+    bio: "Universitas Jambi (UNJA) Student",
+    location: "Jambi, Indonesia",
     email: "ridhorobbipasi@gmail.com",
     avatarUrl: "/images/signature.png",
     heroImage: null,
