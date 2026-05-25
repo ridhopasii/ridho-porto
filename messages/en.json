@@ -4,12 +4,12 @@
     "location": "Based in Jambi, Indonesia 🇮🇩",
     "location_type": "Onsite",
     "resume": {
-      "paragraph_1": "A Student at Universitas Jambi (UNJA) passionate about Web Development, UI/UX Design, and Network Engineering.",
-      "paragraph_2": "I'm always enthusiastic about learning new technologies and applying them to solve real-world problems."
+      "paragraph_1": "A Student at Universitas Jambi (UNJA) passionate about building scalable web applications and intuitive user experiences.",
+      "paragraph_2": "I bridge the gap between design and robust backend architecture. I specialize in creating efficient, production-ready solutions that solve real business problems—from digitalizing attendance systems to building high-conversion platforms."
     },
     "skills": {
       "title": "Skills",
-      "sub_title": "My professional skills."
+      "sub_title": "Tech Arsenal & Capabilities."
     },
     "bento": {
       "title": "Featured Sections",
@@ -22,9 +22,9 @@
     "title": "About",
     "description": "A brief introduction to who I am.",
     "resume": {
-      "paragraph_1": "I'm Ridho Robbi Pasi, a student at Universitas Jambi (UNJA). Passionate in Web Development, UI/UX Design, and Network Engineering.",
-      "paragraph_2": "I'm always enthusiastic about learning new technologies and applying them to solve real-world problems.",
-      "paragraph_3": "I believe that good design and architecture lead to excellent user experiences.",
+      "paragraph_1": "I'm Ridho Robbi Pasi, a student at Universitas Jambi (UNJA) and a developer focused on scalable architecture.",
+      "paragraph_2": "I bridge the gap between engaging UI/UX design and robust backend engineering. My focus is on building efficient, production-ready applications that solve real business problems.",
+      "paragraph_3": "Whether it is digitalizing manual workflows like attendance tracking or creating seamless corporate landing pages, I build with impact in mind.",
       "paragraph_4": "Best regards,"
     },
     "career": {

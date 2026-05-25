@@ -4,12 +4,12 @@
     "location": "Berdomisili di Jambi, Indonesia 🇮🇩",
     "location_type": "Onsite",
     "resume": {
-      "paragraph_1": "Seorang mahasiswa Universitas Jambi (UNJA) yang passionate dalam Web Development, UI/UX Design, dan Network Engineering.",
-      "paragraph_2": "Saya selalu antusias dalam mempelajari teknologi baru dan menerapkannya dalam memecahkan masalah nyata."
+      "paragraph_1": "Seorang mahasiswa Universitas Jambi (UNJA) yang passionate dalam membangun aplikasi web yang scalable dan pengalaman pengguna yang intuitif.",
+      "paragraph_2": "Saya menjembatani desain UI/UX dengan arsitektur backend yang kokoh. Fokus saya adalah menciptakan solusi yang efisien dan production-ready untuk memecahkan masalah bisnis nyata—mulai dari digitalisasi sistem absensi hingga platform konversi tinggi."
     },
     "skills": {
       "title": "Keahlian",
-      "sub_title": "Keahlian profesional saya."
+      "sub_title": "Kapasitas & Teknologi Andalan."
     },
     "bento": {
       "title": "Bagian Unggulan",
@@ -22,9 +22,9 @@
     "title": "Tentang",
     "description": "Pengenalan singkat mengenai siapa saya.",
     "resume": {
-      "paragraph_1": "Saya Ridho Robbi Pasi, mahasiswa Universitas Jambi (UNJA). Passionate dalam Web Development, UI/UX Design, dan Network Engineering.",
-      "paragraph_2": "Saya selalu antusias dalam mempelajari teknologi baru dan menerapkannya dalam memecahkan masalah nyata.",
-      "paragraph_3": "Saya percaya bahwa desain dan arsitektur yang baik akan menghasilkan pengalaman pengguna yang luar biasa.",
+      "paragraph_1": "Saya Ridho Robbi Pasi, mahasiswa Universitas Jambi (UNJA) sekaligus developer yang berfokus pada arsitektur perangkat lunak.",
+      "paragraph_2": "Saya menjembatani desain UI/UX yang menarik dengan arsitektur backend yang kokoh. Fokus utama saya adalah membangun aplikasi yang efisien untuk memecahkan masalah bisnis yang nyata.",
+      "paragraph_3": "Baik itu digitalisasi alur kerja manual seperti pelacakan absensi, atau membuat halaman promosi yang mulus, saya membangun dengan orientasi dampak.",
       "paragraph_4": "Salam hangat,"
     },
     "career": {

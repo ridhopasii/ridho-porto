@@ -158,10 +158,10 @@ const HeroSection = ({ content }: HeroSectionProps) => {
             <span className="overflow-hidden font-semibold text-neutral-800 dark:text-neutral-200">
               <RotatingText
                 texts={[
-                  "Web Developer",
-                  "UI/UX Designer",
-                  "Network Engineer",
-                  "Full-Stack Dev",
+                  "Software Engineer",
+                  "System Architect",
+                  "UI/UX Enthusiast",
+                  "Problem Solver",
                 ]}
                 mainClassName="inline-flex"
                 splitBy="characters"
