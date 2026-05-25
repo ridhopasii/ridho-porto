@@ -1,8 +1,8 @@
 import { BiCodeAlt as SkillsIcon } from "react-icons/bi";
 import { getTranslations } from "next-intl/server";
 
-import DynamicIcon from "@/common/components/DynamicIcon";
 import { supabaseServer } from "@/common/libs/supabase-server";
+import SkillsMarquee from "./SkillsMarquee";
 
 interface Skill {
   id: number;
@@ -24,6 +24,15 @@ const HomeSkills = async () => {
 
   if (stacksInArray.length === 0) return null;
 
+  // Filter out duplicates (case-insensitive name check)
+  const seen = new Set<string>();
+  const uniqueSkills = stacksInArray.filter((skill) => {
+    const nameKey = skill.name.toLowerCase().trim();
+    if (seen.has(nameKey)) return false;
+    seen.add(nameKey);
+    return true;
+  });
+
   return (
     <section className="space-y-4">
       <div>
@@ -38,22 +47,7 @@ const HomeSkills = async () => {
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {stacksInArray.map((skill, index) => (
-          <div
-            key={index}
-            title={skill.name}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 cursor-default"
-          >
-            <span className="w-4 h-4 flex items-center justify-center text-neutral-600 dark:text-neutral-400">
-              <DynamicIcon name={skill.icon} />
-            </span>
-            <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
-              {skill.name}
-            </span>
-          </div>
-        ))}
-      </div>
+      <SkillsMarquee skills={uniqueSkills} />
     </section>
   );
 };
