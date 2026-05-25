@@ -13,7 +13,7 @@ import Layouts from "@/common/components/layouts";
 import ThemeProviderContext from "@/common/stores/theme";
 import NextAuthProvider from "@/SessionProvider";
 import { METADATA } from "@/common/constants/metadata";
-import { inter } from "@/common/styles/fonts";
+import { plusJakartaSans } from "@/common/styles/fonts";
 import SkeletonThemeProvider from "@/SkeletonThemeProvider";
 import { routing } from "@/i18n/routing";
 
@@ -74,7 +74,7 @@ const RootLayout = async ({
           data-website-id="91c868c5-2a89-4a1d-b292-56c40ea30137"
         />
       </head>
-      <body className={inter.className}>
+      <body className={plusJakartaSans.className}>
         <Toaster position="top-center" />
         <NextTopLoader
           color="#fbe400"
