@@ -1,10 +1,10 @@
-  <h1>satriabahari.my.id</h1>
+  <h1>ridhorobbipasi.my.id</h1>
   <p>🔥 Personal website was built originally from scratch using Next.js, TypeScript, Tailwind CSS, SWR, Supabase and more.</p> 
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/satriabahari/satria.com)](https://github.com/satriabahari/satria.com/stargazers)
+[![GitHub Repo stars](https://img.shields.io/github/stars/ridhopasii/ridho-porto)](https://github.com/ridhopasii/ridho-porto/stargazers)
 [![Depfu](https://badges.depfu.com/badges/02483ebb21fdb2182a66a28b68d1b7b0/status.svg)](https://depfu.com)
-[![Depfu](https://badges.depfu.com/badges/02483ebb21fdb2182a66a28b68d1b7b0/overview.svg)](https://depfu.com/github/satriabahari/satria.com?project_id=38809)
-[![Depfu](https://badges.depfu.com/badges/02483ebb21fdb2182a66a28b68d1b7b0/count.svg)](https://depfu.com/github/satriabahari/satria.com?project_id=38809)
+[![Depfu](https://badges.depfu.com/badges/02483ebb21fdb2182a66a28b68d1b7b0/overview.svg)](https://depfu.com/github/ridhopasii/ridho-porto?project_id=38809)
+[![Depfu](https://badges.depfu.com/badges/02483ebb21fdb2182a66a28b68d1b7b0/count.svg)](https://depfu.com/github/ridhopasii/ridho-porto?project_id=38809)
 [![Last Update](https://img.shields.io/badge/deps%20update-every%20sunday-blue.svg)](https://shields.io/)
 
 <br/>
@@ -71,23 +71,23 @@ Follow these steps to run the project locally:
 
 Using Git:
 ```bash
-git clone https://github.com/satriabahari/satriabahari.my.id
+git clone https://github.com/ridhopasii/ridhorobbipasi.my.id
 ```
 
 Using `create-next-app`:
 ```bash
-npx create-next-app -e https://github.com/satriabahari/satriabahari.my.id project-name
+npx create-next-app -e https://github.com/ridhopasii/ridhorobbipasi.my.id project-name
 ```
 
 Using `degit`:
 ```bash
-npx degit satriabahari/satriabahari.my.id YOUR_APP_NAME
+npx degit ridhopasii/ridhorobbipasi.my.id YOUR_APP_NAME
 ```
 
 Or deploy directly to Vercel / Netlify:
 
-[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/satriabahari/satriabahari.my.id)  
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/satriabahari/satriabahari.my.id)
+[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/ridhopasii/ridhorobbipasi.my.id)  
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/ridhopasii/ridhorobbipasi.my.id)
 
 ---
 

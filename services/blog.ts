@@ -60,9 +60,10 @@ export const getArticlesData = async (): Promise<ArticleItem[]> => {
 
     const merged = [...blogRows, ...legacyRows, ...lowercaseLegacyRows];
     const articles = merged.map(mapArticleRow);
+    const validArticles = articles.filter(item => !item.createdAt?.includes("2026-04"));
 
     const bySlug = new Map<string, ArticleItem>();
-    for (const article of articles) {
+    for (const article of validArticles) {
       const key = article.slug || `article-${article.id}`;
       if (!bySlug.has(key)) {
         bySlug.set(key, article);
