@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 
-import Breakline from "@/common/components/elements/Breakline";
 import { PageContentMap } from "@/common/libs/page-content";
 
 import HeroSection from "./HeroSection";
@@ -39,8 +38,6 @@ const Home = ({ content }: HomeProps) => {
       {/* Hero / Introduction */}
       <HeroSection content={content} />
 
-      <Breakline />
-
       {/* Tech Skills */}
       <Suspense
         fallback={
@@ -60,14 +57,10 @@ const Home = ({ content }: HomeProps) => {
         <HomeSkills />
       </Suspense>
 
-      <Breakline />
-
       {/* Featured Projects */}
       <Suspense fallback={<SectionSkeleton />}>
         <FeaturedProjects />
       </Suspense>
-
-      <Breakline />
 
       {/* Recent Blog Posts */}
       <Suspense
