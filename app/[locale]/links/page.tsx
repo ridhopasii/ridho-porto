@@ -1,44 +1,54 @@
-import Container from "@/common/components/elements/Container";
-import PageHeading from "@/common/components/elements/PageHeading";
+import { getProfileData } from "@/services/profile";
 import { supabaseServer } from "@/common/libs/supabase-server";
 import { METADATA } from "@/common/constants/metadata";
+import LinksClient from "./LinksClient";
 
-export const metadata = {
-  title: `Links ${METADATA.exTitle}`,
-};
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({
+  params,
+}: Props) {
+  const { locale } = await params;
+  return {
+    title: `Links ${METADATA.exTitle}`,
+    description: "Kumpulan tautan sosial media dan portofolio saya.",
+    alternates: {
+      canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}/links`,
+    },
+  };
+}
 
 export const revalidate = 60;
 
-export default async function LinksPage() {
-  const { data: links } = await supabaseServer
-    .from("Link")
-    .select("*")
-    .order("id", { ascending: true });
+export default async function LinksPage({ params }: Props) {
+  const { locale } = await params;
+  const [profile, { data: links }] = await Promise.all([
+    getProfileData(),
+    supabaseServer
+      .from("Link")
+      .select("*")
+      .order("id", { ascending: true })
+  ]);
+
+  const defaultProfile = {
+    fullName: "Ridho Robbi Pasi",
+    title: "Fullstack Developer",
+    bio: "Teknik Informatika UNIMAL Student",
+    location: "Aceh, Indonesia",
+    email: "ridhorobbipasi@gmail.com",
+    avatarUrl: "/images/signature.png",
+    heroImage: null,
+    cvLink: null,
+    whatsappUrl: null
+  };
+
+  const finalProfile = profile || defaultProfile;
 
   return (
-    <Container data-aos="fade-up">
-      <PageHeading title="Tautan" description="Kumpulan tautan sosial media dan portofolio saya." />
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-        {links?.length === 0 ? (
-          <p className="text-neutral-500 italic">Belum ada tautan.</p>
-        ) : (
-          links?.map((link: any) => (
-            <a 
-              key={link.id} 
-              href={link.url} 
-              target="_blank" 
-              rel="noreferrer"
-              className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm hover:scale-[1.02] transition-transform flex items-center justify-between"
-            >
-              <div>
-                <h4 className="font-bold">{link.title}</h4>
-                <p className="text-sm text-neutral-500 mt-1 uppercase">{link.type}</p>
-              </div>
-              <div className="text-neutral-400">↗</div>
-            </a>
-          ))
-        )}
-      </div>
-    </Container>
+    <LinksClient
+      profile={finalProfile}
+      links={links || []}
+      locale={locale}
+    />
   );
 }

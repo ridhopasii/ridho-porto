@@ -1,13 +1,11 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 import Container from "@/common/components/elements/Container";
+import PageHeading from "@/common/components/elements/PageHeading";
 import { METADATA } from "@/common/constants/metadata";
-import { checkPrivateDashboardAuth } from "@/common/libs/privateDashboardAuth";
-import Dashboard from "@/modules/dashboard/components/Dashboard";
-import PrivateDashboardGate from "@/modules/dashboard/components/PrivateDashboardGate";
-import { getFinanceHubData } from "@/services/finance";
-import { getProductivityHubData } from "@/services/productivity";
+import DashboardPublic from "@/modules/dashboard/components/DashboardPublic";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -25,24 +23,14 @@ export async function generateMetadata({
 
 const DashboardPage = async ({ params }: Props) => {
   const { locale } = await params;
-  const isAuthenticated = await checkPrivateDashboardAuth();
-
-  if (!isAuthenticated) {
-    return <PrivateDashboardGate />;
-  }
-
-  const [productivity, finance] = await Promise.all([
-    getProductivityHubData(),
-    getFinanceHubData(),
-  ]);
+  const t = await getTranslations({ locale, namespace: "DashboardPage" });
 
   return (
-    <Container data-aos="fade-up" className="mx-auto max-w-7xl px-4 lg:px-6">
-      <Dashboard
-        locale={locale}
-        productivity={productivity}
-        finance={finance}
-      />
+    <Container data-aos="fade-up">
+      <PageHeading title={t("title")} description={t("description")} />
+      <Suspense fallback={<div className="animate-pulse space-y-8"><div className="h-40 rounded-3xl bg-neutral-100 dark:bg-neutral-900" /><div className="h-64 rounded-3xl bg-neutral-100 dark:bg-neutral-900" /></div>}>
+        <DashboardPublic />
+      </Suspense>
     </Container>
   );
 };

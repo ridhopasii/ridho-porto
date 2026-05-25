@@ -20,10 +20,10 @@ const Layouts = ({ children }: LayoutsProps) => {
   const pathname = usePathname();
 
   const isShowChatButton = pathname !== "/chat" && !pathname.endsWith("/dashboard");
-  const isAdminPage =
-    pathname.endsWith("/admin") || pathname.endsWith("/dashboard");
+  const isStandalonePage =
+    pathname.endsWith("/admin") || pathname.endsWith("/dashboard") || pathname.endsWith("/links");
 
-  if (isAdminPage) {
+  if (isStandalonePage) {
     return <LazyMotion features={domMax}>{children}</LazyMotion>;
   }
 

@@ -3,15 +3,21 @@ import Container from "@/common/components/elements/Container";
 import PageHeading from "@/common/components/elements/PageHeading";
 import { METADATA } from "@/common/constants/metadata";
 
-export const metadata: Metadata = {
-  title: `Privacy Policy ${METADATA.exTitle}`,
-  description:
-    "Privacy Policy for Ridho Robbi Pasi's Portfolio App regarding TikTok API integration",
-  keywords: "portfolio frontend developer, privacy policy, tiktok api",
-  alternates: {
-    canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/privacy-policy`,
-  },
-};
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: `Privacy Policy ${METADATA.exTitle}`,
+    description: "Privacy Policy for Ridho Robbi Pasi's Portfolio App regarding TikTok API integration",
+    keywords: "portfolio frontend developer, privacy policy, tiktok api",
+    alternates: {
+      canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}/legal/privacy-policy`,
+    },
+  };
+}
 
 const PrivacyPolicyPage = () => {
   return (
