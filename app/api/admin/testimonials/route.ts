@@ -13,7 +13,8 @@ export async function POST(req: NextRequest) {
   if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { error } = await supabaseServer.from("Testimonial").insert(body);
+  const { rating, ...insertData } = body;
+  const { error } = await supabaseServer.from("Testimonial").insert(insertData);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ success: true });
 }
@@ -22,7 +23,7 @@ export async function PUT(req: NextRequest) {
   if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { id, ...updates } = body;
+  const { id, rating, ...updates } = body;
   
   if (!id) return NextResponse.json({ error: "Missing ID" }, { status: 400 });
 
