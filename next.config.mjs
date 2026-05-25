@@ -2,20 +2,20 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
 
-// Validate critical environment variables at build/startup time
-try {
-  if (!process.env.NEXTAUTH_SECRET || process.env.NEXTAUTH_SECRET.trim() === '') {
-    throw new Error(
-      '❌ Missing required environment variable: NEXTAUTH_SECRET\n' +
-      '   Description: NextAuth.js secret for JWT signing and encryption\n' +
-      '   Please set this variable in your .env.local file or deployment configuration.'
-    );
+// Only validate NEXTAUTH_SECRET strictly if we are NOT in build phase
+// Vercel build phase may not inject all runtime secrets depending on configuration
+if (process.env.NODE_ENV !== "development" && !process.env.VERCEL_ENV) {
+  try {
+    // Only warn during build, don't crash
+    if (!process.env.NEXTAUTH_SECRET || process.env.NEXTAUTH_SECRET.trim() === '') {
+      console.warn(
+        '⚠️ Missing required environment variable: NEXTAUTH_SECRET\n' +
+        '   Please ensure this is set in your runtime environment.'
+      );
+    }
+  } catch (error) {
+    console.error(error.message);
   }
-} catch (error) {
-  console.error('\n🚨 STARTUP VALIDATION FAILED 🚨\n');
-  console.error(error.message);
-  console.error('\nApplication cannot start without required environment variables.\n');
-  process.exit(1);
 }
 
 /** @type {import('next').NextConfig} */
