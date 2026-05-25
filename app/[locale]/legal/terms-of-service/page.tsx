@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Terms of Service for Ridho Robbi Pasi's Portfolio App regarding TikTok API usage",
   keywords: "portfolio frontend developer, terms of service, tiktok api",
   alternates: {
-    canonical: `${process.env.DOMAIN}/terms-of-service`,
+    canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/terms-of-service`,
   },
 };
 

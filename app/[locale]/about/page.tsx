@@ -17,7 +17,7 @@ export async function generateMetadata({
   return {
     title: `${readPageContent(content, "title", t("title"))} ${METADATA.exTitle}`,
     description: readPageContent(content, "description", t("description")),
-    alternates: { canonical: `${process.env.DOMAIN}/${locale}/about` },
+    alternates: { canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}/about` },
   };
 }
 

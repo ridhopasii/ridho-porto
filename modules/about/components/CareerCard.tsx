@@ -25,6 +25,7 @@ const CareerCard = ({
   location,
   start_date,
   end_date,
+  period,
   link,
   type,
   location_type,
@@ -36,11 +37,24 @@ const CareerCard = ({
 
   const locale = useLocale();
 
-  const startDate = new Date(start_date);
-  const endDate = end_date ? new Date(end_date) : new Date();
+  const parseSafeDate = (dateStr: string | null | undefined): Date | null => {
+    if (!dateStr) return null;
+    if (/^\d{4}-\d{2}$/.test(dateStr)) {
+      const d = new Date(`${dateStr}-01`);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    const d = new Date(dateStr);
+    return isNaN(d.getTime()) ? null : d;
+  };
 
-  const durationYears = differenceInYears(endDate, startDate);
-  const durationMonths = differenceInMonths(endDate, startDate) % 12;
+  const parsedStartDate = parseSafeDate(start_date);
+  const parsedEndDate = parseSafeDate(end_date);
+
+  const startDate = parsedStartDate || new Date();
+  const endDate = parsedEndDate || new Date();
+
+  const durationYears = parsedStartDate ? differenceInYears(endDate, startDate) : 0;
+  const durationMonths = parsedStartDate ? (differenceInMonths(endDate, startDate) % 12) : 0;
 
   const yearText =
     locale === "en" ? `year${durationYears > 1 ? "s" : ""}` : "tahun";
@@ -48,11 +62,13 @@ const CareerCard = ({
     locale === "en" ? `Month${durationMonths > 1 ? "s" : ""}` : "bulan";
 
   let durationText = "";
-  if (durationYears > 0) {
-    durationText += `${durationYears} ${yearText} `;
-  }
-  if (durationMonths > 0 || durationYears === 0) {
-    durationText += `${durationMonths} ${monthText}`;
+  if (parsedStartDate) {
+    if (durationYears > 0) {
+      durationText += `${durationYears} ${yearText} `;
+    }
+    if (durationMonths > 0 || durationYears === 0) {
+      durationText += `${durationMonths} ${monthText}`;
+    }
   }
 
   const hideText = locale === "en" ? "Hide" : "Sembunyikan";
@@ -95,14 +111,24 @@ const CareerCard = ({
 
           <div className="flex flex-col gap-2 text-[13px] md:flex-row">
             <div className="flex gap-1 text-neutral-600 dark:text-neutral-400">
-              <span>{format(startDate, "MMM yyyy")}</span> -{" "}
-              <span>{end_date ? format(endDate, "MMM yyyy") : "Present"}</span>
+              {parsedStartDate ? (
+                <>
+                  <span>{format(startDate, "MMM yyyy")}</span> -{" "}
+                  <span>{end_date ? format(endDate, "MMM yyyy") : "Present"}</span>
+                </>
+              ) : (
+                <span>{period || ""}</span>
+              )}
             </div>
 
-            <span className="hidden text-neutral-300 dark:text-neutral-700 md:block">
-              •
-            </span>
-            <span className="text-neutral-500">{durationText}</span>
+            {parsedStartDate && (
+              <>
+                <span className="hidden text-neutral-300 dark:text-neutral-700 md:block">
+                  •
+                </span>
+                <span className="text-neutral-500">{durationText}</span>
+              </>
+            )}
 
             <span className="hidden text-neutral-300 dark:text-neutral-700 md:block">
               •

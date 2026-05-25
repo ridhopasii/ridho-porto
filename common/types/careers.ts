@@ -7,6 +7,7 @@ export interface CareerProps {
   type: string;
   start_date: string;
   end_date: string | null;
+  period?: string | null;
   industry: string;
   link: string | null;
   responsibilities?: string[];

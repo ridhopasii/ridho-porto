@@ -13,6 +13,9 @@ export const getProjectsData = async () => {
       ...item,
       image: item.imageUrl || "",
       is_featured: item.featured || false,
+      is_show: item.showOnHome ?? true,
+      link_demo: item.demoUrl || null,
+      link_github: item.repoUrl || null,
       stacks: item.tags ? item.tags.split(',').map((t: string) => t.trim()) : [],
     };
   });
@@ -34,6 +37,9 @@ export const getProjectsDataBySlug = async (slug: string) => {
     ...data,
     image: data.imageUrl || "",
     is_featured: data.featured || false,
+    is_show: data.showOnHome ?? true,
+    link_demo: data.demoUrl || null,
+    link_github: data.repoUrl || null,
     stacks: data.tags ? data.tags.split(',').map((t: string) => t.trim()) : [],
   };
 };

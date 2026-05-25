@@ -36,7 +36,7 @@ export const generateMetadata = async ({
     },
     keywords: `${article.title}, ${article.tags}`,
     alternates: {
-      canonical: `${process.env.DOMAIN}/${locale}/blog/${slug}`,
+      canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}/blog/${slug}`,
     },
   };
 };

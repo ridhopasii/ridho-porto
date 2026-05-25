@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `Resume ${METADATA.exTitle}`,
     description: "Resume dan riwayat perjalanan karir, pendidikan, serta organisasi.",
-    alternates: { canonical: `${process.env.DOMAIN}/${locale}/resume` },
+    alternates: { canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}/resume` },
   };
 }
 

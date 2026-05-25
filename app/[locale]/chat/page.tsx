@@ -15,7 +15,7 @@ export async function generateMetadata({
   return {
     title: `${t("title")} ${METADATA.exTitle}`,
     description: t("description"),
-    alternates: { canonical: `${process.env.DOMAIN}/${locale}/chat` },
+    alternates: { canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}/chat` },
   };
 }
 

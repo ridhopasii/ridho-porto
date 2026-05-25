@@ -29,7 +29,7 @@ export async function generateMetadata({
     description: t("description"),
     keywords: "software engineer achievements, certificates, ridho robbi pasi",
     alternates: {
-      canonical: `${process.env.DOMAIN}/${locale}/achievements`,
+      canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}/achievements`,
     },
   };
 }

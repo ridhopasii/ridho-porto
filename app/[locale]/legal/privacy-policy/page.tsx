@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Privacy Policy for Ridho Robbi Pasi's Portfolio App regarding TikTok API integration",
   keywords: "portfolio frontend developer, privacy policy, tiktok api",
   alternates: {
-    canonical: `${process.env.DOMAIN}/privacy-policy`,
+    canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/privacy-policy`,
   },
 };
 

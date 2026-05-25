@@ -27,7 +27,7 @@ export async function generateMetadata({
       t("resume.paragraph_1"),
     ),
     alternates: {
-      canonical: `${process.env.DOMAIN}/${locale}`,
+      canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}`,
     },
     openGraph: {
       title: `${METADATA.creator} | Personal Website`,
@@ -36,7 +36,7 @@ export async function generateMetadata({
         "resume.paragraph_1",
         t("resume.paragraph_1"),
       ),
-      url: `${process.env.DOMAIN}/${locale}`,
+      url: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}`,
       siteName: METADATA.openGraph.siteName,
       locale: locale === "id" ? "id_ID" : "en_US",
       type: "website",

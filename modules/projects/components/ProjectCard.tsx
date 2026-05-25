@@ -53,6 +53,7 @@ const ProjectCard = ({
           <div className="flex flex-wrap items-center gap-3 pt-2">
             {stacks.map((stack: string, index: number) => {
               const stackData = STACKS[stack];
+              if (!stackData) return null;
 
               return (
                 <div key={index} className={`${stackData.color}`}>

@@ -4,13 +4,13 @@ export const METADATA = {
   keyword: "ridho, ridho robbi pasi",
   authors: {
     name: "Ridho Robbi Pasi",
-    url: process.env.DOMAIN,
+    url: (process.env.DOMAIN || "https://ridhorobbipasi.my.id"),
   },
   openGraph: {
-    url: process.env.DOMAIN,
+    url: (process.env.DOMAIN || "https://ridhorobbipasi.my.id"),
     siteName: "Ridho Robbi Pasi",
     locale: "id-ID",
   },
   exTitle: "| Ridho Robbi Pasi",
-  profile: "https://i.pinimg.com/736x/87/84/f1/8784f1837e28bbaefae93c7d63259160.jpg",
+  profile: "https://github.com/ridhopasii.png",
 };

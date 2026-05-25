@@ -39,7 +39,12 @@ import {
   SiZod,
   SiShadcnui,
   SiAxios,
+  SiExpo,
+  SiStripe,
+  SiLeaflet,
+  SiCanva,
 } from "react-icons/si";
+import { DiPhotoshop, DiIllustrator } from "react-icons/di";
 import { RiShieldKeyholeFill } from "react-icons/ri";
 
 export type SkillProps = {
@@ -304,6 +309,66 @@ export const STACKS: SkillProps = {
     icon: <SiGithub size={iconSize} />,
     background: "bg-slate-800",
     color: "text-neutral-50",
+    isActive: true,
+  },
+  React: {
+    icon: <SiReact size={iconSize} />,
+    background: "bg-cyan-400",
+    color: "text-cyan-400",
+    isActive: true,
+  },
+  "React Native": {
+    icon: <SiReact size={iconSize} />,
+    background: "bg-sky-500",
+    color: "text-sky-500",
+    isActive: true,
+  },
+  Expo: {
+    icon: <SiExpo size={iconSize} />,
+    background: "bg-neutral-900",
+    color: "text-neutral-900",
+    isActive: true,
+  },
+  Stripe: {
+    icon: <SiStripe size={iconSize} />,
+    background: "bg-indigo-600",
+    color: "text-indigo-600",
+    isActive: true,
+  },
+  Leaflet: {
+    icon: <SiLeaflet size={iconSize} />,
+    background: "bg-emerald-600",
+    color: "text-emerald-600",
+    isActive: true,
+  },
+  Photoshop: {
+    icon: <DiPhotoshop size={iconSize} />,
+    background: "bg-blue-800",
+    color: "text-blue-800",
+    isActive: true,
+  },
+  Canva: {
+    icon: <SiCanva size={iconSize} />,
+    background: "bg-teal-500",
+    color: "text-teal-500",
+    isActive: true,
+  },
+  Illustrator: {
+    icon: <DiIllustrator size={iconSize} />,
+    background: "bg-amber-600",
+    color: "text-amber-600",
+    isActive: true,
+  },
+  PostgreSQL: {
+    icon: <BiLogoPostgresql size={iconSize} />,
+    background: "bg-blue-500",
+    color: "text-blue-500",
+    isActive: true,
+  },
+  MySQL: {
+    icon: <SiMysql size={iconSize} />,
+    background: "bg-cyan-700",
+    color: "text-cyan-700",
     isActive: true,
   },
 };
