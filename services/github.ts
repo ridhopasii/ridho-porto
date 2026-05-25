@@ -57,8 +57,12 @@ const GITHUB_USER_QUERY = `query($username: String!) {
   }
 }`;
 
-const fetchGithubData = async (username: string, token: string) => {
+const fetchGithubData = async (username: string, token: string | undefined) => {
   try {
+    if (!token && process.env.NODE_ENV !== "test") {
+      console.warn("GitHub API: No token provided.");
+      return null;
+    }
     const response = await axios.post(
       GITHUB_USER_ENDPOINT,
       {
@@ -84,7 +88,8 @@ const fetchGithubData = async (username: string, token: string) => {
 };
 
 const getCachedGithubData = unstable_cache(
-  async (username: string, token: string) => fetchGithubData(username, token),
+  async (username: string, token: string | undefined) =>
+    fetchGithubData(username, token),
   ["github-stats-cache-key"],
   {
     revalidate: 3600,
@@ -95,7 +100,7 @@ const getCachedGithubData = unstable_cache(
 export const getGithubData = async () => {
   const { username, token } = GITHUB_ACCOUNTS;
 
-  if (!username || !token) {
+  if (!username) {
     return { status: 500, data: null };
   }
 

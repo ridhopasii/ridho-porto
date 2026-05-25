@@ -10,10 +10,7 @@ import { loadMdxFiles } from "@/common/libs/mdx";
 import { getProjectsDataBySlug } from "@/services/projects";
 
 interface ProjectDetailPageProps {
-  params: {
-    slug: string;
-    locale: string;
-  };
+  params: Promise<{ slug: string; locale: string; }>;
 }
 
 const getProjectDetail = async (slug: string): Promise<ProjectItem> => {
@@ -27,8 +24,8 @@ const getProjectDetail = async (slug: string): Promise<ProjectItem> => {
 export const generateMetadata = async ({
   params,
 }: ProjectDetailPageProps): Promise<Metadata> => {
-  const project = await getProjectDetail(params?.slug);
-  const locale = params.locale || "en";
+  const { slug, locale } = await params;
+  const project = await getProjectDetail(slug);
 
   return {
     title: `${project.title} ${METADATA.exTitle}`,
@@ -43,13 +40,14 @@ export const generateMetadata = async ({
     },
     keywords: project.title,
     alternates: {
-      canonical: `${process.env.DOMAIN}/${locale}/projects/${params.slug}`,
+      canonical: `${process.env.DOMAIN}/${locale}/projects/${slug}`,
     },
   };
 };
 
 const ProjectDetailPage = async ({ params }: ProjectDetailPageProps) => {
-  const data = await getProjectDetail(params?.slug);
+  const { slug } = await params;
+  const data = await getProjectDetail(slug);
 
   return (
     <Container data-aos="fade-up">

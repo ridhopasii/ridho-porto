@@ -1,10 +1,11 @@
+import React from 'react';
 export type SocialMediaProps = {
   title: string;
   description?: string;
   name: string;
   href: string;
-  icon: JSX.Element;
-  backgroundIcon?: JSX.Element;
+  icon: React.ReactNode;
+  backgroundIcon?: React.ReactNode;
   isShow?: boolean;
   isExternal?: boolean;
   backgroundColor?: string;

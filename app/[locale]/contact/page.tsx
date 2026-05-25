@@ -5,11 +5,12 @@ import PageHeading from "@/common/components/elements/PageHeading";
 import Contact from "@/modules/contact";
 import { METADATA } from "@/common/constants/metadata";
 
-type Props = { params: { locale: string } };
+type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: Props): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "ContactPage" });
   return {
     title: `${t("title")} ${METADATA.exTitle}`,
@@ -18,7 +19,8 @@ export async function generateMetadata({
   };
 }
 
-const ContactPage = async ({ params: { locale } }: Props) => {
+const ContactPage = async ({ params }: Props) => {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "ContactPage" });
   return (
     <Container data-aos="fade-up">

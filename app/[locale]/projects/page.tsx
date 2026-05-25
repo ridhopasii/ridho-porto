@@ -9,12 +9,13 @@ import { METADATA } from "@/common/constants/metadata";
 import { getProjectsData } from "@/services/projects";
 
 interface ProjectsPageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: ProjectsPageProps): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "ProjectsPage" });
 
   return {
@@ -27,7 +28,8 @@ export async function generateMetadata({
   };
 }
 
-const ProjectsPage = async ({ params: { locale } }: ProjectsPageProps) => {
+const ProjectsPage = async ({ params }: ProjectsPageProps) => {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "ProjectsPage" });
   const projects = await getProjectsData();
 

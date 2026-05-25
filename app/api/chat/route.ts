@@ -3,7 +3,7 @@ import { createClient } from "@/common/utils/server";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {
-  const supabase = createClient();
+  const supabase = await createClient();
   try {
     const { data } = await supabase.from("messages").select();
     return NextResponse.json(data, { status: 200 });
@@ -16,7 +16,7 @@ export const GET = async () => {
 };
 
 export const POST = async (req: Request) => {
-  const supabase = createClient();
+  const supabase = await createClient();
   try {
     const body = await req.json();
     await supabase.from("messages").insert([body]);

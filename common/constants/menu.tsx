@@ -11,6 +11,8 @@ import {
   BiLayer as CreationsIcon,
   BiMessageSquareDetail as SmartTalkIcon,
   BiBookOpen as BlogIcon,
+  BiTrendingUp as ProductivityIcon,
+  BiWallet as FinanceIcon,
 } from "react-icons/bi";
 import { PiCertificate as AchievementIcon } from "react-icons/pi";
 
@@ -28,8 +30,8 @@ export const MENU_ITEMS: MenuItemProps[] = [
     eventName: "Pages: Home",
   },
   {
-    title: "About",
-    href: "/about",
+    title: "Resume",
+    href: "/resume",
     icon: <AboutIcon size={iconSize} />,
     isShow: true,
     isExternal: false,
@@ -82,6 +84,22 @@ export const MENU_ITEMS: MenuItemProps[] = [
     isShow: true,
     isExternal: false,
     eventName: "Pages: Guestbook",
+  },
+  {
+    title: "Produktif",
+    href: "/produktif",
+    icon: <ProductivityIcon size={iconSize} />,
+    isShow: true,
+    isExternal: false,
+    eventName: "Pages: Produktif",
+  },
+  {
+    title: "Financial",
+    href: "/financial",
+    icon: <FinanceIcon size={iconSize} />,
+    isShow: true,
+    isExternal: false,
+    eventName: "Pages: Financial",
   },
   {
     title: "Uses",

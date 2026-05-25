@@ -1,10 +1,11 @@
+import React from 'react';
 export type ServiceProps = {
   color: string;
   title: string;
   description: string;
   label: string;
   children: React.ReactNode;
-  icon?: JSX.Element;
+  icon?: React.ReactNode;
   className?: string;
   isShow?: boolean;
 };

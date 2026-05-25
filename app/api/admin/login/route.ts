@@ -1,24 +1,31 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import crypto from "crypto";
+
+import {
+  hashPassword,
+  verifyPassword,
+} from "@/common/libs/password-settings";
+import { ADMIN_PASSWORD_SETTING_KEY } from "@/common/libs/adminAuth";
 
 export async function POST(req: Request) {
   try {
     const { password } = await req.json();
-    const correctPassword = process.env.ADMIN_PASSWORD;
 
-    if (!correctPassword || password !== correctPassword) {
+    const isValid = await verifyPassword(
+      ADMIN_PASSWORD_SETTING_KEY,
+      password,
+      "ADMIN_PASSWORD",
+    );
+
+    if (!isValid) {
       return NextResponse.json({ error: "Invalid password" }, { status: 401 });
     }
 
-    // Generate hash to store in cookie
-    const token = crypto
-      .createHash("sha256")
-      .update(correctPassword + process.env.NEXTAUTH_SECRET)
-      .digest("hex");
+    const token = hashPassword(password);
+    const cookieStore = await cookies();
 
-    cookies().set("admin_token", token, {
+    cookieStore.set("admin_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",

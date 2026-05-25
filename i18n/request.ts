@@ -1,7 +1,7 @@
 import { getRequestConfig } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { routing } from "./routing";
-import { createClient } from "@/common/utils/server";
+import { createClient } from "@supabase/supabase-js";
 
 // Helper to set nested properties
 function setNestedProperty(obj: any, path: string, value: any) {
@@ -27,7 +27,10 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const dynamicMessages = JSON.parse(JSON.stringify(messages));
 
   try {
-    const supabase = createClient();
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
     // Fetch dynamic content overrides from Supabase
     const { data: pageContents } = await supabase
       .from("PageContent")

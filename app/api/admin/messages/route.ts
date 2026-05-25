@@ -9,7 +9,7 @@ const supabase = createClient(
 );
 
 export async function DELETE(req: Request) {
-  if (!checkAdminAuth()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
     const url = new URL(req.url);
     const id = url.searchParams.get("id");

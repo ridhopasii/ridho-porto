@@ -1,17 +1,18 @@
 import { cookies } from "next/headers";
-import crypto from "crypto";
 
-export function checkAdminAuth() {
-  const token = cookies().get("admin_token")?.value;
+import { getPasswordHash } from "./password-settings";
+
+export const ADMIN_PASSWORD_SETTING_KEY = "admin_password_hash";
+
+export async function checkAdminAuth() {
+  const token = (await cookies()).get("admin_token")?.value;
   if (!token) return false;
 
-  const correctPassword = process.env.ADMIN_PASSWORD;
-  if (!correctPassword) return false;
-
-  const expectedToken = crypto
-    .createHash("sha256")
-    .update(correctPassword + process.env.NEXTAUTH_SECRET)
-    .digest("hex");
+  const expectedToken = await getPasswordHash(
+    ADMIN_PASSWORD_SETTING_KEY,
+    "ADMIN_PASSWORD",
+  );
+  if (!expectedToken) return false;
 
   return token === expectedToken;
 }

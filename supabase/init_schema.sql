@@ -144,19 +144,41 @@ ALTER TABLE public."Skill" ENABLE ROW LEVEL SECURITY;
 
 -- 3. BUAT POLICY (Hak Akses)
 -- A. Semua tabel bisa DIBACA oleh siapapun (publik)
+DROP POLICY IF EXISTS "Public Read Access Profile" ON public."Profile";
 CREATE POLICY "Public Read Access Profile" ON public."Profile" FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Access Social" ON public."Social";
 CREATE POLICY "Public Read Access Social" ON public."Social" FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Access Experience" ON public."Experience";
 CREATE POLICY "Public Read Access Experience" ON public."Experience" FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Access Education" ON public."Education";
 CREATE POLICY "Public Read Access Education" ON public."Education" FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Access Organization" ON public."Organization";
 CREATE POLICY "Public Read Access Organization" ON public."Organization" FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Access Project" ON public."Project";
 CREATE POLICY "Public Read Access Project" ON public."Project" FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Access Article" ON public."Article";
 CREATE POLICY "Public Read Access Article" ON public."Article" FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Access Testimonial" ON public."Testimonial";
 CREATE POLICY "Public Read Access Testimonial" ON public."Testimonial" FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Access Message" ON public."Message";
 CREATE POLICY "Public Read Access Message" ON public."Message" FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Access SiteSettings" ON public."SiteSettings";
 CREATE POLICY "Public Read Access SiteSettings" ON public."SiteSettings" FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public Read Access Skill" ON public."Skill";
 CREATE POLICY "Public Read Access Skill" ON public."Skill" FOR SELECT USING (true);
 
 -- B. Siapapun bisa mengirim pesan (Guestbook)
+DROP POLICY IF EXISTS "Public Insert Message" ON public."Message";
 CREATE POLICY "Public Insert Message" ON public."Message" FOR INSERT TO public WITH CHECK (true);
 
 -- C. (Opsional) Jika hanya yang sudah login yang bisa INSERT/UPDATE/DELETE selain pesan:

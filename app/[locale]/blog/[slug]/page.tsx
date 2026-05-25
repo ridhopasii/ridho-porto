@@ -8,17 +8,14 @@ import { METADATA } from "@/common/constants/metadata";
 import { getArticleBySlug } from "@/services/blog";
 
 interface BlogDetailPageProps {
-  params: {
-    slug: string;
-    locale: string;
-  };
+  params: Promise<{ slug: string; locale: string; }>;
 }
 
 export const generateMetadata = async ({
   params,
 }: BlogDetailPageProps): Promise<Metadata> => {
-  const article = await getArticleBySlug(params?.slug);
-  const locale = params.locale || "en";
+  const { slug, locale } = await params;
+  const article = await getArticleBySlug(slug);
 
   if (!article || !article.published) {
     return {
@@ -39,13 +36,14 @@ export const generateMetadata = async ({
     },
     keywords: `${article.title}, ${article.tags}`,
     alternates: {
-      canonical: `${process.env.DOMAIN}/${locale}/blog/${params.slug}`,
+      canonical: `${process.env.DOMAIN}/${locale}/blog/${slug}`,
     },
   };
 };
 
 const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
-  const article = await getArticleBySlug(params?.slug);
+  const { slug } = await params;
+  const article = await getArticleBySlug(slug);
 
   if (!article || !article.published) {
     notFound();

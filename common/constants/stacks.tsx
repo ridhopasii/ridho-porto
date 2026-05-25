@@ -44,7 +44,7 @@ import { RiShieldKeyholeFill } from "react-icons/ri";
 
 export type SkillProps = {
   [key: string]: {
-    icon: JSX.Element;
+    icon: React.ReactNode;
     background: string;
     color: string;
     isActive?: boolean;

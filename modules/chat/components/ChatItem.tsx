@@ -1,7 +1,7 @@
 import Image from "next/image";
 import clsx from "clsx";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { RiUserStarLine as AuthorIcon } from "react-icons/ri";
 import { FiTrash2 as DeleteIcon } from "react-icons/fi";

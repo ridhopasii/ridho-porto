@@ -5,11 +5,11 @@ import { createClient } from "@/common/utils/server";
 
 export const DELETE = async (
   req: Request,
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) => {
-  const supabase = createClient();
+  const supabase = await createClient();
   try {
-    const id = params.slug;
+    const { slug: id } = await params;
     await supabase.from("messages").delete().eq("id", id);
     return NextResponse.json("Data saved successfully", { status: 200 });
   } catch (error) {

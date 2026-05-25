@@ -35,6 +35,10 @@
       "title": "Education",
       "sub_title": "My educational journey."
     },
+    "organization": {
+      "title": "Organization",
+      "sub_title": "My organizational and community involvement."
+    },
     "resume_download_button": "Download Resume",
     "portfolio_download_button": "Download Portfolio",
     "error": "An error occurred on the server.",
@@ -246,7 +250,8 @@
     "Links": "Links",
     "Changelog": "Changelog",
     "Smart Talk": "Smart Talk",
-    "Produktif": "Produktif"
+    "Produktif": "Produktif",
+    "Resume": "Resume"
   },
   "NotFoundPage": {
     "title": "Page not found",

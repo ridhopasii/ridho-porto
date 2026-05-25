@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { format, parseISO } from "date-fns";
-import { motion, AnimatePresence } from "framer-motion";
+import { m as motion, AnimatePresence } from "framer-motion";
 import { HiOutlineArrowSmRight as ViewIcon } from "react-icons/hi";
 import { IoClose as CloseIcon } from "react-icons/io5";
 import { AchievementItem } from "@/common/types/achievements";

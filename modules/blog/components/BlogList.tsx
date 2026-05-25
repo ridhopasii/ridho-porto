@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m as motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { BiSearch as SearchIcon, BiCalendar as CalendarIcon, BiTimeFive as TimeIcon } from "react-icons/bi";

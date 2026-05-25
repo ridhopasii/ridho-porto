@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { differenceInDays, format } from "date-fns";
-import { motion, Variants } from "framer-motion";
+import { m as motion, Variants } from "framer-motion";
 import { useTranslations } from "next-intl";
 import useSWR from "swr";
 

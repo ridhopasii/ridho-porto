@@ -9,7 +9,7 @@ const supabase = createClient(
 );
 
 export async function POST(req: Request) {
-  if (!checkAdminAuth()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const data = await req.json();
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
-  if (!checkAdminAuth()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const { id, ...data } = await req.json();
@@ -35,7 +35,7 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  if (!checkAdminAuth()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const url = new URL(req.url);

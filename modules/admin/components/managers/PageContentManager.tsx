@@ -17,7 +17,7 @@ export default function PageContentManager({ page }: Props) {
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 
   useEffect(() => {
@@ -26,7 +26,12 @@ export default function PageContentManager({ page }: Props) {
 
   const fetchData = async () => {
     setLoading(true);
-    const { data } = await supabase.from("PageContent").select("*").eq("page", page).order("locale", { ascending: true }).order("key", { ascending: true });
+    const { data } = await supabase
+      .from("PageContent")
+      .select("*")
+      .eq("page", page)
+      .order("locale", { ascending: true })
+      .order("key", { ascending: true });
     if (data) setItems(data);
     setLoading(false);
   };
@@ -34,44 +39,72 @@ export default function PageContentManager({ page }: Props) {
   return (
     <div className="space-y-6">
       {isModalOpen && (
-        <PageContentFormModal 
-          item={editingItem} 
+        <PageContentFormModal
+          item={editingItem}
           page={page}
-          onClose={() => setIsModalOpen(false)} 
-          onSuccess={() => { setIsModalOpen(false); fetchData(); }} 
+          existingKeys={items.map((item) => `${item.locale}:${item.key}`)}
+          onClose={() => setIsModalOpen(false)}
+          onSuccess={() => {
+            setIsModalOpen(false);
+            fetchData();
+          }}
         />
       )}
 
-      <div className="flex justify-between items-center">
-        <p className="text-sm text-neutral-500">Manage static text content for {page}.</p>
-        <button 
-          onClick={() => { setEditingItem(null); setIsModalOpen(true); }}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-neutral-500">
+          Manage static text content for {page}.
+        </p>
+        <button
+          onClick={() => {
+            setEditingItem(null);
+            setIsModalOpen(true);
+          }}
+          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
         >
           + Add Content Key
         </button>
       </div>
 
       {loading ? (
-        <p className="text-neutral-500 py-10 text-center">Loading data...</p>
+        <p className="py-10 text-center text-neutral-500">Loading data...</p>
       ) : (
         <div className="flex flex-col gap-4">
           {items.map((item) => (
-            <div key={item.id} className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-4 rounded-lg flex justify-between items-start gap-4 shadow-sm group">
+            <div
+              key={item.id}
+              className="group flex items-start justify-between gap-4 rounded-lg border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-900"
+            >
               <div className="w-full">
-                <div className="flex items-center gap-3 mb-2">
-                  <h4 className="font-bold text-base bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 px-2 py-0.5 rounded text-xs">{item.key}</h4>
-                  <span className="text-xs uppercase font-medium bg-neutral-200 dark:bg-neutral-800 px-2 py-0.5 rounded">{item.locale}</span>
+                <div className="mb-2 flex items-center gap-3">
+                  <h4 className="rounded bg-blue-100 px-2 py-0.5 text-base text-xs font-bold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                    {item.key}
+                  </h4>
+                  <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs font-medium uppercase dark:bg-neutral-800">
+                    {item.locale}
+                  </span>
                 </div>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap">{item.value}</p>
+                <p className="whitespace-pre-wrap text-sm text-neutral-600 dark:text-neutral-400">
+                  {item.value}
+                </p>
               </div>
-              
-              <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onClick={() => { setEditingItem(item); setIsModalOpen(true); }} className="text-xs text-blue-600 hover:underline">Edit</button>
+
+              <div className="flex flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+                <button
+                  onClick={() => {
+                    setEditingItem(item);
+                    setIsModalOpen(true);
+                  }}
+                  className="text-xs text-blue-600 hover:underline"
+                >
+                  Edit
+                </button>
               </div>
             </div>
           ))}
-          {items.length === 0 && <p className="text-neutral-500 italic">No content keys found.</p>}
+          {items.length === 0 && (
+            <p className="italic text-neutral-500">No content keys found.</p>
+          )}
         </div>
       )}
     </div>

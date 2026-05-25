@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  if (!checkAdminAuth()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
   const { error } = await supabaseServer.from("Article").insert(body);
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  if (!checkAdminAuth()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
   const { id, ...updates } = body;
@@ -33,7 +33,7 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  if (!checkAdminAuth()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");

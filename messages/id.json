@@ -35,6 +35,10 @@
       "title": "Pendidikan",
       "sub_title": "Perjalanan pendidikan saya."
     },
+    "organization": {
+      "title": "Organisasi",
+      "sub_title": "Keterlibatan saya dalam organisasi dan komunitas."
+    },
     "resume_download_button": "Unduh Resume",
     "portfolio_download_button": "Unduh Portofolio",
     "error": "Terjadi kesalahan pada server.",
@@ -246,7 +250,8 @@
     "Links": "Tautan",
     "Changelog": "Catatan Perubahan",
     "Smart Talk": "Smart Talk",
-    "Produktif": "Produktif"
+    "Produktif": "Produktif",
+    "Resume": "Resume"
   },
   "NotFoundPage": {
     "title": "Halaman tidak ditemukan",

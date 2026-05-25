@@ -1,7 +1,7 @@
-import { createClient } from "@/common/utils/server";
+import { createPublicClient } from "@/common/utils/serverPublic";
 
 export const getProjectsData = async () => {
-  const supabase = createClient();
+  const supabase = createPublicClient();
 
   let { data, error } = await supabase.from("Project").select();
 
@@ -19,7 +19,7 @@ export const getProjectsData = async () => {
 };
 
 export const getProjectsDataBySlug = async (slug: string) => {
-  const supabase = createClient();
+  const supabase = createPublicClient();
 
   let { data, error } = await supabase
     .from("Project")

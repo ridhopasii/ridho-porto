@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { FiSend as SendIcon } from "react-icons/fi";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { IoCloseCircle as CloseIcon } from "react-icons/io5";
 import { useSession } from "next-auth/react";

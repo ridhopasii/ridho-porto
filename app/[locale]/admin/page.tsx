@@ -1,12 +1,7 @@
 import { Metadata } from "next";
-import dynamic from "next/dynamic";
 import { checkAdminAuth } from "@/common/libs/adminAuth";
 import AdminLogin from "@/modules/admin/components/AdminLogin";
-
-const AdminDashboard = dynamic(
-  () => import("@/modules/admin/components/AdminDashboard"),
-  { ssr: false }
-);
+import AdminDashboard from "@/modules/admin/components/AdminDashboard";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Ridho",
@@ -14,8 +9,8 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 };
 
-const AdminPage = () => {
-  const isAuthenticated = checkAdminAuth();
+const AdminPage = async () => {
+  const isAuthenticated = await checkAdminAuth();
 
   return (
     <>

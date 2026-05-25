@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl";
 import useSWR from "swr";
 
 import Tiktok from "./Tiktok";
-import RollingGallery from "@/common/components/elements/RollingGallery";
 import { fetcher } from "@/services/fetcher";
 
 interface GalleryItem {
@@ -91,11 +90,6 @@ const Creations = () => {
       setLightboxIndex((lightboxIndex - 1 + filteredItems.length) % filteredItems.length);
     }
   };
-
-  // Extract all public image URLs for the 3D Rolling Gallery
-  const rollingImages = galleryItems
-    .map(item => item.images?.[0])
-    .filter(Boolean) as string[];
 
   return (
     <div className="space-y-6">
@@ -225,16 +219,6 @@ const Creations = () => {
 
         {activeTab === "gallery" && (
           <div className="space-y-8 animate-[fadeIn_0.5s_ease-out]">
-            {/* 3D Rotating Gallery (Only show if we have images) */}
-            {rollingImages.length > 0 && (
-              <div className="relative rounded-2xl overflow-hidden bg-neutral-900/5 dark:bg-neutral-900/40 p-4 border border-neutral-200/50 dark:border-neutral-800/50">
-                <div className="absolute top-4 left-4 z-10">
-                  <span className="text-xs font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500 bg-white/80 dark:bg-neutral-800/80 px-2.5 py-1 rounded-md shadow-sm border border-neutral-200 dark:border-neutral-700">3D Interactive</span>
-                </div>
-                <RollingGallery autoplay={true} pauseOnHover={true} images={rollingImages} />
-              </div>
-            )}
-
             {/* Category Filter Pills */}
             <div className="flex flex-wrap gap-2 items-center border-b border-neutral-200 dark:border-neutral-800 pb-4">
               {categories.map((cat) => (

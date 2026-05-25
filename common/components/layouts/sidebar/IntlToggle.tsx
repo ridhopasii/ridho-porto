@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useTransition } from "react";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 

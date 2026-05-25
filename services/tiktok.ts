@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createClient } from "@/common/utils/server";
+import { createPublicClient } from "@/common/utils/serverPublic";
 
 const CLIENT_KEY = process.env.TIKTOK_CLIENT_KEY!;
 const CLIENT_SECRET = process.env.TIKTOK_CLIENT_SECRET!;
@@ -11,7 +11,7 @@ const videoFields =
   "id,create_time,cover_image_url,share_url,height,width,title,embed_html,embed_link,like_count,comment_count,share_count,view_count";
 
 export async function getStoredToken() {
-  const supabase = createClient();
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("tiktok_tokens")
     .select("*")
@@ -23,7 +23,7 @@ export async function getStoredToken() {
 }
 
 export async function saveTikTokTokens(tokenData: any) {
-  const supabase = createClient();
+  const supabase = createPublicClient();
   const expiresAt = new Date(
     Date.now() + tokenData.expires_in * 1000,
   ).toISOString();

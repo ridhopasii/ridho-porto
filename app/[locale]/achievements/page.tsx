@@ -14,13 +14,14 @@ import {
 } from "@/services/achievements";
 
 interface AchievementsPageProps {
-  params: { locale: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: AchievementsPageProps): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "AchievementsPage" });
 
   return {
@@ -34,15 +35,17 @@ export async function generateMetadata({
 }
 
 const AchievementsPage = async ({
-  params: { locale },
+  params,
   searchParams,
 }: AchievementsPageProps) => {
+  const { locale } = await params;
+  const sp = await searchParams;
   const t = await getTranslations({ locale, namespace: "AchievementsPage" });
 
   const category =
-    typeof searchParams.category === "string" ? searchParams.category : undefined;
+    typeof sp.category === "string" ? sp.category : undefined;
   const search =
-    typeof searchParams.search === "string" ? searchParams.search : undefined;
+    typeof sp.search === "string" ? sp.search : undefined;
 
   const [achievements, categoriesData, typesData] = await Promise.all([
     getAchievementsData({ category, search }),

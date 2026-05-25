@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { m as motion, useMotionValue, useTransform } from "framer-motion";
 import { useState } from "react";
 
 import Image from "./Image";

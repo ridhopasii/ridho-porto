@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { motion, Variants } from "framer-motion";
+import { m as motion, Variants } from "framer-motion";
 
 interface ProgressProps {
   data: { name: string; percent?: number };

@@ -9,7 +9,7 @@ const supabase = createClient(
 );
 
 export async function POST(req: Request) {
-  if (!checkAdminAuth()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
     const data = await req.json();
     const { error, data: inserted } = await supabase.from("Changelog").insert([data]).select();
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
-  if (!checkAdminAuth()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
     const { id, ...data } = await req.json();
     const { error, data: updated } = await supabase.from("Changelog").update(data).eq("id", id).select();
@@ -33,7 +33,7 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  if (!checkAdminAuth()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
     const url = new URL(req.url);
     const id = url.searchParams.get("id");

@@ -1,6 +1,8 @@
+import React from 'react';
+
 export interface GlassIconProps {
   name: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
   background: string;
 }
 

@@ -5,7 +5,7 @@ import { checkAdminAuth } from "@/common/libs/adminAuth";
 
 export async function POST(req: NextRequest) {
   // Verifikasi otentikasi admin
-  if (!checkAdminAuth()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const formData = await req.formData();

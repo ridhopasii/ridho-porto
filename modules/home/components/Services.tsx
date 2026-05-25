@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { GiExtraTime as CTAIcon } from "react-icons/gi";
 import { GiTimeTrap as ServiceIcon } from "react-icons/gi";

@@ -9,12 +9,13 @@ import { METADATA } from "@/common/constants/metadata";
 import { getArticlesData } from "@/services/blog";
 
 interface BlogPageProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: BlogPageProps): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "BlogPage" });
 
   return {
@@ -27,7 +28,8 @@ export async function generateMetadata({
   };
 }
 
-const BlogPage = async ({ params: { locale } }: BlogPageProps) => {
+const BlogPage = async ({ params }: BlogPageProps) => {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "BlogPage" });
   const articles = await getArticlesData();
 

@@ -1,8 +1,10 @@
+import React from 'react';
+
 export type BentoItemProps = {
   title: string;
   description: string;
   label?: string;
-  icon?: JSX.Element;
+  icon?: React.ReactNode;
   visual?: React.ReactNode;
   href?: string;
   colSpan?: number;
