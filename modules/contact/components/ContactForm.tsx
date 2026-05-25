@@ -52,13 +52,16 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <h2>{t("form.title")}</h2>
+    <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-neutral-900 md:p-8">
+      <div className="mb-8 space-y-2">
+        <h2 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">{t("form.title")}</h2>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">Feel free to reach out to me via email or fill out the form below. I will get back to you as soon as possible.</p>
+      </div>
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
-        className="space-y-4 transition-all duration-300"
+        className="space-y-5 transition-all duration-300"
       >
-        <div className="flex w-full flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
+        <div className="flex w-full flex-col space-y-5 md:flex-row md:space-x-4 md:space-y-0">
           <InputField
             name="name"
             rule={{ required: true }}
@@ -84,13 +87,17 @@ const ContactForm = () => {
           register={register}
           error={errors}
           isTextArea
+          rows={4}
         />
         <button
           disabled={isLoading}
           type="submit"
-          className="w-full rounded-lg bg-neutral-600 px-4 py-2 text-neutral-50 shadow-md transition-all duration-300 hover:bg-neutral-700 hover:shadow-lg dark:bg-neutral-800 hover:dark:bg-neutral-700"
+          className="group relative w-full overflow-hidden rounded-xl bg-neutral-900 px-4 py-3 font-medium text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-white dark:text-black"
         >
-          {buttonText}
+          <span className="relative z-10 flex items-center justify-center gap-2">
+            {buttonText}
+          </span>
+          <div className="absolute inset-0 z-0 h-full w-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 transition-opacity duration-300 group-hover:opacity-20" />
         </button>
       </form>
     </div>

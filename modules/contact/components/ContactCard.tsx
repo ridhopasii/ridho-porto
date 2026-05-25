@@ -23,25 +23,27 @@ const ContactCard = ({
 
   return (
     <SpotlightCard
-      className={`relative grid w-full grid-cols-[2.5fr_1fr] overflow-hidden rounded-md border-2 border-neutral-300 p-6 dark:border-neutral-700 ${colSpan} ${backgroundGradientColor}`}
+      className={`relative grid w-full grid-cols-[2.5fr_1fr] overflow-hidden rounded-2xl border border-neutral-200 bg-white/50 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900/50 ${colSpan} ${backgroundGradientColor}`}
     >
       <div className="absolute -left-[3.5rem] -top-[3.5rem] rotate-45 text-neutral-50/5">
         {backgroundIcon}
       </div>
       <div
-        className={`${textColor} z-10 flex flex-col justify-between gap-y-2`}
+        className={`${textColor} z-10 flex flex-col justify-between gap-y-3`}
       >
-        <h4 className="text-lg font-semibold tracking-wide">
-          {t(`social_media.${name}.title`)}
-        </h4>
-        <p className="pb-2 text-xs">{t(`social_media.${name}.description`)}</p>
+        <div>
+          <h4 className="text-xl font-bold tracking-tight">
+            {t(`social_media.${name}.title`)}
+          </h4>
+          <p className="mt-1 text-sm opacity-80">{t(`social_media.${name}.description`)}</p>
+        </div>
         <button
-          className={`${backgroundColor} rounded-md bg-opacity-85 px-4 py-2 transition duration-300 hover:scale-105 hover:bg-opacity-100 md:w-max`}
+          className={`${backgroundColor} mt-2 rounded-xl bg-opacity-90 px-5 py-2.5 shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-opacity-100 hover:shadow-md md:w-max`}
         >
           <Link
             href={href}
             target="_blank"
-            className="flex items-center justify-center gap-x-2  text-black"
+            className="flex items-center justify-center gap-x-2 text-white"
             data-umami-event={`click_contact_${name}`}
           >
             <p className="text-sm font-medium">

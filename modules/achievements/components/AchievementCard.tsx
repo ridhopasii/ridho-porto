@@ -14,6 +14,7 @@ import Portal from "@/common/components/elements/Portal";
 import Link from "next/link";
 
 const AchievementCard = ({
+  id,
   name,
   issuing_organization,
   issue_date,
@@ -42,13 +43,13 @@ const AchievementCard = ({
   return (
     <>
       <motion.div
-        layoutId={`card-${image}`}
+        layoutId={`card-${id}`}
         onClick={() => setIsOpen(true)}
         className="h-full cursor-pointer"
       >
         <SpotlightCard className="group flex h-full flex-col overflow-hidden border border-neutral-200 dark:border-neutral-800">
           <div className="relative overflow-hidden">
-            <motion.div layoutId={`image-${image}`}>
+            <motion.div layoutId={`image-${id}`}>
               <Image
                 src={image}
                 alt={name}
@@ -113,7 +114,7 @@ const AchievementCard = ({
               />
 
               <motion.div
-                layoutId={`card-${image}`}
+                layoutId={`card-${id}`}
                 className="relative z-[10000] flex max-w-6xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-neutral-900"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -126,7 +127,7 @@ const AchievementCard = ({
 
                 <div className="flex flex-col md:flex-row">
                   <div className="w-full bg-neutral-100 dark:bg-neutral-800">
-                    <motion.div layoutId={`image-${image}`}>
+                    <motion.div layoutId={`image-${id}`}>
                       <Image
                         src={image}
                         alt={name}
