@@ -44,13 +44,16 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
       <div className="mt-1 flex items-center gap-2 lg:mt-4">
         <Link href="/" passHref>
           <h2 className="flex-grow text-lg font-medium lg:text-xl">
-            {fullName}
+            <span className="lg:hidden">{expandMenu ? fullName : fullName.split(" ")[0]}</span>
+            <span className="hidden lg:block">{fullName}</span>
           </h2>
         </Link>
 
-        <Tooltip title="Verified">
-          <VerifiedIcon size={18} className="text-blue-400" />
-        </Tooltip>
+        <div className={cn("transition-all duration-300", !expandMenu && "hidden lg:block")}>
+          <Tooltip title="Verified">
+            <VerifiedIcon size={18} className="text-blue-400" />
+          </Tooltip>
+        </div>
       </div>
 
       <div className="hidden text-sm text-neutral-600 transition-all duration-300 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-400 lg:flex">

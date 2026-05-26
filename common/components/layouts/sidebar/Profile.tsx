@@ -20,11 +20,11 @@ const Profile = () => {
 
   useEffect(() => {
     setWidth(window.innerWidth);
-    setIsMobile(window.innerWidth < 769);
+    setIsMobile(window.innerWidth < 1024);
 
     const handleResize = () => {
       setWidth(window.innerWidth);
-      setIsMobile(window.innerWidth < 769);
+      setIsMobile(window.innerWidth < 1024);
     };
 
     window.addEventListener("resize", handleResize);
@@ -64,7 +64,9 @@ const Profile = () => {
             )}
           >
             <div className="flex gap-4">
-              <IntlToggle />
+              <div className={clsx("transition-all duration-300", !isOpen && "hidden")}>
+                <IntlToggle />
+              </div>
               <ThemeToggle />
             </div>
             <MobileMenuButton expandMenu={isOpen} setExpandMenu={toggleMenu} />
