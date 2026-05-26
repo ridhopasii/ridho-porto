@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiMenu, FiX, FiSearch, FiBell, FiLogOut } from "react-icons/fi";
+
 import ProjectManager from "./managers/ProjectManager";
 import AwardManager from "./managers/AwardManager";
 import GuestbookManager from "./managers/GuestbookManager";
@@ -18,8 +21,11 @@ import ArticleManager from "./managers/ArticleManager";
 import GalleryManager from "./managers/GalleryManager";
 import TestimonialManager from "./managers/TestimonialManager";
 import ServiceManager from "./managers/ServiceManager";
+import OverviewManager from "./managers/OverviewManager";
+import ThemeToggle from "@/common/components/layouts/sidebar/ThemeToggle";
 
 type AdminTab =
+  | "overview"
   | "projects"
   | "awards"
   | "home_text"
@@ -40,7 +46,13 @@ type AdminTab =
   | "services";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<AdminTab>("projects");
+  const [activeTab, setActiveTab] = useState<AdminTab>("overview");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleLogout = async () => {
     await fetch("/api/admin/login", { method: "DELETE" });
@@ -53,6 +65,7 @@ export default function AdminDashboard() {
     icon: string;
     category?: string;
   }[] = [
+    { category: "Dashboard", id: "overview", label: "Ringkasan (Overview)", icon: "📊" },
     { category: "Portfolio", id: "projects", label: "Proyek", icon: "🚀" },
     { id: "awards", label: "Pencapaian", icon: "🏆" },
     { id: "gallery", label: "Galeri Foto", icon: "📸" },
@@ -94,6 +107,8 @@ export default function AdminDashboard() {
 
   const renderContent = () => {
     switch (activeTab) {
+      case "overview":
+        return <OverviewManager />;
       case "projects":
         return <ProjectManager />;
       case "awards":
@@ -109,7 +124,7 @@ export default function AdminDashboard() {
       case "contact":
         return <ContactManager />;
       case "home_text":
-        return <PageContentManager page="home" />;
+        return <PageContentManager page="home" /> ;
       case "about_text":
         return <PageContentManager page="about" />;
       case "education":
@@ -131,75 +146,172 @@ export default function AdminDashboard() {
       case "services":
         return <ServiceManager />;
       default:
-        return <div>Select a module</div>;
+        return <div>Pilih Modul</div>;
     }
   };
 
+  if (!isMounted) return null;
+
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-50 dark:bg-neutral-950 md:flex-row">
+    <div className="flex h-screen overflow-hidden bg-neutral-50 dark:bg-[#0a0a0a]">
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsSidebarOpen(false)}
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
-      <aside className="flex w-full flex-col border-r border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900 md:w-64">
-        <div className="border-b border-neutral-200 p-5 dark:border-neutral-800">
-          <h2 className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-xl font-bold text-transparent">
-            Master CMS
-          </h2>
-          <p className="mt-1 text-xs text-neutral-500">
-            Manage your entire portfolio
-          </p>
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-neutral-200 bg-white shadow-xl transition-transform duration-300 dark:border-neutral-800 dark:bg-[#111111] lg:static lg:translate-x-0 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between border-b border-neutral-100 p-6 dark:border-neutral-800">
+          <div>
+            <h2 className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-2xl font-bold text-transparent">
+              Master CMS
+            </h2>
+            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+              Admin Control Panel
+            </p>
+          </div>
+          <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden">
+            <FiX className="h-6 w-6 text-neutral-500" />
+          </button>
         </div>
 
-        <div className="flex-1 space-y-1 overflow-y-auto p-3">
+        <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
           {tabs.map((tab, idx) => (
             <React.Fragment key={tab.id}>
               {tab.category && (
                 <p
-                  className={`mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-neutral-400 ${idx > 0 ? "mt-4" : ""}`}
+                  className={`mb-2 px-3 text-[10px] font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 ${
+                    idx > 0 ? "mt-6" : ""
+                  }`}
                 >
                   {tab.category}
                 </p>
               )}
               <button
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  if (window.innerWidth < 1024) setIsSidebarOpen(false);
+                }}
+                className={`relative flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm transition-all duration-200 ${
                   activeTab === tab.id
-                    ? "bg-blue-50 font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
-                    : "text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+                    ? "bg-blue-50 font-semibold text-blue-600 dark:bg-blue-500/10 dark:text-blue-400"
+                    : "text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800/50"
                 }`}
               >
-                <span>{tab.icon}</span>
+                {/* Active Indicator Line */}
+                {activeTab === tab.id && (
+                  <motion.div
+                    layoutId="sidebar-active"
+                    className="absolute left-0 h-full w-1 rounded-r-full bg-blue-500"
+                  />
+                )}
+                <span className="text-lg">{tab.icon}</span>
                 {tab.label}
               </button>
             </React.Fragment>
           ))}
         </div>
 
-        <div className="border-t border-neutral-200 p-4 dark:border-neutral-800">
+        <div className="border-t border-neutral-100 p-4 dark:border-neutral-800">
           <button
             onClick={handleLogout}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600 transition-colors hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-50/50 px-4 py-3 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:bg-red-900/10 dark:hover:bg-red-900/30"
           >
-            Logout
+            <FiLogOut className="h-4 w-4" />
+            Sign Out
           </button>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto p-6 lg:p-10">
-        <div className="mx-auto max-w-6xl">
-          <header className="mb-8">
-            <h1 className="text-3xl font-bold">
-              {tabs.find((t) => t.id === activeTab)?.label}
-            </h1>
-            <p className="mt-2 text-neutral-500">
-              Manage content for this section across your website.
-            </p>
-          </header>
-
-          <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-            {renderContent()}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {/* Topbar */}
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-neutral-200 bg-white/70 px-6 backdrop-blur-md dark:border-neutral-800 dark:bg-[#0a0a0a]/70">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="rounded-lg p-2 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 lg:hidden"
+            >
+              <FiMenu className="h-6 w-6" />
+            </button>
+            
+            {/* Breadcrumb */}
+            <div className="hidden items-center gap-2 text-sm text-neutral-500 sm:flex">
+              <span>Admin</span>
+              <span className="text-neutral-300 dark:text-neutral-600">/</span>
+              <span className="font-medium text-neutral-800 dark:text-neutral-200">
+                {tabs.find((t) => t.id === activeTab)?.label}
+              </span>
+            </div>
           </div>
-        </div>
-      </main>
+
+          <div className="flex items-center gap-4">
+            {/* Fake Search */}
+            <div className="hidden items-center gap-2 rounded-full border border-neutral-200 bg-neutral-100/50 px-4 py-1.5 dark:border-neutral-800 dark:bg-neutral-900 md:flex">
+              <FiSearch className="h-4 w-4 text-neutral-400" />
+              <input 
+                type="text" 
+                placeholder="Search..." 
+                className="w-32 bg-transparent text-sm outline-none placeholder:text-neutral-400 dark:text-white"
+              />
+            </div>
+            
+            {/* Notification Bell */}
+            <button className="relative rounded-full p-2 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800">
+              <FiBell className="h-5 w-5" />
+              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-[#0a0a0a]" />
+            </button>
+
+            <ThemeToggle />
+            
+            {/* Profile Avatar */}
+            <div className="h-8 w-8 overflow-hidden rounded-full border border-neutral-200 dark:border-neutral-700">
+              <img src="/profile.webp" alt="Admin" className="h-full w-full object-cover" />
+            </div>
+          </div>
+        </header>
+
+        {/* Scrollable Content */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-10">
+          <div className="mx-auto max-w-7xl">
+            <header className="mb-8">
+              <h1 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
+                {tabs.find((t) => t.id === activeTab)?.label}
+              </h1>
+              <p className="mt-2 text-neutral-500">
+                {activeTab === "overview" 
+                  ? "Welcome back, here's what's happening today." 
+                  : "Kelola konten untuk bagian ini di website kamu."}
+              </p>
+            </header>
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="min-h-[500px]"
+              >
+                {renderContent()}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
