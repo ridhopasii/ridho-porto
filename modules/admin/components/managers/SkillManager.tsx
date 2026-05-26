@@ -75,10 +75,10 @@ export default function SkillManager() {
               </div>
 
               <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 ${item.background} ${item.color} bg-opacity-20 dark:bg-opacity-20`}>
-                <span className="text-xs font-bold">{item.icon.substring(0,2)}</span>
+                <span className="text-xs font-bold">{item.icon?.substring(0,2) || "?"}</span>
               </div>
               <h4 className="font-bold text-sm">{item.name}</h4>
-              <p className="text-xs text-neutral-500 mt-1 font-mono truncate w-full px-2" title={item.icon}>{item.icon}</p>
+              <p className="text-xs text-neutral-500 mt-1 font-mono truncate w-full px-2" title={item.icon}>{item.icon || "-"}</p>
               {!item.is_active && (
                 <span className="mt-2 text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full">Hidden</span>
               )}
