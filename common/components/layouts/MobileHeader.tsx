@@ -31,7 +31,7 @@ const MobileHeader = () => {
         className={`flex w-full justify-between ${isOpen ? "items-start" : "items-center"}`}
       >
         <div
-          className={`flex ${isOpen ? "flex-col space-y-3" : "flex-row space-x-3"}`}
+          className={`flex ${isOpen ? "flex-col space-y-3" : "flex-row space-x-3 items-center"}`}
         >
           <div className="z-10 w-max rounded-full border-2 border-white shadow-md dark:border-neutral-800">
             <Image
@@ -45,7 +45,7 @@ const MobileHeader = () => {
           <div className="flex items-center">
             <Link href="/" passHref>
               <h2 className="whitespace-nowrap text-lg font-medium">
-                {firstName}
+                {isOpen ? fullName : firstName}
               </h2>
             </Link>
           </div>
