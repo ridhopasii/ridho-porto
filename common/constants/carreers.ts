@@ -4,7 +4,7 @@ export const CAREERS: CareerProps[] = [
   {
     position: "Backend Golang Developer",
     company: "Pt. Affan Technology Indonesia (Parto.id)",
-    logo: "/images/careers/parto-id.png",
+    logo: "/images/careers/parto-id.webp",
     location: "Jambi, Indonesia 🇮🇩",
     location_type: "Hybrid",
     type: "Internship",
@@ -31,7 +31,7 @@ export const CAREERS: CareerProps[] = [
   {
     position: "Frontend Web Developer",
     company: "Pt. Eltran Indonesia",
-    logo: "/images/careers/eltran-indonesia.png",
+    logo: "/images/careers/eltran-indonesia.webp",
     location: "Bandung, Indonesia 🇮🇩",
     location_type: "Remote",
     type: "Internship",
@@ -58,7 +58,7 @@ export const CAREERS: CareerProps[] = [
     position: "Head of Technology in the Research and Technology Division",
     company:
       "Himpunan Mahasiswa Sistem Informasi Universitas Jambi (HIMASI UNJA)",
-    logo: "/images/careers/himasi-unja.jpeg",
+    logo: "/images/careers/himasi-unja.webp",
     location: "Jambi, Indonesia 🇮🇩",
     location_type: "Onsite",
     type: "Part-time",
@@ -84,7 +84,7 @@ export const CAREERS: CareerProps[] = [
   {
     position: "Mobile Development Cohort",
     company: "Bangkit Academy led by Google, Tokopedia, Gojek & Traveloka",
-    logo: "/images/careers/bangkit.png",
+    logo: "/images/careers/bangkit.webp",
     location: "Remote",
     location_type: "Remote",
     type: "Part-time",
@@ -110,7 +110,7 @@ export const CAREERS: CareerProps[] = [
   {
     position: "Mobile Developer",
     company: "Pt. Amanah Karya Indonesia (Amanah Corp)",
-    logo: "/images/careers/amanah-karya-indonesia.jpeg",
+    logo: "/images/careers/amanah-karya-indonesia.webp",
     location: "Depok, Indonesia 🇮🇩",
     location_type: "Remote",
     type: "Part-time",

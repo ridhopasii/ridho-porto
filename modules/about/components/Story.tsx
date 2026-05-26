@@ -28,7 +28,7 @@ const Story = async ({ content }: StoryProps) => {
         </div>
       ))}
       <Image
-        src="/images/signature.png"
+        src="/images/signature.webp"
         alt="signature"
         width={100}
         height={100}

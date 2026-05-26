@@ -36,7 +36,7 @@ export default async function LinksPage({ params }: Props) {
     bio: "Universitas Jambi (UNJA) Student",
     location: "Jambi, Indonesia",
     email: "ridhorobbipasi@gmail.com",
-    avatarUrl: "/images/signature.png",
+    avatarUrl: "/images/signature.webp",
     heroImage: null,
     cvLink: null,
     whatsappUrl: null

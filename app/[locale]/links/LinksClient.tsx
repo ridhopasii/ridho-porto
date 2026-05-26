@@ -193,7 +193,7 @@ export default function LinksClient({ profile, links, locale }: LinksClientProps
                 width={112}
                 height={112}
                 className="rounded-full object-cover"
-                src={profile.avatarUrl || "/images/signature.png"}
+                src={profile.avatarUrl || "/images/signature.webp"}
               />
             </motion.div>
 

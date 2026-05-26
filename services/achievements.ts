@@ -35,7 +35,7 @@ export const getAchievementsData = async (params?: { category?: string; search?:
       category: item.category || "Penghargaan",
       url_credential: item.certificateUrl || item.proofUrl || "",
       issue_date: item.createdAt || new Date().toISOString(),
-      image: item.images || "/images/achievements/placeholder.png",
+      image: item.images || "/images/achievements/placeholder.webp",
       is_show: item.showOnHome ?? true,
     };
   });
