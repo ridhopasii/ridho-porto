@@ -1,3 +1,5 @@
+"use client";
+
 import clsx from "clsx";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";

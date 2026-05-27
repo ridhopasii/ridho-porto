@@ -1,3 +1,5 @@
+"use client";
+
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FiMinimize2 as MinimizeIcon } from "react-icons/fi";

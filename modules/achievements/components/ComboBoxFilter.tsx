@@ -1,3 +1,5 @@
+"use client";
+
 import { ChangeEvent, useState, useEffect, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { LuChevronsUpDown as ArrowIcon } from "react-icons/lu";

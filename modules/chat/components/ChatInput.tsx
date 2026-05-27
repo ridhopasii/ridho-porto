@@ -1,3 +1,5 @@
+"use client";
+
 import clsx from "clsx";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { FiSend as SendIcon } from "react-icons/fi";
