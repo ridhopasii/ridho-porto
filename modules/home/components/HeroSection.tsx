@@ -127,7 +127,7 @@ const HeroSection = ({ content }: HeroSectionProps) => {
 
         {/* Mobile Social Links */}
         <div className="mt-4 flex items-center gap-3">
-          {socialLinks.map((link) => (
+          {socialLinks.map((link: any) => (
             <Link
               key={link.label}
               href={link.href}
