@@ -6,7 +6,7 @@ export const getProfileData = async () => {
     const { data, error } = await supabase
       .from("Profile")
       .select(
-        "id, fullName, title, bio, location, email, avatarUrl, heroImage, cvLink, whatsappUrl"
+        "id, fullName, title, bio, location, email, avatarUrl, heroImage, cvLink, whatsappUrl, username"
       )
       .limit(1)
       .single();
@@ -23,6 +23,7 @@ export const getProfileData = async () => {
       return {
         id: data2.id,
         fullName: data2.full_name || "Ridho Robbi Pasi",
+        username: data2.username || "@ridhopasii",
         title: data2.title || "Fullstack Developer",
         bio: data2.bio || "",
         location: data2.location || "Jambi, Indonesia",
@@ -37,6 +38,7 @@ export const getProfileData = async () => {
     return {
       id: data.id,
       fullName: (data as any).fullName || (data as any).full_name || "Ridho Robbi Pasi",
+      username: (data as any).username || "@ridhopasii",
       title: data.title || "Fullstack Developer",
       bio: data.bio || "",
       location: data.location || "Jambi, Indonesia",

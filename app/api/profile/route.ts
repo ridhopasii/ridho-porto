@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getProfileData } from "@/services/profile";
 
 const DEFAULT_AVATAR =
-  "https://github.com/ridhopasii.png";
+  "/profile.webp";
 
 export const GET = async () => {
   try {
@@ -13,6 +13,7 @@ export const GET = async () => {
       return NextResponse.json(
         {
           fullName: "Ridho Robbi Pasi",
+          username: "@ridhopasii",
           title: "Fullstack Developer",
           avatarUrl: DEFAULT_AVATAR,
           location: "Aceh, Indonesia",
@@ -24,6 +25,7 @@ export const GET = async () => {
     return NextResponse.json(
       {
         ...data,
+        username: data.username || "@ridhopasii",
         avatarUrl: data.avatarUrl || DEFAULT_AVATAR,
       },
       { status: 200 },
@@ -33,6 +35,7 @@ export const GET = async () => {
     return NextResponse.json(
       {
         fullName: "Ridho Robbi Pasi",
+        username: "@ridhopasii",
         title: "Fullstack Developer",
         avatarUrl: DEFAULT_AVATAR,
         location: "Aceh, Indonesia",

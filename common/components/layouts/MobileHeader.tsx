@@ -1,3 +1,5 @@
+"use client";
+
 import clsx from "clsx";
 import Link from "next/link";
 import { MdVerified as VerifiedIcon } from "react-icons/md";
@@ -13,7 +15,7 @@ import MobileMenu from "./sidebar/MobileMenu";
 import Tooltip from "../elements/Tooltip";
 import Image from "../elements/Image";
 
-const DEFAULT_AVATAR = "https://i.pinimg.com/736x/87/84/f1/8784f1837e28bbaefae93c7d63259160.jpg";
+const DEFAULT_AVATAR = "/profile.webp";
 
 const MobileHeader = () => {
   const isMobile = useIsMobile();

@@ -14,7 +14,7 @@ const Image = (props: ImageProps) => {
 
   // Normalize image source to prevent Next.js image parsing errors
   let validSrc = src;
-  const DEFAULT_AVATAR = "https://i.pinimg.com/736x/87/84/f1/8784f1837e28bbaefae93c7d63259160.jpg";
+  const DEFAULT_AVATAR = "/profile.webp";
   if (typeof src === "string") {
     if (!src) {
       validSrc = DEFAULT_AVATAR;

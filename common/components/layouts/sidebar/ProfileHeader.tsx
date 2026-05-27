@@ -9,6 +9,8 @@ import IntlToggle from "./IntlToggle";
 import Tooltip from "../../elements/Tooltip";
 import Image from "../../elements/Image";
 import { fetcher } from "@/services/fetcher";
+import { useEffect } from "react";
+import { createBrowserClient } from "@supabase/ssr";
 
 import cn from "@/common/libs/clsxm";
 
@@ -17,13 +19,28 @@ interface ProfileHeaderProps {
   imageSize: number;
 }
 
-const DEFAULT_AVATAR = "https://github.com/ridhopasii.png";
+const DEFAULT_AVATAR = "/profile.webp";
 
 const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
-  const { data } = useSWR("/api/profile", fetcher);
+  const { data, mutate } = useSWR("/api/profile", fetcher);
+  
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('profile-changes-header')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'Profile' }, () => mutate())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profile' }, () => mutate())
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [mutate, supabase]);
   
   const avatarUrl = data?.avatarUrl || DEFAULT_AVATAR;
   const fullName = data?.fullName || "Ridho Robbi Pasi";
+  const username = data?.username || "@ridhopasii";
 
   return (
     <div
@@ -57,7 +74,7 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
       </div>
 
       <div className="hidden text-sm text-neutral-600 transition-all duration-300 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-400 lg:flex">
-        @ridhopasii
+        {username}
       </div>
 
       <div className="hidden justify-between gap-6 lg:mt-4 lg:flex">

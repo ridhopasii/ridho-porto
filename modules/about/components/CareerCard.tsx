@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import clsx from "clsx";
-import Image from "next/image";
+import Image from "@/common/components/elements/Image";
 import { useState } from "react";
 import {
   BsListCheck as ResponsibilityIcon,

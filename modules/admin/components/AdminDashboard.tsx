@@ -20,8 +20,16 @@ import SocialManager from "./managers/SocialManager";
 import ArticleManager from "./managers/ArticleManager";
 import GalleryManager from "./managers/GalleryManager";
 import TestimonialManager from "./managers/TestimonialManager";
-import ServiceManager from "./managers/ServiceManager";
+import ProfileManager from "./managers/ProfileManager";
+import SiteSettingsManager from "./managers/SiteSettingsManager";
+import SecurityManager from "./SecurityManager";
+import FinanceManager from "./managers/FinanceManager";
+import ProductivityManager from "./managers/ProductivityManager";
+import HabitsManager from "./managers/HabitsManager";
+import PlanningManager from "./managers/PlanningManager";
+import PublicationManager from "./managers/PublicationManager";
 import OverviewManager from "./managers/OverviewManager";
+import ServiceManager from "./managers/ServiceManager";
 import ThemeToggle from "@/common/components/layouts/sidebar/ThemeToggle";
 
 type AdminTab =
@@ -43,7 +51,15 @@ type AdminTab =
   | "articles"
   | "gallery"
   | "testimonials"
-  | "services";
+  | "services"
+  | "profile"
+  | "settings"
+  | "security"
+  | "finance"
+  | "productivity"
+  | "habits"
+  | "planning"
+  | "publications";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<AdminTab>("overview");
@@ -87,6 +103,7 @@ export default function AdminDashboard() {
       label: "Blog & Artikel",
       icon: "✍️",
     },
+    { id: "publications", label: "Publikasi Eksternal", icon: "📰" },
     { id: "services", label: "Layanan (Services)", icon: "🤝" },
     { id: "home_text", label: "Beranda (Teks)", icon: "🏠" },
     { id: "about_text", label: "Tentang (Teks)", icon: "📖" },
@@ -103,6 +120,15 @@ export default function AdminDashboard() {
     { category: "Others", id: "uses", label: "Peralatan (Uses)", icon: "💻" },
     { id: "links", label: "Tautan (Links)", icon: "🔗" },
     { id: "changelog", label: "Catatan Perubahan", icon: "🔄" },
+
+    { category: "Settings & System", id: "profile", label: "Profil & Identitas", icon: "👤" },
+    { id: "settings", label: "Pengaturan Global", icon: "⚙️" },
+    { id: "security", label: "Keamanan (Security)", icon: "🔒" },
+
+    { category: "Private Hub", id: "finance", label: "Keuangan (Finance)", icon: "💰" },
+    { id: "productivity", label: "Produktivitas Harian", icon: "⏱️" },
+    { id: "habits", label: "Habit & Tracker", icon: "📅" },
+    { id: "planning", label: "Perencanaan Masa Depan", icon: "🎯" },
   ];
 
   const renderContent = () => {
@@ -145,6 +171,22 @@ export default function AdminDashboard() {
         return <TestimonialManager />;
       case "services":
         return <ServiceManager />;
+      case "profile":
+        return <ProfileManager />;
+      case "settings":
+        return <SiteSettingsManager />;
+      case "security":
+        return <SecurityManager />;
+      case "finance":
+        return <FinanceManager />;
+      case "productivity":
+        return <ProductivityManager />;
+      case "habits":
+        return <HabitsManager />;
+      case "planning":
+        return <PlanningManager />;
+      case "publications":
+        return <PublicationManager />;
       default:
         return <div>Pilih Modul</div>;
     }

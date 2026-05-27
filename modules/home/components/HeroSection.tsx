@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { m as motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -18,6 +19,7 @@ import { HiOutlineExternalLink } from "react-icons/hi";
 import useSWR from "swr";
 import { fetcher } from "@/services/fetcher";
 import { PageContentMap, readPageContent } from "@/common/libs/page-content";
+import { createBrowserClient } from "@supabase/ssr";
 
 import RotatingText from "@/common/components/elements/RotatingText";
 
@@ -45,13 +47,45 @@ interface HeroSectionProps {
 
 const HeroSection = ({ content }: HeroSectionProps) => {
   const t = useTranslations("HomePage");
-  const { data: profile } = useSWR("/api/profile", fetcher);
+  const { data: profile, mutate } = useSWR("/api/profile", fetcher);
+  
+  const [liveContent, setLiveContent] = useState(content || {});
+  
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
+
+  useEffect(() => {
+    setLiveContent(content || {});
+  }, [content]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('hero-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'Profile' }, () => mutate())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profile' }, () => mutate())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'PageContent' }, (payload) => {
+        const { key, value, page } = (payload.new as any) || {};
+        if (page === 'home' && key) {
+          setLiveContent((prev) => ({ ...prev, [key]: value }));
+        }
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [mutate, supabase]);
 
   const avatarUrl =
     profile?.avatarUrl ||
-    "https://github.com/ridhopasii.png";
+    "/profile.webp";
   const fullName = profile?.fullName || "Ridho Robbi Pasi";
+  const username = profile?.username || "@ridhopasii";
   const location = profile?.location || "Jambi, Indonesia";
+  
+  const prefixText = readPageContent(liveContent, "hero.prefix_text", "A");
+  const suffixText = readPageContent(liveContent, "hero.suffix_text", "based in Jambi");
+  const rotatingTextsRaw = readPageContent(liveContent, "hero.rotating_texts", "Software Engineer,System Architect,UI/UX Enthusiast,Problem Solver");
+  const rotatingTexts = rotatingTextsRaw.split(",").map(s => s.trim());
 
   return (
     <section className="space-y-8">
@@ -66,7 +100,7 @@ const HeroSection = ({ content }: HeroSectionProps) => {
               <VerifiedIcon size={18} className="text-blue-400" />
             </div>
             <span className="text-sm text-neutral-500 dark:text-neutral-500">
-              @ridhopasii
+              {username}
             </span>
           </div>
           <div className="flex-shrink-0">
@@ -151,18 +185,13 @@ const HeroSection = ({ content }: HeroSectionProps) => {
         {/* Heading */}
         <div className="space-y-2">
           <h1 className="text-3xl font-bold leading-tight text-neutral-900 dark:text-neutral-50">
-            {readPageContent(content, "intro", t("intro"))}
+            {readPageContent(liveContent, "intro", t("intro"))}
           </h1>
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xl text-neutral-600 dark:text-neutral-400">
-            <span className="font-light">A</span>
+            <span className="font-light">{prefixText}</span>
             <span className="overflow-hidden font-semibold text-neutral-800 dark:text-neutral-200">
               <RotatingText
-                texts={[
-                  "Software Engineer",
-                  "System Architect",
-                  "UI/UX Enthusiast",
-                  "Problem Solver",
-                ]}
+                texts={rotatingTexts}
                 mainClassName="inline-flex"
                 splitBy="characters"
                 staggerDuration={0.02}
@@ -172,7 +201,7 @@ const HeroSection = ({ content }: HeroSectionProps) => {
                 elementLevelClassName="text-violet-500 dark:text-violet-400"
               />
             </span>
-            <span className="font-light">based in Jambi</span>
+            <span className="font-light">{suffixText}</span>
           </div>
         </div>
 
@@ -180,7 +209,7 @@ const HeroSection = ({ content }: HeroSectionProps) => {
         <div className="max-w-xl space-y-3 leading-7 text-neutral-600 dark:text-neutral-400">
           <p>
             {readPageContent(
-              content,
+              liveContent,
               "resume.paragraph_1",
               t("resume.paragraph_1"),
             )}

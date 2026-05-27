@@ -1,0 +1,62 @@
+export const dynamic = "force-dynamic";
+import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+import { checkAdminAuth } from "@/common/libs/adminAuth";
+import { checkPrivateDashboardAuth } from "@/common/libs/privateDashboardAuth";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+);
+
+export async function GET() {
+  const isAdmin = await checkAdminAuth();
+  const isPrivate = await checkPrivateDashboardAuth();
+  if (!isAdmin && !isPrivate) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  try {
+    const { data: habits, error: hError } = await supabase.from("HabitConfig").select("*").order("sortOrder");
+    if (hError) throw hError;
+
+    const { data: trackers, error: tError } = await supabase.from("MonthlyTracker").select("*").order("date", { ascending: false }).limit(30);
+    if (tError) throw tError;
+
+    return NextResponse.json({ habits: habits || [], trackers: trackers || [] });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function POST(req: Request) {
+  const isAdmin = await checkAdminAuth();
+  const isPrivate = await checkPrivateDashboardAuth();
+  if (!isAdmin && !isPrivate) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  try {
+    const { action, payload } = await req.json();
+
+    if (action === "create_habit") {
+      const { data, error } = await supabase.from("HabitConfig").insert([payload]).select();
+      if (error) throw error;
+      return NextResponse.json(data[0]);
+    }
+    
+    if (action === "update_tracker") {
+      const { date, checklist, notes } = payload;
+      // Upsert based on date
+      const { data: existing } = await supabase.from("MonthlyTracker").select("id").eq("date", date).maybeSingle();
+      let res;
+      if (existing) {
+        res = await supabase.from("MonthlyTracker").update({ checklist, notes }).eq("id", existing.id).select();
+      } else {
+        res = await supabase.from("MonthlyTracker").insert([{ date, checklist, notes }]).select();
+      }
+      if (res.error) throw res.error;
+      return NextResponse.json(res.data[0]);
+    }
+
+    throw new Error("Invalid action");
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}

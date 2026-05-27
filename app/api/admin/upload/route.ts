@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/common/libs/supabase-server";
 import { checkAdminAuth } from "@/common/libs/adminAuth";
+import sharp from "sharp";
 
 export async function POST(req: NextRequest) {
   // Verifikasi otentikasi admin
@@ -20,13 +21,20 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
+    // Convert to WebP using sharp
+    const webpBuffer = await sharp(buffer)
+      .webp({ quality: 80 })
+      .toBuffer();
+
     // Upload ke bucket "portofolio"
-    const fileName = `${path}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
+    // Use .webp extension regardless of original extension
+    const baseName = file.name.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z0-9.\-]/g, '_');
+    const fileName = `${path}/${Date.now()}-${baseName}.webp`;
 
     const { data, error } = await supabaseServer.storage
       .from("portofolio")
-      .upload(fileName, buffer, {
-        contentType: file.type,
+      .upload(fileName, webpBuffer, {
+        contentType: "image/webp",
         upsert: false,
       });
 

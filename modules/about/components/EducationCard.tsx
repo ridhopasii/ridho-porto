@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/common/components/elements/Image";
 import { BsBuildings as CompanyIcon } from "react-icons/bs";
 
 import { EducationProps } from "@/common/types/education";

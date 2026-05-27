@@ -12,5 +12,5 @@ export const METADATA = {
     locale: "id-ID",
   },
   exTitle: "| Ridho Robbi Pasi",
-  profile: "https://github.com/ridhopasii.png",
+  profile: `${process.env.DOMAIN || "https://ridhorobbipasi.my.id"}/profile.webp`,
 };

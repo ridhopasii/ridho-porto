@@ -39,3 +39,8 @@ export async function POST(req: Request) {
   }
 }
 
+export async function DELETE() {
+  const cookieStore = await cookies();
+  cookieStore.delete("admin_token");
+  return NextResponse.json({ success: true });
+}
