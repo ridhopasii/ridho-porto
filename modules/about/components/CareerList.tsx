@@ -38,7 +38,7 @@ const CareerList = async ({ content }: CareerListProps) => {
       {filteredCareers.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
           {filteredCareers.map((career, index) => (
-            <CareerCard key={index} indexCareer={index} {...career} />
+            <CareerCard key={index} indexCareer={index} logo={career.logoUrl || career.logo_url} {...career} />
           ))}
         </div>
       ) : (

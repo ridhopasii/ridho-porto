@@ -2,8 +2,7 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { getProfileData } from "@/services/profile";
 
-const DEFAULT_AVATAR =
-  "/profile.webp";
+const DEFAULT_AVATAR = "/profile.webp";
 
 export const GET = async () => {
   try {
@@ -11,35 +10,25 @@ export const GET = async () => {
 
     if (!data) {
       return NextResponse.json(
-        {
-          fullName: "Ridho Robbi Pasi",
-          username: "@ridhopasii",
-          title: "Fullstack Developer",
-          avatarUrl: DEFAULT_AVATAR,
-          location: "Aceh, Indonesia",
-        },
+        { avatarUrl: DEFAULT_AVATAR },
         { status: 200 },
       );
     }
 
+    const fetchedAvatar = data.avatarUrl || DEFAULT_AVATAR;
+    const finalAvatar = fetchedAvatar.includes("github.com") ? DEFAULT_AVATAR : fetchedAvatar;
+
     return NextResponse.json(
       {
         ...data,
-        username: data.username || "@ridhopasii",
-        avatarUrl: data.avatarUrl || DEFAULT_AVATAR,
+        avatarUrl: finalAvatar,
       },
       { status: 200 },
     );
   } catch (error: any) {
     console.error("Profile API Error:", error.message);
     return NextResponse.json(
-      {
-        fullName: "Ridho Robbi Pasi",
-        username: "@ridhopasii",
-        title: "Fullstack Developer",
-        avatarUrl: DEFAULT_AVATAR,
-        location: "Aceh, Indonesia",
-      },
+      { avatarUrl: DEFAULT_AVATAR },
       { status: 200 },
     );
   }

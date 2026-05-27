@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import { FaPaperPlane, FaRobot, FaUser, FaRegQuestionCircle } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import useSWR from "swr";
+import { fetcher } from "@/services/fetcher";
 
 interface Message {
   role: "user" | "assistant";
@@ -12,15 +14,17 @@ interface Message {
   timestamp: Date;
 }
 
-const QUICK_PROMPTS = [
-  { id: 1, text: "Siapa Ridho Robbi Pasi?", label: "Siapa Ridho?" },
-  { id: 2, text: "Apa saja keahlian dan teknologi utama yang dikuasai Ridho?", label: "Keahlian Utama" },
-  { id: 3, text: "Ceritakan tentang proyek portofolio terbaik yang dibangun Ridho.", label: "Proyek Terbaik" },
-  { id: 4, text: "Bagaimana cara merekrut atau menghubungi Ridho?", label: "Hubungi Ridho" },
-];
-
 const SmartTalk = () => {
   const t = useTranslations("SmartTalkPage");
+  const { data: profile } = useSWR("/api/profile", fetcher);
+  const fullName = profile?.fullName || "";
+
+  const QUICK_PROMPTS = [
+    { id: 1, text: `Siapa ${fullName}?`, label: `Siapa ${fullName.split(" ")[0]}?` },
+    { id: 2, text: `Apa saja keahlian dan teknologi utama yang dikuasai ${fullName}?`, label: "Keahlian Utama" },
+    { id: 3, text: `Ceritakan tentang proyek portofolio terbaik yang dibangun ${fullName}.`, label: "Proyek Terbaik" },
+    { id: 4, text: `Bagaimana cara merekrut atau menghubungi ${fullName}?`, label: `Hubungi ${fullName.split(" ")[0]}` },
+  ];
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -111,10 +115,10 @@ const SmartTalk = () => {
               </div>
               <div className="space-y-2">
                 <h4 className="text-lg font-bold text-neutral-800 dark:text-neutral-100">
-                  Tanya apa saja tentang Ridho!
+                  {fullName ? `Tanya apa saja tentang ${fullName.split(" ")[0]}!` : "Tanya apa saja!"}
                 </h4>
                 <p className="text-sm text-neutral-500 dark:text-neutral-400 font-light leading-relaxed">
-                  Asisten AI ini dilatih khusus untuk mempresentasikan portofolio, keahlian, pengalaman, dan filosofi kerja Ridho Robbi Pasi.
+                  {fullName ? `Asisten AI ini dilatih khusus untuk mempresentasikan portofolio, keahlian, pengalaman, dan filosofi kerja ${fullName}.` : "Asisten AI personal portofolio ini siap menjawab pertanyaan Anda."}
                 </p>
               </div>
 
@@ -216,7 +220,7 @@ const SmartTalk = () => {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Tanyakan sesuatu tentang Ridho..."
+            placeholder={fullName ? `Tanyakan sesuatu tentang ${fullName.split(" ")[0]}...` : "Tanyakan sesuatu..."}
             disabled={loading}
             className="flex-1 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3.5 text-sm text-neutral-800 outline-none transition-all duration-200 focus:border-blue-500 focus:bg-white disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 dark:focus:border-blue-400 dark:focus:bg-neutral-900"
           />

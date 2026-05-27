@@ -23,24 +23,6 @@ import { createBrowserClient } from "@supabase/ssr";
 
 import RotatingText from "@/common/components/elements/RotatingText";
 
-const socialLinks = [
-  {
-    href: "https://github.com/ridhopasii",
-    icon: <GithubIcon size={18} />,
-    label: "GitHub",
-  },
-  {
-    href: "https://www.instagram.com/ridhorobbipasi/",
-    icon: <InstagramIcon size={18} />,
-    label: "Instagram",
-  },
-  {
-    href: "https://www.linkedin.com/in/ridhorobbipasi/",
-    icon: <LinkedinIcon size={18} />,
-    label: "LinkedIn",
-  },
-];
-
 interface HeroSectionProps {
   content?: PageContentMap;
 }
@@ -48,13 +30,26 @@ interface HeroSectionProps {
 const HeroSection = ({ content }: HeroSectionProps) => {
   const t = useTranslations("HomePage");
   const { data: profile, mutate } = useSWR("/api/profile", fetcher);
+  const { data: socialsData } = useSWR("/api/admin/social", fetcher);
   
   const [liveContent, setLiveContent] = useState(content || {});
   
   const supabase = createBrowserClient(
-    (process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co"),
-    (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder"),
+    (process.env.NEXT_PUBLIC_SUPABASE_URL || ""),
+    (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""),
   );
+
+  const iconMap: Record<string, React.ReactNode> = {
+    github: <GithubIcon size={18} />,
+    instagram: <InstagramIcon size={18} />,
+    linkedin: <LinkedinIcon size={18} />,
+  };
+
+  const socialLinks = (socialsData?.data || []).map((s: any) => ({
+    href: s.url,
+    icon: iconMap[s.icon?.toLowerCase()] ?? null,
+    label: s.platform,
+  })).filter((s: any) => s.icon !== null && ["github", "instagram", "linkedin"].includes(s.label?.toLowerCase()));
 
   useEffect(() => {
     setLiveContent(content || {});
@@ -75,15 +70,13 @@ const HeroSection = ({ content }: HeroSectionProps) => {
     return () => { supabase.removeChannel(channel); };
   }, [mutate, supabase]);
 
-  const avatarUrl =
-    profile?.avatarUrl ||
-    "/profile.webp";
-  const fullName = profile?.fullName || "Ridho Robbi Pasi";
-  const username = profile?.username || "@ridhopasii";
-  const location = profile?.location || "Jambi, Indonesia";
+  const avatarUrl = profile?.avatarUrl || "/profile.webp";
+  const fullName = profile?.fullName || "";
+  const username = profile?.username || "";
+  const location = profile?.location || "";
   
   const prefixText = readPageContent(liveContent, "hero.prefix_text", "A");
-  const suffixText = readPageContent(liveContent, "hero.suffix_text", "based in Jambi");
+  const suffixText = readPageContent(liveContent, "hero.suffix_text", "");
   const rotatingTextsRaw = readPageContent(liveContent, "hero.rotating_texts", "Software Engineer,System Architect,UI/UX Enthusiast,Problem Solver");
   const rotatingTexts = rotatingTextsRaw.split(",").map(s => s.trim());
 

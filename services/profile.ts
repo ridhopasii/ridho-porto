@@ -22,13 +22,15 @@ export const getProfileData = async () => {
       if (error2 || !data2) return null;
       return {
         id: data2.id,
-        fullName: data2.full_name || "Ridho Robbi Pasi",
-        username: data2.username || "@ridhopasii",
-        title: data2.title || "Fullstack Developer",
+        fullName: data2.full_name || "",
+        username: data2.username || "",
+        title: data2.title || "",
         bio: data2.bio || "",
-        location: data2.location || "Jambi, Indonesia",
+        location: data2.location || "",
         email: data2.email || "",
-        avatarUrl: data2.avatar_url || null,
+        avatarUrl: (data2.avatar_url || "").includes("github.com") 
+          ? "/profile.webp" 
+          : (data2.avatar_url || null),
         heroImage: data2.hero_image || null,
         cvLink: data2.cv_link || null,
         whatsappUrl: data2.whatsapp_url || null,
@@ -37,13 +39,15 @@ export const getProfileData = async () => {
 
     return {
       id: data.id,
-      fullName: (data as any).fullName || (data as any).full_name || "Ridho Robbi Pasi",
-      username: (data as any).username || "@ridhopasii",
-      title: data.title || "Fullstack Developer",
+      fullName: (data as any).fullName || (data as any).full_name || "",
+      username: (data as any).username || "",
+      title: data.title || "",
       bio: data.bio || "",
-      location: data.location || "Jambi, Indonesia",
+      location: data.location || "",
       email: data.email || "",
-      avatarUrl: (data as any).avatarUrl || (data as any).avatar_url || null,
+      avatarUrl: ((data as any).avatarUrl || (data as any).avatar_url || "").includes("github.com") 
+        ? "/profile.webp" 
+        : ((data as any).avatarUrl || (data as any).avatar_url || null),
       heroImage: (data as any).heroImage || (data as any).hero_image || null,
       cvLink: (data as any).cvLink || (data as any).cv_link || null,
       whatsappUrl: (data as any).whatsappUrl || (data as any).whatsapp_url || null,
