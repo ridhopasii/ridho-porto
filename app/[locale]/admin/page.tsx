@@ -1,22 +1,25 @@
 import { Metadata } from "next";
-import { checkAdminAuth } from "@/common/libs/adminAuth";
-import AdminLogin from "@/modules/admin/components/AdminLogin";
-import AdminDashboard from "@/modules/admin/components/AdminDashboard";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Admin Dashboard | Ridho",
-  description: "Manage portfolio content.",
-  robots: "noindex, nofollow",
+import { METADATA } from "@/common/constants/metadata";
+import AdminOverview from "@/modules/dashboard/components/admin/AdminOverview";
+
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "DashboardPage" });
+  return {
+    title: `Admin Overview - ${t("title")} ${METADATA.exTitle}`,
+    description: t("description"),
+    alternates: { canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}/admin` },
+  };
+}
+
+const PrivateDashboardPage = async () => {
+  return <AdminOverview />;
 };
 
-const AdminPage = async () => {
-  const isAuthenticated = await checkAdminAuth();
-
-  return (
-    <>
-      {isAuthenticated ? <AdminDashboard /> : <AdminLogin />}
-    </>
-  );
-};
-
-export default AdminPage;
+export default PrivateDashboardPage;

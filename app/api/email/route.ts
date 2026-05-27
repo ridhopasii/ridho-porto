@@ -2,8 +2,18 @@ export const dynamic = 'force-dynamic';
 import * as nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
 import { getProfileData } from "@/services/profile";
+import { checkRateLimit, getClientIp, RATE_LIMITS } from "@/common/libs/rate-limit";
 
 export const POST = async (request: Request) => {
+  const ip = getClientIp(request);
+  const rl = checkRateLimit(`email:${ip}`, RATE_LIMITS.contact);
+  if (rl.limited) {
+    return NextResponse.json(
+      { message: `Terlalu banyak permintaan. Coba lagi dalam ${rl.retryAfter} detik.` },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { name, email, message } = body;
@@ -16,8 +26,8 @@ export const POST = async (request: Request) => {
     }
 
     const profile = await getProfileData();
-    const targetEmail = profile?.email || process.env.NODEMAILER_EMAIL || "satriaaxel7703@gmail.com";
-    const ownerName = profile?.fullName || "Ridho Robbi Pasi";
+    const targetEmail = profile?.email || process.env.NODEMAILER_EMAIL || "";
+    const ownerName = profile?.fullName || "";
 
     const transporter = nodemailer.createTransport({
       service: "gmail",

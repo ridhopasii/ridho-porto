@@ -8,6 +8,7 @@ import ChatButton from "../../../modules/chat/components/ChatButton";
 import PrivateHubButton from "../../../modules/dashboard/components/PrivateHubButton";
 
 import Sidebar from "./sidebar";
+import AdminLayout from "../../../modules/dashboard/components/admin/AdminLayout";
 
 
 const Notif = dynamic(() => import("../elements/Notif"), { ssr: false });
@@ -20,8 +21,12 @@ const Layouts = ({ children }: LayoutsProps) => {
   const pathname = usePathname();
 
   const isShowChatButton = pathname !== "/chat" && !pathname.endsWith("/dashboard");
-  const isStandalonePage =
-    pathname.endsWith("/admin") || pathname.endsWith("/links");
+  const isStandalonePage = pathname.endsWith("/links");
+  const isAdminPage = pathname.includes("/admin");
+
+  if (isAdminPage) {
+    return <AdminLayout>{children}</AdminLayout>;
+  }
 
   if (isStandalonePage) {
     return <LazyMotion features={domMax}>{children}</LazyMotion>;

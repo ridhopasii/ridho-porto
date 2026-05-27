@@ -14,7 +14,7 @@ export default function PrivateHubButton() {
   const router = useRouter();
 
   const isHidden =
-    pathname.endsWith("/admin") || pathname.endsWith("/dashboard/private");
+    pathname.includes("/admin");
 
   if (isHidden) return null;
 
@@ -49,7 +49,7 @@ export default function PrivateHubButton() {
               buttonLabel="Buka Hub"
               onSuccess={() => {
                 setOpen(false);
-                router.push(`/${locale}/dashboard/private`);
+                router.push(`/${locale}/admin`);
                 router.refresh();
               }}
             />

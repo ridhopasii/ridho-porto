@@ -38,7 +38,8 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
     return () => { supabase.removeChannel(channel); };
   }, [mutate, supabase]);
   
-  const avatarUrl = data?.avatarUrl || DEFAULT_AVATAR;
+  const fetchedAvatar = data?.avatarUrl || DEFAULT_AVATAR;
+  const avatarUrl = fetchedAvatar.includes("github.com") ? DEFAULT_AVATAR : fetchedAvatar;
   const fullName = data?.fullName || "Ridho Robbi Pasi";
   const username = data?.username || "@ridhopasii";
 

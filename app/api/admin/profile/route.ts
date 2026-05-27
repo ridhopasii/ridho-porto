@@ -25,16 +25,34 @@ export async function POST(req: Request) {
     const data = await req.json();
     const { id, ...updateData } = data;
     
+    // Extract only the fields that exist in the Profile table
+    const validUpdateData = {
+      fullName: updateData.fullName,
+      username: updateData.username,
+      title: updateData.title,
+      bio: updateData.bio,
+      location: updateData.location,
+      email: updateData.email,
+      avatarUrl: updateData.avatarUrl,
+      heroImage: updateData.heroImage,
+      cvLink: updateData.cvLink,
+      whatsappUrl: updateData.whatsappUrl,
+    };
+    
+    // Remove undefined
+    Object.keys(validUpdateData).forEach(key => (validUpdateData as any)[key] === undefined && delete (validUpdateData as any)[key]);
+
     let result;
     if (id) {
-      result = await supabase.from("Profile").update(updateData).eq("id", id).select();
+      result = await supabase.from("Profile").update(validUpdateData).eq("id", id).select();
     } else {
-      result = await supabase.from("Profile").insert([updateData]).select();
+      result = await supabase.from("Profile").insert([validUpdateData]).select();
     }
     
     if (result.error) throw result.error;
     return NextResponse.json(result.data[0]);
   } catch (error: any) {
+    console.error("Profile Save Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

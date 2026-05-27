@@ -1,30 +1,73 @@
 import { NextResponse } from "next/server";
+import { createPublicClient } from "@/common/utils/serverPublic";
+import { checkRateLimit, getClientIp, RATE_LIMITS } from "@/common/libs/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 
-const SYSTEM_INSTRUCTIONS = `
-You are 'Smart Talk', an interactive, premium AI Assistant custom-built for Ridho Robbi Pasi's developer portfolio website.
-Your primary role is to act as an agent representing Ridho Robbi Pasi.
-Ridho Robbi Pasi is an experienced Fullstack / Frontend Developer based in Indonesia.
-He specializes in building high-quality, modern, premium, and beautiful web applications using React, Next.js, TypeScript, TailwindCSS, and Supabase.
-His website/portfolio is ridhorobbipasi.my.id.
+async function buildSystemInstructions(): Promise<string> {
+  try {
+    const supabase = createPublicClient();
 
-Key details about Ridho:
-- Skills: React, Next.js, TypeScript, JavaScript, TailwindCSS, Supabase, PostgreSQL, Node.js, Prisma, REST APIs, Git.
-- Personality: Professional, warm, logical, highly detailed, growth-oriented, and focused on result-oriented execution.
-- Work philosophy: Writing clean, secure, and performant code with rich visual aesthetics.
-- Languages: Indonesian (Bahasa Indonesia) and English. Respond in the language that the user queries in.
+    // Fetch profile data dynamically
+    const { data: profile } = await supabase
+      .from("Profile")
+      .select("fullName, title, bio, location, email, whatsappUrl")
+      .limit(1)
+      .single();
+
+    // Fetch skills dynamically
+    const { data: skills } = await supabase
+      .from("Skill")
+      .select("name, category")
+      .limit(50);
+
+    const name = profile?.fullName || "Portfolio Owner";
+    const title = profile?.title || "Fullstack Developer";
+    const bio = profile?.bio || "";
+    const location = profile?.location || "Indonesia";
+    const domain = process.env.DOMAIN || "";
+
+    const skillNames = skills?.map((s: any) => s.name).join(", ") || "React, Next.js, TypeScript, TailwindCSS";
+
+    return `
+You are 'Smart Talk', an interactive, premium AI Assistant custom-built for ${name}'s developer portfolio website.
+Your primary role is to act as an agent representing ${name}.
+${name} is an experienced ${title} based in ${location}.
+${bio ? `About them: ${bio}` : ""}
+${domain ? `Their website/portfolio is ${domain}.` : ""}
+
+Key skills: ${skillNames}
 
 When answering:
 1. Be extremely helpful, warm, professional, and friendly.
-2. Provide precise and structured information using Markdown (such as bullet points, bold text, and clean formatting).
-3. If the user asks about Ridho's details, tell them about his skills, experience, and direct them to the Contact page or projects tab!
-4. Keep your responses relatively concise but complete and engaging.
-`;
+2. Provide precise and structured information using Markdown (bullet points, bold text, clean formatting).
+3. If the user asks about personal details, share their skills, experience, and direct them to the Contact page or Projects section.
+4. Keep responses concise but complete and engaging.
+5. Respond in the same language the user writes in (Indonesian or English).
+`.trim();
+  } catch {
+    // Fallback to minimal instructions if DB fetch fails
+    return `
+You are 'Smart Talk', a premium AI Assistant for this developer portfolio website.
+Help visitors learn about the portfolio owner's skills, experience, and projects.
+Be helpful, warm, and professional. Respond in the user's language.
+`.trim();
+  }
+}
 
 export async function POST(request: Request) {
+  // Rate limiting: max 20 AI requests per minute per IP
+  const ip = getClientIp(request);
+  const rateLimitResult = checkRateLimit(`smart-talk:${ip}`, RATE_LIMITS.ai);
+  if (rateLimitResult.limited) {
+    return NextResponse.json(
+      { error: `Terlalu banyak permintaan. Coba lagi dalam ${rateLimitResult.retryAfter} detik.` },
+      { status: 429, headers: { "Retry-After": String(rateLimitResult.retryAfter) } }
+    );
+  }
+
   if (!GEMINI_API_KEY) {
     return NextResponse.json(
       { error: "Gemini API key is not configured in the environment." },
@@ -41,26 +84,23 @@ export async function POST(request: Request) {
       );
     }
 
-    // Format messages into Gemini API contents structure
-    // Gemini expects an array of contents like: { role: "user" | "model", parts: [{ text: "..." }] }
-    // Note: Gemini roles are 'user' and 'model' (not 'assistant' like OpenAI). We must map them!
+    const systemInstructions = await buildSystemInstructions();
+
+    // Map messages to Gemini API format (roles: 'user' | 'model')
     const contents = messages.map((m: any) => ({
       role: m.role === "assistant" ? "model" : "user",
       parts: [{ text: m.content }]
     }));
 
-    // Inject the system instruction as the system instruction parameter in Gemini API v1beta
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents,
           systemInstruction: {
-            parts: [{ text: SYSTEM_INSTRUCTIONS }]
+            parts: [{ text: systemInstructions }]
           },
           generationConfig: {
             temperature: 0.7,
@@ -71,8 +111,6 @@ export async function POST(request: Request) {
     );
 
     if (!response.ok) {
-      // Jika Gemini API gagal, kirimkan respons fallback yang ramah pengguna
-      console.error("Gemini API Error (fallback):", await response.text());
       return NextResponse.json(
         {
           success: false,
@@ -91,7 +129,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, reply: replyText });
   } catch (error: any) {
-    console.error("Smart Talk Chat Error:", error);
     return NextResponse.json(
       { error: "Terjadi kesalahan internal pada server.", message: error.message },
       { status: 500 }

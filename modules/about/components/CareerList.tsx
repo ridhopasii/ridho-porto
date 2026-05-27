@@ -18,7 +18,6 @@ const CareerList = async ({ content }: CareerListProps) => {
   const { data: careers } = await supabaseServer
     .from("Experience")
     .select("*")
-    .eq("showOnHome", true)
     .order("start_date", { ascending: false });
 
   const filteredCareers = careers || [];
