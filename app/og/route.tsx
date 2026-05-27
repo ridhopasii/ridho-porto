@@ -5,7 +5,7 @@ export const alt = "Portfolio OG Image";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default async function OgImage() {
+export async function GET() {
   const domain = process.env.DOMAIN || "";
   const siteName = process.env.SITE_NAME || "Portfolio";
 
