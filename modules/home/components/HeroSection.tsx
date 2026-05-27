@@ -232,7 +232,7 @@ const HeroSection = ({ content }: HeroSectionProps) => {
             Resume
           </Link>
           <div className="ml-2 hidden items-center gap-3 sm:flex">
-            {socialLinks.map((link) => (
+            {socialLinks.map((link: any) => (
               <Link
                 key={link.label}
                 href={link.href}

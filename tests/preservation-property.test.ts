@@ -367,7 +367,7 @@ describe("Preservation Property Tests", () => {
       
       // Instead of importing the middleware function directly, check the config
       try {
-        const middleware = await import("../middleware");
+        const middleware = require("../proxy");
         
         // Verify config exists and has expected matcher patterns
         expect(middleware.config).toBeDefined();
