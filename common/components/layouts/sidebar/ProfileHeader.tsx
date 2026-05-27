@@ -25,8 +25,8 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
   const { data, mutate } = useSWR("/api/profile", fetcher);
   
   const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    (process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co"),
+    (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder"),
   );
 
   useEffect(() => {
