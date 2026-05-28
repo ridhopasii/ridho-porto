@@ -58,7 +58,7 @@ const Profile = () => {
       </div>
 
       {isMobile && (
-        <div className="border-t border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm overflow-x-auto no-scrollbar">
+        <div className="border-t border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm overflow-x-auto scrollbar-hide">
           <div className="max-w-7xl mx-auto">
             <ul className="flex items-center whitespace-nowrap px-4 py-2 md:py-3 gap-6 md:gap-10 justify-start md:justify-center">
               {filteredMenu.map((item, index) => {

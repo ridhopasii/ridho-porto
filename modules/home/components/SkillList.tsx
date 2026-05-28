@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import SectionHeading from "@/common/components/elements/SectionHeading";
 import SectionSubHeading from "@/common/components/elements/SectionSubHeading";
+import { supabaseServer } from "@/common/libs/supabase-server";
 import SkillGrid from "./SkillGrid";
 
 const SkillList = async () => {

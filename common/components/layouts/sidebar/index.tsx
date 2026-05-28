@@ -14,7 +14,7 @@ export default function Sidebar() {
   
   // Categorize navigation lists beautifully matching the screenshot
   const mainNav = filteredMenu.filter(item => 
-    ["Home", "Resume", "Projects", "Creations", "Blog", "Guestbook", "Chats", "Contact"].includes(item.title)
+    ["Home", "Resume", "Projects", "Social Media", "Blog", "Guestbook", "Chats", "Contact"].includes(item.title)
   );
   
   const appNav = filteredMenu.filter(item => 

@@ -44,8 +44,8 @@
     "error": "Terjadi kesalahan pada server.",
     "no_data": "Data tidak tersedia."
   },
-  "ContentsPage": {
-    "title": "Konten",
+  "SocialMediaPage": {
+    "title": "Media Sosial",
     "description": "Kumpulan konten coding dan karya kreatif saya.",
     "open_tiktok": "Buka TikTok",
     "view": "Lihat",
@@ -241,8 +241,7 @@
   "Navigation": {
     "Home": "Beranda",
     "About": "Tentang",
-    "Creations": "Kreasi",
-    "Contents": "Konten",
+    "Social Media": "Media Sosial",
     "Achievements": "Pencapaian",
     "Projects": "Proyek",
     "Blog": "Blog",

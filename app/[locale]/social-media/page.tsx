@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import Container from "@/common/components/elements/Container";
 import PageHeading from "@/common/components/elements/PageHeading";
-import Creations from "@/modules/creations/Creations";
+import SocialMedia from "@/modules/social-media/SocialMedia";
 import { METADATA } from "@/common/constants/metadata";
 
 type Props = {
@@ -14,27 +14,27 @@ export async function generateMetadata({
   params,
 }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "ContentsPage" });
+  const t = await getTranslations({ locale, namespace: "SocialMediaPage" });
 
   return {
     title: `${t("title")} ${METADATA.exTitle}`,
     description: t("description"),
     alternates: {
-      canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}/creations`,
+      canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}/social-media`,
     },
   };
 }
 
-const CreationsPage = async ({ params }: Props) => {
+const SocialMediaPage = async ({ params }: Props) => {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "ContentsPage" });
+  const t = await getTranslations({ locale, namespace: "SocialMediaPage" });
 
   return (
     <Container data-aos="fade-up">
       <PageHeading title={t("title")} description={t("description")} />
-      <Creations />
+      <SocialMedia />
     </Container>
   );
 };
 
-export default CreationsPage;
+export default SocialMediaPage;

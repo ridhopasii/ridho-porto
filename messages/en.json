@@ -44,8 +44,8 @@
     "error": "An error occurred on the server.",
     "no_data": "No data available."
   },
-  "ContentsPage": {
-    "title": "Contents",
+  "SocialMediaPage": {
+    "title": "Social Media",
     "description": "A collection of my coding content and creative works.",
     "open_tiktok": "Open TikTok",
     "view": "View",
@@ -241,8 +241,7 @@
   "Navigation": {
     "Home": "Home",
     "About": "About",
-    "Creations": "Creations",
-    "Contents": "Contents",
+    "Social Media": "Social Media",
     "Achievements": "Achievements",
     "Projects": "Projects",
     "Blog": "Blog",

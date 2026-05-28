@@ -36,12 +36,12 @@ export const MENU_ITEMS: MenuItemProps[] = [
     eventName: "Pages: About",
   },
   {
-    title: "Creations",
-    href: "/creations",
+    title: "Social Media",
+    href: "/social-media",
     icon: <CreationsIcon size={iconSize} />,
     isShow: true,
     isExternal: false,
-    eventName: "Pages: Creations",
+    eventName: "Pages: Social Media",
   },
   {
     title: "Achievements",
