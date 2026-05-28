@@ -39,7 +39,7 @@ export const MENU_ITEMS: MenuItemProps[] = [
     title: "Creations",
     href: "/creations",
     icon: <CreationsIcon size={iconSize} />,
-    isShow: false,
+    isShow: true,
     isExternal: false,
     eventName: "Pages: Creations",
   },
