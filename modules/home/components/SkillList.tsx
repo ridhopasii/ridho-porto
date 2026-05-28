@@ -3,9 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import SectionHeading from "@/common/components/elements/SectionHeading";
 import SectionSubHeading from "@/common/components/elements/SectionSubHeading";
-import GlassIcon from "@/common/components/elements/GlassIcon";
-import DynamicIcon from "@/common/components/DynamicIcon";
-import { supabaseServer } from "@/common/libs/supabase-server";
+import SkillGrid from "./SkillGrid";
 
 const SkillList = async () => {
   const t = await getTranslations("HomePage");
@@ -27,16 +25,7 @@ const SkillList = async () => {
         </SectionSubHeading>
       </div>
 
-      <div className="grid w-full grid-cols-6 gap-x-[1em] gap-y-[2.7em] py-2 md:grid-cols-10 lg:grid-cols-11">
-        {stacksInArray.map((skill, index) => (
-          <GlassIcon
-            key={index}
-            name={skill.name}
-            icon={<DynamicIcon name={skill.icon} />}
-            background={skill.background}
-          />
-        ))}
-      </div>
+      <SkillGrid skills={stacksInArray} />
     </section>
   );
 };

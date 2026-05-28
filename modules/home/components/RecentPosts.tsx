@@ -63,7 +63,7 @@ const RecentPosts = async () => {
           </p>
         </div>
         <Link
-          href="/creations"
+          href="/blog"
           className="flex items-center gap-1 text-sm text-neutral-500 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors group"
         >
           View all
@@ -78,7 +78,7 @@ const RecentPosts = async () => {
         {recentArticles.map((article: Article) => (
           <Link
             key={article.id}
-            href={`/creations/${article.slug}`}
+            href={`/blog/${article.slug}`}
             className="group flex gap-4 p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all duration-300 hover:shadow-sm"
           >
             {/* Thumbnail */}

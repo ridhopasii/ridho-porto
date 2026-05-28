@@ -230,10 +230,10 @@ const HeroSection = ({ content }: HeroSectionProps) => {
             <HiOutlineExternalLink size={15} />
           </Link>
           <Link
-            href="/"
+            href="/about"
             className="group relative flex items-center gap-2 overflow-hidden rounded-full border border-neutral-300 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-800 transition-all hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
           >
-            Resume
+            About Me
           </Link>
           <div className="ml-2 hidden items-center gap-3 sm:flex">
             {socialLinks.map((link: any) => (
