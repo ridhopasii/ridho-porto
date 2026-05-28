@@ -53,12 +53,12 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
   const username = data?.username || "@ridhopasii";
 
   return (
-    <div className="flex w-full flex-col items-center">
+    <div className="flex w-auto lg:w-full flex-col items-start lg:items-center">
       {/* Premium Grid Background behind avatar (Desktop only) */}
       <div className="hidden lg:block absolute top-0 left-0 right-0 h-[100px] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#262626_1px,transparent_1px),linear-gradient(to_bottom,#262626_1px,transparent_1px)] bg-[size:14px_14px] rounded-t-2xl border-b border-neutral-100 dark:border-neutral-900 opacity-60 pointer-events-none" />
       
       {/* Avatar Container with responsive styling */}
-      <div className="relative mt-0 lg:mt-10 flex flex-col items-center w-full">
+      <div className="relative mt-0 lg:mt-10 flex flex-row lg:flex-col items-center gap-3 lg:gap-0 w-full lg:w-auto">
         <Image
           src={avatarUrl}
           width={expandMenu ? 80 : imageSize * 1}
@@ -69,18 +69,18 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
         />
         
         {/* Name and Verification Badge */}
-        <div className="mt-3 flex items-center justify-center gap-1.5 w-full">
+        <div className="flex flex-col items-start lg:items-center lg:mt-3 w-full lg:w-auto">
           <Link href="/" passHref className="hover:opacity-80 transition-opacity">
             <h2 className="flex items-center gap-1.5 text-base lg:text-lg font-bold text-neutral-900 dark:text-neutral-50 whitespace-nowrap">
               {fullName}
               <VerifiedIcon className="text-[#1D9BF0] flex-shrink-0" size={16} />
             </h2>
           </Link>
-        </div>
 
-        {/* Username */}
-        <div className="text-xs lg:text-sm text-neutral-500 dark:text-neutral-400 mt-0.5">
-          {username}
+          {/* Username */}
+          <div className="text-xs lg:text-sm text-neutral-500 dark:text-neutral-400 mt-0.5 lg:mt-0.5">
+            {username}
+          </div>
         </div>
       </div>
 
