@@ -20,7 +20,7 @@ export async function generateMetadata({
   const content = await getPageContent("home", locale);
 
   return {
-    title: `${METADATA.creator} | Portfolio`,
+    title: `Portfolio`,
     description: readPageContent(
       content,
       "resume.paragraph_1",
