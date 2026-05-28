@@ -21,7 +21,7 @@ export async function generateMetadata({
   return {
     title: `${t("title")} ${METADATA.exTitle}`,
     description: t("description"),
-    keywords: "ridho robbi pasi blog, programming tutorial, web development, information systems student UNJA",
+    keywords: "ridho robbi pasi blog, programming tutorial, web development, informatics engineer USU",
     alternates: {
       canonical: `${(process.env.DOMAIN || "https://ridhorobbipasi.my.id")}/${locale}/blog`,
     },
