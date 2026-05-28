@@ -49,7 +49,7 @@ const Image = (props: ImageProps) => {
           className,
         )}
         src={validSrc}
-        alt={alt}
+        alt={alt || ""}
         loading="lazy"
         quality={75}
         unoptimized
