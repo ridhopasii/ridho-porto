@@ -26,13 +26,15 @@ export default function PageContentManager({ page }: Props) {
 
   const fetchData = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from("PageContent")
-      .select("*")
-      .eq("page", page)
-      .order("locale", { ascending: true })
-      .order("key", { ascending: true });
-    if (data) setItems(data);
+    try {
+      const res = await fetch(`/api/admin/page-content?page=${page}`);
+      if (res.ok) {
+        const data = await res.json();
+        setItems(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
     setLoading(false);
   };
 

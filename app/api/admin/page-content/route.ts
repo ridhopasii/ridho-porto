@@ -74,3 +74,25 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function GET(req: Request) {
+  if (!(await checkAdminAuth()))
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const { searchParams } = new URL(req.url);
+    const page = searchParams.get("page");
+    if (!page) return NextResponse.json({ error: "Page is required" }, { status: 400 });
+
+    const { data, error } = await supabase
+      .from("PageContent")
+      .select("*")
+      .eq("page", page)
+      .order("locale", { ascending: true })
+      .order("key", { ascending: true });
+      
+    if (error) throw error;
+    return NextResponse.json(data);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
