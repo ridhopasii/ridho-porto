@@ -4,6 +4,7 @@ import { PageContentMap } from "@/common/libs/page-content";
 
 import HeroSection from "./HeroSection";
 import HomeSkills from "./HomeSkills";
+import Services from "./Services";
 import ContactList from "@/modules/contact/components/ContactList";
 import FeaturedProjects from "./FeaturedProjects";
 import RecentPosts from "./RecentPosts";
@@ -69,6 +70,13 @@ const Home = ({ content }: HomeProps) => {
         >
           <HomeSkills />
         </Suspense>
+      </section>
+
+      <hr className="border-neutral-100 dark:border-neutral-800/50" />
+
+      {/* Services / Layanan */}
+      <section className="pt-2">
+        <Services />
       </section>
 
       {/* Featured Projects */}

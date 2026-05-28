@@ -75,17 +75,16 @@ export default function Guestbook({ messages }: Props) {
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-6" data-aos="fade-up">
-      {/* Terminal Window Container */}
+      {/* Modern Chat Container */}
       <div className="rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800 shadow-lg bg-white dark:bg-neutral-900/40 backdrop-blur-xl">
-        {/* Terminal Header */}
-        <div className="flex justify-between items-center bg-neutral-100 dark:bg-neutral-800/80 backdrop-blur-xl w-full p-3 px-6 select-none border-b border-neutral-200 dark:border-neutral-800">
-          <div className="flex items-center text-xs font-mono text-neutral-500 gap-3 overflow-hidden">
-            <span className="whitespace-nowrap text-ellipsis">wscat -c wss://api.ridhorobbipasi.my.id/v2/guestbook</span>
+        {/* Chat Header */}
+        <div className="flex items-center gap-4 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800 p-4 px-6 select-none">
+          <div className="w-10 h-10 bg-teal-100 dark:bg-teal-900/30 rounded-full flex items-center justify-center text-teal-600 dark:text-teal-400 text-lg shadow-sm">
+            💬
           </div>
-          <div className="gap-2 flex">
-            <div className="w-3 h-3 bg-red-400/80 rounded-full hover:bg-red-500 cursor-pointer transition-colors" title="Close"></div>
-            <div className="w-3 h-3 bg-yellow-400/80 rounded-full hover:bg-yellow-500 cursor-pointer transition-colors" title="Minimize"></div>
-            <div className="w-3 h-3 bg-green-400/80 rounded-full hover:bg-green-500 cursor-pointer transition-colors" title="Maximize"></div>
+          <div>
+            <h3 className="font-bold text-neutral-800 dark:text-neutral-100">Live Guestbook</h3>
+            <p className="text-xs text-neutral-500 font-medium mt-0.5">Mari terhubung & tinggalkan jejak Anda</p>
           </div>
         </div>
 
@@ -150,20 +149,60 @@ export default function Guestbook({ messages }: Props) {
                         </div>
 
                         {/* Bubble Message */}
-                        <div
-                          className={`text-sm px-3.5 py-2.5 rounded-2xl shadow-sm transition-all duration-200 ${
-                            isSenderAdmin
-                              ? "bg-teal-600 text-white rounded-tr-none"
-                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-tl-none border border-neutral-200/40 dark:border-neutral-800/40"
-                          }`}
-                        >
-                          <p className="leading-relaxed whitespace-pre-line">{msg.message}</p>
-                        </div>
+                        {(() => {
+                          const parts = (msg.message || "").split(" [ADMIN_REPLY] ");
+                          const originalMessage = parts[0];
+                          const adminReply = parts[1] || "";
+                          
+                          return (
+                            <>
+                              <div
+                                className={`text-sm px-3.5 py-2.5 rounded-2xl shadow-sm transition-all duration-200 ${
+                                  isSenderAdmin
+                                    ? "bg-teal-600 text-white rounded-tr-none"
+                                    : "bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-tl-none border border-neutral-200/40 dark:border-neutral-800/40"
+                                }`}
+                              >
+                                <p className="leading-relaxed whitespace-pre-line">{originalMessage}</p>
+                              </div>
 
-                        {/* Timestamp */}
-                        <span className="text-[10px] text-neutral-400 dark:text-neutral-500 px-1 pt-0.5 block">
-                          {formatMsgDate(msg.createdAt)}
-                        </span>
+                              {/* Timestamp */}
+                              <span className="text-[10px] text-neutral-400 dark:text-neutral-500 px-1 pt-0.5 block">
+                                {formatMsgDate(msg.createdAt)}
+                              </span>
+
+                              {/* Nested Admin Reply Bubble */}
+                              {adminReply && (
+                                <div className="mt-3 ml-6 self-stretch flex gap-3 items-start animate-fade-in flex-row">
+                                  {/* Admin Avatar */}
+                                  <div className="relative shrink-0 w-8 h-8 rounded-full overflow-hidden border border-neutral-200 dark:border-neutral-800 shadow-sm bg-neutral-100 dark:bg-neutral-800">
+                                    <img
+                                      alt="Admin"
+                                      src="/profile.webp"
+                                      className="object-cover w-full h-full"
+                                    />
+                                  </div>
+                                  
+                                  {/* Reply bubble content */}
+                                  <div className="space-y-1 flex-1 text-left">
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-[11px] font-bold text-neutral-800 dark:text-neutral-200">
+                                        Ridho Robbi Pasi
+                                      </span>
+                                      <MdVerified className="text-blue-500" size={11} title="Verified Admin" />
+                                      <span className="text-[8px] bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider scale-90">
+                                        Admin
+                                      </span>
+                                    </div>
+                                    <div className="text-xs bg-blue-50/50 dark:bg-blue-950/20 text-neutral-800 dark:text-neutral-200 px-3.5 py-2.5 rounded-2xl rounded-tl-none border border-blue-100/50 dark:border-blue-900/30 shadow-sm">
+                                      <p className="leading-relaxed whitespace-pre-line">{adminReply}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          );
+                        })()}
                       </div>
                     </div>
                   );
@@ -207,18 +246,15 @@ export default function Guestbook({ messages }: Props) {
               </div>
 
               {/* Message input bar */}
-              <div className="flex gap-2 items-center bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl p-1.5 focus-within:border-teal-500 transition-colors">
-                <span className="text-xs font-mono text-neutral-400 dark:text-neutral-500 pl-3 shrink-0 select-none">
-                  guest@ridhopasii:~$
-                </span>
+              <div className="flex gap-2 items-center bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl p-1.5 focus-within:border-teal-500 focus-within:ring-1 focus-within:ring-teal-500 transition-all shadow-sm">
                 <input
                   required
                   type="text"
                   value={formData.message}
                   onFocus={() => setIsFocused(true)}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="Ketik pesan hangat Anda di sini..."
-                  className="flex-grow bg-transparent text-sm border-0 focus:ring-0 focus:outline-none pl-1.5 py-1 text-neutral-800 dark:text-neutral-100"
+                  placeholder="Ketik pesan Anda di sini..."
+                  className="flex-grow bg-transparent text-sm border-0 focus:ring-0 focus:outline-none pl-3 py-2 text-neutral-800 dark:text-neutral-100"
                 />
                 <button
                   type="submit"

@@ -23,6 +23,13 @@ const Providers = [
     textColor: "text-white",
     eventName: "sign_in: Github",
   },
+  {
+    id: "credentials",
+    icon: <span className="text-sm">🔑</span>,
+    bgColor: "!bg-blue-600 hover:!bg-blue-700",
+    textColor: "text-white",
+    eventName: "sign_in: Credentials",
+  },
 ];
 
 const ChatAuth = ({ isWidget = false }) => {
@@ -46,7 +53,7 @@ const ChatAuth = ({ isWidget = false }) => {
             >
               {provider.icon}
               <span className={provider.textColor}>
-                {t("label")} {provider.id}
+                {provider.id === "credentials" ? "Login via Demo" : `${t("label")} ${provider.id}`}
               </span>
             </Button>
           ))}

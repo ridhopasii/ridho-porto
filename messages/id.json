@@ -16,7 +16,16 @@
       "sub_title": "Jelajahi semua yang telah saya buat, kontribusikan, dan capai."
     },
     "error": "Terjadi kesalahan pada server.",
-    "no_data": "Data tidak tersedia."
+    "no_data": "Data tidak tersedia.",
+    "services": {
+      "title": "Layanan",
+      "sub_title": "Solusi digital untuk mendukung kesuksesan bisnis Anda.",
+      "cta": {
+        "title": "Ada proyek dalam pikiran?",
+        "sub_title": "Mari diskusikan proyek impian Anda dan ubah menjadi kenyataan.",
+        "button": "Hubungi Saya"
+      }
+    }
   },
   "AboutPage": {
     "title": "Tentang",
@@ -73,7 +82,7 @@
     "no_data": "Proyek tidak tersedia."
   },
   "BlogPage": {
-    "title": "Blog",
+    "title": "Blog & Publikasi",
     "description": "Opini, tutorial, panduan, dan wawasan teknologi dari perjalanan koding saya.",
     "search_placeholder": "Cari artikel...",
     "all_categories": "Semua Kategori",
@@ -82,7 +91,9 @@
     "read_time": "menit baca",
     "error": "Gagal memuat daftar artikel.",
     "no_data": "Belum ada artikel yang diterbitkan.",
-    "related_posts": "Artikel Terkait"
+    "related_posts": "Artikel Terkait",
+    "tab_articles": "Artikel & Blog",
+    "tab_publications": "Publikasi Eksternal"
   },
   "DashboardPage": {
     "title": "Dasbor",
@@ -244,7 +255,7 @@
     "Social Media": "Media Sosial",
     "Achievements": "Pencapaian",
     "Projects": "Proyek",
-    "Blog": "Blog",
+    "Blog": "Blog & Publikasi",
     "Dashboard": "Dasbor",
     "Guestbook": "Chat Live",
     "Uses": "Peralatan",

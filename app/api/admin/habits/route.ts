@@ -43,7 +43,6 @@ export async function POST(req: Request) {
     
     if (action === "update_tracker") {
       const { date, checklist, notes } = payload;
-      // Upsert based on date
       const { data: existing } = await supabase.from("MonthlyTracker").select("id").eq("date", date).maybeSingle();
       let res;
       if (existing) {
@@ -53,6 +52,57 @@ export async function POST(req: Request) {
       }
       if (res.error) throw res.error;
       return NextResponse.json(res.data[0]);
+    }
+
+    throw new Error("Invalid action");
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function PUT(req: Request) {
+  const isAdmin = await checkAdminAuth();
+  const isPrivate = await checkPrivateDashboardAuth();
+  if (!isAdmin && !isPrivate) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  try {
+    const { action, payload } = await req.json();
+
+    if (action === "update_habit") {
+      const { id, ...data } = payload;
+      const { data: res, error } = await supabase.from("HabitConfig").update(data).eq("id", id).select();
+      if (error) throw error;
+      return NextResponse.json(res[0]);
+    }
+
+    throw new Error("Invalid action");
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  const isAdmin = await checkAdminAuth();
+  const isPrivate = await checkPrivateDashboardAuth();
+  if (!isAdmin && !isPrivate) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  try {
+    const { searchParams } = new URL(req.url);
+    const action = searchParams.get("action");
+    const id = searchParams.get("id");
+    
+    if (!id || !action) throw new Error("Missing id or action");
+
+    if (action === "delete_habit") {
+      const { error } = await supabase.from("HabitConfig").delete().eq("id", id);
+      if (error) throw error;
+      return NextResponse.json({ success: true });
+    }
+
+    if (action === "delete_tracker") {
+      const { error } = await supabase.from("MonthlyTracker").delete().eq("id", id);
+      if (error) throw error;
+      return NextResponse.json({ success: true });
     }
 
     throw new Error("Invalid action");

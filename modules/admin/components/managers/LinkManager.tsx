@@ -22,8 +22,15 @@ export default function LinkManager() {
 
   const fetchData = async () => {
     setLoading(true);
-    const { data } = await supabase.from("Link").select("*").order("id", { ascending: false });
-    if (data) setItems(data);
+    try {
+      const res = await fetch("/api/admin/links");
+      if (res.ok) {
+        const data = await res.json();
+        setItems(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
     setLoading(false);
   };
 

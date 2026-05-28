@@ -22,8 +22,15 @@ export default function ChangelogManager() {
 
   const fetchData = async () => {
     setLoading(true);
-    const { data } = await supabase.from("Changelog").select("*").order("date", { ascending: false });
-    if (data) setItems(data);
+    try {
+      const res = await fetch("/api/admin/changelogs");
+      if (res.ok) {
+        const data = await res.json();
+        setItems(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
     setLoading(false);
   };
 

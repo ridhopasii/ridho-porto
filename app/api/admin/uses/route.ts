@@ -8,6 +8,21 @@ const supabase = createClient(
   (process.env.SUPABASE_SERVICE_ROLE_KEY || "placeholder")
 );
 
+export async function GET(req: Request) {
+  if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const { data, error } = await supabase
+      .from("Uses")
+      .select("*")
+      .order("id", { ascending: false });
+
+    if (error) throw error;
+    return NextResponse.json(data);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
 export async function POST(req: Request) {
   if (!(await checkAdminAuth())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {

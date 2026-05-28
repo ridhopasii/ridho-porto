@@ -7,6 +7,7 @@ import PageHeading from "@/common/components/elements/PageHeading";
 import BlogList from "@/modules/blog/components/BlogList";
 import { METADATA } from "@/common/constants/metadata";
 import { getArticlesData } from "@/services/blog";
+import { getPublicationsData } from "@/services/achievements";
 
 interface BlogPageProps {
   params: Promise<{ locale: string }>;
@@ -31,7 +32,11 @@ export async function generateMetadata({
 const BlogPage = async ({ params }: BlogPageProps) => {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "BlogPage" });
-  const articles = await getArticlesData();
+  
+  const [articles, publications] = await Promise.all([
+    getArticlesData(),
+    getPublicationsData(),
+  ]);
 
   // Filter only published articles for public viewing
   const publishedArticles = articles.filter(a => a.published);
@@ -39,7 +44,7 @@ const BlogPage = async ({ params }: BlogPageProps) => {
   return (
     <Container data-aos="fade-up">
       <PageHeading title={t("title")} description={t("description")} />
-      <BlogList articles={publishedArticles} />
+      <BlogList articles={publishedArticles} publications={publications} />
     </Container>
   );
 };

@@ -22,8 +22,15 @@ export default function UsesManager() {
 
   const fetchData = async () => {
     setLoading(true);
-    const { data } = await supabase.from("Uses").select("*").order("id", { ascending: false });
-    if (data) setItems(data);
+    try {
+      const res = await fetch("/api/admin/uses");
+      if (res.ok) {
+        const data = await res.json();
+        setItems(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
     setLoading(false);
   };
 

@@ -16,7 +16,16 @@
       "sub_title": "Explore everything I’ve crafted, contributed, and accomplished."
     },
     "error": "An error occurred on the server.",
-    "no_data": "No data available."
+    "no_data": "No data available.",
+    "services": {
+      "title": "Services",
+      "sub_title": "Digital solutions to power your business success.",
+      "cta": {
+        "title": "Have a project in mind?",
+        "sub_title": "Let's discuss your dream project and turn it into reality.",
+        "button": "Contact Me"
+      }
+    }
   },
   "AboutPage": {
     "title": "About",
@@ -73,7 +82,7 @@
     "no_data": "No data available."
   },
   "BlogPage": {
-    "title": "Blog",
+    "title": "Blog & Publications",
     "description": "Thoughts, tutorials, guides, and tech insights from my coding journey.",
     "search_placeholder": "Search articles...",
     "all_categories": "All Categories",
@@ -82,7 +91,9 @@
     "read_time": "min read",
     "error": "An error occurred while loading articles.",
     "no_data": "No articles published yet.",
-    "related_posts": "Related Posts"
+    "related_posts": "Related Posts",
+    "tab_articles": "Articles & Blog",
+    "tab_publications": "External Publications"
   },
   "DashboardPage": {
     "title": "Dashboard",
@@ -244,7 +255,7 @@
     "Social Media": "Social Media",
     "Achievements": "Achievements",
     "Projects": "Projects",
-    "Blog": "Blog",
+    "Blog": "Blog & Publications",
     "Dashboard": "Dashboard",
     "Guestbook": "Live Chat",
     "Uses": "Uses",

@@ -23,10 +23,6 @@ import TestimonialManager from "./managers/TestimonialManager";
 import ProfileManager from "./managers/ProfileManager";
 import SiteSettingsManager from "./managers/SiteSettingsManager";
 import SecurityManager from "./SecurityManager";
-import FinanceManager from "./managers/FinanceManager";
-import ProductivityManager from "./managers/ProductivityManager";
-import HabitsManager from "./managers/HabitsManager";
-import PlanningManager from "./managers/PlanningManager";
 import PublicationManager from "./managers/PublicationManager";
 import OverviewManager from "./managers/OverviewManager";
 import ServiceManager from "./managers/ServiceManager";
@@ -55,10 +51,6 @@ type AdminTab =
   | "profile"
   | "settings"
   | "security"
-  | "finance"
-  | "productivity"
-  | "habits"
-  | "planning"
   | "publications";
 
 export default function AdminDashboard() {
@@ -124,11 +116,6 @@ export default function AdminDashboard() {
     { category: "Settings & System", id: "profile", label: "Profil & Identitas", icon: "👤" },
     { id: "settings", label: "Pengaturan Global", icon: "⚙️" },
     { id: "security", label: "Keamanan (Security)", icon: "🔒" },
-
-    { category: "Private Hub", id: "finance", label: "Keuangan (Finance)", icon: "💰" },
-    { id: "productivity", label: "Produktivitas Harian", icon: "⏱️" },
-    { id: "habits", label: "Habit & Tracker", icon: "📅" },
-    { id: "planning", label: "Perencanaan Masa Depan", icon: "🎯" },
   ];
 
   const renderContent = () => {
@@ -177,14 +164,6 @@ export default function AdminDashboard() {
         return <SiteSettingsManager />;
       case "security":
         return <SecurityManager />;
-      case "finance":
-        return <FinanceManager />;
-      case "productivity":
-        return <ProductivityManager />;
-      case "habits":
-        return <HabitsManager />;
-      case "planning":
-        return <PlanningManager />;
       case "publications":
         return <PublicationManager />;
       default:
