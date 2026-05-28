@@ -24,7 +24,8 @@ export default function AdminSidebar() {
     {
       title: "UTAMA",
       items: [
-        { icon: TbHome, label: "Beranda", href: `${basePath}` },
+        { icon: TbHome, label: "Overview", href: `${basePath}` },
+        { icon: TbHome, label: "Beranda", href: `${basePath}/home` },
         { icon: TbInfoCircle, label: "Tentang", href: `${basePath}/about` },
       ]
     },
