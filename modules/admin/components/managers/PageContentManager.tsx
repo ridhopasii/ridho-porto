@@ -9,6 +9,19 @@ interface Props {
   page: string;
 }
 
+const FRIENDLY_KEYS: Record<string, string> = {
+  "intro": "Headline / Sapaan Utama",
+  "hero.prefix_text": "Kata Awalan (Sebelum Animasi)",
+  "hero.rotating_texts": "Kata Animasi Berputar (Koma)",
+  "hero.suffix_text": "Kata Akhiran (Setelah Animasi)",
+  "resume.paragraph_1": "Bio Paragraf Pertama",
+  "resume.paragraph_2": "Bio Paragraf Kedua",
+  "resume.paragraph_3": "Bio Paragraf Ketiga",
+  "resume.paragraph_4": "Bio Paragraf Keempat",
+  "location": "Lokasi Domisili",
+  "location_type": "Tipe Kerja (Remote/Onsite)",
+};
+
 export default function PageContentManager({ page }: Props) {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +68,7 @@ export default function PageContentManager({ page }: Props) {
 
       <div className="flex items-center justify-between">
         <p className="text-sm text-neutral-500">
-          Manage static text content for {page}.
+          Manage static text content for <span className="font-semibold capitalize text-neutral-800 dark:text-neutral-200">{page}</span>.
         </p>
         <button
           onClick={() => {
@@ -79,12 +92,17 @@ export default function PageContentManager({ page }: Props) {
             >
               <div className="w-full">
                 <div className="mb-2 flex items-center gap-3">
-                  <h4 className="rounded bg-blue-100 px-2 py-0.5 text-base text-xs font-bold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-                    {item.key}
+                  <h4 className="rounded bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                    {FRIENDLY_KEYS[item.key] || item.key}
                   </h4>
-                  <span className="rounded bg-neutral-200 px-2 py-0.5 text-xs font-medium uppercase dark:bg-neutral-800">
+                  <span className="rounded bg-neutral-200 px-2 py-0.5 text-[10px] font-medium uppercase dark:bg-neutral-800">
                     {item.locale}
                   </span>
+                  {FRIENDLY_KEYS[item.key] && (
+                    <span className="text-[10px] text-neutral-400 font-mono">
+                      key: {item.key}
+                    </span>
+                  )}
                 </div>
                 <p className="whitespace-pre-wrap text-sm text-neutral-600 dark:text-neutral-400">
                   {item.value}

@@ -99,12 +99,25 @@ export default function PageContentFormModal({
               <input
                 required
                 name="key"
+                list="suggested-keys"
                 value={formData.key}
                 onChange={handleChange}
                 placeholder="e.g. intro"
                 disabled={isEditing}
                 className="w-full rounded border border-neutral-300 bg-transparent p-2 disabled:opacity-50 dark:border-neutral-700"
               />
+              <datalist id="suggested-keys">
+                <option value="intro">Headline / Sapaan Utama</option>
+                <option value="hero.prefix_text">Kata Awalan (Sebelum Animasi)</option>
+                <option value="hero.rotating_texts">Kata Animasi Berputar (Koma)</option>
+                <option value="hero.suffix_text">Kata Akhiran (Setelah Animasi)</option>
+                <option value="resume.paragraph_1">Bio Paragraf Pertama</option>
+                <option value="resume.paragraph_2">Bio Paragraf Kedua</option>
+                <option value="resume.paragraph_3">Bio Paragraf Ketiga</option>
+                <option value="resume.paragraph_4">Bio Paragraf Keempat</option>
+                <option value="location">Lokasi Domisili</option>
+                <option value="location_type">Tipe Kerja (Remote/Onsite)</option>
+              </datalist>
             </div>
           </div>
           <div>
