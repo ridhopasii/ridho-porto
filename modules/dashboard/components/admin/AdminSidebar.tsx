@@ -26,7 +26,6 @@ export default function AdminSidebar() {
       items: [
         { icon: TbHome, label: "Overview", href: `${basePath}` },
         { icon: TbHome, label: "Beranda", href: `${basePath}/home` },
-        { icon: TbInfoCircle, label: "Tentang", href: `${basePath}/about` },
       ]
     },
     {
