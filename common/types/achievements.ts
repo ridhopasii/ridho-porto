@@ -10,5 +10,7 @@ export interface AchievementItem {
   issue_date: string;
   expiration_date?: string;
   image: string;
+  images?: string[];
+  description?: string;
   is_show?: boolean;
 }

@@ -38,27 +38,26 @@ export const POST = async (request: Request) => {
     });
 
     const htmlTemplate = `
-      <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
-        <h2 style="color: #333; border-bottom: 2px solid #0070f3; padding-bottom: 10px;">Pesan Baru dari Portfolio</h2>
-        <p style="font-size: 16px; color: #555;">Anda mendapatkan pesan baru dari seseorang yang mengunjungi website Anda.</p>
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 32px 20px; color: #171717;">
+        <h2 style="font-size: 24px; font-weight: 600; margin: 0 0 24px 0; border-bottom: 1px solid #e5e5e5; padding-bottom: 16px;">New Contact Message</h2>
         
-        <table style="width: 100%; border-collapse: collapse;">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
           <tr>
-            <td style="padding: 10px 0; color: #888; width: 100px;">Nama:</td>
-            <td style="padding: 10px 0; font-weight: bold; color: #333;">${name}</td>
+            <td style="padding: 8px 0; color: #737373; width: 80px; font-size: 14px;">Name:</td>
+            <td style="padding: 8px 0; font-weight: 500; font-size: 14px;">${name}</td>
           </tr>
           <tr>
-            <td style="padding: 10px 0; color: #888;">Email:</td>
-            <td style="padding: 10px 0; font-weight: bold; color: #333;">${email}</td>
+            <td style="padding: 8px 0; color: #737373; font-size: 14px;">Email:</td>
+            <td style="padding: 8px 0; font-weight: 500; font-size: 14px;">${email}</td>
           </tr>
         </table>
 
-        <div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-left: 4px solid #0070f3; color: #444; font-style: italic;">
-          "${message}"
+        <div style="background-color: #fafafa; border: 1px solid #e5e5e5; border-radius: 8px; padding: 20px; font-size: 15px; line-height: 1.6; color: #404040;">
+          ${message}
         </div>
 
-        <footer style="margin-top: 30px; font-size: 12px; color: #aaa; text-align: center;">
-          Pesan ini dikirim via sistem otomatis Portfolio ${ownerName}.
+        <footer style="margin-top: 32px; font-size: 12px; color: #a3a3a3; text-align: center;">
+          Sent from ${ownerName}'s Portfolio System
         </footer>
       </div>
     `;

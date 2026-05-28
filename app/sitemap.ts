@@ -9,8 +9,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Base static routes
   const routes = [
     "",
-    "/about",
-    "/resume",
+    "/karir",
+    "/pendidikan",
+    "/organisasi",
+    "/pencapaian",
+
     "/projects",
     "/creations",
     "/dashboard",

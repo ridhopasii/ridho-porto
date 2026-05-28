@@ -86,11 +86,21 @@ export async function POST(request: Request) {
 
     const systemInstructions = await buildSystemInstructions();
 
-    // Map messages to Gemini API format (roles: 'user' | 'model')
-    const contents = messages.map((m: any) => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: m.content }]
-    }));
+    // Inject system instruction as first message in the conversation (universally compatible)
+    const contentsWithSystem = [
+      {
+        role: "user",
+        parts: [{ text: `[SYSTEM INSTRUCTIONS - follow these always]\n${systemInstructions}\n\n[END SYSTEM INSTRUCTIONS]\n\nHello! I'm ready to answer questions.` }]
+      },
+      {
+        role: "model",
+        parts: [{ text: "Hello! I'm Smart Talk, your AI assistant. How can I help you today?" }]
+      },
+      ...messages.map((m: any) => ({
+        role: m.role === "assistant" ? "model" : "user",
+        parts: [{ text: m.content }]
+      }))
+    ];
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
@@ -98,10 +108,7 @@ export async function POST(request: Request) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents,
-          systemInstruction: {
-            parts: [{ text: systemInstructions }]
-          },
+          contents: contentsWithSystem,
           generationConfig: {
             temperature: 0.7,
             maxOutputTokens: 800,
@@ -111,6 +118,8 @@ export async function POST(request: Request) {
     );
 
     if (!response.ok) {
+      const errText = await response.text();
+      console.error("Gemini API Error details:", errText);
       return NextResponse.json(
         {
           success: false,

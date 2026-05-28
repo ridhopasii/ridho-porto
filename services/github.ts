@@ -22,7 +22,25 @@ const GithubMonthSchema = z.object({
   totalWeeks: z.number(),
 });
 
+const PinnedRepositorySchema = z.object({
+  name: z.string(),
+  description: z.string().nullable().optional(),
+  url: z.string(),
+  stargazerCount: z.number(),
+  forkCount: z.number(),
+  primaryLanguage: z.object({
+    name: z.string(),
+    color: z.string().nullable().optional(),
+  }).nullable().optional(),
+});
+
 const GithubUserSchema = z.object({
+  followers: z.object({ totalCount: z.number() }),
+  following: z.object({ totalCount: z.number() }),
+  repositories: z.object({ totalCount: z.number() }),
+  pinnedItems: z.object({
+    nodes: z.array(PinnedRepositorySchema),
+  }),
   contributionsCollection: z.object({
     contributionCalendar: z.object({
       colors: z.array(z.string()),
@@ -35,23 +53,30 @@ const GithubUserSchema = z.object({
 
 const GITHUB_USER_QUERY = `query($username: String!) {
   user(login: $username) {
+    name
+    login
+    avatarUrl
+    bio
+    url
+    repositories(first: 4, orderBy: {field: STARGAZERS, direction: DESC}) {
+      nodes {
+        name
+        description
+        url
+        stargazerCount
+        forkCount
+        primaryLanguage {
+          name
+          color
+        }
+      }
+    }
     contributionsCollection {
       contributionCalendar {
         colors
         totalContributions
-        months {
-          firstDay
-          name
-          totalWeeks
-        }
-        weeks {
-          contributionDays {
-            color
-            contributionCount
-            date
-          }
-          firstDay
-        }
+        months { firstDay name totalWeeks }
+        weeks { firstDay contributionDays { color contributionCount date } }
       }
     }
   }

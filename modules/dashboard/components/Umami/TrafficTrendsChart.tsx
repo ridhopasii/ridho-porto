@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Bar } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2";
 import { format, parseISO } from "date-fns";
 
 import {
@@ -9,19 +9,25 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend,
   ChartOptions,
+  Filler,
 } from "chart.js";
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend,
+  Filler,
 );
 
 interface DataPoint {
@@ -34,9 +40,10 @@ interface DataProps {
     pageviews: DataPoint[];
     sessions: DataPoint[];
   };
+  type?: "bar" | "line";
 }
 
-const TrafficTrendsChart = ({ data }: DataProps) => {
+const TrafficTrendsChart = ({ data, type = "bar" }: DataProps) => {
   const rawLabels = data?.pageviews?.map((point) => point.x) || [];
   const labels = rawLabels?.map((isoDate) => format(parseISO(isoDate), "MMM"));
 
@@ -46,21 +53,27 @@ const TrafficTrendsChart = ({ data }: DataProps) => {
       {
         label: "Sessions",
         data: data?.sessions?.map((point) => point.y) || [],
-        backgroundColor: "rgba(255, 255, 184, 0.7)",
-        stack: "traffic",
-        borderRadius: 4,
+        backgroundColor: type === "bar" ? "rgba(255, 255, 184, 0.7)" : "rgba(255, 255, 184, 0.2)",
+        borderColor: type === "line" ? "rgba(251, 228, 0, 1)" : "transparent",
+        stack: type === "bar" ? "traffic" : undefined,
+        borderRadius: type === "bar" ? 4 : undefined,
+        tension: 0.4,
+        fill: type === "line",
       },
       {
         label: "Page views",
         data: data?.pageviews?.map((point) => point.y) || [],
-        backgroundColor: "rgba(251, 228, 0, 0.7)",
-        stack: "traffic",
-        borderRadius: 4,
+        backgroundColor: type === "bar" ? "rgba(251, 228, 0, 0.7)" : "rgba(251, 228, 0, 0.1)",
+        borderColor: type === "line" ? "rgba(251, 228, 0, 1)" : "transparent",
+        stack: type === "bar" ? "traffic" : undefined,
+        borderRadius: type === "bar" ? 4 : undefined,
+        tension: 0.4,
+        fill: type === "line",
       },
     ],
   };
 
-  const options: ChartOptions<"bar"> = {
+  const options: any = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -76,7 +89,7 @@ const TrafficTrendsChart = ({ data }: DataProps) => {
       },
       tooltip: {
         callbacks: {
-          title: (tooltipItems) => {
+          title: (tooltipItems: any[]) => {
             const index = tooltipItems[0].dataIndex;
             const isoDate = rawLabels[index];
             return isoDate ? format(parseISO(isoDate), "MMM yyyy") : "";
@@ -86,13 +99,13 @@ const TrafficTrendsChart = ({ data }: DataProps) => {
     },
     scales: {
       x: {
-        stacked: true,
+        stacked: type === "bar",
         grid: {
           display: false,
         },
       },
       y: {
-        stacked: true,
+        stacked: type === "bar",
         beginAtZero: true,
       },
     },
@@ -100,7 +113,11 @@ const TrafficTrendsChart = ({ data }: DataProps) => {
 
   return (
     <div className="h-[350px] w-full md:h-[400px]">
-      <Bar data={chartData} options={options} />
+      {type === "bar" ? (
+        <Bar data={chartData} options={options as any} />
+      ) : (
+        <Line data={chartData} options={options as any} />
+      )}
     </div>
   );
 };

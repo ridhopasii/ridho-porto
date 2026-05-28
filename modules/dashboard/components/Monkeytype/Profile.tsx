@@ -21,11 +21,11 @@ interface ItemProps {
 const DEFAULT_AVATAR = "/profile.webp";
 
 const Item = ({ label, value }: ItemProps) => (
-  <div className="flex flex-col items-center">
-    <span className="text-xs text-neutral-600 dark:text-neutral-400">
+  <div className="flex flex-col items-center justify-center">
+    <span className="text-xs text-neutral-600 dark:text-neutral-400 text-center">
       {label}
     </span>
-    <span className="text-2xl text-primary">{value}</span>
+    <span className="text-xl font-medium text-primary mt-1">{value}</span>
   </div>
 );
 
@@ -96,58 +96,51 @@ const Profile = ({ data }: ProfileProps) => {
   );
 
   return (
-    <SpotlightCard className="flex flex-col items-center gap-x-8 gap-y-4 p-4 sm:flex-row">
-      <div className="flex flex-col gap-y-2">
-        <div className="flex gap-x-4">
-          <div className="flex items-center">
+    <SpotlightCard className="flex flex-col p-6">
+      <div className="flex w-full flex-col gap-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
             <Image
               src={avatarUrl}
-              width={80}
-              height={80}
+              width={64}
+              height={64}
               alt={fullName}
-              className="rounded-full border-2 border-neutral-400 transition-all duration-300 dark:border-neutral-600 lg:hover:scale-105"
+              className="rounded-full border-2 border-neutral-400 transition-all duration-300 dark:border-neutral-600"
             />
+            <div className="flex flex-col">
+              <span className="text-xl font-medium text-primary">
+                {data?.name}
+              </span>
+              <span className="text-sm text-neutral-600 dark:text-neutral-400">
+                {data?.details?.bio || "Just typing..."}
+              </span>
+            </div>
           </div>
-
-          <div className="flex flex-col">
-            <span className="text-2xl font-medium text-primary">
-              {data?.name}
-            </span>
-            <Tooltip title={`${durationDays} ${t("days_ago")}`}>
-              <span className="text-xs text-neutral-600 dark:text-neutral-400">
-                {t("joined")} {format(date, "dd MMM yyyy")}
-              </span>
-            </Tooltip>
-            <Tooltip
-              title={`${t("current_streak")}: ${data?.maxStreak} ${t("unit_days")}`}
-            >
-              <span className="text-xs text-neutral-600 dark:text-neutral-400">
-                {t("current_streak")}: {data?.streak} {t("unit_days")}
-              </span>
-            </Tooltip>
+          <div className="flex flex-col text-sm text-neutral-600 dark:text-neutral-400 sm:text-right">
+            <span>{t("joined")} {format(date, "dd MMM yyyy")}</span>
+            <span>{t("current_streak")}: {data?.streak} {t("unit_days")}</span>
+            <span>Keyboard: {data?.details?.keyboard || "Custom Build"}</span>
           </div>
         </div>
 
         <XpProgress />
-      </div>
 
-      <span className="hidden h-24 w-2 rounded-full bg-neutral-300 p-1 dark:bg-dark sm:inline-block" />
-
-      <div className="flex flex-grow flex-col items-center justify-between rounded-xl sm:flex-row sm:px-4 sm:py-3">
-        <Item
-          label={t("title_test_started")}
-          value={data?.typingStats.startedTests || "N/A"}
-        />
-        <Item
-          label={t("title_test_completed")}
-          value={data?.typingStats.completedTests || "N/A"}
-        />
-        <Item
-          label={t("title_time_typing")}
-          value={
-            format(new Date(0, 0, 0, 0, minutes, seconds), "HH:mm:ss") || "N/A"
-          }
-        />
+        <div className="grid grid-cols-3 divide-x divide-neutral-200 rounded-xl bg-neutral-100 p-4 dark:divide-neutral-800 dark:bg-neutral-900/50">
+          <Item
+            label={t("title_test_started")}
+            value={data?.typingStats.startedTests || "N/A"}
+          />
+          <Item
+            label={t("title_test_completed")}
+            value={data?.typingStats.completedTests || "N/A"}
+          />
+          <Item
+            label={t("title_time_typing")}
+            value={
+              format(new Date(0, 0, 0, 0, minutes, seconds), "HH:mm:ss") || "N/A"
+            }
+          />
+        </div>
       </div>
     </SpotlightCard>
   );

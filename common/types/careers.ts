@@ -15,4 +15,7 @@ export interface CareerProps {
   impact?: string[];
   indexCareer?: number;
   isShow?: boolean;
+  slug?: string;
+  description?: string;
+  images?: string[];
 }

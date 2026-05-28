@@ -9,7 +9,7 @@ import {
   BsBuildings as CompanyIcon,
   BsLightbulb as LearnIcon,
 } from "react-icons/bs";
-import { HiChevronRight as ChevronIcon } from "react-icons/hi";
+import { HiChevronRight as ChevronIcon, HiArrowRight } from "react-icons/hi";
 import { HiOutlineRocketLaunch as ImpactIcon } from "react-icons/hi2";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocale } from "next-intl";
@@ -32,6 +32,7 @@ const CareerCard = ({
   responsibilities,
   lessons_learned,
   impact,
+  slug,
 }: CareerProps) => {
   const [isShowDetails, setIsShowDetails] = useState(false);
 
@@ -145,7 +146,7 @@ const CareerCard = ({
             </span>
           </div>
 
-          <div className="pt-2">
+          <div className="pt-2 flex flex-row items-center justify-between">
             <button
               onClick={() => setIsShowDetails(!isShowDetails)}
               className="-ml-1 flex items-center justify-center gap-x-1 transition duration-300 hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-300"
@@ -161,7 +162,17 @@ const CareerCard = ({
                 {isShowDetails ? hideText : showText} {detailsText}
               </p>
             </button>
+            {slug && (
+              <Link
+                href={`/${locale}/karir/${slug}`}
+                className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+              >
+                Full Page <HiArrowRight size={14} />
+              </Link>
+            )}
+          </div>
 
+          <div className="w-full">
             <AnimatePresence>
               {isShowDetails && (
                 <motion.div

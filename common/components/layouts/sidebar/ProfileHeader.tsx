@@ -3,15 +3,12 @@
 import Link from "next/link";
 import { MdVerified as VerifiedIcon } from "react-icons/md";
 import useSWR from "swr";
+import { useEffect, useState } from "react";
+import { createBrowserClient } from "@supabase/ssr";
 
-import ThemeToggle from "./ThemeToggle";
-import IntlToggle from "./IntlToggle";
 import Tooltip from "../../elements/Tooltip";
 import Image from "../../elements/Image";
 import { fetcher } from "@/services/fetcher";
-import { useEffect } from "react";
-import { createBrowserClient } from "@supabase/ssr";
-
 import cn from "@/common/libs/clsxm";
 
 interface ProfileHeaderProps {
@@ -23,6 +20,7 @@ const DEFAULT_AVATAR = "/profile.webp";
 
 const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
   const { data, mutate } = useSWR("/api/profile", fetcher);
+  const [user, setUser] = useState<any>(null);
   
   const supabase = createBrowserClient(
     (process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co"),
@@ -30,12 +28,23 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
   );
 
   useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
     const channel = supabase
       .channel('profile-changes-header')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'Profile' }, () => mutate())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'profile' }, () => mutate())
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+
+    return () => {
+      supabase.removeChannel(channel);
+      subscription.unsubscribe();
+    };
   }, [mutate, supabase]);
   
   const fetchedAvatar = data?.avatarUrl || DEFAULT_AVATAR;
@@ -44,47 +53,51 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
   const username = data?.username || "@ridhopasii";
 
   return (
-    <div
-      className={cn(
-        "flex w-full flex-grow items-center gap-4 lg:flex-col  lg:gap-0.5",
-        expandMenu && "flex-col !items-start",
-      )}
-    >
-      <Image
-        src={avatarUrl}
-        width={expandMenu ? 80 : imageSize * 1}
-        height={expandMenu ? 80 : imageSize * 1}
-        alt={fullName}
-        className="border-2 border-neutral-400 dark:border-neutral-600 lg:hover:scale-105"
-        rounded="rounded-full"
-      />
+    <div className="flex w-full flex-col items-center">
+      {/* Premium Grid Background behind avatar (Desktop only) */}
+      <div className="hidden lg:block absolute top-0 left-0 right-0 h-[100px] bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#262626_1px,transparent_1px),linear-gradient(to_bottom,#262626_1px,transparent_1px)] bg-[size:14px_14px] rounded-t-2xl border-b border-neutral-100 dark:border-neutral-900 opacity-60 pointer-events-none" />
+      
+      {/* Avatar Container with responsive styling */}
+      <div className="relative mt-0 lg:mt-10 flex flex-col items-center w-full">
+        <Image
+          src={avatarUrl}
+          width={expandMenu ? 80 : imageSize * 1}
+          height={expandMenu ? 80 : imageSize * 1}
+          alt={fullName}
+          className="border-2 border-neutral-400 dark:border-neutral-600 lg:border-4 lg:border-white lg:dark:border-neutral-950 shadow-md lg:hover:scale-105 transition-transform duration-300"
+          rounded="rounded-full"
+        />
+        
+        {/* Name and Verification Badge */}
+        <div className="mt-3 flex items-center justify-center gap-1.5 w-full">
+          <Link href="/" passHref className="hover:opacity-80 transition-opacity">
+            <h2 className="flex items-center gap-1.5 text-base lg:text-lg font-bold text-neutral-900 dark:text-neutral-50 whitespace-nowrap">
+              {fullName}
+              <VerifiedIcon className="text-[#1D9BF0] flex-shrink-0" size={16} />
+            </h2>
+          </Link>
+        </div>
 
-      <div className="mt-1 flex items-center gap-2 lg:mt-4">
-        <Link href="/" passHref>
-          <h2 className="flex-grow text-lg font-medium lg:text-xl">
-            <span className="lg:hidden">{expandMenu ? fullName : fullName.split(" ")[0]}</span>
-            <span className="hidden lg:block">{fullName}</span>
-          </h2>
-        </Link>
-
-        <div className={cn("transition-all duration-300", !expandMenu && "hidden lg:block")}>
-          <Tooltip title="Verified">
-            <VerifiedIcon size={18} className="text-blue-400" />
-          </Tooltip>
+        {/* Username */}
+        <div className="text-xs lg:text-sm text-neutral-500 dark:text-neutral-400 mt-0.5">
+          {username}
         </div>
       </div>
 
-      <div className="hidden text-sm text-neutral-600 transition-all duration-300 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-400 lg:flex">
-        {username}
-      </div>
-
-      <div className="hidden justify-between gap-6 lg:mt-4 lg:flex">
-        <IntlToggle />
-        <ThemeToggle />
+      {/* Ayo Berkolaborasi Status Badge */}
+      <div className="mt-1.5 hidden transition-all duration-300 lg:flex">
+        <div className="flex items-center gap-1.5 overflow-hidden rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 yellow:border-amber-400/50 yellow:bg-amber-400/15 ramadan:border-amber-500/40 ramadan:bg-amber-500/10 valentine:border-rose-400/40 valentine:bg-rose-400/10">
+          <span className="relative flex h-1.5 w-1.5 shrink-0">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75 yellow:bg-amber-400 ramadan:bg-amber-400 valentine:bg-rose-400"></span>
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary yellow:bg-amber-500 ramadan:bg-amber-500 valentine:bg-rose-500"></span>
+          </span>
+          <div className="relative h-4 overflow-hidden">
+            <span className="block text-[11px] font-semibold tracking-wide text-primary yellow:text-amber-700 ramadan:text-amber-400 valentine:text-rose-600 whitespace-nowrap" style={{ opacity: 1, transform: "none" }}>Ayo Berkolaborasi</span>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default ProfileHeader;
-

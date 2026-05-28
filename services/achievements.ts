@@ -3,6 +3,20 @@ import { supabaseServer } from "@/common/libs/supabase-server";
 import { createPublicClient } from "@/common/utils/serverPublic";
 import { PublicationItem } from "@/common/types/publication";
 
+const parseImages = (images: any): string[] => {
+  if (Array.isArray(images)) return images.filter(Boolean);
+  if (typeof images === "string") {
+    if (images.trim().startsWith("[")) {
+      try {
+        const parsed = JSON.parse(images);
+        if (Array.isArray(parsed)) return parsed.filter(Boolean);
+      } catch {}
+    }
+    return images.trim() ? [images] : [];
+  }
+  return [];
+};
+
 export const getAchievementsData = async (params?: { category?: string; search?: string }) => {
   const supabase = createPublicClient();
   let query = supabase.from("Award").select("*");
@@ -19,6 +33,7 @@ export const getAchievementsData = async (params?: { category?: string; search?:
   if (!data) return [];
 
   return data.map((item) => {
+    const parsedImages = parseImages(item.images);
     return {
       id: item.id,
       credential_id: item.credentialId || "",
@@ -27,10 +42,12 @@ export const getAchievementsData = async (params?: { category?: string; search?:
       issuing_organization: item.organizer,
       type: item.category || "Penghargaan",
       category: item.category || "Penghargaan",
-      url_credential: item.certificateUrl || item.proofUrl || "",
-      issue_date: item.createdAt || new Date().toISOString(),
-      image: item.images || "/images/achievements/placeholder.webp",
+      url_credential: item.proofUrl || item.certificateUrl || "",
+      issue_date: item.date || item.createdAt || new Date().toISOString(),
+      image: item.certificateUrl || (parsedImages.length > 0 ? parsedImages[0] : "/images/achievements/placeholder.webp"),
       is_show: item.showOnHome ?? true,
+      description: item.description || "",
+      images: parsedImages,
     };
   });
 };

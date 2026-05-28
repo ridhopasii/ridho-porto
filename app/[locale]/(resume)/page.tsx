@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
 
-import Container from "@/common/components/elements/Container";
+
 import { getPageContent, readPageContent } from "@/common/libs/page-content";
 import Home from "@/modules/home";
 import { METADATA } from "@/common/constants/metadata";
@@ -48,9 +48,9 @@ const HomePage = async ({ params }: HomePageProps) => {
   const { locale } = await params;
   const content = await getPageContent("home", locale);
   return (
-    <Container data-aos="fade-up">
+    <>
       <Home content={content} />
-    </Container>
+    </>
   );
 };
 

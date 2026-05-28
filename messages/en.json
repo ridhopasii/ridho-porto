@@ -4,7 +4,7 @@
     "location": "Based in Jambi, Indonesia 🇮🇩",
     "location_type": "Onsite",
     "resume": {
-      "paragraph_1": "An Informatics Engineering student at UNJA focused on building functional and clean web products.",
+      "paragraph_1": "An Informatics Engineering student at USU focused on building functional and clean web products.",
       "paragraph_2": "I love tinkering with Next.js, UI/UX, and things that make users feel at home."
     },
     "skills": {
@@ -22,7 +22,7 @@
     "title": "About",
     "description": "A brief introduction to who I am.",
     "resume": {
-      "paragraph_1": "An Informatics Engineering student at UNJA focused on building functional and clean web products.",
+      "paragraph_1": "An Informatics Engineering student at USU focused on building functional and clean web products.",
       "paragraph_2": "I love tinkering with Next.js, UI/UX, and things that make users feel at home. My focus is on building efficient, production-ready applications that solve real business problems.",
       "paragraph_3": "Whether it is digitalizing manual workflows like attendance tracking or creating seamless corporate landing pages, I build with impact in mind.",
       "paragraph_4": "Best regards,"
@@ -89,6 +89,10 @@
     "description": "My personal dashboard built with Next.js API routes, visualizing development statistics and contributions in real-time.",
     "error": "An error occurred on the server.",
     "no_data": "No data available.",
+    "uses": {
+      "title": "Uses",
+      "sub_title": "Tools and software I use."
+    },
     "umami": {
       "title": "Umami",
       "sub_title": "Monitor real-time traffic and interactions from my portfolio site.",
@@ -243,7 +247,7 @@
     "Projects": "Projects",
     "Blog": "Blog",
     "Dashboard": "Dashboard",
-    "Guestbook": "Guestbook",
+    "Guestbook": "Live Chat",
     "Uses": "Uses",
     "Chat Room": "Chat Room",
     "Contact": "Contact",

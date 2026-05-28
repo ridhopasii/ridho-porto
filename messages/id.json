@@ -4,7 +4,7 @@
     "location": "Berdomisili di Jambi, Indonesia 🇮🇩",
     "location_type": "Onsite",
     "resume": {
-      "paragraph_1": "Mahasiswa Teknik Informatika UNJA yang fokus membangun produk web yang fungsional dan bersih.",
+      "paragraph_1": "Mahasiswa Teknik Informatika USU yang fokus membangun produk web yang fungsional dan bersih.",
       "paragraph_2": "Suka ngulik Next.js, UI/UX, dan hal-hal yang bikin pengguna betah."
     },
     "skills": {
@@ -22,7 +22,7 @@
     "title": "Tentang",
     "description": "Pengenalan singkat mengenai siapa saya.",
     "resume": {
-      "paragraph_1": "Mahasiswa Teknik Informatika UNJA yang fokus membangun produk web yang fungsional dan bersih.",
+      "paragraph_1": "Mahasiswa Teknik Informatika USU yang fokus membangun produk web yang fungsional dan bersih.",
       "paragraph_2": "Suka ngulik Next.js, UI/UX, dan hal-hal yang bikin pengguna betah. Fokus utama saya adalah membangun aplikasi yang efisien untuk memecahkan masalah bisnis yang nyata.",
       "paragraph_3": "Baik itu digitalisasi alur kerja manual seperti pelacakan absensi, atau membuat halaman promosi yang mulus, saya membangun dengan orientasi dampak.",
       "paragraph_4": "Salam hangat,"
@@ -89,6 +89,10 @@
     "description": "Dasbor pribadi saya yang dibangun dengan rute API Next.js, memvisualisasikan statistik pengembangan dan kontribusi secara real-time.",
     "error": "Terjadi kesalahan pada server.",
     "no_data": "Statistik tidak tersedia.",
+    "uses": {
+      "title": "Peralatan",
+      "sub_title": "Alat dan perangkat lunak yang saya gunakan."
+    },
     "umami": {
       "title": "Umami",
       "sub_title": "Pantau trafik dan interaksi real-time dari situs portofolio saya.",
@@ -243,7 +247,7 @@
     "Projects": "Proyek",
     "Blog": "Blog",
     "Dashboard": "Dasbor",
-    "Guestbook": "Buku Tamu",
+    "Guestbook": "Chat Live",
     "Uses": "Peralatan",
     "Chat Room": "Ruang Obrolan",
     "Contact": "Kontak",

@@ -12,7 +12,7 @@ export const UMAMI_ACCOUNT = {
     unit: "month",
     timezone: "Asia/Jakarta",
   },
-  is_active: false,
+  is_active: true,
   websites: [
     {
       domain: "satriabahari.my.id",

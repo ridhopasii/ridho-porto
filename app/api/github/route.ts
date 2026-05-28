@@ -96,6 +96,15 @@ function generateMockGithubData() {
   });
   
   return {
+    followers: { totalCount: 120 },
+    following: { totalCount: 45 },
+    repositories: { totalCount: 32 },
+    pinnedItems: {
+      nodes: [
+        { name: "mock-portfolio", description: "Mock portfolio built with Next.js", url: "#", stargazerCount: 42, forkCount: 5, primaryLanguage: { name: "TypeScript", color: "#3178c6" } },
+        { name: "mock-library", description: "A simple mock utility library", url: "#", stargazerCount: 18, forkCount: 2, primaryLanguage: { name: "JavaScript", color: "#f1e05a" } }
+      ]
+    },
     contributionsCollection: {
       contributionCalendar: {
         colors,

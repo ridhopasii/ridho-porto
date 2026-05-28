@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { format, parseISO } from "date-fns";
 import { m as motion, AnimatePresence } from "framer-motion";
 import { HiOutlineArrowSmRight as ViewIcon } from "react-icons/hi";
@@ -12,6 +12,7 @@ import Image from "@/common/components/elements/Image";
 import SpotlightCard from "@/common/components/elements/SpotlightCard";
 import Portal from "@/common/components/elements/Portal";
 import Link from "next/link";
+import MDXComponent from "@/common/components/elements/MDXComponent";
 
 const AchievementCard = ({
   id,
@@ -23,11 +24,25 @@ const AchievementCard = ({
   category,
   credential_id,
   url_credential,
+  slug,
+  description,
 }: AchievementItem) => {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("AchievementsPage");
+  const locale = useLocale();
 
-  const issueDate = issue_date ? format(parseISO(issue_date), "MMMM yyyy") : "";
+  let issueDate = "";
+  if (issue_date) {
+    try {
+      const parsed = parseISO(issue_date);
+      // Ensure it's a valid date before formatting
+      if (!isNaN(parsed.getTime())) {
+        issueDate = format(parsed, "MMMM yyyy");
+      }
+    } catch (error) {
+      // Ignore invalid date errors
+    }
+  }
 
   useEffect(() => {
     if (isOpen) {
@@ -178,6 +193,17 @@ const AchievementCard = ({
                           {issueDate}
                         </p>
                       </div>
+
+                      {description && (
+                        <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800">
+                          <p className="text-xs uppercase text-neutral-400 mb-2">
+                            Description
+                          </p>
+                          <div className="text-sm dark:text-neutral-300 leading-relaxed">
+                            <MDXComponent>{description}</MDXComponent>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {url_credential && (
@@ -187,6 +213,16 @@ const AchievementCard = ({
                       >
                         <p className="text-sm font-semibold ">Credential URL</p>
                         <ViewIcon size={20} className=" " />
+                      </Link>
+                    )}
+                    
+                    {slug && (
+                      <Link
+                        href={`/${locale}/pencapaian/${slug}`}
+                        className="mt-4 flex w-fit justify-between gap-2 rounded-full border border-neutral-300 bg-neutral-100 dark:bg-neutral-800 dark:border-neutral-700 px-4 py-2 transition duration-300 hover:scale-105"
+                      >
+                        <p className="text-sm font-semibold">View Full Page</p>
+                        <ViewIcon size={20} />
                       </Link>
                     )}
                   </div>

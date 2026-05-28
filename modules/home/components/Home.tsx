@@ -4,6 +4,7 @@ import { PageContentMap } from "@/common/libs/page-content";
 
 import HeroSection from "./HeroSection";
 import HomeSkills from "./HomeSkills";
+import ContactList from "@/modules/contact/components/ContactList";
 import FeaturedProjects from "./FeaturedProjects";
 import RecentPosts from "./RecentPosts";
 import Story from "@/modules/about/components/Story";
@@ -34,51 +35,78 @@ interface HomeProps {
 
 const Home = ({ content }: HomeProps) => {
   return (
-    <div className="space-y-10 pb-10">
+    <div className="space-y-12 pb-24 md:pb-10">
       {/* Hero / Introduction */}
-      <HeroSection content={content} />
+      <section className="mb-12">
+        <HeroSection content={content} />
+      </section>
+
+      <hr className="border-neutral-100 dark:border-neutral-800/50" />
+
+      {/* Social Media Pill Buttons */}
+      <section className="pt-2" id="contact">
+        <ContactList />
+      </section>
+
+      <hr className="border-neutral-100 dark:border-neutral-800/50" />
 
       {/* Tech Skills */}
+      <section className="pt-2">
+        <Suspense
+          fallback={
+            <div className="animate-pulse space-y-3">
+              <div className="h-5 w-24 rounded bg-neutral-200 dark:bg-neutral-800" />
+              <div className="flex flex-wrap gap-2">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                  <div
+                    key={i}
+                    className="h-8 w-20 rounded-full bg-neutral-100 dark:bg-neutral-800"
+                  />
+                ))}
+              </div>
+            </div>
+          }
+        >
+          <HomeSkills />
+        </Suspense>
+      </section>
+
+      {/* Featured Projects */}
       <Suspense
         fallback={
-          <div className="animate-pulse space-y-3">
-            <div className="h-5 w-24 rounded bg-neutral-200 dark:bg-neutral-800" />
-            <div className="flex flex-wrap gap-2">
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <div
-                  key={i}
-                  className="h-8 w-20 rounded-full bg-neutral-100 dark:bg-neutral-800"
-                />
-              ))}
-            </div>
+          <div className="space-y-12">
+            <hr className="border-neutral-100 dark:border-neutral-800/50" />
+            <section className="pt-2">
+              <SectionSkeleton />
+            </section>
           </div>
         }
       >
-        <HomeSkills />
-      </Suspense>
-
-      {/* Featured Projects */}
-      <Suspense fallback={<SectionSkeleton />}>
         <FeaturedProjects />
       </Suspense>
 
       {/* Recent Blog Posts */}
       <Suspense
         fallback={
-          <div className="animate-pulse space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="flex gap-4 rounded-xl border border-neutral-200 p-4 dark:border-neutral-800"
-              >
-                <div className="h-14 w-20 flex-shrink-0 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
-                <div className="flex-1 space-y-2">
-                  <div className="h-3 w-16 rounded bg-neutral-100 dark:bg-neutral-800" />
-                  <div className="h-4 w-48 rounded bg-neutral-200 dark:bg-neutral-700" />
-                  <div className="h-3 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
-                </div>
+          <div className="space-y-12">
+            <hr className="border-neutral-100 dark:border-neutral-800/50" />
+            <section className="pt-2">
+              <div className="animate-pulse space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="flex gap-4 rounded-xl border border-neutral-200 p-4 dark:border-neutral-800"
+                  >
+                    <div className="h-14 w-20 flex-shrink-0 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-3 w-16 rounded bg-neutral-100 dark:bg-neutral-800" />
+                      <div className="h-4 w-48 rounded bg-neutral-200 dark:bg-neutral-700" />
+                      <div className="h-3 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </section>
           </div>
         }
       >

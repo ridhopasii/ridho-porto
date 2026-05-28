@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MdVerified as VerifiedIcon,
   MdLocationOn as LocationIcon,
 } from "react-icons/md";
 import {
@@ -31,6 +30,9 @@ const HeroSection = ({ content }: HeroSectionProps) => {
   const t = useTranslations("HomePage");
   const { data: profile, mutate } = useSWR("/api/profile", fetcher);
   const { data: socialsData } = useSWR("/api/admin/social", fetcher);
+  const { data: galleryData } = useSWR("/api/admin/gallery", fetcher);
+  
+  const galleryItems = Array.isArray(galleryData) ? galleryData.slice(0, 5) : [];
   
   const [liveContent, setLiveContent] = useState(content || {});
   
@@ -90,7 +92,6 @@ const HeroSection = ({ content }: HeroSectionProps) => {
               <h3 className="text-2xl font-semibold tracking-tight">
                 {fullName}
               </h3>
-              <VerifiedIcon size={18} className="text-blue-400" />
             </div>
             <span className="text-sm text-neutral-500 dark:text-neutral-500">
               {username}
@@ -140,7 +141,7 @@ const HeroSection = ({ content }: HeroSectionProps) => {
             </Link>
           ))}
           <Link
-            href="/contact"
+            href="#contact"
             className="ml-auto flex items-center gap-1.5 rounded-full bg-neutral-900 px-4 py-1.5 text-sm font-medium text-white transition-all duration-200 hover:opacity-80 dark:bg-white dark:text-neutral-900"
           >
             Hire me
@@ -151,13 +152,14 @@ const HeroSection = ({ content }: HeroSectionProps) => {
         <hr className="mt-5 border-neutral-200 dark:border-neutral-800" />
       </div>
 
-      {/* Main Hero Content */}
-      <motion.div
-        className="space-y-5"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-      >
+      {/* Main Hero Content and Decorative Block */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <motion.div
+          className="space-y-5 lg:col-span-7"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
         {/* Status Badge */}
         <motion.div
           className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-sm dark:border-neutral-800 dark:bg-neutral-900/50"
@@ -181,20 +183,22 @@ const HeroSection = ({ content }: HeroSectionProps) => {
             {readPageContent(liveContent, "intro", t("intro"))}
           </h1>
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xl text-neutral-600 dark:text-neutral-400">
-            <span className="font-light">{prefixText}</span>
-            <span className="overflow-hidden font-semibold text-neutral-800 dark:text-neutral-200">
-              <RotatingText
-                texts={rotatingTexts}
-                mainClassName="inline-flex"
-                splitBy="characters"
-                staggerDuration={0.02}
-                staggerFrom="first"
-                rotationInterval={2800}
-                transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                elementLevelClassName="text-violet-500 dark:text-violet-400"
-              />
+            <span className="inline-flex items-center gap-x-2">
+              <span className="font-light">{prefixText}</span>
+              <span className="overflow-hidden font-semibold text-neutral-800 dark:text-neutral-200">
+                <RotatingText
+                  texts={rotatingTexts}
+                  mainClassName="inline-flex"
+                  splitBy="characters"
+                  staggerDuration={0.02}
+                  staggerFrom="first"
+                  rotationInterval={2800}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                  elementLevelClassName="text-violet-500 dark:text-violet-400"
+                />
+              </span>
+              <span className="font-light">{suffixText}</span>
             </span>
-            <span className="font-light">{suffixText}</span>
           </div>
         </div>
 
@@ -226,8 +230,8 @@ const HeroSection = ({ content }: HeroSectionProps) => {
             <HiOutlineExternalLink size={15} />
           </Link>
           <Link
-            href="/resume"
-            className="inline-flex items-center gap-2 rounded-xl border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-700 transition-all duration-200 hover:bg-neutral-100 active:scale-95 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+            href="/"
+            className="group relative flex items-center gap-2 overflow-hidden rounded-full border border-neutral-300 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-800 transition-all hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
           >
             Resume
           </Link>
@@ -246,7 +250,79 @@ const HeroSection = ({ content }: HeroSectionProps) => {
             ))}
           </div>
         </div>
-      </motion.div>
+        </motion.div>
+
+        {/* Swipeable Gallery Preview for Right Side */}
+        <motion.div 
+          className="hidden lg:flex lg:col-span-5 items-center justify-center"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+        >
+          <div className="relative w-full max-w-sm">
+            {/* Ambient glow */}
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-violet-500 to-emerald-400 opacity-20 blur-xl"></div>
+            
+            <div className="relative overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 p-2 backdrop-blur-sm shadow-xl">
+              {galleryItems.length > 0 ? (
+                <>
+                  <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory rounded-xl [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    {galleryItems.map((item: any) => {
+                      const rawSrc = item.images?.[0] || item.imageUrl;
+                      const isValidSrc = typeof rawSrc === "string" && (rawSrc.startsWith("http") || rawSrc.startsWith("/"));
+                      
+                      return (
+                      <div 
+                        key={item.id} 
+                        className="relative min-w-full aspect-[4/5] snap-center overflow-hidden rounded-xl border border-neutral-100 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-800 group cursor-grab active:cursor-grabbing"
+                      >
+                        {isValidSrc ? (
+                          <Image 
+                            src={rawSrc} 
+                            alt={item.description || "Gallery"} 
+                            fill 
+                            className="object-cover transition-transform duration-500 group-hover:scale-105" 
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-neutral-400">No Image</div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
+                        <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-2 group-hover:translate-y-0 transition-transform">
+                          {item.category && (
+                            <span className="mb-2 inline-block rounded-full bg-violet-500/80 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-md">
+                              {item.category}
+                            </span>
+                          )}
+                          <p className="text-white text-sm font-medium line-clamp-2 leading-relaxed">
+                            {item.description}
+                          </p>
+                        </div>
+                      </div>
+                      );
+                    })}
+                  </div>
+                  
+                  <div className="mt-3 flex items-center justify-between px-2">
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium animate-pulse">
+                      &larr; Swipe &rarr;
+                    </span>
+                    <Link 
+                      href="/creations" 
+                      className="text-xs text-violet-600 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300 font-semibold transition-colors flex items-center gap-1"
+                    >
+                      Buka Galeri <HiOutlineExternalLink size={12} />
+                    </Link>
+                  </div>
+                </>
+              ) : (
+                <div className="w-full aspect-[4/5] rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse flex items-center justify-center">
+                  <span className="text-neutral-400 text-sm">Memuat galeri...</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 };

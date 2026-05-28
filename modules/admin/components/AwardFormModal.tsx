@@ -3,12 +3,18 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import ImageUploader from "./ImageUploader";
+import MarkdownEditor from "./MarkdownEditor";
 
 interface AwardFormModalProps {
   award?: any;
   onClose: () => void;
   onSuccess: () => void;
 }
+
+const normalizeImages = (images: unknown): string[] => {
+  if (!Array.isArray(images)) return [];
+  return images.filter((url): url is string => typeof url === "string" && !!url);
+};
 
 export default function AwardFormModal({ award, onClose, onSuccess }: AwardFormModalProps) {
   const isEditing = !!award;
@@ -23,6 +29,7 @@ export default function AwardFormModal({ award, onClose, onSuccess }: AwardFormM
     certificateUrl: award?.certificateUrl || "",
     proofUrl: award?.proofUrl || "",
     credentialId: award?.credentialId || "",
+    images: normalizeImages(award?.images).length > 0 ? normalizeImages(award?.images) : [""],
     showOnHome: award?.showOnHome ?? true,
   });
 
@@ -43,6 +50,7 @@ export default function AwardFormModal({ award, onClose, onSuccess }: AwardFormM
 
     try {
       const payload = isEditing ? { id: award.id, ...formData } : formData;
+      payload.images = formData.images.filter(Boolean);
       const res = await fetch("/api/admin/awards", {
         method: isEditing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
@@ -108,7 +116,12 @@ export default function AwardFormModal({ award, onClose, onSuccess }: AwardFormM
 
           <div>
             <label className="block text-sm font-medium mb-1">Description</label>
-            <textarea name="description" value={formData.description} onChange={handleChange} rows={2} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
+            <MarkdownEditor
+              value={formData.description}
+              onChange={(val) => setFormData({...formData, description: val})}
+              rows={4}
+              placeholder="Description (Markdown supported)..."
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -123,6 +136,56 @@ export default function AwardFormModal({ award, onClose, onSuccess }: AwardFormM
             <div>
               <label className="block text-sm font-medium mb-1">Proof URL</label>
               <input name="proofUrl" value={formData.proofUrl} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
+            </div>
+          </div>
+
+          <div className="space-y-3 rounded-xl border border-dashed border-neutral-300 p-4 dark:border-neutral-700 mt-4">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-medium">Gallery Images</p>
+                <p className="text-xs text-neutral-500">Upload multiple supporting images for this achievement.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setFormData((prev) => ({ ...prev, images: [...prev.images, ""] }))}
+                className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
+              >
+                + Add Image
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {formData.images.map((imageUrl, index) => (
+                <div key={`award-image-${index}`} className="rounded-xl border border-neutral-200 p-3 dark:border-neutral-800">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-xs font-medium text-neutral-500">Image {index + 1}</span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData((prev) => {
+                          const nextImages = prev.images.filter((_, imageIndex) => imageIndex !== index);
+                          return { ...prev, images: nextImages.length > 0 ? nextImages : [""] };
+                        })
+                      }
+                      className="text-xs font-medium text-red-600 hover:underline"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <ImageUploader
+                    label={`Upload Image ${index + 1}`}
+                    value={imageUrl}
+                    onChange={(url) =>
+                      setFormData((prev) => {
+                        const nextImages = [...prev.images];
+                        nextImages[index] = url;
+                        return { ...prev, images: nextImages };
+                      })
+                    }
+                    path="awards"
+                  />
+                </div>
+              ))}
             </div>
           </div>
 

@@ -29,7 +29,7 @@ const CodingActiveList = ({ data }: CodingActiveListProps) => {
       <p className="text-neutral-600 dark:text-neutral-400">{t("languages")}</p>
 
       <ul className="grid grid-cols-1 gap-x-12 sm:grid-cols-2">
-        {data?.languages?.map((subItem) => (
+        {data?.languages?.slice(0, 4).map((subItem) => (
           <li key={subItem?.name}>
             <Progress
               data={subItem}

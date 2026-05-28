@@ -46,7 +46,7 @@ const Services = () => {
         </p>
         <Button
           className="transition duration-300 hover:scale-105 active:scale-95"
-          onClick={() => router.push("/contact")}
+          onClick={() => router.push("/#contact")}
         >
           {t("cta.button")}
         </Button>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 
 import ImageUploader from "./ImageUploader";
+import MarkdownEditor from "./MarkdownEditor";
 
 interface OrganizationFormModalProps {
   item?: any;
@@ -186,16 +187,12 @@ export default function OrganizationFormModal({
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium">
-              Description
-            </label>
-            <textarea
-              name="description"
+            <label className="mb-1 block text-sm font-medium">Description</label>
+            <MarkdownEditor
               value={formData.description}
-              onChange={handleChange}
+              onChange={(val) => setFormData({...formData, description: val})}
               rows={4}
-              className="w-full rounded border border-neutral-300 bg-transparent p-2 dark:border-neutral-700"
-              placeholder="Short description of the organization"
+              placeholder="Detailed description of the organization (Markdown supported)..."
             />
           </div>
 

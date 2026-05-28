@@ -19,7 +19,9 @@ const FeaturedProjects = async () => {
   if (featuredProjects.length === 0) return null;
 
   return (
-    <section className="space-y-4">
+    <div className="space-y-12">
+      <hr className="border-neutral-100 dark:border-neutral-800/50" />
+      <section className="pt-2 space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
@@ -118,7 +120,8 @@ const FeaturedProjects = async () => {
           </div>
         ))}
       </div>
-    </section>
+      </section>
+    </div>
   );
 };
 

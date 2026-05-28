@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       name: data.name,
       email: data.email,
       message: data.message,
-      isApproved: false // Always false initially for safety
+      isApproved: true // Instantly visible by default, admin can still moderate or delete it
     }]);
 
     if (error) throw error;

@@ -1,5 +1,5 @@
 export const GITHUB_ACCOUNTS = {
-  username: "ridhopasii",
+  username: process.env.GITHUB_ID || "ridhopasii",
   token: process.env.GITHUB_TOKEN,
   endpoint: "/api/github",
   type: "personal",

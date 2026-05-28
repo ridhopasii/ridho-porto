@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
 import { useTranslations } from "next-intl";
@@ -15,6 +16,7 @@ const TIKTOK_API_BASE = "/api/tiktok?action=";
 
 const Tiktok = () => {
   const t = useTranslations("ContentsPage");
+  const [sortOption, setSortOption] = useState<"newest" | "oldest" | "views" | "likes" | "comments">("newest");
 
   const { data: profile, isLoading: profileLoading } = useSWR(
     `${TIKTOK_API_BASE}profile`,
@@ -40,6 +42,22 @@ const Tiktok = () => {
   const hasMore = data ? data[data.length - 1]?.has_more : false;
   const isRefreshing = videoValidating && data && data.length === size;
 
+  const sortedVideos = [...allVideos].sort((a, b) => {
+    switch (sortOption) {
+      case "oldest":
+        return a.create_time - b.create_time;
+      case "views":
+        return b.view_count - a.view_count;
+      case "likes":
+        return b.like_count - a.like_count;
+      case "comments":
+        return b.comment_count - a.comment_count;
+      case "newest":
+      default:
+        return b.create_time - a.create_time;
+    }
+  });
+
   const isLoadingInitial = profileLoading || (videoLoading && !data);
 
   if (isLoadingInitial) {
@@ -57,9 +75,23 @@ const Tiktok = () => {
 
   return (
     <section className="space-y-4">
-      <ProfileHeader {...profile?.data} />
+      <ProfileHeader {...profile?.data} allVideos={allVideos} />
 
-      <VideoList videos={allVideos} />
+      <div className="flex justify-end">
+        <select 
+          value={sortOption} 
+          onChange={(e) => setSortOption(e.target.value as any)}
+          className="rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+        >
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="views">Most Views</option>
+          <option value="likes">Most Likes</option>
+          <option value="comments">Most Comments</option>
+        </select>
+      </div>
+
+      <VideoList videos={sortedVideos} />
 
       {hasMore && (
         <div className="flex justify-center">

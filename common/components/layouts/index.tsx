@@ -34,11 +34,14 @@ const Layouts = ({ children }: LayoutsProps) => {
 
   return (
     <LazyMotion features={domMax}>
-      <div className="mx-auto max-w-7xl lg:px-12">
-        <div className="mx-auto flex flex-col lg:flex-row lg:gap-5 lg:py-4">
+      <div className="relative mx-auto max-w-7xl lg:px-12">
+        <div className="mx-auto flex flex-col lg:flex-row lg:gap-8 lg:py-8">
           <Sidebar />
-          <main className="max-w-[854px] transition-all duration-300 lg:w-4/5">
-            {children}
+          <main className="relative w-full max-w-[854px] transition-all duration-300 lg:w-4/5">
+            {/* Elegant glass container for the main content */}
+            <div className="min-h-screen w-full rounded-3xl border border-neutral-200/50 bg-white/40 p-4 shadow-sm backdrop-blur-xl dark:border-neutral-800/50 dark:bg-neutral-900/40 md:p-8">
+              {children}
+            </div>
           </main>
         </div>
         <Notif />

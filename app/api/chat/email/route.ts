@@ -13,41 +13,19 @@ export const POST = async (request: Request) => {
       },
     });
 
-    // Warna Utama & Tekstur
-    const primaryColor = "#fbe400";
-    const darkColor = "#1e293b";
-
-    const mainContainer = `font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; color: ${darkColor};`;
-    const headerStyle = `background-color: ${primaryColor}; padding: 30px 24px; text-align: center;`;
-    const bodyStyle = "padding: 32px; background-color: #ffffff;";
-    const footerStyle =
-      "padding: 20px; text-align: center; background-color: #f8fafc; color: #64748b; font-size: 12px; border-top: 1px solid #e2e8f0;";
-
-    const buttonStyle = `display: inline-block; padding: 12px 24px; background-color: ${primaryColor}; color: ${darkColor}; text-decoration: none; border-radius: 8px; font-weight: 700; margin-top: 20px;`;
-    const quoteStyle = `margin: 20px 0; padding: 16px; border-left: 4px solid ${primaryColor}; background-color: #fffdec; color: #454c00; font-style: italic; line-height: 1.6;`;
-
     if (body.type === "REPLY_NOTIFICATION") {
       const { targetEmail, senderName, message } = body;
 
       const htmlReply = `
-        <div style="${mainContainer}">
-          <div style="${headerStyle}">
-            <h1 style="color: ${darkColor}; margin: 0; font-size: 20px; font-weight: bold;">Pesan Kamu Dibalas!</h1>
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 32px 20px; color: #171717;">
+          <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 24px 0;">New Reply on Guestbook</h2>
+          <p style="font-size: 15px; line-height: 1.6; margin-bottom: 24px; color: #404040;">
+            <strong>${senderName}</strong> replied to your message on the Guestbook:
+          </p>
+          <div style="background-color: #fafafa; border-left: 3px solid #171717; padding: 16px 20px; font-size: 15px; line-height: 1.6; color: #404040; margin-bottom: 24px;">
+            ${message}
           </div>
-          <div style="${bodyStyle}">
-            <p style="font-size: 16px; margin-top: 0;">Halo,</p>
-            <p style="font-size: 15px; line-height: 1.5;">
-              <strong>${senderName}</strong> baru saja memberikan balasan untuk pesan kamu di Chat Room:
-            </p>
-            <div style="${quoteStyle}">
-              "${message}"
-            </div>
-            <p style="font-size: 14px; color: #64748b; margin-top: 24px;">Klik tombol di bawah ini untuk melihat percakapan lengkap.</p>
-            <a href="https://ridhorobbipasi.my.id/chat" style="${buttonStyle}">Buka Chat Room</a>
-          </div>
-          <div style="${footerStyle}">
-            Sent by Ridho Robbi Pasi Portfolio System • www.ridhorobbipasi.my.id • Aceh, Indonesia
-          </div>
+          <a href="https://ridhorobbipasi.my.id/guestbook" style="display: inline-block; background-color: #171717; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 14px; font-weight: 500;">View Guestbook</a>
         </div>
       `;
 
@@ -61,35 +39,29 @@ export const POST = async (request: Request) => {
       const { name, email, message } = body;
 
       const htmlNewChat = `
-        <div style="${mainContainer}">
-          <div style="${headerStyle}">
-            <h1 style="color: ${darkColor}; margin: 0; font-size: 20px; font-weight: bold;">💬 Chat Room Alert</h1>
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 32px 20px; color: #171717;">
+          <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 24px 0;">New Guestbook Message</h2>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+            <tr>
+              <td style="padding: 8px 0; color: #737373; width: 80px; font-size: 14px;">Name:</td>
+              <td style="padding: 8px 0; font-weight: 500; font-size: 14px;">${name}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #737373; font-size: 14px;">Email:</td>
+              <td style="padding: 8px 0; font-weight: 500; font-size: 14px;">${email}</td>
+            </tr>
+          </table>
+          <div style="background-color: #fafafa; border-left: 3px solid #171717; padding: 16px 20px; font-size: 15px; line-height: 1.6; color: #404040; margin-bottom: 24px;">
+            ${message}
           </div>
-          <div style="${bodyStyle}">
-            <p style="font-size: 16px; margin-top: 0;">Hi Ridho,</p>
-            <p style="font-size: 15px;">Kamu mendapatkan pesan baru dari seseorang di Chat Room kamu.</p>
-            
-            <div style="background-color: #f8fafc; border-radius: 8px; padding: 16px; margin: 20px 0; border: 1px solid #e2e8f0;">
-                <p style="margin: 0; font-size: 14px;"><strong>Pengirim:</strong> ${name}</p>
-                <p style="margin: 5px 0 0 0; font-size: 14px;"><strong>Email:</strong> ${email}</p>
-            </div>
-
-            <div style="${quoteStyle}">
-              "${message}"
-            </div>
-            
-            <a href="https://ridhorobbipasi.my.id/chat" style="${buttonStyle}">Balas Sekarang</a>
-          </div>
-          <div style="${footerStyle}">
-            Automated Notification System • Portfolio App
-          </div>
+          <a href="https://ridhorobbipasi.my.id/guestbook" style="display: inline-block; background-color: #171717; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 14px; font-weight: 500;">Reply in Guestbook</a>
         </div>
       `;
 
       await transporter.sendMail({
-        from: `"Chat System" <${process.env.NODEMAILER_EMAIL}>`,
+        from: `"Guestbook System" <${process.env.NODEMAILER_EMAIL}>`,
         to: "ridhorobbipasi@gmail.com",
-        subject: `New Message from ${name} 💬`,
+        subject: `New Guestbook Message from ${name} 💬`,
         html: htmlNewChat,
       });
     }

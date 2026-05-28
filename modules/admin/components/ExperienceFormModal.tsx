@@ -3,12 +3,18 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import ImageUploader from "./ImageUploader";
+import MarkdownEditor from "./MarkdownEditor";
 
 interface ExperienceFormModalProps {
   experience: any | null;
   onClose: () => void;
   onSuccess: () => void;
 }
+
+const normalizeImages = (images: unknown): string[] => {
+  if (!Array.isArray(images)) return [];
+  return images.filter((url): url is string => typeof url === "string" && !!url);
+};
 
 export default function ExperienceFormModal({ experience, onClose, onSuccess }: ExperienceFormModalProps) {
   const [loading, setLoading] = useState(false);
@@ -26,6 +32,8 @@ export default function ExperienceFormModal({ experience, onClose, onSuccess }: 
     responsibilities: [""],
     lessons_learned: [""],
     impact: [""],
+    description: "",
+    images: [""],
     showOnHome: true,
   });
 
@@ -45,6 +53,8 @@ export default function ExperienceFormModal({ experience, onClose, onSuccess }: 
         responsibilities: experience.responsibilities?.length ? experience.responsibilities : [""],
         lessons_learned: experience.lessons_learned?.length ? experience.lessons_learned : [""],
         impact: experience.impact?.length ? experience.impact : [""],
+        description: experience.description || "",
+        images: normalizeImages(experience.images).length > 0 ? normalizeImages(experience.images) : [""],
         showOnHome: experience.showOnHome ?? true,
       });
     }
@@ -77,6 +87,7 @@ export default function ExperienceFormModal({ experience, onClose, onSuccess }: 
         responsibilities: formData.responsibilities.filter(x => x.trim()),
         lessons_learned: formData.lessons_learned.filter(x => x.trim()),
         impact: formData.impact.filter(x => x.trim()),
+        images: formData.images.filter(Boolean),
         slug: formData.company.toLowerCase().replace(/\s+/g, '-'),
       };
 
@@ -162,6 +173,16 @@ export default function ExperienceFormModal({ experience, onClose, onSuccess }: 
             </div>
           </div>
 
+          <div>
+            <label className="block text-sm font-medium mb-1">Description (Optional)</label>
+            <MarkdownEditor
+              value={formData.description}
+              onChange={(val) => setFormData({...formData, description: val})}
+              rows={4}
+              placeholder="Detailed description of the role (Markdown supported)..."
+            />
+          </div>
+
           {/* Dynamic Array Fields */}
           {(['responsibilities', 'lessons_learned', 'impact'] as const).map((field) => (
             <div key={field} className="border-t pt-3 dark:border-neutral-700">
@@ -177,6 +198,56 @@ export default function ExperienceFormModal({ experience, onClose, onSuccess }: 
               ))}
             </div>
           ))}
+
+          <div className="space-y-3 rounded-xl border border-dashed border-neutral-300 p-4 dark:border-neutral-700 mt-4">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-medium">Gallery Images</p>
+                <p className="text-xs text-neutral-500">Upload multiple supporting images for this experience.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setFormData((prev) => ({ ...prev, images: [...prev.images, ""] }))}
+                className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
+              >
+                + Add Image
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {formData.images.map((imageUrl, index) => (
+                <div key={`experience-image-${index}`} className="rounded-xl border border-neutral-200 p-3 dark:border-neutral-800">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-xs font-medium text-neutral-500">Image {index + 1}</span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData((prev) => {
+                          const nextImages = prev.images.filter((_, imageIndex) => imageIndex !== index);
+                          return { ...prev, images: nextImages.length > 0 ? nextImages : [""] };
+                        })
+                      }
+                      className="text-xs font-medium text-red-600 hover:underline"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <ImageUploader
+                    label={`Upload Image ${index + 1}`}
+                    value={imageUrl}
+                    onChange={(url) =>
+                      setFormData((prev) => {
+                        const nextImages = [...prev.images];
+                        nextImages[index] = url;
+                        return { ...prev, images: nextImages };
+                      })
+                    }
+                    path="experience"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
 
           <div className="flex items-center gap-2 mt-4">
             <input type="checkbox" id="showOnHome" checked={formData.showOnHome} onChange={(e) => setFormData({...formData, showOnHome: e.target.checked})} className="rounded text-blue-600" />

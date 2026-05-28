@@ -22,7 +22,7 @@ const HomeSkills = async () => {
 
   const stacksInArray: Skill[] = skills || [];
 
-  if (stacksInArray.length === 0) return null;
+  if (!skills || skills.length === 0) return null;
 
   // Filter out duplicates (case-insensitive name check)
   const seen = new Set<string>();
@@ -32,6 +32,8 @@ const HomeSkills = async () => {
     seen.add(nameKey);
     return true;
   });
+
+  if (uniqueSkills.length === 0) return null;
 
   return (
     <section className="space-y-4">

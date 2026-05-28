@@ -1,6 +1,5 @@
 "use client";
 
-import Marquee from "react-fast-marquee";
 import DynamicIcon from "@/common/components/DynamicIcon";
 
 interface Skill {
@@ -46,28 +45,27 @@ export default function SkillsMarquee({ skills }: SkillsMarqueeProps) {
   );
 
   return (
-    <div className="relative w-full overflow-hidden py-4 space-y-4">
-
-      {/* Row 1: Leftward */}
-      <Marquee speed={35} direction="left" pauseOnHover={true} gradient={false}>
-        <div className="flex py-0.5">
+    <div className="relative w-full py-2 space-y-4">
+      {/* Row 1: Manual Swipe */}
+      <div className="w-full overflow-x-auto pb-1 cursor-grab active:cursor-grabbing scrollbar-hide">
+        <div className="flex py-0.5 min-w-max pr-4">
           {row1.map((skill, idx) => renderSkillCard(skill, idx))}
         </div>
-      </Marquee>
+      </div>
 
-      {/* Row 2: Rightward */}
-      <Marquee speed={30} direction="right" pauseOnHover={true} gradient={false}>
-        <div className="flex py-0.5">
+      {/* Row 2: Manual Swipe */}
+      <div className="w-full overflow-x-auto pb-1 cursor-grab active:cursor-grabbing scrollbar-hide">
+        <div className="flex py-0.5 min-w-max pr-4">
           {row2.map((skill, idx) => renderSkillCard(skill, idx))}
         </div>
-      </Marquee>
+      </div>
 
-      {/* Row 3: Leftward */}
-      <Marquee speed={40} direction="left" pauseOnHover={true} gradient={false}>
-        <div className="flex py-0.5">
+      {/* Row 3: Manual Swipe */}
+      <div className="w-full overflow-x-auto pb-1 cursor-grab active:cursor-grabbing scrollbar-hide">
+        <div className="flex py-0.5 min-w-max pr-4">
           {row3.map((skill, idx) => renderSkillCard(skill, idx))}
         </div>
-      </Marquee>
+      </div>
     </div>
   );
 }

@@ -74,7 +74,7 @@ const RootLayout = async ({
           data-website-id="91c868c5-2a89-4a1d-b292-56c40ea30137"
         />
       </head>
-      <body className={plusJakartaSans.className}>
+      <body className={`${plusJakartaSans.className} bg-light text-neutral-800 transition-colors duration-300 dark:bg-dark dark:text-neutral-200`}>
         <Toaster position="top-center" />
         <NextTopLoader
           color="#fbe400"

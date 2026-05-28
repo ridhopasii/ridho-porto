@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "@/common/components/elements/Image";
-import { ProfileItem } from "@/common/types/tiktok";
+import { ProfileItem, VideoItem } from "@/common/types/tiktok";
 
 function StatItem({ count, label }: { count: number; label: string }) {
   const format = (num: number) => {
@@ -30,7 +30,12 @@ export default function ProfileHeader({
   bio_description,
   display_name,
   likes_count,
-}: ProfileItem) {
+  allVideos = [],
+}: ProfileItem & { allVideos?: VideoItem[] }) {
+  const totalViews = allVideos.reduce((acc, video) => acc + (video.view_count || 0), 0);
+  const totalComments = allVideos.reduce((acc, video) => acc + (video.comment_count || 0), 0);
+  const totalShares = allVideos.reduce((acc, video) => acc + (video.share_count || 0), 0);
+
   return (
     <div className="flex flex-col md:flex-row max-w-[800px] mb-8">
       {/* Avatar */}
@@ -60,6 +65,15 @@ export default function ProfileHeader({
           <StatItem count={follower_count} label="Pengikut" />
           <StatItem count={likes_count} label="Suka" />
         </div>
+
+        {/* Aggregate Stats */}
+        {allVideos.length > 0 && (
+          <div className="flex items-center gap-5 mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-800">
+            <StatItem count={totalViews} label="Total Views" />
+            <StatItem count={totalComments} label="Comments" />
+            <StatItem count={totalShares} label="Shares" />
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2 mt-5">
