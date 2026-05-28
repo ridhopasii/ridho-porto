@@ -39,11 +39,17 @@ export const metadata: Metadata = {
     url: METADATA.openGraph.url,
   },
   openGraph: {
-    images: METADATA.profile,
+    images: METADATA.openGraph.image,
     url: METADATA.openGraph.url,
     siteName: METADATA.openGraph.siteName,
     locale: METADATA.openGraph.locale,
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: METADATA.creator,
+    description: METADATA.description,
+    images: [METADATA.openGraph.image],
   },
 };
 
