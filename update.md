@@ -1,7 +1,35 @@
 # Catatan Pembaruan (Update Log)
-**Tanggal:** 28 Mei 2026
 
-Berikut adalah ringkasan dari semua penyesuaian, refaktorisasi, dan penambahan fitur yang dilakukan pada sesi ini:
+## **Pembaruan Terbaru: 29 Mei 2026**
+
+Berikut adalah ringkasan lengkap dari refaktorisasi, penambahan fitur visual, optimalisasi SEO, dan perbaikan infrastruktur yang diselesaikan pada sesi ini:
+
+### 1. Desain Ulang & Restrukturisasi "Private Hub"
+- **Pemisahan Layout Mandiri**: Melakukan pemisahan jalur secara tuntas antara `/admin` (khusus kelola konten publik) dan `/private-hub` (dashboard produktivitas pribadi) dengan meluncurkan layout baru `PrivateHubLayout.tsx`.
+- **Navigasi Bilah Samping (Sidebar)**: Menghadirkan sidebar mandiri yang responsif di Private Hub untuk mengorganisasi sub-menu penting: Harian, Riwayat, Tracker, Rencana, Tabungan, Pengaturan Hari.
+- **Fitur Edit Mode Toggle**: Menambahkan tombol toggle visual **Edit Mode** (View / Edit) yang mulus di dashboard. Kini pengguna dapat dengan nyaman melihat laporan ringkas (*view mode*) atau beralih ke form input penuh (*edit mode*) dalam satu klik.
+
+### 2. Peningkatan Galeri Foto Interaktif (Hero Section)
+- **Mouse Drag-to-Scroll (Desktop)**: Memprogram fungsionalitas geser menggunakan *mouse drag* alami pada komputer desktop, dibantu pembatasan seleksi bawaan (`select-none` & `draggable={false}`) demi menjamin pergerakan yang mulus.
+- **Tombol Navigasi Glassmorphic**: Menyematkan panah navigasi kiri/kanan kustom berpenampilan premium (`backdrop-blur-md` dan `bg-black/40`) yang muncul secara dinamis saat kursor menyentuh area galeri (*hover*).
+- **Interactive Slide Indicator Dots**: Menyisipkan barisan titik penanda dinamis di bawah galeri yang menyala dan bergeser secara sinkron mengikuti gambar yang sedang aktif secara waktu nyata.
+
+### 3. Infrastruktur Branding & Sistem Logo Dinamis
+- **API Logo Dinamis (`/api/logo`)**: Membangun rute API pintar yang menghubungkan metadata dengan database. Ikon situs akan memuat logo kustom hasil unggahan Admin secara dinamis, dengan *fallback* favicon neon kustom jika belum diatur.
+- **Uploader Logo Instan di Admin Settings**: Memodifikasi `SiteSettingsManager.tsx` sehingga kunci konfigurasi `site_logo` otomatis berubah menjadi tombol uploader berkas gambar lengkap dengan pratinjau lingkaran.
+- **PWA Web Manifest (`manifest.json`)**: Membuat manifes aplikasi lengkap untuk mendefinisikan identitas brand, warna tema, serta resolusi ikon perangkat secara formal bagi peramban dan mesin pencari.
+
+### 4. Optimalisasi SEO Google Sitelinks & Koreksi USU
+- **Unified Multi-Graph Schema (JSON-LD)**: Merancang skema data terstruktur canggih menggabungkan objek `Person` (profil karir), `WebSite` (Sitelinks Searchbox), dan `SiteNavigationElement` (peta menu utama) guna merangsang kemunculan sitelinks profesional di Google Search.
+- **Pembaruan Pendidikan (USU)**: Memperbarui seluruh entitas data karir dan pendidikan Anda dari *UNIMAL* menjadi **Universitas Sumatera Utara (USU)** di seluruh dokumen data terstruktur.
+
+### 5. Penyelesaian Eror Konsol (Hydration Mismatch)
+- **Penyelamatan Hydration**: Memindahkan posisi rendering tag `<script>` JSON-LD dari `<head>` ke urutan pertama di dalam `<body>` pada `app/[locale]/layout.tsx`. Hal ini sukses menghindarkan situs dari pemicu galat *Hydration Mismatch* akibat manipulasi/suntikan skrip oleh berbagai jenis ekstensi peramban (seperti pemalsu lokasi, ad blocker, dll).
+- **Verifikasi Build**: Proyek berhasil dikompilasi statis secara sukses (`npx tsc --noEmit` menghasilkan 0 eror) dan telah sukses diunggah ke repositori GitHub utama (`branch main`).
+
+---
+
+## **Pembaruan Sebelumnya: 28 Mei 2026**
 
 ## 1. Migrasi ke "Private Hub"
 - **Pemusatan Akses Admin**: Memindahkan dan menyatukan seluruh _manager_ admin (seperti `FinanceManager`, `ProductivityManager`, `HabitsManager`, `PlanningManager`) dari panel Admin lama ke dalam satu ekosistem terpadu bernama **Private Hub** (`/id/private-hub`).
