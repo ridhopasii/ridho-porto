@@ -97,6 +97,7 @@ export const getPublicationsData = async (): Promise<PublicationItem[]> => {
     date: item.date || "",
     url: item.url || "",
     description: item.description || "",
+    content: item.content || "",
     tags: item.tags || "",
     createdAt: item.createdAt || item.created_at || new Date().toISOString(),
     updatedAt: item.updatedAt || item.updated_at || new Date().toISOString(),
@@ -105,4 +106,32 @@ export const getPublicationsData = async (): Promise<PublicationItem[]> => {
     slug: item.slug || "",
     showOnHome: item.showOnHome ?? true,
   }));
+};
+
+export const getPublicationBySlug = async (slug: string): Promise<any | null> => {
+  const supabase = createPublicClient();
+  const { data, error } = await supabase
+    .from("Publication")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) return null;
+
+  return {
+    id: data.id,
+    title: data.title || "",
+    outlet: data.outlet || "",
+    date: data.date || "",
+    url: data.url || "",
+    description: data.description || "",
+    content: data.content || "",
+    tags: data.tags || "",
+    createdAt: data.createdAt || data.created_at || new Date().toISOString(),
+    updatedAt: data.updatedAt || data.updated_at || new Date().toISOString(),
+    imageUrl: data.imageUrl || data.image_url || "",
+    images: data.images,
+    slug: data.slug || "",
+    showOnHome: data.showOnHome ?? true,
+  };
 };

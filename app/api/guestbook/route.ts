@@ -16,8 +16,8 @@ export async function POST(req: Request) {
     const data = await req.json();
     
     // Basic validation
-    if (!data.name || !data.email || !data.message) {
-      return NextResponse.json({ error: "Name, email, and message are required" }, { status: 400 });
+    if (!data.name || !data.message) {
+      return NextResponse.json({ error: "Name and message are required" }, { status: 400 });
     }
 
     // Insert as unapproved

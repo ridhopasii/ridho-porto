@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 
 import SegmentedTabs from "@/common/components/elements/SegmentedTabs";
@@ -25,7 +25,7 @@ import HabitsManager from "@/modules/admin/components/managers/HabitsManager";
 import PlanningManager from "@/modules/admin/components/managers/PlanningManager";
 
 type MainTab = "produktif" | "keuangan";
-type ProductiveTab = "harian" | "riwayat" | "tracker" | "rencana" | "tabungan";
+type ProductiveTab = "harian" | "riwayat" | "tracker" | "rencana" | "tabungan" | "pengaturan_hari";
 type FinanceTab = "dompet" | "transaksi";
 
 interface DashboardProps {
@@ -96,6 +96,47 @@ export default function Dashboard({
   const [mainTab, setMainTab] = useState<MainTab>("produktif");
   const [productiveTab, setProductiveTab] = useState<ProductiveTab>("harian");
   const [financeTab, setFinanceTab] = useState<FinanceTab>("dompet");
+
+  useEffect(() => {
+    const segments = window.location.pathname.split("/");
+    const slugTab = segments[segments.length - 1];
+    
+    const searchParams = new URLSearchParams(window.location.search);
+    const queryTab = searchParams.get("tab");
+
+    const tab = queryTab || slugTab;
+
+    if (tab) {
+      if (["harian", "riwayat", "tracker", "rencana", "tabungan", "pengaturan_hari"].includes(tab)) {
+        setMainTab("produktif");
+        setProductiveTab(tab as ProductiveTab);
+      } else if (["dompet", "transaksi"].includes(tab)) {
+        setMainTab("keuangan");
+        setFinanceTab(tab as FinanceTab);
+      }
+    }
+  }, []);
+
+  const basePath = `/${locale}/private-hub`;
+
+  const handleProductiveTabChange = (val: ProductiveTab) => {
+    setProductiveTab(val);
+    window.history.pushState(null, "", `${basePath}/${val}`);
+  };
+
+  const handleFinanceTabChange = (val: FinanceTab) => {
+    setFinanceTab(val);
+    window.history.pushState(null, "", `${basePath}/${val}`);
+  };
+
+  const handleMainTabChange = (val: MainTab) => {
+    setMainTab(val);
+    if (val === "produktif") {
+      window.history.pushState(null, "", `${basePath}/${productiveTab}`);
+    } else {
+      window.history.pushState(null, "", `${basePath}/${financeTab}`);
+    }
+  };
 
   const [localWallets, setLocalWallets] = useState(finance.wallets || []);
   const [localTransactions, setLocalTransactions] = useState(finance.transactions || []);
@@ -228,7 +269,7 @@ export default function Dashboard({
       <HubCard className="p-1">
         <SegmentedTabs
           value={mainTab}
-          onChange={setMainTab}
+          onChange={handleMainTabChange}
           options={[
             { value: "produktif", label: "Produktif", icon: "🌿" },
             { value: "keuangan", label: "Keuangan", icon: "💰" },
@@ -241,21 +282,22 @@ export default function Dashboard({
         <HubCard className="p-1">
           <SegmentedTabs
             value={productiveTab}
-            onChange={setProductiveTab}
+            onChange={handleProductiveTabChange}
             options={[
               { value: "harian", label: "Harian", icon: "📝" },
               { value: "riwayat", label: "Riwayat", icon: "🕒" },
               { value: "tracker", label: "Tracker", icon: "📈" },
               { value: "rencana", label: "Rencana", icon: "🎯" },
               { value: "tabungan", label: "Tabungan", icon: "💰" },
+              { value: "pengaturan_hari", label: "Pengaturan Hari", icon: "⚙️" },
             ]}
           />
         </HubCard>
 
         {/* ProductivityManager stays mounted to preserve Pomodoro timer state */}
-        <div className={productiveTab === "harian" || productiveTab === "riwayat" ? "" : "hidden"}>
+        <div className={productiveTab === "harian" || productiveTab === "riwayat" || productiveTab === "pengaturan_hari" ? "" : "hidden"}>
           <ProductivityManager
-            activeTab={productiveTab === "riwayat" ? "riwayat" : "harian"}
+            activeTab={productiveTab as any}
             onMutate={refreshStats}
           />
         </div>
@@ -275,7 +317,7 @@ export default function Dashboard({
         <HubCard className="p-1">
           <SegmentedTabs
             value={financeTab}
-            onChange={setFinanceTab}
+            onChange={handleFinanceTabChange}
             options={[
               { value: "dompet", label: "Dompet", icon: "💳" },
               { value: "transaksi", label: "Transaksi", icon: "🧾" },

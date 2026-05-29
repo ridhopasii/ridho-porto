@@ -9,7 +9,7 @@ import { checkPrivateDashboardAuth } from "@/common/libs/privateDashboardAuth";
 import Dashboard from "@/modules/dashboard/components/Dashboard";
 import PrivateDashboardGate from "@/modules/dashboard/components/PrivateDashboardGate";
 
-type Props = { params: Promise<{ locale: string }> };
+type Props = { params: Promise<{ locale: string; slug?: string[] }> };
 
 export async function generateMetadata({
   params,

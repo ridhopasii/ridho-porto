@@ -17,6 +17,26 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
+    // --- SECURITY PATCH ---
+    // 1. Validasi Ukuran File (Maksimal 5MB)
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { error: `File size exceeds the 5MB limit. Your file is ${(file.size / (1024 * 1024)).toFixed(2)}MB` },
+        { status: 413 } // 413 Payload Too Large
+      );
+    }
+
+    // 2. Validasi MIME Type (Hanya gambar)
+    const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
+    if (!validTypes.includes(file.type)) {
+      return NextResponse.json(
+        { error: "Invalid file type. Only JPG, PNG, WEBP, GIF, and SVG are allowed." },
+        { status: 415 } // 415 Unsupported Media Type
+      );
+    }
+    // ----------------------
+
     // Ubah File menjadi Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);

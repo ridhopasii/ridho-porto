@@ -44,10 +44,26 @@ const SocialMedia = () => {
   );
 
   useEffect(() => {
-    if (activeTab === "gallery") {
+    const segments = window.location.pathname.split("/");
+    const lastSegment = segments[segments.length - 1];
+    
+    if (["tiktok", "instagram", "gallery"].includes(lastSegment)) {
+      setActiveTab(lastSegment as any);
+    } else if (lastSegment === "social-media") {
+      setActiveTab("instagram");
+    }
+
+    if (activeTab === "gallery" || lastSegment === "gallery") {
       fetchGallery();
     }
   }, [activeTab]);
+
+  const handleTabChange = (tabId: "tiktok" | "instagram" | "gallery") => {
+    setActiveTab(tabId);
+    const segments = window.location.pathname.split("/");
+    const locale = segments[1] || "id";
+    window.history.pushState(null, "", `/${locale}/social-media/${tabId}`);
+  };
 
   const fetchGallery = async () => {
     setLoadingGallery(true);
@@ -58,8 +74,9 @@ const SocialMedia = () => {
         setGalleryItems(data);
         setFilteredItems(data);
         
-        // Extract unique categories
-        const cats = ["All", ...Array.from(new Set(data.map(item => item.category)))];
+        // Extract unique valid categories
+        const validCategories = data.map(item => item.category).filter(cat => cat && cat.trim() !== "");
+        const cats = ["All", ...Array.from(new Set(validCategories))];
         setCategories(cats);
       }
     } catch (error) {
@@ -106,7 +123,7 @@ const SocialMedia = () => {
       <div className="w-full rounded-xl bg-neutral-100 p-1 dark:bg-neutral-800 yellow:bg-amber-100 ramadan:bg-emerald-950/80 valentine:bg-rose-100">
         <div className="relative grid grid-cols-3 gap-1">
           <button
-            onClick={() => setActiveTab("instagram")}
+            onClick={() => handleTabChange("instagram")}
             className={`relative flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors duration-200 ${
               activeTab === "instagram"
                 ? "text-neutral-800 dark:text-neutral-100 yellow:text-amber-900 ramadan:text-amber-200 valentine:text-white"
@@ -123,7 +140,7 @@ const SocialMedia = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab("tiktok")}
+            onClick={() => handleTabChange("tiktok")}
             className={`relative flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors duration-200 ${
               activeTab === "tiktok"
                 ? "text-neutral-800 dark:text-neutral-100 yellow:text-amber-900 ramadan:text-amber-200 valentine:text-white"
@@ -140,7 +157,7 @@ const SocialMedia = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab("gallery")}
+            onClick={() => handleTabChange("gallery")}
             className={`relative flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors duration-200 ${
               activeTab === "gallery"
                 ? "text-neutral-800 dark:text-neutral-100 yellow:text-amber-900 ramadan:text-amber-200 valentine:text-white"
@@ -330,19 +347,19 @@ const SocialMedia = () => {
 
                 {/* Navigation Buttons */}
                 <button 
-                  onClick={prevImage}
-                  className="absolute left-4 p-4 text-white/50 hover:text-white rounded-full bg-white/5 hover:bg-white/10 transition-colors hidden md:block"
+                  onClick={(e) => { e.stopPropagation(); prevImage(e); }}
+                  className="absolute left-2 md:left-6 z-50 p-2.5 md:p-4 text-white rounded-full bg-black/50 hover:bg-black/80 backdrop-blur-md shadow-2xl transition-all border border-white/20 group"
                   title="Previous"
                 >
-                  <FaChevronLeft size={20} />
+                  <FaChevronLeft size={20} className="group-hover:-translate-x-0.5 transition-transform" />
                 </button>
 
                 <button 
-                  onClick={nextImage}
-                  className="absolute right-4 p-4 text-white/50 hover:text-white rounded-full bg-white/5 hover:bg-white/10 transition-colors hidden md:block"
+                  onClick={(e) => { e.stopPropagation(); nextImage(e); }}
+                  className="absolute right-2 md:right-6 z-50 p-2.5 md:p-4 text-white rounded-full bg-black/50 hover:bg-black/80 backdrop-blur-md shadow-2xl transition-all border border-white/20 group"
                   title="Next"
                 >
-                  <FaChevronRight size={20} />
+                  <FaChevronRight size={20} className="group-hover:translate-x-0.5 transition-transform" />
                 </button>
 
                 {/* Lightbox Content Container */}

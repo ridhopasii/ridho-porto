@@ -23,7 +23,7 @@ export default function Sidebar() {
 
   return (
     <header className="lg:w-[260px] flex-shrink-0">
-      <div className="sticky top-8 z-10 flex flex-col transition-all duration-300 space-y-6">
+      <div className="sticky top-8 z-10 flex flex-col transition-all duration-300 space-y-6 lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <Profile />
         
         <div className="hidden lg:block space-y-6">

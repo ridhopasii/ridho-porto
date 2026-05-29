@@ -25,8 +25,8 @@ export default function Guestbook({ messages }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      toast.error("Semua kolom harus diisi!");
+    if (!formData.name.trim() || !formData.message.trim()) {
+      toast.error("Nama dan pesan harus diisi!");
       return;
     }
 
@@ -113,7 +113,7 @@ export default function Guestbook({ messages }: Props) {
               </div>
             ) : (
               <div className="flex flex-col gap-5 pt-2">
-                {messages.map((msg) => {
+                {[...messages].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()).map((msg) => {
                   const isSenderAdmin = isAdmin(msg);
                   // Dynamic avatar based on initials or custom admin avatar
                   const avatarUrl = isSenderAdmin
@@ -233,13 +233,12 @@ export default function Guestbook({ messages }: Props) {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase tracking-wider font-semibold text-neutral-400 dark:text-neutral-500">Email</label>
+                  <label className="text-[10px] uppercase tracking-wider font-semibold text-neutral-400 dark:text-neutral-500">Email (Opsional)</label>
                   <input
-                    required
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="Masukkan email Anda..."
+                    placeholder="Masukkan email Anda (opsional)..."
                     className="w-full text-xs p-2.5 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-950/50 focus:border-teal-500 dark:focus:border-teal-500 focus:outline-none transition-colors"
                   />
                 </div>

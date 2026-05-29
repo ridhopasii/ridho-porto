@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { m as motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -36,6 +36,26 @@ const BlogList = ({ articles, publications = [] }: BlogListProps) => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [activeTab, setActiveTab] = useState<"articles" | "publications">("articles");
 
+  useEffect(() => {
+    const segments = window.location.pathname.split("/");
+    const lastSegment = segments[segments.length - 1];
+    
+    if (lastSegment === "publikasi") {
+      setActiveTab("publications");
+    } else if (lastSegment === "artikel" || lastSegment === "blog") {
+      setActiveTab("articles");
+    }
+  }, []);
+
+  const handleTabChange = (tab: "articles" | "publications") => {
+    setActiveTab(tab);
+    setSearchQuery("");
+    const segments = window.location.pathname.split("/");
+    const locale = segments[1] || "id";
+    const slug = tab === "articles" ? "artikel" : "publikasi";
+    window.history.pushState(null, "", `/${locale}/blog/${slug}`);
+  };
+
   // Filter articles
   const filteredArticles = articles.filter((article) => {
     const matchesSearch =
@@ -68,10 +88,7 @@ const BlogList = ({ articles, publications = [] }: BlogListProps) => {
       {/* Premium Tab Selector matching ResumeNavigation style */}
       <div className="w-full max-w-md rounded-xl bg-neutral-100 p-1 dark:bg-neutral-800/80 flex gap-1">
         <button
-          onClick={() => {
-            setActiveTab("articles");
-            setSearchQuery("");
-          }}
+          onClick={() => handleTabChange("articles")}
           className={`relative flex-1 flex items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold transition-all duration-300 ${
             activeTab === "articles"
               ? "bg-white text-neutral-900 shadow-sm dark:bg-neutral-700 dark:text-neutral-100"
@@ -81,10 +98,7 @@ const BlogList = ({ articles, publications = [] }: BlogListProps) => {
           {t("tab_articles") || "Artikel & Blog"}
         </button>
         <button
-          onClick={() => {
-            setActiveTab("publications");
-            setSearchQuery("");
-          }}
+          onClick={() => handleTabChange("publications")}
           className={`relative flex-1 flex items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold transition-all duration-300 ${
             activeTab === "publications"
               ? "bg-white text-neutral-900 shadow-sm dark:bg-neutral-700 dark:text-neutral-100"
@@ -223,7 +237,11 @@ const BlogList = ({ articles, publications = [] }: BlogListProps) => {
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                   className="group relative flex flex-col cursor-pointer overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
                 >
-                  <Link href={pub.url || "#"} target={pub.url ? "_blank" : ""} className="flex flex-col h-full">
+                  <Link 
+                    href={pub.slug ? `/blog/publikasi/${pub.slug}` : pub.url || "#"} 
+                    target={pub.slug ? "_self" : (pub.url ? "_blank" : "_self")} 
+                    className="flex flex-col h-full"
+                  >
                     {/* Cover Image */}
                     <div className="relative aspect-[16/10] w-full overflow-hidden bg-neutral-100 dark:bg-neutral-900">
                       {pub.imageUrl ? (
@@ -267,7 +285,7 @@ const BlogList = ({ articles, publications = [] }: BlogListProps) => {
                           <CalendarIcon size={12} />
                           {formatDate(pub.createdAt || pub.date)}
                         </span>
-                        {pub.url && (
+                        {(pub.url || pub.slug) && (
                           <span className="text-violet-600 dark:text-violet-400 font-semibold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform duration-200">
                             Buka ↗
                           </span>

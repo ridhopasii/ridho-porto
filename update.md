@@ -22,4 +22,9 @@ Berikut adalah ringkasan dari semua penyesuaian, refaktorisasi, dan penambahan f
 
 ## 4. Perbaikan _Bugs_ & Infrastruktur Kode
 - **Resolusi JSX Syntax Error**: Menyelesaikan _error_ pada *Turbopack build* (`npm run build`) yang sebelumnya gagal akibat kesalahan struktur penutupan tag HTML (`</div>`) dan kurung kurawal pada pembungkus ekspresi _conditional rendering_ `&&` di dalam file `FinanceManager` dan `HabitsManager`.
+- **Resolusi ChunkLoadError Turbopack**: Memperbaiki masalah muat ikon `react-icons/di` dengan mengatur `optimizePackageImports: ["react-icons"]` di `next.config.mjs` dan membersihkan *cache* lokal `.next`.
 - Kode secara keseluruhan berhasil di-kompilasi dan sukses di-_push_ ke repositori GitHub (`ridhopasii/ridho-porto` branch `main`).
+
+## 5. Peningkatan Performa (Performance Tuning)
+- **Pembersihan Komponen UI Berlebih**: Menghapus puluhan komponen animasi dekoratif (sekitar 3.400 baris kode) seperti `MagicBento`, `GlitchText`, dan komponen abstrak lainnya dari `common/components/elements` yang tidak memberikan nilai fungsional pada UI/UX inti (mengikuti prinsip *Growth Hacker & Performance Optimization*).
+- **Migrasi Data Ke Supabase**: Membersihkan 13 data dummy sertifikat, mengimpor 15 sertifikat nyata dari Google Drive, mengubah gambar menjadi `.webp` yang super-ringan, dan membuat tata kelola sertifikat lebih cepat. Data pendidikan lama yang tidak relevan juga ikut diganti dengan rekam jejak nyata (USU, PP Arraudlatul Hasanah, dsb).

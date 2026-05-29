@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaChartBar, FaCode, FaTools, FaHistory } from "react-icons/fa";
 
 import Codewars from "./Codewars";
@@ -20,6 +20,24 @@ type TabType = "analitik" | "koding" | "peralatan" | "perubahan";
 const DashboardPublic = () => {
   const [activeTab, setActiveTab] = useState<TabType>("koding");
 
+  useEffect(() => {
+    const segments = window.location.pathname.split("/");
+    const lastSegment = segments[segments.length - 1];
+    
+    if (["koding", "analitik", "peralatan", "perubahan"].includes(lastSegment)) {
+      setActiveTab(lastSegment as TabType);
+    } else if (lastSegment === "dashboard") {
+      setActiveTab("koding");
+    }
+  }, []);
+
+  const handleTabChange = (tabId: TabType) => {
+    setActiveTab(tabId);
+    const segments = window.location.pathname.split("/");
+    const locale = segments[1] || "id";
+    window.history.pushState(null, "", `/${locale}/dashboard/${tabId}`);
+  };
+
   const tabs = [
     { id: "koding" as TabType, label: "Aktivitas Koding", icon: <FaCode size={14} /> },
     { id: "analitik" as TabType, label: "Analitik", icon: <FaChartBar size={14} /> },
@@ -37,7 +55,7 @@ const DashboardPublic = () => {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className={`relative flex w-full items-center justify-center gap-2 rounded-lg px-2 py-2.5 text-xs lg:text-sm font-semibold transition-colors duration-200 focus:outline-none ${
                   isActive
                     ? "text-neutral-800 dark:text-neutral-100 yellow:text-amber-900 ramadan:text-amber-200 valentine:text-white"

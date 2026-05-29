@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { getDayType, getCategorizedTasksForDay } from "@/common/constants/productivityBlocks";
+import { getDayType, getCategorizedTasksForDay, ProductivityConfig, DEFAULT_PRODUCTIVITY_CONFIG, DayTypeConfig } from "@/common/constants/productivityBlocks";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -20,19 +20,20 @@ export default function ProductivityManager({
   activeTab = "harian",
   onMutate,
 }: {
-  activeTab?: "harian" | "riwayat";
+  activeTab?: "harian" | "riwayat" | "pengaturan_hari";
   onMutate?: () => void;
 }) {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [draftTasks, setDraftTasks] = useState<{ name: string; completed: boolean }[]>([]);
+  const [config, setConfig] = useState<ProductivityConfig>(DEFAULT_PRODUCTIVITY_CONFIG);
 
   // item state (for create and edit riwayat manual)
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newItem, setNewItem] = useState({
     date: new Date().toISOString().split('T')[0],
     tasks: "",
-    dayType: getDayType(new Date().toISOString().split('T')[0]),
+    dayType: getDayType(new Date().toISOString().split('T')[0], DEFAULT_PRODUCTIVITY_CONFIG),
     pomodoroMinutes: 0,
     mood: "🙂",
     goals: "",
@@ -62,14 +63,14 @@ export default function ProductivityManager({
   // Auto-fill dayType when date changes (non-edit mode)
   useEffect(() => {
     if (!editingId) {
-      setNewItem((prev) => ({ ...prev, dayType: getDayType(prev.date) }));
+      setNewItem((prev) => ({ ...prev, dayType: getDayType(prev.date, config) }));
     }
-  }, [newItem.date, editingId]);
+  }, [newItem.date, editingId, config]);
 
   // Auto-update draft tasks when dayType changes (non-edit mode)
   useEffect(() => {
     if (!editingId) {
-      const cats = getCategorizedTasksForDay(newItem.dayType);
+      const cats = getCategorizedTasksForDay(newItem.dayType, config);
       setDraftTasks(
         [...cats.block1, ...cats.block2, ...cats.block3].map((name) => ({
           name,
@@ -77,13 +78,13 @@ export default function ProductivityManager({
         }))
       );
     }
-  }, [newItem.dayType, editingId]);
+  }, [newItem.dayType, editingId, config]);
 
   useEffect(() => {
     if (!loading && !todayItem) {
       // Auto create today's record
-      const dayType = getDayType(today);
-      const allTasks = getCategorizedTasksForDay(dayType);
+      const dayType = getDayType(today, config);
+      const allTasks = getCategorizedTasksForDay(dayType, config);
       const initialTasks = [
         ...allTasks.block1,
         ...allTasks.block2,
@@ -139,14 +140,40 @@ export default function ProductivityManager({
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/productivity");
-      if (!res.ok) throw new Error("Gagal mengambil data");
-      const data = await res.json();
+      const [resProd, resSet] = await Promise.all([
+        fetch("/api/admin/productivity"),
+        fetch("/api/admin/site-settings")
+      ]);
+      if (!resProd.ok) throw new Error("Gagal mengambil data produktivitas");
+      const data = await resProd.json();
       setItems(data);
+
+      if (resSet.ok) {
+         const settings = await resSet.json();
+         const confStr = settings.find((s: any) => s.key === "productivity_day_types")?.value;
+         if (confStr) {
+           setConfig(JSON.parse(confStr));
+         }
+      }
     } catch (error: any) {
       toast.error(error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSaveConfig = async () => {
+    const toastId = toast.loading("Menyimpan pengaturan...");
+    try {
+       const res = await fetch("/api/admin/site-settings", {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify({ key: "productivity_day_types", value: JSON.stringify(config) })
+       });
+       if (!res.ok) throw new Error("Gagal menyimpan pengaturan");
+       toast.success("Pengaturan tersimpan", { id: toastId });
+    } catch (error: any) {
+       toast.error(error.message, { id: toastId });
     }
   };
 
@@ -194,7 +221,7 @@ export default function ProductivityManager({
     setNewItem({
       date: item.date,
       tasks: item.tasks || "",
-      dayType: item.dayType || getDayType(item.date),
+      dayType: item.dayType || getDayType(item.date, config),
       pomodoroMinutes: item.pomodoroMinutes || 0,
       mood: item.mood || "🙂",
       goals: item.goals || "",
@@ -208,17 +235,44 @@ export default function ProductivityManager({
     window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   };
 
-  const resetForm = () => {
+  const resetForm = (targetDateStr?: string) => {
+    const d = targetDateStr || new Date().toISOString().split('T')[0];
     setEditingId(null);
     setDraftTasks([]); // will be repopulated by useEffect via dayType
     setNewItem({
-      date: new Date().toISOString().split('T')[0],
+      date: d,
       tasks: "",
-      dayType: getDayType(new Date().toISOString().split('T')[0]),
+      dayType: getDayType(d, config),
       pomodoroMinutes: 0,
       mood: "🙂",
       goals: "",
     });
+  };
+
+  const [calendarDate, setCalendarDate] = useState(new Date());
+  
+  const getDaysArray = () => {
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDay = new Date(year, month, 1).getDay();
+    const days = [];
+    for (let i = 0; i < firstDay; i++) days.push(null);
+    for (let i = 1; i <= daysInMonth; i++) days.push(new Date(year, month, i));
+    return days;
+  };
+  
+  const handlePrevMonth = () => setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1));
+  const handleNextMonth = () => setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1));
+  
+  const selectDate = (d: Date) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const dateStrSafe = `${year}-${month}-${day}`;
+    const existing = items.find(i => i.date === dateStrSafe);
+    if (existing) editItem(existing);
+    else resetForm(dateStrSafe);
   };
 
   const toggleTask = async (taskName: string) => {
@@ -530,12 +584,86 @@ export default function ProductivityManager({
       </div>
       )}
 
-      {/* 4. RIWAYAT & MANUAL FORM (Lama) */}
+      {/* 4. RIWAYAT & MANUAL FORM (Kalender) */}
       {activeTab === "riwayat" && (
       <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
         <h3 className="mb-4 font-semibold text-lg dark:text-white">Riwayat Terakhir & Edit Manual</h3>
         
-        <div className="grid gap-4 md:grid-cols-2 mb-8 bg-neutral-50 dark:bg-neutral-950 p-4 rounded-lg border border-neutral-100 dark:border-neutral-800">
+        {/* Calendar Grid */}
+        <div className="mb-8 rounded-lg border border-neutral-100 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-950">
+          <div className="flex justify-between items-center mb-4">
+            <button onClick={handlePrevMonth} className="p-2 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300">◀</button>
+            <h4 className="font-bold text-lg dark:text-white">
+              {calendarDate.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}
+            </h4>
+            <button onClick={handleNextMonth} className="p-2 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300">▶</button>
+          </div>
+          
+          <div className="grid grid-cols-7 gap-2 mb-2 text-center text-xs font-semibold text-neutral-500 uppercase tracking-widest">
+            <div>Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div>
+          </div>
+          
+          <div className="grid grid-cols-7 gap-2">
+            {getDaysArray().map((d, i) => {
+              if (!d) return <div key={i} className="h-12 rounded-lg"></div>;
+              
+              const year = d.getFullYear();
+              const month = String(d.getMonth() + 1).padStart(2, '0');
+              const day = String(d.getDate()).padStart(2, '0');
+              const dateStrSafe = `${year}-${month}-${day}`;
+              
+              const existing = items.find(x => x.date === dateStrSafe);
+              let rate = 0;
+              if (existing) {
+                try {
+                  const parsed = JSON.parse(existing.tasks || "[]");
+                  const completed = parsed.filter((t: any) => t.completed).length;
+                  rate = parsed.length > 0 ? Math.round((completed / parsed.length) * 100) : 0;
+                } catch(e) {}
+              }
+              
+              const isSelected = newItem.date === dateStrSafe;
+              
+              let bgColor = "bg-white hover:bg-neutral-100 border border-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-700";
+              if (existing) {
+                if (rate >= 80) bgColor = "bg-green-50 text-green-800 border border-green-200 hover:bg-green-100 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300 dark:hover:bg-green-900/50";
+                else if (rate >= 50) bgColor = "bg-blue-50 text-blue-800 border border-blue-200 hover:bg-blue-100 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/50";
+                else bgColor = "bg-yellow-50 text-yellow-800 border border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/30 dark:border-yellow-800 dark:text-yellow-300 dark:hover:bg-yellow-900/50";
+              }
+              
+              if (isSelected) {
+                bgColor = "ring-2 ring-blue-500 shadow-md " + bgColor;
+              }
+              
+              return (
+                <button 
+                  key={i} 
+                  onClick={() => selectDate(d)}
+                  className={`h-12 rounded-lg flex flex-col items-center justify-center transition-all relative ${bgColor}`}
+                  title={existing ? `Progress: ${rate}%` : "Belum ada rekor"}
+                >
+                  <span className="font-bold text-sm">{d.getDate()}</span>
+                  {existing && <span className="text-[12px] absolute bottom-0.5">{existing.mood}</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        
+        {/* Detail Form (Shows details for selected date) */}
+        <div className="grid gap-4 md:grid-cols-2 bg-neutral-50 dark:bg-neutral-950 p-5 rounded-xl border border-neutral-100 dark:border-neutral-800 relative">
+          
+          <div className="md:col-span-2 mb-2 flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3">
+             <h4 className="font-bold text-neutral-800 dark:text-neutral-200">
+               Detail Tanggal: {new Date(newItem.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+             </h4>
+             {editingId && (
+               <span className="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">
+                 Mode Edit
+               </span>
+             )}
+          </div>
+
           <div>
             <label className="mb-1 block text-xs font-medium text-neutral-500">Tanggal</label>
             <input type="date" value={newItem.date} onChange={e => setNewItem({...newItem, date: e.target.value})} className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-white" />
@@ -543,18 +671,16 @@ export default function ProductivityManager({
           <div>
             <label className="mb-1 block text-xs font-medium text-neutral-500">Tipe Hari</label>
             <select value={newItem.dayType} onChange={e => setNewItem({...newItem, dayType: e.target.value})} className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-white">
-              <option value="A">Hari A (Fokus Spesifik)</option>
-              <option value="B">Hari B (Fokus Spesifik)</option>
-              <option value="Minggu">Minggu (Review)</option>
-              <option value="Work">Work (Umum)</option>
-              <option value="Rest">Rest</option>
+              {config.dayTypes.map(dt => (
+                <option key={dt.id} value={dt.id}>{dt.name}</option>
+              ))}
             </select>
           </div>
           <div className="md:col-span-2">
             <label className="mb-2 block text-xs font-medium text-neutral-500">
               Tugas ({draftTasks.filter((t) => t.completed).length}/{draftTasks.length} selesai)
             </label>
-            <div className="max-h-48 overflow-y-auto space-y-1 rounded-xl border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-700 dark:bg-neutral-950">
+            <div className="max-h-48 overflow-y-auto space-y-1 rounded-xl border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900 shadow-inner">
               {draftTasks.length === 0 ? (
                 <p className="py-2 text-center text-xs text-neutral-400">
                   Pilih tipe hari untuk generate tugas otomatis
@@ -566,7 +692,7 @@ export default function ProductivityManager({
                     className={`flex cursor-pointer items-center gap-2 rounded-lg p-2 transition-colors ${
                       task.completed
                         ? "bg-green-50 dark:bg-green-900/20"
-                        : "hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                        : "hover:bg-neutral-50 dark:hover:bg-neutral-800"
                     }`}
                   >
                     <input
@@ -610,7 +736,7 @@ export default function ProductivityManager({
                   className={`rounded-lg p-2 text-xl transition-all hover:scale-110 ${
                     newItem.mood === m
                       ? "bg-blue-100 ring-2 ring-blue-400 dark:bg-blue-900/40"
-                      : "hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      : "hover:bg-neutral-100 dark:hover:bg-neutral-800 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800"
                   }`}
                 >
                   {m}
@@ -618,66 +744,161 @@ export default function ProductivityManager({
               ))}
             </div>
           </div>
-          <div className="md:col-span-2 mt-2 flex gap-2">
-            <button onClick={handleSave} className="rounded-lg bg-neutral-900 px-6 py-2 font-medium text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200">
-              {editingId ? "Simpan Perubahan Manual" : "Buat Rekor Manual"}
+          <div className="md:col-span-2 mt-4 flex gap-3 border-t border-neutral-200 dark:border-neutral-800 pt-4">
+            <button onClick={handleSave} className="flex-1 rounded-lg bg-blue-600 px-6 py-2.5 font-bold text-white transition-colors hover:bg-blue-700">
+              {editingId ? "Simpan Perubahan Manual" : "Buat Rekor Baru"}
             </button>
             {editingId && (
-              <button onClick={resetForm} className="rounded-lg bg-neutral-200 px-6 py-2 font-medium transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700">
+              <button onClick={() => handleDelete(editingId)} className="rounded-lg bg-red-100 text-red-600 px-6 py-2.5 font-bold transition-colors hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50">
+                Hapus
+              </button>
+            )}
+            {editingId && (
+              <button onClick={() => resetForm()} className="rounded-lg bg-neutral-200 px-6 py-2.5 font-bold transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700">
                 Batal
               </button>
             )}
           </div>
         </div>
-
-        <div className="space-y-4">
-          {items.map((item) => (
-            <div key={item.id} className="group rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-950">
-              <div className="flex justify-between">
-                <span className="font-bold dark:text-white">{new Date(item.date).toLocaleDateString("id-ID", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</span>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-medium uppercase text-blue-500">{item.dayType}</span>
-                  <div className="hidden gap-2 group-hover:flex">
-                    <button onClick={() => editItem(item)} className="text-xs font-semibold text-neutral-500 hover:text-blue-500 transition-colors dark:text-neutral-400">Edit</button>
-                    <button onClick={() => handleDelete(item.id)} className="text-xs font-semibold text-neutral-500 hover:text-red-500 transition-colors dark:text-neutral-400">Hapus</button>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-3">
-                {(() => {
-                  try {
-                    const tParsed = JSON.parse(item.tasks);
-                    if (Array.isArray(tParsed)) {
-                      return (
-                        <div className="flex flex-wrap gap-1.5">
-                          {tParsed.map((t: any, i: number) => (
-                            <span key={i} className={`flex items-center gap-1 text-[10px] font-medium px-2 py-1 rounded-md border ${
-                              t.completed 
-                                ? "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-900/50" 
-                                : "bg-white text-neutral-600 border-neutral-200 dark:bg-neutral-900 dark:text-neutral-400 dark:border-neutral-700"
-                            }`}>
-                              {t.completed ? "✓" : "○"} {t.name}
-                            </span>
-                          ))}
-                        </div>
-                      );
-                    }
-                  } catch (e) {}
-                  return <p className="text-sm text-neutral-600 dark:text-neutral-400">Tasks: {item.tasks}</p>;
-                })()}
-              </div>
-              <div className="mt-3 flex gap-4 text-xs text-neutral-500 font-medium dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800 pt-3">
-                <span className="flex items-center gap-1">⏱️ {item.pomodoroMinutes} menit</span>
-                <span className="flex items-center gap-1">😊 Mood: {item.mood}</span>
-                {item.goals && <span className="flex items-center gap-1">🎯 {item.goals.substring(0, 30)}...</span>}
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
       )}
+      {/* 5. PENGATURAN HARI */}
+      {activeTab === "pengaturan_hari" && (
+        <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-900 mb-8">
+          <div className="flex justify-between items-center mb-6 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+            <h3 className="font-semibold text-xl dark:text-white flex items-center gap-2">⚙️ Pengaturan Rutinitas & Tipe Hari</h3>
+            <button onClick={handleSaveConfig} className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-blue-700 shadow-md">
+              Simpan Pengaturan
+            </button>
+          </div>
 
-      {/* 5. FLOATING ACTION BUTTONS */}
+          <div className="grid gap-6 md:grid-cols-2 mb-8">
+            {/* Rutinitas Pagi */}
+            <div className="rounded-xl border border-neutral-100 bg-neutral-50 p-5 dark:border-neutral-800 dark:bg-neutral-950">
+              <h4 className="font-bold text-neutral-800 dark:text-neutral-200 mb-3 flex items-center gap-2">🌅 Rutinitas Pagi</h4>
+              <textarea 
+                className="w-full h-40 rounded-lg border border-neutral-300 bg-white p-3 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
+                value={config.morningTasks.join("\n")}
+                onChange={e => setConfig({...config, morningTasks: e.target.value.split("\n")})}
+                placeholder="Pisahkan dengan baris baru (Enter)"
+              />
+              <p className="text-xs text-neutral-500 mt-2 font-medium">Tugas ini akan otomatis ditambahkan ke awal setiap hari.</p>
+            </div>
+
+            {/* Rutinitas Malam */}
+            <div className="rounded-xl border border-neutral-100 bg-neutral-50 p-5 dark:border-neutral-800 dark:bg-neutral-950">
+              <h4 className="font-bold text-neutral-800 dark:text-neutral-200 mb-3 flex items-center gap-2">🌃 Rutinitas Malam</h4>
+              <textarea 
+                className="w-full h-40 rounded-lg border border-neutral-300 bg-white p-3 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
+                value={config.eveningTasks.join("\n")}
+                onChange={e => setConfig({...config, eveningTasks: e.target.value.split("\n")})}
+                placeholder="Pisahkan dengan baris baru (Enter)"
+              />
+              <p className="text-xs text-neutral-500 mt-2 font-medium">Tugas ini akan otomatis ditambahkan ke akhir setiap hari.</p>
+            </div>
+          </div>
+
+          {/* Pengaturan Tipe Hari */}
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h4 className="font-bold text-lg dark:text-white flex items-center gap-2">📅 Daftar Tipe Hari</h4>
+              <button 
+                onClick={() => setConfig({...config, dayTypes: [...config.dayTypes, { id: "New_" + Date.now(), name: "Tipe Baru", daysOfWeek: [], tasks: [] }]})} 
+                className="rounded-lg bg-green-100 text-green-700 px-4 py-2 text-sm font-bold transition-colors hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50"
+              >
+                + Tambah Tipe Hari
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              {config.dayTypes.map((dt, index) => (
+                <div key={dt.id} className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-800 dark:bg-neutral-900 relative">
+                  <button 
+                    onClick={() => {
+                      if(window.confirm("Hapus tipe hari ini?")) {
+                        setConfig({...config, dayTypes: config.dayTypes.filter((_, i) => i !== index)});
+                      }
+                    }}
+                    className="absolute top-5 right-5 text-red-500 hover:text-red-700 text-sm font-bold px-3 py-1 bg-red-50 rounded-md dark:bg-red-900/20"
+                  >
+                    Hapus
+                  </button>
+
+                  <div className="grid gap-4 md:grid-cols-2 mb-4 pr-24">
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-neutral-500">ID Tipe (Tanpa Spasi)</label>
+                      <input 
+                        type="text" 
+                        value={dt.id} 
+                        onChange={e => {
+                          const newDt = [...config.dayTypes];
+                          newDt[index].id = e.target.value;
+                          setConfig({...config, dayTypes: newDt});
+                        }}
+                        className="w-full rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" 
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-neutral-500">Nama Tampilan Dropdown</label>
+                      <input 
+                        type="text" 
+                        value={dt.name} 
+                        onChange={e => {
+                          const newDt = [...config.dayTypes];
+                          newDt[index].name = e.target.value;
+                          setConfig({...config, dayTypes: newDt});
+                        }}
+                        className="w-full rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" 
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="mb-2 block text-xs font-medium text-neutral-500">Jadwal Aktif Otomatis (Hari dalam seminggu)</label>
+                    <div className="flex flex-wrap gap-2">
+                      {["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"].map((dayName, dIdx) => (
+                        <label key={dIdx} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium cursor-pointer transition-colors ${dt.daysOfWeek.includes(dIdx) ? "bg-blue-100 border-blue-300 text-blue-700 dark:bg-blue-900/40 dark:border-blue-700 dark:text-blue-300" : "bg-neutral-50 border-neutral-200 text-neutral-600 dark:bg-neutral-900 dark:border-neutral-800 dark:text-neutral-400 hover:bg-neutral-100"}`}>
+                          <input 
+                            type="checkbox" 
+                            className="hidden"
+                            checked={dt.daysOfWeek.includes(dIdx)}
+                            onChange={(e) => {
+                              const newDt = [...config.dayTypes];
+                              if (e.target.checked) {
+                                newDt[index].daysOfWeek.push(dIdx);
+                              } else {
+                                newDt[index].daysOfWeek = newDt[index].daysOfWeek.filter(d => d !== dIdx);
+                              }
+                              setConfig({...config, dayTypes: newDt});
+                            }}
+                          />
+                          {dayName}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-neutral-500">Fokus Tugas Tambahan (Pisahkan dengan baris baru)</label>
+                    <textarea 
+                      className="w-full h-32 rounded-lg border border-neutral-300 bg-neutral-50 p-3 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                      value={dt.tasks.join("\n")}
+                      onChange={e => {
+                        const newDt = [...config.dayTypes];
+                        newDt[index].tasks = e.target.value.split("\n");
+                        setConfig({...config, dayTypes: newDt});
+                      }}
+                      placeholder="Masukkan tugas khusus untuk hari ini..."
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 6. FLOATING ACTION BUTTONS */}
       {activeTab === "harian" && (
       <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
         <button onClick={() => {setShowMood(true); setShowTimer(false); setShowGoals(false);}} className="w-12 h-12 bg-yellow-500 hover:bg-yellow-600 text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 text-xl" title="Mood Tracker">😊</button>
