@@ -1,15 +1,15 @@
-import { checkPrivateDashboardAuth } from "@/common/libs/privateDashboardAuth";
-import PrivateDashboardGate from "@/modules/dashboard/components/PrivateDashboardGate";
+import { checkAdminAuth } from "@/common/libs/adminAuth";
+import AdminLogin from "@/modules/admin/components/AdminLogin";
 
-export default async function PrivateDashboardLayout({
+export default async function AdminRootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const isAuthenticated = await checkPrivateDashboardAuth();
+  const isAuthenticated = await checkAdminAuth();
 
   if (!isAuthenticated) {
-    return <PrivateDashboardGate />;
+    return <AdminLogin />;
   }
 
   return <>{children}</>;

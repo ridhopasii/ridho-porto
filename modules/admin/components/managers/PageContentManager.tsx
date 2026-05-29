@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
+
+import { createClient } from "@/common/utils/client";
 
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { createBrowserClient } from "@supabase/ssr";
 import PageContentFormModal from "../PageContentFormModal";
 
 interface Props {
@@ -28,10 +29,7 @@ export default function PageContentManager({ page }: Props) {
   const [editingItem, setEditingItem] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const supabase = createBrowserClient(
-    (process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co"),
-    (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder"),
-  );
+  const supabase = createClient();
 
   useEffect(() => {
     fetchData();
@@ -77,12 +75,12 @@ export default function PageContentManager({ page }: Props) {
           }}
           className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
         >
-          + Add Content Key
+          + Tambah Konten
         </button>
       </div>
 
       {loading ? (
-        <p className="py-10 text-center text-neutral-500">Loading data...</p>
+        <div className="animate-pulse space-y-3">{[1,2,3].map(i=><div key={i} className="h-20 rounded-xl bg-neutral-100 dark:bg-neutral-800"/>)}</div>
       ) : (
         <div className="flex flex-col gap-4">
           {items.map((item) => (

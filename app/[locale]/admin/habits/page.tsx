@@ -1,15 +1,6 @@
-import { Metadata } from "next";
-import HabitsManager from "@/modules/admin/components/managers/HabitsManager";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Admin - habits | Ridho",
-  robots: "noindex, nofollow",
-};
-
-export default function Page() {
-  return (
-    <div className="animate-[fadeIn_0.5s_ease-out]">
-      <HabitsManager />
-    </div>
-  );
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  redirect(`/${locale}/private-hub/tracker`);
 }

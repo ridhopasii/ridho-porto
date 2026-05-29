@@ -1,167 +1,246 @@
-import React from "react";
-import { TbFolder, TbArticle, TbBook, TbEye, TbTrendingUp, TbDotsCircleHorizontal } from "react-icons/tb";
-import Image from "next/image";
+"use client";
+
+import { createClient } from "@/common/utils/client";
+
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import {
+  TbFolder, TbMedal, TbPhoto, TbSchool, TbBriefcase,
+  TbUsers, TbCode, TbShare, TbArticle, TbBook,
+  TbListDetails, TbNotebook, TbMail, TbStar,
+  TbTools, TbLink, TbHistory, TbUserEdit,
+  TbSettings, TbShieldLock, TbWallet, TbListCheck,
+  TbTarget, TbCalendarEvent, TbHome, TbArrowUpRight,
+} from "react-icons/tb";
+
+const QUICK_NAV = [
+  {
+    group: "Portfolio",
+    color: "text-blue-400",
+    bg: "bg-blue-500/10",
+    border: "border-blue-500/20",
+    items: [
+      { label: "Proyek", href: "/admin/projects", icon: TbFolder },
+      { label: "Penghargaan", href: "/admin/awards", icon: TbMedal },
+      { label: "Galeri Foto", href: "/admin/gallery", icon: TbPhoto },
+    ],
+  },
+  {
+    group: "Profil",
+    color: "text-violet-400",
+    bg: "bg-violet-500/10",
+    border: "border-violet-500/20",
+    items: [
+      { label: "Pendidikan", href: "/admin/education", icon: TbSchool },
+      { label: "Pengalaman", href: "/admin/experience", icon: TbBriefcase },
+      { label: "Organisasi", href: "/admin/organization", icon: TbUsers },
+      { label: "Keahlian", href: "/admin/skills", icon: TbCode },
+      { label: "Sosial Media", href: "/admin/social", icon: TbShare },
+    ],
+  },
+  {
+    group: "Konten",
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10",
+    border: "border-emerald-500/20",
+    items: [
+      { label: "Blog & Artikel", href: "/admin/articles", icon: TbArticle },
+      { label: "Publikasi", href: "/admin/publications", icon: TbBook },
+      { label: "Layanan", href: "/admin/services", icon: TbListDetails },
+      { label: "Peralatan", href: "/admin/uses", icon: TbTools },
+      { label: "Tautan", href: "/admin/links", icon: TbLink },
+      { label: "Changelog", href: "/admin/changelog", icon: TbHistory },
+    ],
+  },
+  {
+    group: "Interaksi",
+    color: "text-amber-400",
+    bg: "bg-amber-500/10",
+    border: "border-amber-500/20",
+    items: [
+      { label: "Buku Tamu", href: "/admin/guestbook", icon: TbNotebook },
+      { label: "Pesan Masuk", href: "/admin/contact", icon: TbMail },
+      { label: "Testimoni", href: "/admin/testimonials", icon: TbStar },
+    ],
+  },
+  {
+    group: "Pengaturan",
+    color: "text-neutral-400",
+    bg: "bg-neutral-500/10",
+    border: "border-neutral-500/20",
+    items: [
+      { label: "Beranda", href: "/admin/home", icon: TbHome },
+      { label: "Profil & Identitas", href: "/admin/profile", icon: TbUserEdit },
+      { label: "Pengaturan Global", href: "/admin/settings", icon: TbSettings },
+      { label: "Keamanan", href: "/admin/security", icon: TbShieldLock },
+    ],
+  },
+  {
+    group: "Private Hub",
+    color: "text-cyan-400",
+    bg: "bg-cyan-500/10",
+    border: "border-cyan-500/20",
+    items: [
+      { label: "Keuangan", href: "/admin/finance", icon: TbWallet },
+      { label: "Produktivitas", href: "/admin/productivity", icon: TbListCheck },
+      { label: "Habit & Tracker", href: "/admin/habits", icon: TbTarget },
+      { label: "Perencanaan", href: "/admin/planning", icon: TbCalendarEvent },
+    ],
+  },
+];
+
+interface Stats {
+  projects: number;
+  skills: number;
+  guestbook: number;
+  services: number;
+}
 
 export default function AdminOverview() {
+  const params = useParams();
+  const locale = (params?.locale as string) || "id";
+
+  const [stats, setStats] = useState<Stats | null>(null);
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    const load = async () => {
+      const [
+        { count: projects },
+        { count: skills },
+        guestbookRes,
+        servicesRes,
+      ] = await Promise.all([
+        supabase.from("Project").select("*", { count: "exact", head: true }),
+        supabase.from("Skill").select("*", { count: "exact", head: true }),
+        fetch("/api/admin/guestbook"),
+        fetch("/api/admin/services"),
+      ]);
+
+      const guestbook = guestbookRes.ok
+        ? ((await guestbookRes.json()) as unknown[]).length
+        : 0;
+      const services = servicesRes.ok
+        ? ((await servicesRes.json()) as unknown[]).length
+        : 0;
+
+      setStats({
+        projects: projects ?? 0,
+        skills: skills ?? 0,
+        guestbook,
+        services,
+      });
+    };
+    load();
+  }, []);
+
+  const today = new Date().toLocaleDateString("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   return (
-    <div className="p-admin-xl max-w-[1600px] mx-auto min-h-screen">
-      {/* HEADER & BREADCRUMB */}
-      <header className="mb-admin-xl flex flex-col gap-admin-xs">
-        <nav className="flex items-center gap-admin-sm text-admin-label-caps font-admin-label-caps text-admin-outline dark:text-neutral-400">
-          <a className="hover:text-admin-primary" href="#">Admin</a>
-          <span className="text-[12px]">{'>'}</span>
-          <span className="text-admin-primary font-bold">Overview</span>
-        </nav>
-        <h2 className="font-admin-display-lg text-admin-display-lg text-admin-on-surface dark:text-white">Welcome back, Ridho.</h2>
-        <p className="text-admin-on-surface-variant dark:text-neutral-400 font-admin-body-md">Here is what's happening with your workspace today.</p>
-      </header>
-      
-      <div className="grid grid-cols-12 gap-admin-xl">
-        {/* LEFT CONTENT (STATS & CHARTS) */}
-        <div className="col-span-12 lg:col-span-8 space-y-admin-xl">
-          {/* STATS GRID */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-admin-lg">
-            {/* Total Proyek */}
-            <div className="bg-admin-surface dark:bg-[#111111] p-admin-lg rounded-xl border border-admin-outline-variant dark:border-neutral-800 hover:shadow-lg hover:-translate-y-1 transition-all group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-admin-primary/5 rounded-full -mr-8 -mt-8"></div>
-              <div className="flex items-center justify-between mb-admin-md">
-                <div className="p-2 bg-admin-primary-container/10 text-admin-primary rounded-lg group-hover:bg-admin-primary group-hover:text-white transition-colors">
-                  <TbFolder size={24} />
-                </div>
-                <span className="text-admin-success-accent bg-admin-success-accent/10 px-admin-xs py-[2px] rounded text-[10px] font-bold">+12%</span>
-              </div>
-              <p className="text-admin-outline dark:text-neutral-400 font-admin-label-caps text-admin-label-caps uppercase">Total Proyek</p>
-              <p className="text-admin-display-lg font-admin-display-lg text-admin-on-surface dark:text-white mt-admin-xs">10</p>
-            </div>
-            {/* Total Artikel */}
-            <div className="bg-admin-surface dark:bg-[#111111] p-admin-lg rounded-xl border border-admin-outline-variant dark:border-neutral-800 hover:shadow-lg hover:-translate-y-1 transition-all group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-admin-tertiary/5 rounded-full -mr-8 -mt-8"></div>
-              <div className="flex items-center justify-between mb-admin-md">
-                <div className="p-2 bg-admin-tertiary-container/10 text-admin-tertiary rounded-lg group-hover:bg-admin-tertiary group-hover:text-white transition-colors">
-                  <TbArticle size={24} />
-                </div>
-                <span className="text-admin-success-accent bg-admin-success-accent/10 px-admin-xs py-[2px] rounded text-[10px] font-bold">+5%</span>
-              </div>
-              <p className="text-admin-outline dark:text-neutral-400 font-admin-label-caps text-admin-label-caps uppercase">Total Artikel</p>
-              <p className="text-admin-display-lg font-admin-display-lg text-admin-on-surface dark:text-white mt-admin-xs">7</p>
-            </div>
-            {/* Pesan Buku Tamu */}
-            <div className="bg-admin-surface dark:bg-[#111111] p-admin-lg rounded-xl border border-admin-outline-variant dark:border-neutral-800 hover:shadow-lg hover:-translate-y-1 transition-all group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-admin-secondary/5 rounded-full -mr-8 -mt-8"></div>
-              <div className="flex items-center justify-between mb-admin-md">
-                <div className="p-2 bg-admin-secondary-container/10 text-admin-secondary rounded-lg group-hover:bg-admin-secondary group-hover:text-white transition-colors">
-                  <TbBook size={24} />
-                </div>
-                <span className="text-admin-outline dark:text-neutral-400 bg-admin-outline-variant/20 px-admin-xs py-[2px] rounded text-[10px] font-bold">0%</span>
-              </div>
-              <p className="text-admin-outline dark:text-neutral-400 font-admin-label-caps text-admin-label-caps uppercase">Pesan Buku Tamu</p>
-              <p className="text-admin-display-lg font-admin-display-lg text-admin-on-surface dark:text-white mt-admin-xs">0</p>
-            </div>
-            {/* Total Kunjungan */}
-            <div className="bg-admin-surface dark:bg-[#111111] p-admin-lg rounded-xl border border-admin-outline-variant dark:border-neutral-800 hover:shadow-lg hover:-translate-y-1 transition-all group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-admin-primary/5 rounded-full -mr-8 -mt-8"></div>
-              <div className="flex items-center justify-between mb-admin-md">
-                <div className="p-2 bg-admin-primary-container/10 text-admin-primary rounded-lg group-hover:bg-admin-primary group-hover:text-white transition-colors">
-                  <TbEye size={24} />
-                </div>
-                <span className="text-admin-success-accent bg-admin-success-accent/10 px-admin-xs py-[2px] rounded text-[10px] font-bold">+28%</span>
-              </div>
-              <p className="text-admin-outline dark:text-neutral-400 font-admin-label-caps text-admin-label-caps uppercase">Total Kunjungan</p>
-              <p className="text-admin-display-lg font-admin-display-lg text-admin-on-surface dark:text-white mt-admin-xs">24.5K</p>
-            </div>
-          </div>
+    <div className="space-y-8 p-4 lg:p-6">
+      {/* Header */}
+      <div className="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900/50">
+        <p className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+          {today}
+        </p>
+        <h1 className="mt-2 text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+          Selamat datang, Ridho 👋
+        </h1>
+        <p className="mt-1 text-sm text-neutral-500">
+          Kelola seluruh konten dan pengaturan portofoliomu dari sini.
+        </p>
+      </div>
 
-          {/* MAIN CHART */}
-          <section className="bg-admin-surface dark:bg-[#111111] border border-admin-outline-variant dark:border-neutral-800 rounded-xl p-admin-xl">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-admin-md mb-admin-xl">
-              <div>
-                <h3 className="font-admin-headline-md text-admin-headline-md text-admin-on-surface dark:text-white">Statistik Pengunjung</h3>
-                <p className="text-admin-on-surface-variant dark:text-neutral-400 font-admin-body-md">Daily traffic and interaction metrics</p>
-              </div>
-              <div className="flex bg-admin-surface-container-low dark:bg-[#1a1a1a] p-1 rounded-lg border border-admin-outline-variant dark:border-neutral-800">
-                <button className="px-admin-md py-1.5 rounded-md text-admin-label-caps font-admin-label-caps bg-admin-surface dark:bg-[#111111] text-admin-primary shadow-sm">7 Days</button>
-                <button className="px-admin-md py-1.5 rounded-md text-admin-label-caps font-admin-label-caps text-admin-on-surface-variant dark:text-neutral-400 hover:text-admin-primary transition-colors">30 Days</button>
-              </div>
+      {/* Stat Cards */}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        {[
+          {
+            label: "Proyek",
+            value: stats?.projects,
+            href: `/${locale}/admin/projects`,
+            color: "text-blue-400",
+          },
+          {
+            label: "Skills",
+            value: stats?.skills,
+            href: `/${locale}/admin/skills`,
+            color: "text-violet-400",
+          },
+          {
+            label: "Layanan",
+            value: stats?.services,
+            href: `/${locale}/admin/services`,
+            color: "text-emerald-400",
+          },
+          {
+            label: "Buku Tamu",
+            value: stats?.guestbook,
+            href: `/${locale}/admin/guestbook`,
+            color: "text-amber-400",
+          },
+        ].map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            className="group flex flex-col justify-between rounded-xl border border-neutral-200 bg-white p-4 transition-all hover:border-neutral-300 hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/50 dark:hover:border-neutral-700 dark:hover:bg-neutral-900"
+          >
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                {item.label}
+              </p>
+              <TbArrowUpRight
+                size={14}
+                className="text-neutral-300 transition-colors group-hover:text-neutral-500 dark:text-neutral-700 dark:group-hover:text-neutral-400"
+              />
             </div>
-            
-            {/* CHART VISUALIZATION (CSS/SVG) */}
-            <div className="h-[320px] w-full relative">
-              {/* Y-Axis Labels */}
-              <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-[10px] text-admin-outline dark:text-neutral-400 font-admin-mono-label pr-4">
-                <span>30.0k</span>
-                <span>22.5k</span>
-                <span>15.0k</span>
-                <span>7.5k</span>
-                <span>0</span>
-              </div>
-              
-              {/* Chart Area */}
-              <div className="ml-12 h-full border-l border-b border-admin-outline-variant dark:border-neutral-800 relative overflow-hidden">
-                {/* Grid Lines */}
-                <div className="absolute w-full h-full flex flex-col justify-between pointer-events-none">
-                  <div className="border-t border-dashed border-admin-outline-variant dark:border-neutral-800/30 w-full"></div>
-                  <div className="border-t border-dashed border-admin-outline-variant dark:border-neutral-800/30 w-full"></div>
-                  <div className="border-t border-dashed border-admin-outline-variant dark:border-neutral-800/30 w-full"></div>
-                  <div className="border-t border-dashed border-admin-outline-variant dark:border-neutral-800/30 w-full"></div>
-                  <div className="h-0"></div>
-                </div>
-                
-                {/* SVG Chart Path */}
-                <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0%" stopColor="#4F46E5" stopOpacity="0.2"></stop>
-                      <stop offset="100%" stopColor="#4F46E5" stopOpacity="0"></stop>
-                    </linearGradient>
-                  </defs>
-                  {/* Area */}
-                  <path d="M0,280 Q50,220 100,240 T200,140 T300,180 T400,100 T500,160 T600,60 T700,90 L700,320 L0,320 Z" fill="url(#chartGradient)"></path>
-                  {/* Line */}
-                  <path d="M0,280 Q50,220 100,240 T200,140 T300,180 T400,100 T500,160 T600,60 T700,90" fill="none" stroke="#4F46E5" strokeLinecap="round" strokeWidth="3"></path>
-                  {/* Tooltip Points */}
-                  <circle cx="400" cy="100" fill="#ffffff" r="6" stroke="#4F46E5" strokeWidth="2"></circle>
-                </svg>
-                
-                {/* X-Axis Labels */}
-                <div className="absolute bottom-[-24px] w-full flex justify-between px-2 text-[10px] text-admin-outline dark:text-neutral-400 font-admin-mono-label">
-                  <span>Mon</span>
-                  <span>Tue</span>
-                  <span>Wed</span>
-                  <span>Thu</span>
-                  <span>Fri</span>
-                  <span>Sat</span>
-                  <span>Sun</span>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
+            <p className={`mt-3 text-3xl font-black ${item.color}`}>
+              {item.value == null ? (
+                <span className="inline-block h-8 w-12 animate-pulse rounded-lg bg-neutral-200 dark:bg-neutral-800" />
+              ) : (
+                item.value
+              )}
+            </p>
+          </Link>
+        ))}
+      </div>
 
-        {/* BENTO SECTION FOR OTHER CONTENT */}
-        <div className="col-span-12 lg:col-span-4 space-y-admin-xl">
-          <div className="bg-admin-surface dark:bg-[#111111] p-admin-lg rounded-xl border border-admin-outline-variant dark:border-neutral-800">
-            <div className="flex items-center justify-between mb-admin-lg">
-              <h4 className="font-admin-body-lg font-bold">Top Performance</h4>
-              <TbDotsCircleHorizontal className="text-admin-outline dark:text-neutral-400" size={20} />
-            </div>
-            <div className="space-y-admin-md">
-              <div className="flex items-center gap-admin-md">
-                <div className="w-12 h-12 rounded-lg bg-admin-surface-container-high dark:bg-[#222] overflow-hidden border border-admin-outline-variant dark:border-neutral-800">
-                  <Image 
-                    src="/profile.webp" 
-                    alt="Project Thumbnail" 
-                    width={48} height={48} 
-                    className="w-full h-full object-cover" 
-                  />
-                </div>
-                <div className="flex-1">
-                  <p className="font-admin-body-md font-semibold">Nexus Core Redesign</p>
-                  <p className="text-xs text-admin-outline dark:text-neutral-400">Updated 2 days ago</p>
-                </div>
-                <TbTrendingUp className="text-admin-success-accent" size={20} />
+      {/* Quick Navigation */}
+      <div>
+        <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
+          Navigasi Cepat
+        </h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {QUICK_NAV.map((section) => (
+            <div
+              key={section.group}
+              className={`rounded-xl border ${section.border} bg-white p-4 dark:bg-neutral-900/40`}
+            >
+              <p
+                className={`mb-3 text-[10px] font-bold uppercase tracking-widest ${section.color}`}
+              >
+                {section.group}
+              </p>
+              <div className="space-y-0.5">
+                {section.items.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={`/${locale}${item.href}`}
+                    className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-[13px] text-neutral-600 transition-all hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+                  >
+                    <item.icon size={15} className={`flex-shrink-0 ${section.color}`} />
+                    {item.label}
+                  </Link>
+                ))}
               </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

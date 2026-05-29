@@ -1,10 +1,11 @@
-"use client";
+﻿"use client";
+
+import { createClient } from "@/common/utils/client";
 
 import Link from "next/link";
 import { MdVerified as VerifiedIcon } from "react-icons/md";
 import useSWR from "swr";
 import { useEffect, useState } from "react";
-import { createBrowserClient } from "@supabase/ssr";
 
 import Tooltip from "../../elements/Tooltip";
 import Image from "../../elements/Image";
@@ -22,17 +23,14 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
   const { data, mutate } = useSWR("/api/profile", fetcher);
   const [user, setUser] = useState<any>(null);
   
-  const supabase = createBrowserClient(
-    (process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co"),
-    (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder"),
-  );
+  const supabase = createClient();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
     });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: unknown, session: unknown) => {
+      setUser((session as any)?.user ?? null);
     });
 
     const channel = supabase

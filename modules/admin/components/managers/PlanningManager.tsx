@@ -15,8 +15,8 @@ export default function PlanningManager({
   const [loading, setLoading] = useState(true);
 
   // Form states
-  const [newPlan, setNewPlan] = useState({ year: 2026, category: "", item: "", progress: 0 });
-  const [newTabungan, setNewTabungan] = useState({ month: "", year: 2026, category: "", amount: 0, target: 0, notes: "" });
+  const [newPlan, setNewPlan] = useState({ year: new Date().getFullYear(), category: "", item: "", progress: 0 });
+  const [newTabungan, setNewTabungan] = useState({ month: "", year: new Date().getFullYear(), category: "", amount: 0, target: 0, notes: "" });
 
   // Edit states
   const [editPlan, setEditPlan] = useState<any>(null);
@@ -61,7 +61,7 @@ export default function PlanningManager({
         });
         if (!res.ok) throw new Error("Gagal");
         toast.success("Berhasil ditambahkan", { id: toastId });
-        setNewPlan({ year: 2026, category: "", item: "", progress: 0 });
+        setNewPlan({ year: new Date().getFullYear(), category: "", item: "", progress: 0 });
       }
       fetchData();
       onMutate?.();
@@ -104,7 +104,7 @@ export default function PlanningManager({
         });
         if (!res.ok) throw new Error("Gagal");
         toast.success("Berhasil ditambahkan", { id: toastId });
-        setNewTabungan({ month: "", year: 2026, category: "", amount: 0, target: 0, notes: "" });
+        setNewTabungan({ month: "", year: new Date().getFullYear(), category: "", amount: 0, target: 0, notes: "" });
       }
       fetchData();
       onMutate?.();

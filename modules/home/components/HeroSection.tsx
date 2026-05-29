@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { createClient } from "@/common/utils/client";
+
+import { useEffect, useMemo, useState, useRef } from "react";
 import { m as motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -13,12 +15,11 @@ import {
   BsInstagram as InstagramIcon,
   BsLinkedin as LinkedinIcon,
 } from "react-icons/bs";
-import { HiOutlineExternalLink } from "react-icons/hi";
+import { HiOutlineExternalLink, HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 import useSWR from "swr";
 import { fetcher } from "@/services/fetcher";
 import { PageContentMap, readPageContent } from "@/common/libs/page-content";
-import { createBrowserClient } from "@supabase/ssr";
 
 import RotatingText from "@/common/components/elements/RotatingText";
 
@@ -32,26 +33,96 @@ const HeroSection = ({ content }: HeroSectionProps) => {
   const { data: socialsData } = useSWR("/api/admin/social", fetcher);
   const { data: galleryData } = useSWR("/api/admin/gallery", fetcher);
   
-  const galleryItems = Array.isArray(galleryData) ? galleryData.slice(0, 5) : [];
-  
   const [liveContent, setLiveContent] = useState(content || {});
-  
-  const supabase = createBrowserClient(
-    (process.env.NEXT_PUBLIC_SUPABASE_URL || ""),
-    (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""),
+
+  const supabase = createClient();
+
+  // Drag and Swipe Gallery states
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const handleScroll = () => {
+    if (!galleryRef.current) return;
+    const { scrollLeft, clientWidth } = galleryRef.current;
+    if (clientWidth > 0) {
+      const index = Math.round(scrollLeft / clientWidth);
+      setActiveSlide(index);
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!galleryRef.current) return;
+    setIsDragging(true);
+    setStartX(e.clientX - galleryRef.current.offsetLeft);
+    setScrollLeftState(galleryRef.current.scrollLeft);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging || !galleryRef.current) return;
+    e.preventDefault();
+    const x = e.clientX - galleryRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5; // Sensitivity scroll multiplier
+    galleryRef.current.scrollLeft = scrollLeftState - walk;
+  };
+
+  const scrollToSlide = (index: number) => {
+    if (!galleryRef.current) return;
+    const { clientWidth } = galleryRef.current;
+    galleryRef.current.scrollTo({
+      left: index * clientWidth,
+      behavior: "smooth",
+    });
+    setActiveSlide(index);
+  };
+
+  const handlePrev = () => {
+    const prevIndex = activeSlide > 0 ? activeSlide - 1 : galleryItems.length - 1;
+    scrollToSlide(prevIndex);
+  };
+
+  const handleNext = () => {
+    const nextIndex = activeSlide < galleryItems.length - 1 ? activeSlide + 1 : 0;
+    scrollToSlide(nextIndex);
+  };
+
+  // Memoize derived values — avoid recomputing on every render
+  const galleryItems = useMemo(
+    () => (Array.isArray(galleryData) ? galleryData.slice(0, 5) : []),
+    [galleryData]
   );
 
-  const iconMap: Record<string, React.ReactNode> = {
+  const iconMap = useMemo<Record<string, React.ReactNode>>(() => ({
     github: <GithubIcon size={18} />,
     instagram: <InstagramIcon size={18} />,
     linkedin: <LinkedinIcon size={18} />,
-  };
+  }), []);
 
-  const socialLinks = (socialsData?.data || []).map((s: any) => ({
-    href: s.url,
-    icon: iconMap[s.icon?.toLowerCase()] ?? null,
-    label: s.platform,
-  })).filter((s: any) => s.icon !== null && ["github", "instagram", "linkedin"].includes(s.label?.toLowerCase()));
+  const socialLinks = useMemo(
+    () =>
+      (socialsData?.data || [])
+        .map((s: any) => ({
+          href: s.url,
+          icon: iconMap[s.icon?.toLowerCase()] ?? null,
+          label: s.platform,
+        }))
+        .filter(
+          (s: any) =>
+            s.icon !== null &&
+            ["github", "instagram", "linkedin"].includes(s.label?.toLowerCase())
+        ),
+    [socialsData, iconMap]
+  );
 
   useEffect(() => {
     setLiveContent(content || {});
@@ -61,7 +132,6 @@ const HeroSection = ({ content }: HeroSectionProps) => {
     const channel = supabase
       .channel('hero-changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'Profile' }, () => mutate())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'profile' }, () => mutate())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'PageContent' }, (payload) => {
         const { key, value, page } = (payload.new as any) || {};
         if (page === 'home' && key) {
@@ -70,7 +140,9 @@ const HeroSection = ({ content }: HeroSectionProps) => {
       })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [mutate, supabase]);
+  // supabase is a stable singleton — not a dep
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mutate]);
 
   const avatarUrl = profile?.avatarUrl || "/profile.webp";
   const fullName = profile?.fullName || "";
@@ -263,10 +335,18 @@ const HeroSection = ({ content }: HeroSectionProps) => {
             {/* Ambient glow */}
             <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-violet-500 to-emerald-400 opacity-20 blur-xl"></div>
             
-            <div className="relative overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 p-2 backdrop-blur-sm shadow-xl">
+            <div className="relative overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 p-2 backdrop-blur-sm shadow-xl group/gallery">
               {galleryItems.length > 0 ? (
                 <>
-                  <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory rounded-xl [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                  <div 
+                    ref={galleryRef}
+                    onScroll={handleScroll}
+                    onMouseDown={handleMouseDown}
+                    onMouseLeave={handleMouseLeave}
+                    onMouseUp={handleMouseUp}
+                    onMouseMove={handleMouseMove}
+                    className="flex gap-3 overflow-x-auto snap-x snap-mandatory rounded-xl [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] select-none"
+                  >
                     {galleryItems.map((item: any) => {
                       const rawSrc = item.images?.[0] || item.imageUrl;
                       const isValidSrc = typeof rawSrc === "string" && (rawSrc.startsWith("http") || rawSrc.startsWith("/"));
@@ -282,6 +362,7 @@ const HeroSection = ({ content }: HeroSectionProps) => {
                             alt={item.description || "Gallery"} 
                             fill 
                             className="object-cover transition-transform duration-500 group-hover:scale-105" 
+                            draggable={false}
                           />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center text-neutral-400">No Image</div>
@@ -302,10 +383,41 @@ const HeroSection = ({ content }: HeroSectionProps) => {
                     })}
                   </div>
                   
+                  {/* Navigation Arrows */}
+                  {galleryItems.length > 1 && (
+                    <>
+                      <button
+                        onClick={handlePrev}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 hover:bg-black/60 dark:bg-neutral-900/40 dark:hover:bg-neutral-900/60 border border-white/10 dark:border-neutral-800/10 backdrop-blur-md text-white transition-opacity duration-300 opacity-0 group-hover/gallery:opacity-100 active:scale-95 shadow-lg cursor-pointer"
+                        aria-label="Previous image"
+                      >
+                        <HiChevronLeft size={18} />
+                      </button>
+                      <button
+                        onClick={handleNext}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 hover:bg-black/60 dark:bg-neutral-900/40 dark:hover:bg-neutral-900/60 border border-white/10 dark:border-neutral-800/10 backdrop-blur-md text-white transition-opacity duration-300 opacity-0 group-hover/gallery:opacity-100 active:scale-95 shadow-lg cursor-pointer"
+                        aria-label="Next image"
+                      >
+                        <HiChevronRight size={18} />
+                      </button>
+                    </>
+                  )}
+                  
                   <div className="mt-3 flex items-center justify-between px-2">
-                    <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium animate-pulse">
-                      &larr; Swipe &rarr;
-                    </span>
+                    <div className="flex gap-1.5 items-center">
+                      {galleryItems.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => scrollToSlide(index)}
+                          className={`h-1.5 rounded-full transition-all duration-300 ${
+                            activeSlide === index
+                              ? "w-4 bg-violet-600 dark:bg-violet-400"
+                              : "w-1.5 bg-neutral-300 dark:bg-neutral-700 hover:bg-neutral-400 dark:hover:bg-neutral-600"
+                          }`}
+                          aria-label={`Go to slide ${index + 1}`}
+                        />
+                      ))}
+                    </div>
                     <Link 
                       href="/social-media"
                       className="text-xs text-violet-600 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300 font-semibold transition-colors flex items-center gap-1"

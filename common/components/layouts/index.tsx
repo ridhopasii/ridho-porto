@@ -23,9 +23,15 @@ const Layouts = ({ children }: LayoutsProps) => {
   const isShowChatButton = pathname !== "/chat" && !pathname.endsWith("/dashboard");
   const isStandalonePage = pathname.endsWith("/links");
   const isAdminPage = pathname.includes("/admin");
+  const isPrivateHubPage = pathname.includes("/private-hub");
 
   if (isAdminPage) {
     return <AdminLayout>{children}</AdminLayout>;
+  }
+
+  // Private hub manages its own layout
+  if (isPrivateHubPage) {
+    return <>{children}</>;
   }
 
   if (isStandalonePage) {
@@ -53,3 +59,4 @@ const Layouts = ({ children }: LayoutsProps) => {
 };
 
 export default Layouts;
+

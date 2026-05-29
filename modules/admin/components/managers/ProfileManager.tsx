@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -55,7 +55,7 @@ export default function ProfileManager() {
   };
 
   if (loading) {
-    return <div className="py-10 text-center text-neutral-500">Loading data...</div>;
+    return <div className="animate-pulse space-y-4">{[1,2,3].map(i=><div key={i} className="h-20 rounded-xl bg-neutral-100 dark:bg-neutral-800"/>)}</div>;
   }
 
   return (

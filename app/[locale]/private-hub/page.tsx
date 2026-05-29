@@ -63,21 +63,19 @@ export default async function PrivateHubPage({ params }: Props) {
   ]);
 
   return (
-    <Container data-aos="fade-up">
-      <Dashboard
-        locale={locale}
-        productivity={{
-          logs: logs || [],
-          monthlyTrackers: monthlyTrackers || [],
-          habitConfigs: habitConfigs || [],
-          savingsPlans: savingsPlans || [],
-          yearlyPlans: yearlyPlans || [],
-        }}
-        finance={{
-          wallets: wallets || [],
-          transactions: transactions || [],
-        }}
-      />
-    </Container>
+    <Dashboard
+      locale={locale}
+      productivity={{
+        logs: logs || [],
+        monthlyTrackers: monthlyTrackers || [],
+        habitConfigs: habitConfigs || [],
+        savingsPlans: savingsPlans || [],
+        yearlyPlans: yearlyPlans || [],
+      }}
+      finance={{
+        wallets: wallets || [],
+        transactions: transactions || [],
+      }}
+    />
   );
 }
