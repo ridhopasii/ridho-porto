@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
-export default function PlanningManager({ activeTab = "rencana" }: { activeTab?: "rencana" | "tabungan" }) {
+export default function PlanningManager({
+  activeTab = "rencana",
+  onMutate,
+}: {
+  activeTab?: "rencana" | "tabungan";
+  onMutate?: () => void;
+}) {
   const [plans, setPlans] = useState<any[]>([]);
   const [tabungan, setTabungan] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,6 +64,7 @@ export default function PlanningManager({ activeTab = "rencana" }: { activeTab?:
         setNewPlan({ year: 2026, category: "", item: "", progress: 0 });
       }
       fetchData();
+      onMutate?.();
     } catch (e: any) {
       toast.error(e.message, { id: toastId });
     }
@@ -71,6 +78,7 @@ export default function PlanningManager({ activeTab = "rencana" }: { activeTab?:
       if (!res.ok) throw new Error("Gagal menghapus");
       toast.success("Berhasil dihapus", { id: toastId });
       fetchData();
+      onMutate?.();
     } catch (e: any) {
       toast.error(e.message, { id: toastId });
     }
@@ -99,6 +107,7 @@ export default function PlanningManager({ activeTab = "rencana" }: { activeTab?:
         setNewTabungan({ month: "", year: 2026, category: "", amount: 0, target: 0, notes: "" });
       }
       fetchData();
+      onMutate?.();
     } catch (e: any) {
       toast.error(e.message, { id: toastId });
     }
@@ -112,12 +121,20 @@ export default function PlanningManager({ activeTab = "rencana" }: { activeTab?:
       if (!res.ok) throw new Error("Gagal menghapus");
       toast.success("Berhasil dihapus", { id: toastId });
       fetchData();
+      onMutate?.();
     } catch (e: any) {
       toast.error(e.message, { id: toastId });
     }
   };
 
-  if (loading) return <div className="py-10 text-center">Loading...</div>;
+  if (loading)
+    return (
+      <div className="space-y-3 animate-pulse">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-14 rounded-xl bg-neutral-100 dark:bg-neutral-800" />
+        ))}
+      </div>
+    );
 
   const totalTabungan = tabungan.reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
   const totalTargetTabungan = tabungan.reduce((sum, t) => sum + (Number(t.target) || 0), 0);

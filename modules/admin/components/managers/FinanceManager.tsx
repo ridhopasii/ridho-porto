@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
-export default function FinanceManager({ activeTab = "dompet" }: { activeTab?: "dompet" | "transaksi" }) {
+export default function FinanceManager({
+  activeTab = "dompet",
+  onMutate,
+}: {
+  activeTab?: "dompet" | "transaksi";
+  onMutate?: () => void;
+}) {
   const [wallets, setWallets] = useState<any[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,6 +64,7 @@ export default function FinanceManager({ activeTab = "dompet" }: { activeTab?: "
         setNewWallet({ name: "", balance: 0, icon: "💳" });
       }
       fetchFinance();
+      onMutate?.();
     } catch (e: any) {
       toast.error(e.message, { id: toastId });
     }
@@ -71,6 +78,7 @@ export default function FinanceManager({ activeTab = "dompet" }: { activeTab?: "
       if (!res.ok) throw new Error("Gagal menghapus");
       toast.success("Berhasil dihapus", { id: toastId });
       fetchFinance();
+      onMutate?.();
     } catch (e: any) {
       toast.error(e.message, { id: toastId });
     }
@@ -99,6 +107,7 @@ export default function FinanceManager({ activeTab = "dompet" }: { activeTab?: "
         setNewTx({ wallet_id: "", type: "expense", amount: 0, description: "" });
       }
       fetchFinance();
+      onMutate?.();
     } catch (e: any) {
       toast.error(e.message, { id: toastId });
     }
@@ -112,12 +121,20 @@ export default function FinanceManager({ activeTab = "dompet" }: { activeTab?: "
       if (!res.ok) throw new Error("Gagal menghapus");
       toast.success("Berhasil dihapus", { id: toastId });
       fetchFinance();
+      onMutate?.();
     } catch (e: any) {
       toast.error(e.message, { id: toastId });
     }
   };
 
-  if (loading) return <div className="py-10 text-center">Loading...</div>;
+  if (loading)
+    return (
+      <div className="space-y-3 animate-pulse">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-14 rounded-xl bg-neutral-100 dark:bg-neutral-800" />
+        ))}
+      </div>
+    );
 
   return (
     <div className="space-y-6">

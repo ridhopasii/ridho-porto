@@ -57,8 +57,8 @@ export async function GET(request: NextRequest) {
     // Save tokens to Supabase
     await saveTikTokTokens(tokenData);
 
-    // Redirect to the creations page after successful login
-    return NextResponse.redirect(`${process.env.BASE_URL || "http://localhost:3000"}/creations?tiktok_auth=success`);
+    // Redirect to the social media page after successful login
+    return NextResponse.redirect(`${process.env.BASE_URL || "http://localhost:3000"}/social-media?tiktok_auth=success`);
   } catch (error: any) {
     console.error("TikTok Auth Callback Error:", error.response?.data || error.message);
     return NextResponse.json(

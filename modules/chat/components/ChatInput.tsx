@@ -71,7 +71,7 @@ const ChatInput = ({
       setMessage("");
       onCancelReply();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsSending(false);
       setTimeout(() => {
@@ -86,7 +86,10 @@ const ChatInput = ({
 
   return (
     <>
-      <form className="flex flex-col gap-2 border-t border-neutral-300 px-4 py-4 dark:border-neutral-700">
+      <form
+        onSubmit={handleSendMessage}
+        className="flex flex-col gap-2 border-t border-neutral-300 px-4 py-4 dark:border-neutral-700"
+      >
         {replyName && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -114,7 +117,6 @@ const ChatInput = ({
           />
           <button
             type="submit"
-            onClick={handleSendMessage}
             className={clsx(
               "ml-2 rounded-md bg-primary p-3 text-dark transition duration-100 hover:bg-primary-500 active:scale-90",
               !message.trim() &&

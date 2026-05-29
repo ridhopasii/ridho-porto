@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { ReactNode } from "react";
 
 import SegmentedTabs from "@/common/components/elements/SegmentedTabs";
@@ -25,7 +25,7 @@ import HabitsManager from "@/modules/admin/components/managers/HabitsManager";
 import PlanningManager from "@/modules/admin/components/managers/PlanningManager";
 
 type MainTab = "produktif" | "keuangan";
-type ProductiveTab = "ringkasan" | "riwayat" | "tracker" | "rencana" | "tabungan" | "kebiasaan";
+type ProductiveTab = "harian" | "riwayat" | "tracker" | "rencana" | "tabungan";
 type FinanceTab = "dompet" | "transaksi";
 
 interface DashboardProps {
@@ -94,37 +94,62 @@ export default function Dashboard({
 }: DashboardProps) {
   const router = useRouter();
   const [mainTab, setMainTab] = useState<MainTab>("produktif");
-  const [productiveTab, setProductiveTab] = useState<ProductiveTab>("ringkasan");
+  const [productiveTab, setProductiveTab] = useState<ProductiveTab>("harian");
   const [financeTab, setFinanceTab] = useState<FinanceTab>("dompet");
 
-  const logs = productivity.logs || [];
-  const savingsPlans = productivity.savingsPlans || [];
-  const wallets = finance.wallets || [];
-  const transactions = finance.transactions || [];
+  const [localWallets, setLocalWallets] = useState(finance.wallets || []);
+  const [localTransactions, setLocalTransactions] = useState(finance.transactions || []);
+  const [localLogs, setLocalLogs] = useState(productivity.logs || []);
+  const [localSavings, setLocalSavings] = useState(productivity.savingsPlans || []);
 
-  const totalPomodoro = logs.reduce(
+  const refreshStats = useCallback(async () => {
+    try {
+      const [financeRes, planningRes, productivityRes] = await Promise.all([
+        fetch("/api/admin/finance"),
+        fetch("/api/admin/planning"),
+        fetch("/api/admin/productivity"),
+      ]);
+      if (financeRes.ok) {
+        const data = await financeRes.json();
+        setLocalWallets(data.wallets || []);
+        setLocalTransactions(data.transactions || []);
+      }
+      if (planningRes.ok) {
+        const data = await planningRes.json();
+        setLocalSavings(data.tabungan || []);
+      }
+      if (productivityRes.ok) {
+        const data = await productivityRes.json();
+        if (Array.isArray(data)) setLocalLogs(data);
+      }
+    } catch {
+      // silent — stats will refresh on next hard reload
+    }
+  }, []);
+
+  const totalPomodoro = localLogs.reduce(
     (sum, item) => sum + safeNumber(item.pomodoroMinutes),
     0,
   );
-  const totalSavings = savingsPlans.reduce(
+  const totalSavings = localSavings.reduce(
     (sum, item) => sum + safeNumber(item.amount),
     0,
   );
-  const savingsTarget = savingsPlans.reduce(
+  const savingsTarget = localSavings.reduce(
     (sum, item) => sum + safeNumber(item.target),
     0,
   );
   const savingsProgress = savingsTarget
     ? Math.round((totalSavings / savingsTarget) * 100)
     : 0;
-  const totalBalance = wallets.reduce(
+  const totalBalance = localWallets.reduce(
     (sum, item) => sum + safeNumber(item.balance),
     0,
   );
-  const totalIncome = transactions
+  const totalIncome = localTransactions
     .filter((item) => item.type === "income")
     .reduce((sum, item) => sum + safeNumber(item.amount), 0);
-  const totalExpense = transactions
+  const totalExpense = localTransactions
     .filter((item) => item.type === "expense")
     .reduce((sum, item) => sum + safeNumber(item.amount), 0);
 
@@ -179,7 +204,7 @@ export default function Dashboard({
             <StatCard
               label="Saldo Total"
               value={currencyFormatter.format(totalBalance)}
-              hint={`${numberFormatter.format(wallets.length)} dompet aktif`}
+              hint={`${numberFormatter.format(localWallets.length)} dompet aktif`}
             />
             <StatCard
               label="Savings"
@@ -189,7 +214,7 @@ export default function Dashboard({
             <StatCard
               label="Pomodoro"
               value={`${numberFormatter.format(totalPomodoro)} menit`}
-              hint={`${numberFormatter.format(logs.length)} log produktif`}
+              hint={`${numberFormatter.format(localLogs.length)} log produktif`}
             />
             <StatCard
               label="Arus Kas"
@@ -211,47 +236,56 @@ export default function Dashboard({
         />
       </HubCard>
 
-      {mainTab === "produktif" ? (
-        <div className="space-y-5">
-          <HubCard className="p-1">
-            <SegmentedTabs
-              value={productiveTab}
-              onChange={setProductiveTab}
-              options={[
-                { value: "ringkasan", label: "Analitik", icon: "📊" },
-                { value: "riwayat", label: "Riwayat", icon: "🕒" },
-                { value: "tracker", label: "Tracker", icon: "📈" },
-                { value: "rencana", label: "Rencana", icon: "🎯" },
-                { value: "tabungan", label: "Tabungan", icon: "💰" },
-                { value: "kebiasaan", label: "Kebiasaan", icon: "✨" },
-              ]}
-            />
-          </HubCard>
+      {/* PRODUKTIF */}
+      <div className={mainTab === "produktif" ? "space-y-5" : "hidden"}>
+        <HubCard className="p-1">
+          <SegmentedTabs
+            value={productiveTab}
+            onChange={setProductiveTab}
+            options={[
+              { value: "harian", label: "Harian", icon: "📝" },
+              { value: "riwayat", label: "Riwayat", icon: "🕒" },
+              { value: "tracker", label: "Tracker", icon: "📈" },
+              { value: "rencana", label: "Rencana", icon: "🎯" },
+              { value: "tabungan", label: "Tabungan", icon: "💰" },
+            ]}
+          />
+        </HubCard>
 
-          {productiveTab === "ringkasan" ? <ProductivityManager activeTab="ringkasan" /> : null}
-          {productiveTab === "riwayat" ? <ProductivityManager activeTab="riwayat" /> : null}
-          {productiveTab === "tracker" ? <HabitsManager activeTab="tracker" /> : null}
-          {productiveTab === "kebiasaan" ? <HabitsManager activeTab="kebiasaan" /> : null}
-          {productiveTab === "rencana" ? <PlanningManager activeTab="rencana" /> : null}
-          {productiveTab === "tabungan" ? <PlanningManager activeTab="tabungan" /> : null}
+        {/* ProductivityManager stays mounted to preserve Pomodoro timer state */}
+        <div className={productiveTab === "harian" || productiveTab === "riwayat" ? "" : "hidden"}>
+          <ProductivityManager
+            activeTab={productiveTab === "riwayat" ? "riwayat" : "harian"}
+            onMutate={refreshStats}
+          />
         </div>
-      ) : (
-        <div className="space-y-5">
-          <HubCard className="p-1">
-            <SegmentedTabs
-              value={financeTab}
-              onChange={setFinanceTab}
-              options={[
-                { value: "dompet", label: "Dompet", icon: "💳" },
-                { value: "transaksi", label: "Transaksi", icon: "🧾" },
-              ]}
-            />
-          </HubCard>
 
-          {financeTab === "dompet" ? <FinanceManager activeTab="dompet" /> : null}
-          {financeTab === "transaksi" ? <FinanceManager activeTab="transaksi" /> : null}
-        </div>
-      )}
+        {productiveTab === "tracker" && <HabitsManager onMutate={refreshStats} />}
+
+        {(productiveTab === "rencana" || productiveTab === "tabungan") && (
+          <PlanningManager
+            activeTab={productiveTab as "rencana" | "tabungan"}
+            onMutate={refreshStats}
+          />
+        )}
+      </div>
+
+      {/* KEUANGAN */}
+      <div className={mainTab === "keuangan" ? "space-y-5" : "hidden"}>
+        <HubCard className="p-1">
+          <SegmentedTabs
+            value={financeTab}
+            onChange={setFinanceTab}
+            options={[
+              { value: "dompet", label: "Dompet", icon: "💳" },
+              { value: "transaksi", label: "Transaksi", icon: "🧾" },
+            ]}
+          />
+        </HubCard>
+
+        {financeTab === "dompet" && <FinanceManager activeTab="dompet" onMutate={refreshStats} />}
+        {financeTab === "transaksi" && <FinanceManager activeTab="transaksi" onMutate={refreshStats} />}
+      </div>
     </div>
   );
 }

@@ -213,7 +213,7 @@ const HeroSection = ({ content }: HeroSectionProps) => {
           </p>
           <p>
             {readPageContent(
-              content,
+              liveContent,
               "resume.paragraph_2",
               t("resume.paragraph_2"),
             )}
@@ -307,7 +307,7 @@ const HeroSection = ({ content }: HeroSectionProps) => {
                       &larr; Swipe &rarr;
                     </span>
                     <Link 
-                      href="/creations" 
+                      href="/social-media"
                       className="text-xs text-violet-600 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300 font-semibold transition-colors flex items-center gap-1"
                     >
                       Buka Galeri <HiOutlineExternalLink size={12} />

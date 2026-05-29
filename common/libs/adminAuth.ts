@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
 
 import { getPasswordHash } from "./password-settings";
@@ -14,5 +15,7 @@ export async function checkAdminAuth() {
   );
   if (!expectedToken) return false;
 
-  return token === expectedToken;
+  const a = Buffer.from(token);
+  const b = Buffer.from(expectedToken);
+  return a.length === b.length && timingSafeEqual(a, b);
 }

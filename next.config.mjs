@@ -4,6 +4,9 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    optimizePackageImports: ["react-icons"],
+  },
   images: {
     remotePatterns: [
       {
@@ -44,10 +47,6 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "encrypted-tbn0.gstatic.com",
-      },
-      {
-        protocol: "https",
-        hostname: "example.com",
       },
     ],
   },

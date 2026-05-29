@@ -58,11 +58,11 @@ export async function GET() {
   try {
     const response = await getInstagramMedia();
     if (!response || !response.data || response.data.length === 0) {
-      return NextResponse.json({ success: true, data: MOCK_INSTAGRAM_POSTS });
+      return NextResponse.json({ success: true, data: MOCK_INSTAGRAM_POSTS, isMock: true });
     }
-    return NextResponse.json({ success: true, data: response.data });
+    return NextResponse.json({ success: true, data: response.data, isMock: false });
   } catch (error) {
-    console.warn("Instagram API fetch failed, falling back to mock posts.");
-    return NextResponse.json({ success: true, data: MOCK_INSTAGRAM_POSTS });
+    console.error("Instagram API fetch failed, falling back to mock posts.");
+    return NextResponse.json({ success: true, data: MOCK_INSTAGRAM_POSTS, isMock: true });
   }
 }

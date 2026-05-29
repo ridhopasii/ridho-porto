@@ -19,17 +19,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/dashboard",
     "/achievements",
     "/guestbook",
-    "/produktif",
-    "/financial",
-    "/chat",
-    "/contact",
-    "/uses",
     "/changelog",
     "/blog",
     "/links",
     "/smart-talk",
-    "/privacy",
-    "/terms",
     "/legal/privacy-policy",
     "/legal/terms-of-service"
   ];

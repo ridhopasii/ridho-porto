@@ -1,5 +1,4 @@
 import {
-  BiHomeCircle as HomeIcon,
   BiUser as AboutIcon,
   BiCollection as ProjectIcon,
   BiCategory as DashboardIcon,
@@ -19,14 +18,6 @@ import { MenuItemProps } from "../types/menu";
 const iconSize = 20;
 
 export const MENU_ITEMS: MenuItemProps[] = [
-  {
-    title: "Home",
-    href: "/",
-    icon: <HomeIcon size={iconSize} />,
-    isShow: false,
-    isExternal: false,
-    eventName: "Pages: Home",
-  },
   {
     title: "Home",
     href: "/",

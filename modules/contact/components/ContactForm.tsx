@@ -30,12 +30,19 @@ const ContactForm = () => {
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   useEffect(() => {
-    setButtonText(isLoading ? "Sending your message..." : "Send Email");
-    if (!isLoading && isSuccess) setButtonText("Your email sent successfully");
-    const timeout = setTimeout(() => {
-      setButtonText("Send Email");
-    }, 5000);
-    return () => clearTimeout(timeout);
+    if (isLoading) {
+      setButtonText("Sending your message...");
+      return;
+    }
+    if (isSuccess) {
+      setButtonText("Your email sent successfully");
+      const timeout = setTimeout(() => {
+        setButtonText("Send Email");
+        setIsSuccess(false);
+      }, 5000);
+      return () => clearTimeout(timeout);
+    }
+    setButtonText("Send Email");
   }, [isLoading, isSuccess]);
 
   const handleFormSubmit = async (payload: FormEmail) => {
@@ -46,7 +53,7 @@ const ContactForm = () => {
       reset();
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setIsLoading(false);
     }
   };

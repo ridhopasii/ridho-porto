@@ -1,13 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaInstagram, FaTiktok, FaImages, FaChevronLeft, FaChevronRight, FaHeart, FaComment } from "react-icons/fa";
+import { FaInstagram, FaTiktok, FaImages, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { HiOutlineCalendar, HiOutlineTag } from "react-icons/hi";
 import { useTranslations } from "next-intl";
 import useSWR from "swr";
 
 import Tiktok from "./Tiktok";
 import { fetcher } from "@/services/fetcher";
+
+interface InstagramPost {
+  id: string;
+  caption?: string;
+  media_type: string;
+  media_url: string;
+  permalink: string;
+  timestamp: string;
+}
 
 interface GalleryItem {
   id: number;
@@ -167,9 +176,15 @@ const SocialMedia = () => {
                 <p className="text-lg font-medium">Gagal memuat konten Instagram.</p>
                 <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1">Silakan coba beberapa saat lagi.</p>
               </div>
+            ) : instagramData?.isMock ? (
+              <div className="flex flex-col items-center justify-center py-20 text-neutral-500 dark:text-neutral-400">
+                <FaInstagram size={48} className="mb-4 opacity-40" />
+                <p className="text-lg font-medium">Instagram tidak tersedia saat ini.</p>
+                <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1">Konten akan muncul setelah integrasi terhubung.</p>
+              </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {instagramData.data.map((post: any) => (
+                {(instagramData.data as InstagramPost[]).map((post) => (
                   <a
                     key={post.id}
                     href={post.permalink}
@@ -184,30 +199,17 @@ const SocialMedia = () => {
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         loading="lazy"
                       />
-                      
-                      {/* Elegant hover overlay */}
+
+                      {/* Hover overlay */}
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-between p-5">
                         <div className="flex justify-end">
                           <span className="text-[10px] uppercase font-bold tracking-wider text-pink-400 bg-pink-500/10 px-2.5 py-0.5 rounded border border-pink-500/20">
                             {post.media_type.replace("_", " ")}
                           </span>
                         </div>
-                        
-                        <div className="space-y-3">
-                          <p className="text-white text-xs line-clamp-3 font-light leading-relaxed">
-                            {post.caption || "Lihat postingan di Instagram"}
-                          </p>
-                          <div className="flex items-center gap-4 text-xs text-neutral-300 pt-2 border-t border-white/10">
-                            <span className="flex items-center gap-1.5">
-                              <FaHeart className="text-pink-500" size={12} />
-                              <span>{Math.floor(Math.random() * 150) + 50} Likes</span>
-                            </span>
-                            <span className="flex items-center gap-1.5">
-                              <FaComment className="text-blue-400" size={12} />
-                              <span>{Math.floor(Math.random() * 20) + 5} Comments</span>
-                            </span>
-                          </div>
-                        </div>
+                        <p className="text-white text-xs line-clamp-3 font-light leading-relaxed">
+                          {post.caption || "Lihat postingan di Instagram"}
+                        </p>
                       </div>
                     </div>
                   </a>

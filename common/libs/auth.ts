@@ -3,8 +3,10 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-// Provide a fallback secret for build time or development if not specified
-const nextAuthSecret = process.env.NEXTAUTH_SECRET || "fallback_secret_for_portfolio";
+const nextAuthSecret = process.env.NEXTAUTH_SECRET;
+if (!nextAuthSecret && process.env.NODE_ENV === "production") {
+  throw new Error("NEXTAUTH_SECRET environment variable must be set in production");
+}
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -35,5 +37,5 @@ export const authOptions: AuthOptions = {
       }
     }),
   ],
-  secret: nextAuthSecret,
+  secret: nextAuthSecret ?? "fallback_secret_for_development_only",
 };

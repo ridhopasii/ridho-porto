@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto, { timingSafeEqual } from "crypto";
 
 import { supabaseServer } from "./supabase-server";
 
@@ -46,7 +46,9 @@ export async function verifyPassword(
 ): Promise<boolean> {
   const expected = await getPasswordHash(settingKey, fallbackEnvKey);
   if (!expected) return false;
-  return hashPassword(password) === expected;
+  const a = Buffer.from(hashPassword(password));
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b);
 }
 
 export async function upsertSetting(key: string, value: string) {
