@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NODE_ENV === "development"
       ? "http://localhost:3000"
-      : process.env.DOMAIN || "https://ridhorobbipasi.my.id",
+      : process.env.DOMAIN || "https://www.ridhorobbipasi.my.id",
   ),
   title: {
     default: METADATA.creator,
@@ -101,7 +101,7 @@ const RootLayout = async ({
                 {
                   "@type": "Person",
                   "name": METADATA.creator,
-                  "url": "https://ridhorobbipasi.my.id",
+                  "url": "https://www.ridhorobbipasi.my.id",
                   "image": METADATA.profile,
                   "jobTitle": "Software Engineer",
                   "alumniOf": {
@@ -117,46 +117,46 @@ const RootLayout = async ({
                 {
                   "@type": "WebSite",
                   "name": METADATA.creator,
-                  "url": "https://ridhorobbipasi.my.id",
+                  "url": "https://www.ridhorobbipasi.my.id",
                   "potentialAction": {
                     "@type": "SearchAction",
-                    "target": "https://ridhorobbipasi.my.id/id/blog?q={search_term_string}",
+                    "target": "https://www.ridhorobbipasi.my.id/id/blog?q={search_term_string}",
                     "query-input": "required name=search_term_string"
                   }
                 },
                 {
                   "@type": "SiteNavigationElement",
-                  "@id": "https://ridhorobbipasi.my.id/#navigation",
+                  "@id": "https://www.ridhorobbipasi.my.id/#navigation",
                   "hasPart": [
                     {
                       "@type": "WebPage",
                       "name": "Projects",
-                      "url": "https://ridhorobbipasi.my.id/id/projects"
+                      "url": "https://www.ridhorobbipasi.my.id/id/projects"
                     },
                     {
                       "@type": "WebPage",
                       "name": "Karir & Pengalaman",
-                      "url": "https://ridhorobbipasi.my.id/id/karir"
+                      "url": "https://www.ridhorobbipasi.my.id/id/karir"
                     },
                     {
                       "@type": "WebPage",
                       "name": "Pendidikan",
-                      "url": "https://ridhorobbipasi.my.id/id/pendidikan"
+                      "url": "https://www.ridhorobbipasi.my.id/id/pendidikan"
                     },
                     {
                       "@type": "WebPage",
                       "name": "Blog & Artikel",
-                      "url": "https://ridhorobbipasi.my.id/id/blog"
+                      "url": "https://www.ridhorobbipasi.my.id/id/blog"
                     },
                     {
                       "@type": "WebPage",
                       "name": "Pencapaian",
-                      "url": "https://ridhorobbipasi.my.id/id/achievements"
+                      "url": "https://www.ridhorobbipasi.my.id/id/achievements"
                     },
                     {
                       "@type": "WebPage",
                       "name": "Guestbook",
-                      "url": "https://ridhorobbipasi.my.id/id/guestbook"
+                      "url": "https://www.ridhorobbipasi.my.id/id/guestbook"
                     }
                   ]
                 }

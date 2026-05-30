@@ -3,7 +3,7 @@ import { getArticlesData } from "@/services/blog";
 import { getProjectsData } from "@/services/projects";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const domain = process.env.DOMAIN || "https://ridhorobbipasi.my.id";
+  const domain = process.env.DOMAIN || "https://www.ridhorobbipasi.my.id";
   const locales = ["en", "id"];
   
   // Base static routes
