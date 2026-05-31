@@ -521,3 +521,4 @@ Pesan/Media dari user: "${text}"`;
     }
     return NextResponse.json({ ok: true });
   }
+}
