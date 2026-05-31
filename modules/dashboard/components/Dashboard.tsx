@@ -2,6 +2,8 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import { useCallback, useMemo, useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
+import { TbSend } from "react-icons/tb";
 
 import PrivateHubLayout from "./PrivateHubLayout";
 import {
@@ -17,10 +19,15 @@ import {
 } from "@/common/types/productivity";
 
 // Import Full CRUD Managers
+import dynamic from "next/dynamic";
 import FinanceManager from "@/modules/admin/components/managers/FinanceManager";
-import ProductivityManager from "@/modules/admin/components/managers/ProductivityManager";
 import HabitsManager from "@/modules/admin/components/managers/HabitsManager";
 import PlanningManager from "@/modules/admin/components/managers/PlanningManager";
+
+const ProductivityManager = dynamic(
+  () => import("@/modules/admin/components/managers/ProductivityManager"),
+  { ssr: false }
+);
 
 type ProductiveTab = "harian" | "riwayat" | "tracker" | "rencana" | "tabungan" | "pengaturan_hari";
 type FinanceTab = "dompet" | "transaksi";
@@ -135,6 +142,31 @@ export default function Dashboard({
   const isProductiveTab = PRODUCTIVE_TABS.includes(activeTab as ProductiveTab);
   const isFinanceTab = FINANCE_TABS.includes(activeTab as FinanceTab);
 
+  const [sendingReport, setSendingReport] = useState(false);
+  const handleSendWeeklyReport = useCallback(async () => {
+    if (sendingReport) return;
+    setSendingReport(true);
+    const toastId = toast.loading("Menyusun laporan mingguan dengan AI...");
+    try {
+      const res = await fetch("/api/telegram/weekly-report", { method: "POST" });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        toast.success(
+          data.aiGenerated
+            ? "Laporan AI terkirim ke Telegram! 📊"
+            : "Laporan terkirim ke Telegram (mode ringkas).",
+          { id: toastId }
+        );
+      } else {
+        toast.error(data.error || "Gagal mengirim laporan.", { id: toastId });
+      }
+    } catch {
+      toast.error("Gagal terhubung ke server.", { id: toastId });
+    } finally {
+      setSendingReport(false);
+    }
+  }, [sendingReport]);
+
   return (
     <PrivateHubLayout
       editMode={editMode}
@@ -179,6 +211,19 @@ export default function Dashboard({
               {item.hint && <p className="mt-1 text-[11px] text-neutral-500">{item.hint}</p>}
             </div>
           ))}
+        </section>
+
+        {/* Quick actions */}
+        <section className="flex justify-end">
+          <button
+            type="button"
+            onClick={handleSendWeeklyReport}
+            disabled={sendingReport}
+            className="inline-flex items-center gap-2 rounded-xl border border-cyan-200 bg-cyan-50 px-4 py-2 text-[13px] font-semibold text-cyan-700 transition-colors hover:bg-cyan-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-cyan-800/40 dark:bg-cyan-950/30 dark:text-cyan-300 dark:hover:bg-cyan-900/40"
+          >
+            <TbSend size={16} className={sendingReport ? "animate-pulse" : ""} />
+            {sendingReport ? "Mengirim..." : "Kirim Laporan Mingguan"}
+          </button>
         </section>
 
         {/* Edit mode banner */}
