@@ -14,13 +14,24 @@ const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const ALLOWED_CHAT_ID = process.env.TELEGRAM_ALLOWED_CHAT_ID;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 
+const stripMarkdown = (text: string): string => {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1')   // **bold** → bold
+    .replace(/\*(.*?)\*/g, '$1')         // *italic* → italic
+    .replace(/__(.*?)__/g, '$1')         // __bold__ → bold
+    .replace(/_(.*?)_/g, '$1')           // _italic_ → italic
+    .replace(/`(.*?)`/g, '$1')           // `code` → code
+    .replace(/\[(.*?)\]\(.*?\)/g, '$1'); // [text](url) → text
+};
+
 const sendMessage = async (chatId: string | number, text: string) => {
   if (!TELEGRAM_TOKEN) return;
+  const cleanText = stripMarkdown(text);
   try {
     const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text })
+      body: JSON.stringify({ chat_id: chatId, text: cleanText })
     });
     if (!res.ok) {
       const errorData = await res.text();
