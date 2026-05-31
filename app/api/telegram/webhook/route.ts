@@ -101,41 +101,62 @@ async function ensureTodayProductivityRecord(supabaseClient: any) {
 }
 
 export async function POST(req: Request) {
+  const urlObj = new URL(req.url);
+  const isDebug = urlObj.searchParams.get("debug") === "true";
+  const debugLogs: string[] = [];
   try {
+    debugLogs.push("POST started");
+    debugLogs.push(`TELEGRAM_BOT_TOKEN defined: ${!!TELEGRAM_TOKEN} (length: ${TELEGRAM_TOKEN?.length || 0})`);
+    debugLogs.push(`ALLOWED_CHAT_ID: "${ALLOWED_CHAT_ID}"`);
+    debugLogs.push(`GEMINI_API_KEY defined: ${!!GEMINI_API_KEY} (length: ${GEMINI_API_KEY?.length || 0})`);
+    debugLogs.push(`SUPABASE_URL: ${process.env.NEXT_PUBLIC_SUPABASE_URL}`);
+    debugLogs.push(`SUPABASE_SERVICE_ROLE_KEY defined: ${!!process.env.SUPABASE_SERVICE_ROLE_KEY} (length: ${process.env.SUPABASE_SERVICE_ROLE_KEY?.length || 0})`);
+
     const body = await req.json();
     const message = body.message;
     
     if (!message) {
-      return NextResponse.json({ ok: true });
+      debugLogs.push("No message in body");
+      return NextResponse.json(isDebug ? { ok: true, debug: true, logs: debugLogs } : { ok: true });
     }
 
     if (!message.text && !message.photo && !message.voice) {
-      return NextResponse.json({ ok: true });
+      debugLogs.push("Message has no text, photo, or voice");
+      return NextResponse.json(isDebug ? { ok: true, debug: true, logs: debugLogs } : { ok: true });
     }
 
     const chatId = message.chat.id.toString();
+    debugLogs.push(`Received chatId: "${chatId}"`);
     if (chatId !== ALLOWED_CHAT_ID) {
-      return NextResponse.json({ ok: true });
+      debugLogs.push("chatId mismatch with ALLOWED_CHAT_ID");
+      return NextResponse.json(isDebug ? { ok: true, debug: true, logs: debugLogs, chat_id_mismatch: true } : { ok: true });
     }
 
     let text = message.text || message.caption || "";
     text = text.trim();
     
     if (text === "/start" || text === "/help") {
+      debugLogs.push("Sending help/start message");
       await sendMessage(chatId, "👋 Halo Bos!\n\nAsisten AI sudah aktif. Kirim pesan senatural mungkin!\n\nContoh Teks:\n`Tadi beli ayam 25rb pake Gopay`\n\nContoh Foto:\nKirim struk belanja minimarket\n\nContoh Suara:\nKirim voice note tagihan.\n\n✨ **Fitur Baru (V3):**\n1. **Deteksi Anomali & Typo**: Peringatan jika nominal tidak wajar.\n2. **Audit Langganan**: Ketik `Audit langgananku`.\n3. **Analisis Habit**: Ketik `Analisis habitku`.\n4. **Jurnal Suara**: Kirim Voice Note cerita harian malam hari.\n5. **Perintah Suara**: Ketik `Hapus tugas [Nama]`.\n6. **Kegiatan & Produktivitas Harian**: Ketik `Gimana produktivitasku hari ini?` atau `Apa aja kegiatanku hari ini?`.");
-      return NextResponse.json({ ok: true });
+      debugLogs.push("Help/start message sent");
+      return NextResponse.json(isDebug ? { ok: true, debug: true, logs: debugLogs } : { ok: true });
     }
 
     let inlineData = null;
     if (message.photo && message.photo.length > 0) {
+      debugLogs.push("Retrieving Telegram photo...");
       const photo = message.photo[message.photo.length - 1];
       inlineData = await getTelegramFileBase64(photo.file_id);
+      debugLogs.push(`Photo base64 fetched: ${!!inlineData}`);
     } else if (message.voice) {
+      debugLogs.push("Retrieving Telegram voice...");
       inlineData = await getTelegramFileBase64(message.voice.file_id);
+      debugLogs.push(`Voice base64 fetched: ${!!inlineData}`);
     }
 
     const todayStr = new Date().toISOString().split("T")[0];
 
+    debugLogs.push("Fetching Supabase dependencies in parallel...");
     // Fetch context data in parallel (including today's specific productivity & habits config)
     const [wallets, averages, subAudit, habitFriction, todayProd, todayHabitTrack, habitsConfig] = await Promise.all([
       supabase.from("Wallets").select("*").then(res => res.data || []),
@@ -147,9 +168,12 @@ export async function POST(req: Request) {
       supabase.from("HabitConfig").select("*").then(res => res.data || []),
     ]);
 
+    debugLogs.push(`Supabase queries completed. Wallets count: ${wallets?.length || 0}`);
+
     if (!wallets || wallets.length === 0) {
+      debugLogs.push("No wallets found in Supabase");
       await sendMessage(chatId, "⚠️ Error: Tidak ada Wallet yang ditemukan di Database. Buat dompet dulu di Private Hub.");
-      return NextResponse.json({ ok: true });
+      return NextResponse.json(isDebug ? { ok: true, debug: true, logs: debugLogs, error: "No wallets" } : { ok: true });
     }
 
     // Prepare rich today status strings to inject into Gemini prompt
@@ -268,6 +292,7 @@ Pesan/Media dari user: "${text}"`;
       contentsParts.push({ inlineData });
     }
 
+    debugLogs.push("Calling Gemini API...");
     const aiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -277,23 +302,34 @@ Pesan/Media dari user: "${text}"`;
         })
     });
 
+    if (!aiRes.ok) {
+      const aiErrText = await aiRes.text();
+      debugLogs.push(`Gemini API Error: Status ${aiRes.status} - ${aiErrText}`);
+      throw new Error(`Gemini API returned status ${aiRes.status}`);
+    }
+
     const aiData = await aiRes.json();
+    debugLogs.push("Gemini API returned response successfully");
+    
     let aiResponse: any = { type: "ANALYSIS", reply: "Maaf, sistem AI sedang bingung.", data: {} };
     
     try {
       const responseText = aiData.candidates[0].content.parts[0].text;
       const cleanJsonStr = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
       aiResponse = JSON.parse(cleanJsonStr);
-    } catch (e) {
+    } catch (e: any) {
+      debugLogs.push(`Failed to parse Gemini response: ${e.message}`);
       await sendMessage(chatId, "⚠️ Gagal memproses obrolan dengan AI. Format respons tidak valid.");
-      return NextResponse.json({ ok: true });
+      return NextResponse.json(isDebug ? { ok: true, debug: true, logs: debugLogs, error: "AI response parsing failed" } : { ok: true });
     }
 
     const { type, reply, data } = aiResponse;
+    debugLogs.push(`Gemini interaction type: ${type}`);
     let reportMsg = reply + "\n";
 
     // 1. HANDLER: TRANSACTION
     if (type === "TRANSACTION" && data?.transactions && Array.isArray(data.transactions) && data.transactions.length > 0) {
+      debugLogs.push("Handling TRANSACTION request...");
       reportMsg += "\n📝 **Catatan Transaksi:**\n";
       for (const tx of data.transactions) {
         const { type: txType, amount, wallet_id, description } = tx;
@@ -321,10 +357,12 @@ Pesan/Media dari user: "${text}"`;
       if (data.is_anomaly) {
         reportMsg += `\n⚠️ **PERINGATAN ANOMALI:** Nominal pengeluaran di atas terdeteksi jauh lebih tinggi dari kebiasaan Anda. Harap dipastikan tidak ada salah ketik!`;
       }
+      debugLogs.push("Transactions processed successfully");
     }
 
     // 2. HANDLER: JOURNAL
     else if (type === "JOURNAL" && data) {
+      debugLogs.push("Handling JOURNAL request...");
       const todayItem = await ensureTodayProductivityRecord(supabase);
       let currentTasks: any[] = [];
       try { currentTasks = JSON.parse(todayItem.tasks || "[]"); } catch(e){}
@@ -375,10 +413,12 @@ Pesan/Media dari user: "${text}"`;
       reportMsg += `🤩 Mood Hari Ini: ${data.mood || "🙂"}\n`;
       if (tasksUpdatedCount > 0) reportMsg += `✅ ${tasksUpdatedCount} Tugas Harian dicentang selesai!\n`;
       if (habitsUpdatedCount > 0) reportMsg += `🔥 ${habitsUpdatedCount} Habits dicentang selesai!\n`;
+      debugLogs.push("Journal processed successfully");
     }
 
     // 3. HANDLER: DATABASE_COMMAND
     else if (type === "DATABASE_COMMAND" && data) {
+      debugLogs.push(`Handling DATABASE_COMMAND: ${data.command_action}...`);
       const { command_action, params } = data;
       const todayItem = await ensureTodayProductivityRecord(supabase);
       let currentTasks: any[] = [];
@@ -466,12 +506,18 @@ Pesan/Media dari user: "${text}"`;
         
         reportMsg += `\n\n⏰ **Pengingat AI Dijadwalkan:**\n📌 *"${params.reminder_text}"*\n⏰ Waktu: *${formattedDate} pukul ${formattedTime}*`;
       }
+      debugLogs.push("Database command processed successfully");
     }
 
+    debugLogs.push("Sending final message response to Telegram...");
     await sendMessage(chatId, reportMsg.trim());
-    return NextResponse.json({ ok: true });
+    debugLogs.push("Final message sent successfully");
+    
+    return NextResponse.json(isDebug ? { ok: true, debug: true, logs: debugLogs } : { ok: true });
   } catch (error: any) {
     console.error("Telegram Webhook Error:", error);
+    if (isDebug) {
+      return NextResponse.json({ ok: false, error: error.message, stack: error.stack, logs: debugLogs });
+    }
     return NextResponse.json({ ok: true });
   }
-}
