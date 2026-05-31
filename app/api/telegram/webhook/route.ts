@@ -16,11 +16,15 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API
 const sendMessage = async (chatId: string | number, text: string) => {
   if (!TELEGRAM_TOKEN) return;
   try {
-    await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text, parse_mode: "Markdown" })
+      body: JSON.stringify({ chat_id: chatId, text })
     });
+    if (!res.ok) {
+      const errorData = await res.text();
+      console.error("Telegram API Error Response:", errorData);
+    }
   } catch (e) {
     console.error("Failed to send telegram message", e);
   }
