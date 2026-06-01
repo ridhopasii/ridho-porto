@@ -57,6 +57,8 @@ export default function ProductivityManager({
   const [timerMinutes, setTimerMinutes] = useState(25);
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [timerRunning, setTimerRunning] = useState(false);
+  const [customMinutes, setCustomMinutes] = useState(25);
+  const [customSeconds, setCustomSeconds] = useState(0);
 
   const MOODS = ['😢', '😐', '🙂', '😊', '🤩'];
   const [tempGoals, setTempGoals] = useState("");
@@ -128,7 +130,7 @@ export default function ProductivityManager({
           if (timerMinutes === 0) {
             setTimerRunning(false);
             clearInterval(interval);
-            addPomodoro(25);
+            addPomodoro(customMinutes);
             
             // Play notification sound
             try {
@@ -137,7 +139,7 @@ export default function ProductivityManager({
             } catch (e) {}
 
             toast.success("Pomodoro selesai!");
-            setTimerMinutes(25);
+            setTimerMinutes(customMinutes);
             setShowTimer(false);
           } else {
             setTimerMinutes(m => m - 1);
@@ -149,7 +151,7 @@ export default function ProductivityManager({
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [timerRunning, timerMinutes, timerSeconds]);
+  }, [timerRunning, timerMinutes, timerSeconds, customMinutes]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -556,9 +558,39 @@ export default function ProductivityManager({
           <h3 className="mb-2 font-bold text-blue-800 dark:text-blue-300 flex items-center gap-2">
             🍅 Pomodoro Focus Timer
           </h3>
-          <div className="text-6xl font-black text-blue-900 dark:text-blue-100 tabular-nums tracking-tighter mb-4">
-            {String(timerMinutes).padStart(2, '0')}:{String(timerSeconds).padStart(2, '0')}
-          </div>
+          {timerRunning ? (
+            <div className="text-6xl font-black text-blue-900 dark:text-blue-100 tabular-nums tracking-tighter mb-4">
+              {String(timerMinutes).padStart(2, '0')}:{String(timerSeconds).padStart(2, '0')}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-2 mb-4 text-6xl font-black text-blue-900 dark:text-blue-100">
+              <input 
+                type="number"
+                min="0"
+                max="180"
+                value={timerMinutes}
+                onChange={(e) => {
+                  const val = Math.max(0, Math.min(180, Number(e.target.value)));
+                  setTimerMinutes(val);
+                  setCustomMinutes(val);
+                }}
+                className="w-20 bg-transparent text-center border-b-2 border-blue-300 dark:border-blue-700 focus:border-blue-500 focus:outline-none tabular-nums"
+              />
+              <span>:</span>
+              <input 
+                type="number"
+                min="0"
+                max="59"
+                value={timerSeconds}
+                onChange={(e) => {
+                  const val = Math.max(0, Math.min(59, Number(e.target.value)));
+                  setTimerSeconds(val);
+                  setCustomSeconds(val);
+                }}
+                className="w-20 bg-transparent text-center border-b-2 border-blue-300 dark:border-blue-700 focus:border-blue-500 focus:outline-none tabular-nums"
+              />
+            </div>
+          )}
           <div className="flex gap-3">
             <button 
               onClick={() => setTimerRunning(!timerRunning)}
@@ -569,7 +601,7 @@ export default function ProductivityManager({
               {timerRunning ? 'Jeda' : 'Mulai Fokus'}
             </button>
             <button 
-              onClick={() => { setTimerRunning(false); setTimerMinutes(25); setTimerSeconds(0); }}
+              onClick={() => { setTimerRunning(false); setTimerMinutes(customMinutes); setTimerSeconds(customSeconds); }}
               className="rounded-full bg-white px-6 py-3 font-bold text-blue-600 border border-blue-200 hover:bg-blue-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-blue-400 dark:hover:bg-neutral-700"
             >
               Reset
@@ -1034,9 +1066,39 @@ export default function ProductivityManager({
             <div className="bg-white dark:bg-neutral-900 rounded-2xl p-6 w-full max-w-sm shadow-xl animate-in zoom-in-95">
               <h3 className="text-xl font-bold mb-4 dark:text-white flex items-center gap-2">⏱️ Pomodoro Timer</h3>
               <div className="text-center mb-6">
-                <div className="text-5xl font-black text-blue-600 mb-2">
-                  {timerMinutes.toString().padStart(2, '0')}:{timerSeconds.toString().padStart(2, '0')}
-                </div>
+                {timerRunning ? (
+                  <div className="text-5xl font-black text-blue-600 mb-2 tabular-nums">
+                    {timerMinutes.toString().padStart(2, '0')}:{timerSeconds.toString().padStart(2, '0')}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center gap-1.5 mb-2 text-5xl font-black text-blue-600">
+                    <input 
+                      type="number"
+                      min="0"
+                      max="180"
+                      value={timerMinutes}
+                      onChange={(e) => {
+                        const val = Math.max(0, Math.min(180, Number(e.target.value)));
+                        setTimerMinutes(val);
+                        setCustomMinutes(val);
+                      }}
+                      className="w-16 bg-transparent text-center border-b-2 border-blue-200 focus:border-blue-500 focus:outline-none tabular-nums"
+                    />
+                    <span>:</span>
+                    <input 
+                      type="number"
+                      min="0"
+                      max="59"
+                      value={timerSeconds}
+                      onChange={(e) => {
+                        const val = Math.max(0, Math.min(59, Number(e.target.value)));
+                        setTimerSeconds(val);
+                        setCustomSeconds(val);
+                      }}
+                      className="w-16 bg-transparent text-center border-b-2 border-blue-200 focus:border-blue-500 focus:outline-none tabular-nums"
+                    />
+                  </div>
+                )}
                 <div className="text-sm text-neutral-500 font-medium">
                   {timerRunning ? "Fokus berjalan..." : "Siap untuk mulai"}
                 </div>
@@ -1044,7 +1106,7 @@ export default function ProductivityManager({
               <div className="flex gap-2 mb-4">
                 <button onClick={() => setTimerRunning(true)} disabled={timerRunning} className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white py-2.5 rounded-xl font-bold">Start</button>
                 <button onClick={() => setTimerRunning(false)} disabled={!timerRunning} className="flex-1 bg-yellow-500 hover:bg-yellow-600 disabled:opacity-50 text-white py-2.5 rounded-xl font-bold">Pause</button>
-                <button onClick={() => {setTimerRunning(false); setTimerMinutes(25); setTimerSeconds(0);}} className="flex-1 bg-neutral-200 hover:bg-neutral-300 text-neutral-800 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700 py-2.5 rounded-xl font-bold">Reset</button>
+                <button onClick={() => {setTimerRunning(false); setTimerMinutes(customMinutes); setTimerSeconds(customSeconds);}} className="flex-1 bg-neutral-200 hover:bg-neutral-300 text-neutral-800 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700 py-2.5 rounded-xl font-bold">Reset</button>
               </div>
               <button onClick={() => setShowTimer(false)} className="w-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 py-2 rounded-xl font-medium">Tutup</button>
             </div>
