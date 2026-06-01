@@ -11,7 +11,7 @@ const supabase = createClient(
 );
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const ALLOWED_CHAT_ID = process.env.TELEGRAM_ALLOWED_CHAT_ID || "1674540875";
+const ALLOWED_CHAT_ID = (process.env.TELEGRAM_ALLOWED_CHAT_ID && process.env.TELEGRAM_ALLOWED_CHAT_ID !== "undefined") ? process.env.TELEGRAM_ALLOWED_CHAT_ID : "1674540875";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 
 const stripMarkdown = (text: string): string => {
