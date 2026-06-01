@@ -346,9 +346,13 @@ Pesan/Media dari user: "${text}"`;
       return NextResponse.json(isDebug ? { ok: true, debug: true, logs: debugLogs, error: "AI response parsing failed" } : { ok: true });
     }
 
-    const { type, reply, data } = aiResponse;
-    debugLogs.push(`Gemini interaction type: ${type}`);
-    let reportMsg = reply + "\n";
+    const aiResponses = Array.isArray(aiResponse) ? aiResponse : [aiResponse];
+    let finalReportMsg = "";
+
+    for (const resp of aiResponses) {
+      const { type, reply, data } = resp;
+      debugLogs.push(`Gemini interaction type: ${type}`);
+      let reportMsg = reply ? reply + "\n" : "";
 
     // 1. HANDLER: TRANSACTION
     if (type === "TRANSACTION" && data?.transactions && Array.isArray(data.transactions) && data.transactions.length > 0) {
@@ -442,7 +446,9 @@ Pesan/Media dari user: "${text}"`;
     // 3. HANDLER: DATABASE_COMMAND
     else if (type === "DATABASE_COMMAND" && data) {
       debugLogs.push(`Handling DATABASE_COMMAND: ${data.command_action}...`);
-      const { command_action, params } = data;
+      const commands = Array.isArray(data) ? data : [data];
+      for (const cmd of commands) {
+        const { command_action, params } = cmd;
       const todayItem = await ensureTodayProductivityRecord(supabase);
       let currentTasks: any[] = [];
       try { currentTasks = JSON.parse(todayItem.tasks || "[]"); } catch(e){}
@@ -539,11 +545,15 @@ Pesan/Media dari user: "${text}"`;
         
         reportMsg += `\n\n⏰ **Pengingat AI Dijadwalkan:**\n📌 *"${params.reminder_text}"*\n⏰ Waktu: *${formattedDate} pukul ${formattedTime}*`;
       }
+      } // end for cmd of commands
       debugLogs.push("Database command processed successfully");
     }
 
+      finalReportMsg += reportMsg + "\n";
+    } // end for resp of aiResponses
+
     debugLogs.push("Sending final message response to Telegram...");
-    await sendMessage(chatId, reportMsg.trim());
+    await sendMessage(chatId, finalReportMsg.trim());
     debugLogs.push("Final message sent successfully");
     
     return NextResponse.json(isDebug ? { ok: true, debug: true, logs: debugLogs } : { ok: true });
