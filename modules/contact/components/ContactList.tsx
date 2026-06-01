@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { supabaseServer } from "@/common/libs/supabase-server";
+import { getSiteSettings } from "@/common/libs/site-settings";
 import DynamicIcon from "@/common/components/DynamicIcon";
 
 // Premium vector SVG logos from SVGL.app
@@ -41,16 +42,50 @@ const svgLogoMap: Record<string, React.ReactNode> = {
       <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"></path>
     </svg>
   ),
+  whatsapp: (
+    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" role="img" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"></path>
+    </svg>
+  ),
 };
 
 const ContactList = async () => {
   const t = await getTranslations("ContactPage");
 
-  const { data: socialMedia } = await supabaseServer
-    .from("Social")
-    .select("*")
-    .eq("is_show", true)
-    .order("id", { ascending: true });
+  const [{ data: socialMedia }, settings] = await Promise.all([
+    supabaseServer
+      .from("Social")
+      .select("*")
+      .eq("is_show", true)
+      .order("id", { ascending: true }),
+    getSiteSettings(),
+  ]);
+
+  // Kontak langsung dari /admin/settings (WhatsApp & Email)
+  const whatsapp = settings.contact_whatsapp?.replace(/[^0-9]/g, "");
+  const email = settings.contact_email?.trim();
+  const directContacts = [
+    whatsapp && {
+      label: "WhatsApp",
+      href: `https://wa.me/${whatsapp}`,
+      icon: svgLogoMap.whatsapp,
+      umami: "click_contact_whatsapp",
+      external: true,
+    },
+    email && {
+      label: "Email",
+      href: `mailto:${email}`,
+      icon: svgLogoMap.email,
+      umami: "click_contact_email",
+      external: false,
+    },
+  ].filter(Boolean) as {
+    label: string;
+    href: string;
+    icon: React.ReactNode;
+    umami: string;
+    external: boolean;
+  }[];
 
   const filteredSocialMedia = socialMedia || [];
 
@@ -76,6 +111,25 @@ const ContactList = async () => {
 
       {/* Wrapping layout: automatically wraps into a second row when the first is full */}
       <div className="flex flex-wrap gap-3 pt-2">
+        {directContacts.map((contact) => (
+          <a
+            key={contact.label}
+            href={contact.href}
+            {...(contact.external
+              ? { target: "_blank", rel: "noopener noreferrer" }
+              : {})}
+            title={contact.label}
+            data-umami-event={contact.umami}
+            className="flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-teal-200 dark:border-teal-900/40 bg-teal-50/60 dark:bg-teal-900/10 backdrop-blur-sm hover:border-teal-300 dark:hover:border-teal-700 hover:bg-teal-100 dark:hover:bg-teal-900/20 transition-all duration-300 shadow-sm hover:shadow-md select-none hover:-translate-y-0.5 cursor-pointer group"
+          >
+            <span className="w-5 h-5 flex items-center justify-center text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-all duration-300">
+              {contact.icon}
+            </span>
+            <span className="text-xs font-semibold text-teal-700 dark:text-teal-300 transition-colors duration-200 whitespace-nowrap">
+              {contact.label}
+            </span>
+          </a>
+        ))}
         {uniqueSocialMedia.map((media) => {
           const platformKey = (media.platform || media.title || "").toLowerCase().trim();
           const logoSvg = svgLogoMap[platformKey];

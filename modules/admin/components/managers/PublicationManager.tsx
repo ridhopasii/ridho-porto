@@ -92,7 +92,7 @@ export default function PublicationManager() {
   if (loading) return <div className="py-10 text-center">Loading...</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
         <h3 className="mb-4 font-semibold dark:text-white">{isEditing ? "Edit Publikasi" : "Tambah Publikasi Baru"}</h3>
         <div className="grid gap-4 md:grid-cols-2">

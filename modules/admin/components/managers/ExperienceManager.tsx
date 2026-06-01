@@ -4,7 +4,7 @@ import { createClient } from "@/common/utils/client";
 
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { TbArrowUp, TbArrowDown } from "react-icons/tb";
+import { TbArrowUp, TbArrowDown, TbEye, TbEyeOff } from "react-icons/tb";
 import ExperienceFormModal from "../ExperienceFormModal";
 import { useAdminList } from "@/common/hooks/useAdminList";
 import AdminSearchBar from "../AdminSearchBar";
@@ -59,6 +59,16 @@ export default function ExperienceManager() {
     ]);
     const anyFailed = results.some(r => r.status === "rejected");
     if (anyFailed) toast.error("Urutan tidak tersimpan — kolom sort_order mungkin belum ada di DB");
+  };
+
+  const handleToggle = async (id: number, current: boolean) => {
+    const next = !current;
+    setExperiences((prev) => prev.map((e) => (e.id === id ? { ...e, showOnHome: next } : e)));
+    const { error } = await supabase.from("Experience").update({ showOnHome: next }).eq("id", id);
+    if (error) {
+      setExperiences((prev) => prev.map((e) => (e.id === id ? { ...e, showOnHome: current } : e)));
+      toast.error("Gagal memperbarui");
+    }
   };
 
   const handleDelete = async (id: number) => {
@@ -136,12 +146,18 @@ export default function ExperienceManager() {
                   {item.logoUrl && <img src={item.logoUrl} alt={item.company} className="h-10 w-10 flex-shrink-0 rounded-full object-cover" />}
 
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-bold">{item.position}</h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-bold">{item.position}</h4>
+                      {!item.showOnHome && <span className="flex-shrink-0 rounded-full bg-neutral-100 px-1.5 py-0.5 text-[10px] text-neutral-500 dark:bg-neutral-800">Tersembunyi</span>}
+                    </div>
                     <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{item.company}</p>
                     <p className="text-xs text-neutral-500">{item.type} · {item.location} · {item.start_date} – {item.end_date || "Sekarang"}</p>
                   </div>
 
                   <div className="flex flex-shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                    <button onClick={() => handleToggle(item.id, item.showOnHome !== false)} title={item.showOnHome === false ? "Tampilkan" : "Sembunyikan"} className={`rounded-lg p-1.5 transition-colors ${item.showOnHome === false ? "bg-neutral-100 text-neutral-400 dark:bg-neutral-800" : "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"}`}>
+                      {item.showOnHome === false ? <TbEyeOff size={14} /> : <TbEye size={14} />}
+                    </button>
                     <button onClick={() => { setEditingData(item); setIsModalOpen(true); }} className="rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400">Edit</button>
                     <button onClick={() => handleDelete(item.id)} className="rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400">Hapus</button>
                   </div>

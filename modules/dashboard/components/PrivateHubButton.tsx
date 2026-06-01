@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BiLockAlt } from "react-icons/bi";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,6 +9,13 @@ import PrivateAccessForm from "./PrivateAccessForm";
 
 export default function PrivateHubButton() {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpen = () => setOpen(true);
+    window.addEventListener("open-private-hub", handleOpen);
+    return () => window.removeEventListener("open-private-hub", handleOpen);
+  }, []);
+
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();

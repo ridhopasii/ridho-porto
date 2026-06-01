@@ -46,3 +46,4 @@ fix-*.mjs
 
 # dist
 /dist
+.vercel

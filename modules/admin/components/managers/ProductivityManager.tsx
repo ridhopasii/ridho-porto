@@ -13,6 +13,8 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import { ModalShell, FormFooter, inputCls, labelCls } from "../AdminFormUI";
+import { TbEdit } from "react-icons/tb";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -43,10 +45,13 @@ export default function ProductivityManager({
   const todayItem = items.find(item => item.date === today);
 
   // Modals state
+  const [showRiwayatModal, setShowRiwayatModal] = useState(false);
   const [period, setPeriod] = useState<"7d" | "30d">("7d");
   const [showTimer, setShowTimer] = useState(false);
   const [showMood, setShowMood] = useState(false);
   const [showGoals, setShowGoals] = useState(false);
+  const [quickEditBlock, setQuickEditBlock] = useState<number | null>(null);
+  const [quickEditText, setQuickEditText] = useState("");
 
   // Timer state
   const [timerMinutes, setTimerMinutes] = useState(25);
@@ -105,7 +110,9 @@ export default function ProductivityManager({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(initialNewItem),
       }).then(res => res.json()).then(data => {
-        setItems(prev => [data, ...prev]);
+        if (data && !data.error) {
+          setItems(prev => Array.isArray(prev) ? [data, ...prev] : [data]);
+        }
       }).catch(err => {
         console.error("Failed to init today record", err);
       });
@@ -121,7 +128,14 @@ export default function ProductivityManager({
           if (timerMinutes === 0) {
             setTimerRunning(false);
             clearInterval(interval);
-            addPomodoro(25); // automatically add 25 min
+            addPomodoro(25);
+            
+            // Play notification sound
+            try {
+              const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
+              audio.play();
+            } catch (e) {}
+
             toast.success("Pomodoro selesai!");
             setTimerMinutes(25);
             setShowTimer(false);
@@ -146,7 +160,7 @@ export default function ProductivityManager({
       ]);
       if (!resProd.ok) throw new Error("Gagal mengambil data produktivitas");
       const data = await resProd.json();
-      setItems(data);
+      setItems(Array.isArray(data) ? data : []);
 
       if (resSet.ok) {
          const settings = await resSet.json();
@@ -162,19 +176,60 @@ export default function ProductivityManager({
     }
   };
 
-  const handleSaveConfig = async () => {
+  const handleSaveConfig = async (cfgToSave = config, syncToday = false) => {
     const toastId = toast.loading("Menyimpan pengaturan...");
     try {
        const res = await fetch("/api/admin/site-settings", {
          method: "POST",
          headers: { "Content-Type": "application/json" },
-         body: JSON.stringify({ key: "productivity_day_types", value: JSON.stringify(config) })
+         body: JSON.stringify({ key: "productivity_day_types", value: JSON.stringify(cfgToSave) })
        });
        if (!res.ok) throw new Error("Gagal menyimpan pengaturan");
        toast.success("Pengaturan tersimpan", { id: toastId });
+
+       if (syncToday && todayItem) {
+          const dt = getDayType(todayItem.date, cfgToSave);
+          const dtObj = cfgToSave.dayTypes.find(d => d.id === dt) || cfgToSave.dayTypes[0];
+          const allExpected = [
+            ...cfgToSave.morningTasks,
+            ...(dtObj ? dtObj.tasks : []),
+            ...cfgToSave.eveningTasks
+          ].filter(t => t.trim());
+
+          let currentTasks = [];
+          try { currentTasks = JSON.parse(todayItem.tasks || "[]"); } catch(e){}
+
+          const newTasks = allExpected.map(name => {
+            const existing = currentTasks.find((t: any) => t.name === name);
+            return { name, completed: existing ? existing.completed : false };
+          });
+
+          await fetch("/api/admin/productivity", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({ id: todayItem.id, tasks: JSON.stringify(newTasks) }),
+          });
+          fetchData();
+       }
     } catch (error: any) {
        toast.error(error.message, { id: toastId });
     }
+  };
+
+  const handleQuickEditSave = async () => {
+     let newConfig = { ...config };
+     if (quickEditBlock === 1) newConfig.morningTasks = quickEditText.split("\n").filter(t => t.trim());
+     if (quickEditBlock === 3) newConfig.eveningTasks = quickEditText.split("\n").filter(t => t.trim());
+     if (quickEditBlock === 2) {
+        const dt = todayItem ? getDayType(todayItem.date, config) : "Work";
+        const idx = newConfig.dayTypes.findIndex(d => d.id === dt);
+        if (idx !== -1) {
+           newConfig.dayTypes[idx].tasks = quickEditText.split("\n").filter(t => t.trim());
+        }
+     }
+     setConfig(newConfig);
+     setQuickEditBlock(null);
+     await handleSaveConfig(newConfig, true);
   };
 
   const handleSave = async () => {
@@ -194,6 +249,7 @@ export default function ProductivityManager({
       if (!res.ok) throw new Error("Gagal menyimpan");
       toast.success("Berhasil disave", { id: toastId });
 
+      setShowRiwayatModal(false);
       resetForm();
       fetchData();
       onMutate?.();
@@ -209,6 +265,7 @@ export default function ProductivityManager({
       const res = await fetch(`/api/admin/productivity?id=${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Gagal menghapus");
       toast.success("Berhasil dihapus", { id: toastId });
+      setShowRiwayatModal(false);
       fetchData();
       onMutate?.();
     } catch (e: any) {
@@ -232,7 +289,6 @@ export default function ProductivityManager({
     } catch {
       setDraftTasks([]);
     }
-    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   };
 
   const resetForm = (targetDateStr?: string) => {
@@ -273,6 +329,7 @@ export default function ProductivityManager({
     const existing = items.find(i => i.date === dateStrSafe);
     if (existing) editItem(existing);
     else resetForm(dateStrSafe);
+    setShowRiwayatModal(true);
   };
 
   const toggleTask = async (taskName: string) => {
@@ -448,11 +505,18 @@ export default function ProductivityManager({
   const categories = getCategorizedTasksForDay(dayType);
   const streakCount = calculateStreak();
 
-  const renderBlock = (title: string, subtitle: string, tasksToRender: string[], bgHeaderClass: string) => (
+  const renderBlock = (title: string, subtitle: string, tasksToRender: string[], bgHeaderClass: string, onEdit?: () => void) => (
     <div className="rounded-xl border border-neutral-200 bg-white shadow-sm overflow-hidden dark:border-neutral-800 dark:bg-neutral-900">
        <div className={`${bgHeaderClass} p-4 text-white`}>
-         <h4 className="font-bold text-lg">{title}</h4>
-         <p className="text-sm opacity-80">{subtitle}</p>
+         <h4 className="font-bold text-lg flex items-center justify-between">
+           {title}
+           {onEdit && (
+             <button onClick={onEdit} className="p-1.5 bg-white/20 hover:bg-white/30 rounded transition-colors text-white shadow-sm" title="Quick Edit">
+               <TbEdit size={16} />
+             </button>
+           )}
+         </h4>
+         <p className="text-sm opacity-80 mt-0.5">{subtitle}</p>
        </div>
        <div className="p-4 space-y-2">
          {tasksToRender.map(taskName => {
@@ -486,6 +550,34 @@ export default function ProductivityManager({
   return (
     <div className="space-y-8 animate-in fade-in zoom-in-95 duration-300 relative pb-10">
       
+      {/* 0. POMODORO TIMER */}
+      {activeTab === "harian" && todayItem && (
+        <div className="rounded-xl border border-blue-200 bg-blue-50/50 p-6 shadow-sm dark:border-blue-900/50 dark:bg-blue-900/20 flex flex-col items-center">
+          <h3 className="mb-2 font-bold text-blue-800 dark:text-blue-300 flex items-center gap-2">
+            🍅 Pomodoro Focus Timer
+          </h3>
+          <div className="text-6xl font-black text-blue-900 dark:text-blue-100 tabular-nums tracking-tighter mb-4">
+            {String(timerMinutes).padStart(2, '0')}:{String(timerSeconds).padStart(2, '0')}
+          </div>
+          <div className="flex gap-3">
+            <button 
+              onClick={() => setTimerRunning(!timerRunning)}
+              className={`rounded-full px-8 py-3 font-bold text-white transition-all shadow-md ${
+                timerRunning ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700'
+              }`}
+            >
+              {timerRunning ? 'Jeda' : 'Mulai Fokus'}
+            </button>
+            <button 
+              onClick={() => { setTimerRunning(false); setTimerMinutes(25); setTimerSeconds(0); }}
+              className="rounded-full bg-white px-6 py-3 font-bold text-blue-600 border border-blue-200 hover:bg-blue-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-blue-400 dark:hover:bg-neutral-700"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* 1. PROGRESS OVERVIEW */}
       {activeTab === "harian" && todayItem && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -522,9 +614,19 @@ export default function ProductivityManager({
       {/* 2. TASK BLOCKS */}
       {activeTab === "harian" && todayItem && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {renderBlock("🕌 BLOK 1: FONDASI", "Aktivitas spiritual & dasar", categories.block1, "bg-gradient-to-r from-blue-600 to-blue-800")}
-          {renderBlock("🎯 BLOK 2: FOKUS", `Hari ${dayType} - Rotasi spesifik`, categories.block2, "bg-gradient-to-r from-indigo-500 to-indigo-700")}
-          {renderBlock("📅 BLOK 3: MINGGUAN", "Review & administrasi", categories.block3, "bg-gradient-to-r from-purple-500 to-purple-700")}
+          {categories.block1.length > 0 && renderBlock("🕌 BLOK 1: FONDASI", "Aktivitas spiritual & dasar", categories.block1, "bg-gradient-to-r from-blue-600 to-blue-800", () => {
+            setQuickEditText(config.morningTasks.join("\n"));
+            setQuickEditBlock(1);
+          })}
+          {categories.block2.length > 0 && renderBlock("🎯 BLOK 2: FOKUS", `Hari ${dayType} - Rotasi spesifik`, categories.block2, "bg-gradient-to-r from-indigo-500 to-indigo-700", () => {
+            const dtObj = config.dayTypes.find(d => d.id === dayType);
+            setQuickEditText(dtObj ? dtObj.tasks.join("\n") : "");
+            setQuickEditBlock(2);
+          })}
+          {categories.block3.length > 0 && renderBlock("📅 BLOK 3: MINGGUAN", "Review & administrasi", categories.block3, "bg-gradient-to-r from-purple-500 to-purple-700", () => {
+            setQuickEditText(config.eveningTasks.join("\n"));
+            setQuickEditBlock(3);
+          })}
         </div>
       )}
 
@@ -624,15 +726,18 @@ export default function ProductivityManager({
               
               const isSelected = newItem.date === dateStrSafe;
               
+              const isPast = d < new Date(new Date().setHours(0,0,0,0));
               let bgColor = "bg-white hover:bg-neutral-100 border border-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-700";
               if (existing) {
-                if (rate >= 80) bgColor = "bg-green-50 text-green-800 border border-green-200 hover:bg-green-100 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300 dark:hover:bg-green-900/50";
-                else if (rate >= 50) bgColor = "bg-blue-50 text-blue-800 border border-blue-200 hover:bg-blue-100 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/50";
-                else bgColor = "bg-yellow-50 text-yellow-800 border border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/30 dark:border-yellow-800 dark:text-yellow-300 dark:hover:bg-yellow-900/50";
+                if (rate >= 80) bgColor = "bg-green-500 text-white border-green-600 hover:bg-green-600 dark:bg-green-600 dark:border-green-700";
+                else if (rate >= 40) bgColor = "bg-yellow-400 text-yellow-900 border-yellow-500 hover:bg-yellow-500 dark:bg-yellow-500 dark:border-yellow-600";
+                else bgColor = "bg-red-500 text-white border-red-600 hover:bg-red-600 dark:bg-red-600 dark:border-red-700";
+              } else if (isPast) {
+                bgColor = "bg-red-50 text-red-400 border border-red-200 dark:bg-red-900/20 dark:border-red-900/50";
               }
               
               if (isSelected) {
-                bgColor = "ring-2 ring-blue-500 shadow-md " + bgColor;
+                bgColor = "ring-2 ring-blue-500 shadow-lg scale-105 z-10 " + bgColor;
               }
               
               return (
@@ -650,116 +755,112 @@ export default function ProductivityManager({
           </div>
         </div>
         
-        {/* Detail Form (Shows details for selected date) */}
-        <div className="grid gap-4 md:grid-cols-2 bg-neutral-50 dark:bg-neutral-950 p-5 rounded-xl border border-neutral-100 dark:border-neutral-800 relative">
-          
-          <div className="md:col-span-2 mb-2 flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3">
-             <h4 className="font-bold text-neutral-800 dark:text-neutral-200">
-               Detail Tanggal: {new Date(newItem.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-             </h4>
-             {editingId && (
-               <span className="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">
-                 Mode Edit
-               </span>
-             )}
-          </div>
+        {/* Detail Form Modal */}
+        {showRiwayatModal && (
+        <ModalShell title={editingId ? "✏️ Mode Edit Riwayat" : "✨ Buat Riwayat Baru"} onClose={() => setShowRiwayatModal(false)}>
+          <div className="grid gap-4 md:grid-cols-2 relative">
+            <div className="md:col-span-2 mb-2">
+               <h4 className="font-bold text-neutral-800 dark:text-neutral-200">
+                 Detail Tanggal: {new Date(newItem.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+               </h4>
+            </div>
 
-          <div>
-            <label className="mb-1 block text-xs font-medium text-neutral-500">Tanggal</label>
-            <input type="date" value={newItem.date} onChange={e => setNewItem({...newItem, date: e.target.value})} className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-white" />
-          </div>
-          <div>
-            <label className="mb-1 block text-xs font-medium text-neutral-500">Tipe Hari</label>
-            <select value={newItem.dayType} onChange={e => setNewItem({...newItem, dayType: e.target.value})} className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-white">
-              {config.dayTypes.map(dt => (
-                <option key={dt.id} value={dt.id}>{dt.name}</option>
-              ))}
-            </select>
-          </div>
-          <div className="md:col-span-2">
-            <label className="mb-2 block text-xs font-medium text-neutral-500">
-              Tugas ({draftTasks.filter((t) => t.completed).length}/{draftTasks.length} selesai)
-            </label>
-            <div className="max-h-48 overflow-y-auto space-y-1 rounded-xl border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900 shadow-inner">
-              {draftTasks.length === 0 ? (
-                <p className="py-2 text-center text-xs text-neutral-400">
-                  Pilih tipe hari untuk generate tugas otomatis
-                </p>
-              ) : (
-                draftTasks.map((task, i) => (
-                  <label
-                    key={i}
-                    className={`flex cursor-pointer items-center gap-2 rounded-lg p-2 transition-colors ${
-                      task.completed
-                        ? "bg-green-50 dark:bg-green-900/20"
-                        : "hover:bg-neutral-50 dark:hover:bg-neutral-800"
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={task.completed}
-                      onChange={() =>
-                        setDraftTasks((prev) =>
-                          prev.map((t, idx) =>
-                            idx === i ? { ...t, completed: !t.completed } : t
-                          )
-                        )
-                      }
-                      className="h-4 w-4 rounded accent-blue-600"
-                    />
-                    <span
-                      className={`text-xs ${
+            <div>
+              <label className={labelCls}>Tanggal</label>
+              <input type="date" value={newItem.date} onChange={e => setNewItem({...newItem, date: e.target.value})} className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Tipe Hari</label>
+              <select value={newItem.dayType} onChange={e => setNewItem({...newItem, dayType: e.target.value})} className={inputCls}>
+                {config.dayTypes.map(dt => (
+                  <option key={dt.id} value={dt.id}>{dt.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="md:col-span-2">
+              <label className={labelCls}>
+                Tugas ({draftTasks.filter((t) => t.completed).length}/{draftTasks.length} selesai)
+              </label>
+              <div className="max-h-48 overflow-y-auto space-y-1 rounded-xl border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900 shadow-inner">
+                {draftTasks.length === 0 ? (
+                  <p className="py-2 text-center text-xs text-neutral-400">
+                    Pilih tipe hari untuk generate tugas otomatis
+                  </p>
+                ) : (
+                  draftTasks.map((task, i) => (
+                    <label
+                      key={i}
+                      className={`flex cursor-pointer items-center gap-2 rounded-lg p-2 transition-colors ${
                         task.completed
-                          ? "text-green-700 line-through dark:text-green-400"
-                          : "text-neutral-700 dark:text-neutral-300"
+                          ? "bg-green-50 dark:bg-green-900/20"
+                          : "hover:bg-neutral-50 dark:hover:bg-neutral-800"
                       }`}
                     >
-                      {task.name}
-                    </span>
-                  </label>
-                ))
-              )}
+                      <input
+                        type="checkbox"
+                        checked={task.completed}
+                        onChange={() =>
+                          setDraftTasks((prev) =>
+                            prev.map((t, idx) =>
+                              idx === i ? { ...t, completed: !t.completed } : t
+                            )
+                          )
+                        }
+                        className="h-4 w-4 rounded accent-blue-600"
+                      />
+                      <span
+                        className={`text-xs ${
+                          task.completed
+                            ? "text-green-700 line-through dark:text-green-400"
+                            : "text-neutral-700 dark:text-neutral-300"
+                        }`}
+                      >
+                        {task.name}
+                      </span>
+                    </label>
+                  ))
+                )}
+              </div>
             </div>
-          </div>
-          <div>
-            <label className="mb-1 block text-xs font-medium text-neutral-500">Menit Pomodoro</label>
-            <input type="number" value={newItem.pomodoroMinutes || ""} onChange={e => setNewItem({...newItem, pomodoroMinutes: Number(e.target.value)})} className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-white" />
-          </div>
-          <div>
-            <label className="mb-2 block text-xs font-medium text-neutral-500">Mood</label>
-            <div className="flex gap-1.5">
-              {["😢", "😐", "🙂", "😊", "🤩"].map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  onClick={() => setNewItem({ ...newItem, mood: m })}
-                  className={`rounded-lg p-2 text-xl transition-all hover:scale-110 ${
-                    newItem.mood === m
-                      ? "bg-blue-100 ring-2 ring-blue-400 dark:bg-blue-900/40"
-                      : "hover:bg-neutral-100 dark:hover:bg-neutral-800 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800"
-                  }`}
-                >
-                  {m}
-                </button>
-              ))}
+            <div>
+              <label className={labelCls}>Menit Pomodoro</label>
+              <input type="number" value={newItem.pomodoroMinutes || ""} onChange={e => setNewItem({...newItem, pomodoroMinutes: Number(e.target.value)})} className={inputCls} />
             </div>
-          </div>
-          <div className="md:col-span-2 mt-4 flex gap-3 border-t border-neutral-200 dark:border-neutral-800 pt-4">
-            <button onClick={handleSave} className="flex-1 rounded-lg bg-blue-600 px-6 py-2.5 font-bold text-white transition-colors hover:bg-blue-700">
-              {editingId ? "Simpan Perubahan Manual" : "Buat Rekor Baru"}
-            </button>
-            {editingId && (
-              <button onClick={() => handleDelete(editingId)} className="rounded-lg bg-red-100 text-red-600 px-6 py-2.5 font-bold transition-colors hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50">
-                Hapus
+            <div>
+              <label className={labelCls}>Mood</label>
+              <div className="flex gap-1.5">
+                {["😢", "😐", "🙂", "😊", "🤩"].map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setNewItem({ ...newItem, mood: m })}
+                    className={`rounded-lg p-2 text-xl transition-all hover:scale-110 ${
+                      newItem.mood === m
+                        ? "bg-blue-100 ring-2 ring-blue-400 dark:bg-blue-900/40"
+                        : "hover:bg-neutral-100 dark:hover:bg-neutral-800 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800"
+                    }`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="md:col-span-2 mt-4 flex gap-3 border-t border-neutral-100 dark:border-neutral-800 pt-4">
+              <button onClick={handleSave} className="flex-1 rounded-lg bg-blue-600 px-6 py-2.5 font-bold text-white transition-colors hover:bg-blue-700">
+                {editingId ? "Simpan Perubahan Manual" : "Buat Rekor Baru"}
               </button>
-            )}
-            {editingId && (
-              <button onClick={() => resetForm()} className="rounded-lg bg-neutral-200 px-6 py-2.5 font-bold transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700">
+              {editingId && (
+                <button onClick={() => handleDelete(editingId)} className="rounded-lg bg-red-100 text-red-600 px-6 py-2.5 font-bold transition-colors hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50">
+                  Hapus
+                </button>
+              )}
+              <button onClick={() => setShowRiwayatModal(false)} className="rounded-lg bg-neutral-200 px-6 py-2.5 font-bold transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700">
                 Batal
               </button>
-            )}
+            </div>
           </div>
-        </div>
+        </ModalShell>
+        )}
       </div>
       )}
       {/* 5. PENGATURAN HARI */}
@@ -767,15 +868,15 @@ export default function ProductivityManager({
         <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-900 mb-8">
           <div className="flex justify-between items-center mb-6 border-b border-neutral-200 dark:border-neutral-800 pb-4">
             <h3 className="font-semibold text-xl dark:text-white flex items-center gap-2">⚙️ Pengaturan Rutinitas & Tipe Hari</h3>
-            <button onClick={handleSaveConfig} className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-blue-700 shadow-md">
-              Simpan Pengaturan
+            <button onClick={() => handleSaveConfig(config, true)} className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-blue-700 shadow-md">
+              Simpan & Sinkronkan
             </button>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 mb-8">
             {/* Rutinitas Pagi */}
             <div className="rounded-xl border border-neutral-100 bg-neutral-50 p-5 dark:border-neutral-800 dark:bg-neutral-950">
-              <h4 className="font-bold text-neutral-800 dark:text-neutral-200 mb-3 flex items-center gap-2">🌅 Rutinitas Pagi</h4>
+              <h4 className="font-bold text-neutral-800 dark:text-neutral-200 mb-3 flex items-center gap-2">🕌 Pengaturan BLOK 1 (Fondasi / Pagi)</h4>
               <textarea 
                 className="w-full h-40 rounded-lg border border-neutral-300 bg-white p-3 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
                 value={config.morningTasks.join("\n")}
@@ -787,7 +888,7 @@ export default function ProductivityManager({
 
             {/* Rutinitas Malam */}
             <div className="rounded-xl border border-neutral-100 bg-neutral-50 p-5 dark:border-neutral-800 dark:bg-neutral-950">
-              <h4 className="font-bold text-neutral-800 dark:text-neutral-200 mb-3 flex items-center gap-2">🌃 Rutinitas Malam</h4>
+              <h4 className="font-bold text-neutral-800 dark:text-neutral-200 mb-3 flex items-center gap-2">📅 Pengaturan BLOK 3 (Mingguan / Malam)</h4>
               <textarea 
                 className="w-full h-40 rounded-lg border border-neutral-300 bg-white p-3 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
                 value={config.eveningTasks.join("\n")}
@@ -824,33 +925,21 @@ export default function ProductivityManager({
                     Hapus
                   </button>
 
-                  <div className="grid gap-4 md:grid-cols-2 mb-4 pr-24">
-                    <div>
-                      <label className="mb-1 block text-xs font-medium text-neutral-500">ID Tipe (Tanpa Spasi)</label>
-                      <input 
-                        type="text" 
-                        value={dt.id} 
-                        onChange={e => {
-                          const newDt = [...config.dayTypes];
-                          newDt[index].id = e.target.value;
-                          setConfig({...config, dayTypes: newDt});
-                        }}
-                        className="w-full rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" 
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-xs font-medium text-neutral-500">Nama Tampilan Dropdown</label>
-                      <input 
-                        type="text" 
-                        value={dt.name} 
-                        onChange={e => {
-                          const newDt = [...config.dayTypes];
-                          newDt[index].name = e.target.value;
-                          setConfig({...config, dayTypes: newDt});
-                        }}
-                        className="w-full rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" 
-                      />
-                    </div>
+                  <div className="mb-4 pr-24">
+                    <label className="mb-1 block text-xs font-medium text-neutral-500">Nama Tipe Hari (Untuk Dropdown & Header)</label>
+                    <input 
+                      type="text" 
+                      value={dt.name} 
+                      onChange={e => {
+                        const val = e.target.value;
+                        const newDt = [...config.dayTypes];
+                        newDt[index].name = val;
+                        // Auto generate ID avoiding spaces
+                        newDt[index].id = val.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+                        setConfig({...config, dayTypes: newDt});
+                      }}
+                      className="w-full rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" 
+                    />
                   </div>
 
                   <div className="mb-4">
@@ -879,7 +968,7 @@ export default function ProductivityManager({
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-neutral-500">Fokus Tugas Tambahan (Pisahkan dengan baris baru)</label>
+                    <label className="mb-1 block text-xs font-medium text-neutral-500">Pengaturan BLOK 2 (Fokus Tugas Tambahan)</label>
                     <textarea 
                       className="w-full h-32 rounded-lg border border-neutral-300 bg-neutral-50 p-3 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                       value={dt.tasks.join("\n")}
@@ -890,6 +979,35 @@ export default function ProductivityManager({
                       }}
                       placeholder="Masukkan tugas khusus untuk hari ini..."
                     />
+                  </div>
+
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 text-xs font-medium text-neutral-600 dark:text-neutral-300 cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        checked={dt.hideMorning || false}
+                        onChange={e => {
+                          const newDt = [...config.dayTypes];
+                          newDt[index].hideMorning = e.target.checked;
+                          setConfig({...config, dayTypes: newDt});
+                        }}
+                        className="rounded border-neutral-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      Sembunyikan Blok 1 (Fondasi/Pagi)
+                    </label>
+                    <label className="flex items-center gap-2 text-xs font-medium text-neutral-600 dark:text-neutral-300 cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        checked={dt.hideEvening || false}
+                        onChange={e => {
+                          const newDt = [...config.dayTypes];
+                          newDt[index].hideEvening = e.target.checked;
+                          setConfig({...config, dayTypes: newDt});
+                        }}
+                        className="rounded border-neutral-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      Sembunyikan Blok 3 (Mingguan/Malam)
+                    </label>
                   </div>
                 </div>
               ))}
@@ -961,6 +1079,34 @@ export default function ProductivityManager({
                 <button onClick={saveGoals} className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl font-bold">Simpan</button>
                 <button onClick={() => setShowGoals(false)} className="flex-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 py-2 rounded-xl font-medium">Batal</button>
               </div>
+            </div>
+          )}
+
+          {/* Quick Edit Modal */}
+          {quickEditBlock !== null && (
+            <div className="bg-white dark:bg-neutral-900 rounded-2xl w-full max-w-md shadow-xl animate-in zoom-in-95 overflow-hidden">
+              <div className="px-6 py-4 border-b border-neutral-100 dark:border-neutral-800">
+                <h3 className="text-lg font-bold dark:text-white flex items-center gap-2">
+                  <TbEdit className="text-blue-500" /> Edit BLOK {quickEditBlock}
+                </h3>
+              </div>
+              <form onSubmit={e => { e.preventDefault(); handleQuickEditSave(); }} className="p-6">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-neutral-600 dark:text-neutral-400">
+                    Daftar Tugas (Pisahkan dengan Baris Baru / Enter)
+                  </label>
+                  <textarea 
+                    value={quickEditText}
+                    onChange={e => setQuickEditText(e.target.value)}
+                    placeholder="Tugas 1&#10;Tugas 2"
+                    className="w-full h-48 p-3 rounded-xl border border-neutral-200 bg-neutral-50 dark:bg-neutral-950 dark:border-neutral-800 dark:text-white outline-none resize-none mb-4 font-mono text-sm shadow-inner focus:ring-2 focus:ring-blue-500/20"
+                  />
+                </div>
+                <div className="flex gap-2 pt-2">
+                  <button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-bold transition-colors">Simpan & Sinkronkan</button>
+                  <button type="button" onClick={() => setQuickEditBlock(null)} className="flex-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 py-2.5 rounded-xl font-medium transition-colors">Batal</button>
+                </div>
+              </form>
             </div>
           )}
 

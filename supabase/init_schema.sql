@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS public."Testimonial" (
     message text,
     "avatarUrl" text,
     rating int default 5,
+    "showOnHome" boolean not null default true,
     "createdAt" timestamp with time zone default timezone('utc'::text, now())
 );
 

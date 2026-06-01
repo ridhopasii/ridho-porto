@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { createClient } from "@/common/utils/client";
 
@@ -97,10 +97,13 @@ export default function SocialManager() {
                 </div>
                 <div className="pr-24">
                   <div className="flex items-center gap-2">
-                    <h4 className="font-bold">{item.title}</h4>
-                    {!item.is_show && <span className="rounded-full bg-neutral-100 px-1.5 py-0.5 text-[10px] text-neutral-500 dark:bg-neutral-800">Tersembunyi</span>}
+                    <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-neutral-500 dark:bg-neutral-800">
+                      {item.name || item.platform}
+                    </span>
+                    {!item.is_show && <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">Tersembunyi</span>}
                   </div>
-                  <p className="mt-0.5 text-xs text-neutral-500">{item.description}</p>
+                  <h4 className="mt-1 font-bold">{item.title || item.platform}</h4>
+                  <p className="mt-0.5 text-xs text-neutral-500 line-clamp-1">{item.description || <span className="italic text-neutral-400">Tanpa deskripsi</span>}</p>
                   <a href={item.url} target="_blank" rel="noreferrer" className="mt-1 block truncate text-xs text-blue-600 hover:underline dark:text-blue-400">{item.url}</a>
                   <span className="mt-1.5 inline-block rounded bg-neutral-100 px-1.5 py-0.5 font-mono text-[10px] text-neutral-500 dark:bg-neutral-800">{item.icon}</span>
                 </div>

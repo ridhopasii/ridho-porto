@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { TbEye, TbEyeOff } from "react-icons/tb";
 import TestimonialFormModal from "../TestimonialFormModal";
 import { useAdminList } from "@/common/hooks/useAdminList";
 import AdminSearchBar from "../AdminSearchBar";
@@ -28,6 +29,20 @@ export default function TestimonialManager() {
       if (res.ok) setItems(await res.json());
     } catch (e) { console.error(e); }
     setLoading(false);
+  };
+
+  const handleToggleShow = async (id: number, current: boolean) => {
+    const next = !current;
+    setItems((prev) => prev.map((it) => (it.id === id ? { ...it, showOnHome: next } : it)));
+    const res = await fetch("/api/admin/testimonials", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, showOnHome: next }),
+    });
+    if (!res.ok) {
+      setItems((prev) => prev.map((it) => (it.id === id ? { ...it, showOnHome: current } : it)));
+      toast.error("Gagal memperbarui status tampil");
+    }
   };
 
   const handleDelete = async (id: number) => {
@@ -80,15 +95,27 @@ export default function TestimonialManager() {
                     ? <img src={item.avatarUrl} alt={item.name} className="h-10 w-10 flex-shrink-0 rounded-full object-cover" />
                     : <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-700 text-lg font-bold text-neutral-500">{item.name?.charAt(0)}</div>
                   }
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <h4 className="font-bold">{item.name}</h4>
                     <p className="text-xs text-neutral-500">{item.role}</p>
                   </div>
+                  {item.showOnHome === false && (
+                    <span className="flex-shrink-0 rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium text-neutral-500 dark:bg-neutral-800">
+                      Disembunyikan
+                    </span>
+                  )}
                 </div>
                 <p className="flex-1 italic text-sm text-neutral-600 dark:text-neutral-400">"{item.message}"</p>
                 <div className="flex items-center justify-between border-t border-neutral-100 pt-3 dark:border-neutral-800">
                   <div className="text-sm text-yellow-500">{"★".repeat(item.rating ?? 5)}{"☆".repeat(5 - (item.rating ?? 5))}</div>
-                  <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => handleToggleShow(item.id, item.showOnHome !== false)}
+                      title={item.showOnHome === false ? "Tampilkan di beranda" : "Sembunyikan dari beranda"}
+                      className={`rounded-lg p-1.5 transition-colors ${item.showOnHome === false ? "text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800" : "text-green-600 hover:bg-green-50 dark:text-green-500 dark:hover:bg-green-900/20"}`}
+                    >
+                      {item.showOnHome === false ? <TbEyeOff size={15} /> : <TbEye size={15} />}
+                    </button>
                     <button onClick={() => { setEditingItem(item); setIsModalOpen(true); }} className="rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400">Edit</button>
                     <button onClick={() => handleDelete(item.id)} className="rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400">Hapus</button>
                   </div>

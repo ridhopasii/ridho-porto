@@ -12,6 +12,7 @@ import {
   TbTools, TbLink, TbHistory, TbUserEdit,
   TbSettings, TbShieldLock, TbWallet, TbListCheck,
   TbTarget, TbCalendarEvent, TbHome, TbArrowUpRight,
+  TbFileText,
 } from "react-icons/tb";
 
 const QUICK_NAV = [
@@ -71,6 +72,7 @@ const QUICK_NAV = [
     border: "border-neutral-500/20",
     items: [
       { label: "Beranda", href: "/admin/home", icon: TbHome },
+      { label: "Konten Resume", href: "/admin/about", icon: TbFileText },
       { label: "Profil & Identitas", href: "/admin/profile", icon: TbUserEdit },
       { label: "Pengaturan Global", href: "/admin/settings", icon: TbSettings },
       { label: "Keamanan", href: "/admin/security", icon: TbShieldLock },
@@ -82,10 +84,10 @@ const QUICK_NAV = [
     bg: "bg-cyan-500/10",
     border: "border-cyan-500/20",
     items: [
-      { label: "Keuangan", href: "/admin/finance", icon: TbWallet },
-      { label: "Produktivitas", href: "/admin/productivity", icon: TbListCheck },
-      { label: "Habit & Tracker", href: "/admin/habits", icon: TbTarget },
-      { label: "Perencanaan", href: "/admin/planning", icon: TbCalendarEvent },
+      { label: "Keuangan", href: "/private-hub/dompet", icon: TbWallet },
+      { label: "Produktivitas", href: "/private-hub/harian", icon: TbListCheck },
+      { label: "Habit & Tracker", href: "/private-hub/tracker", icon: TbTarget },
+      { label: "Perencanaan", href: "/private-hub/rencana", icon: TbCalendarEvent },
     ],
   },
 ];

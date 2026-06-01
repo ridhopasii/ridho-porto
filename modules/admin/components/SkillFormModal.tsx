@@ -2,12 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
+import { ModalShell, FormFooter, ToggleSwitch, ColorPicker, BgColorPicker, StylingSection, ColorSwatches, Field, inputCls, labelCls, COLOR_OPTIONS } from "./AdminFormUI";
 
 interface SkillFormModalProps {
   skill: any | null;
   onClose: () => void;
   onSuccess: () => void;
 }
+
+const SKILL_LEVELS = ["Beginner", "Intermediate", "Advanced", "Expert"];
+const SKILL_CATEGORIES = ["Frontend", "Backend", "Database", "DevOps", "Design", "Mobile", "AI/ML", "Other"];
 
 export default function SkillFormModal({ skill, onClose, onSuccess }: SkillFormModalProps) {
   const [loading, setLoading] = useState(false);
@@ -37,79 +41,112 @@ export default function SkillFormModal({ skill, onClose, onSuccess }: SkillFormM
     }
   }, [skill]);
 
+  const set = (key: string, value: any) => setFormData(prev => ({ ...prev, [key]: value }));
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const toastId = toast.loading("Saving...");
-
+    const toastId = toast.loading("Menyimpan...");
     try {
       const payload = {
         ...formData,
-        slug: formData.name.toLowerCase().replace(/\s+/g, '-'),
+        slug: formData.name.toLowerCase().replace(/\s+/g, "-"),
         showOnHome: formData.is_active,
       };
-
       const res = await fetch("/api/admin/skills", {
         method: skill ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(skill ? { id: skill.id, ...payload } : payload),
       });
-
       if (res.ok) {
-        toast.success("Saved successfully!", { id: toastId });
+        toast.success("Berhasil disimpan!", { id: toastId });
         onSuccess();
       } else {
         const err = await res.json();
         toast.error(`Error: ${err.error}`, { id: toastId });
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to save", { id: toastId });
     }
     setLoading(false);
   };
 
+  const textSelected = COLOR_OPTIONS.find(c => c.text === formData.color);
+  const bgSelected = COLOR_OPTIONS.find(c => c.bg === formData.background);
+
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <h3 className="text-xl font-bold mb-4">{skill ? "Edit Skill" : "Add Skill"}</h3>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Skill Name</label>
-            <input required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full border rounded-md px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700" placeholder="e.g. React.js" />
+    <ModalShell title={skill ? "Edit Keahlian" : "Tambah Keahlian"} maxWidth="max-w-lg" onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Nama Skill" required>
+            <input required value={formData.name} onChange={e => set("name", e.target.value)} className={inputCls} placeholder="e.g. React.js" />
+          </Field>
+          <Field label="Icon (react-icons)" required hint="Nama komponen: SiReact, FaNodeJs, dll.">
+            <input required value={formData.icon} onChange={e => set("icon", e.target.value)} className={inputCls} placeholder="e.g. SiReact" />
+          </Field>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Kategori">
+            <select value={formData.category} onChange={e => set("category", e.target.value)} className={inputCls}>
+              <option value="">— Pilih kategori —</option>
+              {SKILL_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </Field>
+          <Field label="Level">
+            <select value={formData.level} onChange={e => set("level", e.target.value)} className={inputCls}>
+              {SKILL_LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
+            </select>
+          </Field>
+        </div>
+
+        <Field label={`Persentase: ${formData.percentage}%`}>
+          <input
+            type="range" min={0} max={100}
+            value={formData.percentage}
+            onChange={e => set("percentage", Number(e.target.value))}
+            className="w-full accent-blue-500"
+          />
+          <div className="mt-1 flex justify-between text-[10px] text-neutral-400">
+            <span>0%</span><span>50%</span><span>100%</span>
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Icon Name (react-icons)</label>
-            <input required value={formData.icon} onChange={(e) => setFormData({...formData, icon: e.target.value})} className="w-full border rounded-md px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700" placeholder="e.g. SiReact" />
-            <p className="text-xs text-neutral-500 mt-1">Use exact component name from react-icons/si, fa, bs, etc.</p>
-          </div>
-          
+        </Field>
+
+        <StylingSection>
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Background Class</label>
-              <input value={formData.background} onChange={(e) => setFormData({...formData, background: e.target.value})} className="w-full border rounded-md px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700" placeholder="e.g. bg-cyan-400" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Text Color Class</label>
-              <input value={formData.color} onChange={(e) => setFormData({...formData, color: e.target.value})} className="w-full border rounded-md px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700" placeholder="e.g. text-cyan-400" />
-            </div>
+            <ColorPicker label="Text Color" prefix="text" value={formData.color} onChange={v => set("color", v)} />
+            <ColorPicker label="Background Color" prefix="bg" value={formData.background} onChange={v => set("background", v)} />
           </div>
+          {/* Live swatch preview */}
+          <div className="mt-3 flex items-center gap-3">
+            <ColorSwatches colors={[
+              { label: "Text", hex: textSelected?.hex },
+              { label: "BG",   hex: bgSelected?.hex },
+            ]} />
+            {/* Mini badge preview */}
+            {(formData.color || formData.background) && (
+              <div
+                className="ml-2 flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold"
+                style={{
+                  backgroundColor: bgSelected?.hex ?? "#374151",
+                  color: textSelected?.hex ?? "#ffffff",
+                }}
+              >
+                <span>●</span> {formData.name || "Skill"}
+              </div>
+            )}
+          </div>
+        </StylingSection>
 
-          <div className="flex items-center gap-2 mt-4">
-            <input type="checkbox" id="is_active" checked={formData.is_active} onChange={(e) => setFormData({...formData, is_active: e.target.checked})} className="rounded text-blue-600" />
-            <label htmlFor="is_active" className="text-sm">Is Active / Show on Home</label>
-          </div>
+        <ToggleSwitch
+          checked={formData.is_active}
+          onChange={v => set("is_active", v)}
+          label={formData.is_active ? "Aktif" : "Nonaktif"}
+          description="Tampilkan di halaman beranda & skills"
+        />
 
-          <div className="flex justify-end gap-3 pt-4 border-t dark:border-neutral-800 mt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-neutral-600 hover:bg-neutral-100 rounded-lg dark:text-neutral-300 dark:hover:bg-neutral-800">
-              Cancel
-            </button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
-              {loading ? "Saving..." : "Save"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <FormFooter onClose={onClose} loading={loading} saveLabel="Simpan Keahlian" />
+      </form>
+    </ModalShell>
   );
 }

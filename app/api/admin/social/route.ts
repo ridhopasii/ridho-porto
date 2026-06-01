@@ -13,6 +13,21 @@ export async function POST(req: Request) {
 
   try {
     const data = await req.json();
+
+    // Cek duplikat berdasarkan URL atau nama platform
+    const { data: existing } = await supabase
+      .from("Social")
+      .select("id")
+      .or(`url.eq.${data.url},name.eq.${data.name}`)
+      .limit(1);
+
+    if (existing && existing.length > 0) {
+      return NextResponse.json(
+        { error: `Platform "${data.name || data.platform}" atau URL ini sudah ada. Gunakan Edit untuk mengubah data yang ada.` },
+        { status: 409 }
+      );
+    }
+
     const { error, data: inserted } = await supabase.from("Social").insert([data]).select();
     if (error) throw error;
     return NextResponse.json(inserted[0]);

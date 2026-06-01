@@ -6,13 +6,14 @@ import { Toaster } from "react-hot-toast";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "../globals.css";
 
 import Layouts from "@/common/components/layouts";
 import ThemeProviderContext from "@/common/stores/theme";
 import NextAuthProvider from "@/common/providers/NextAuthProvider";
 import { METADATA } from "@/common/constants/metadata";
+import { getSiteSettings, readSetting } from "@/common/libs/site-settings";
 import { plusJakartaSans } from "@/common/styles/fonts";
 import SkeletonThemeProvider from "@/common/providers/SkeletonThemeProvider";
 import { routing } from "@/i18n/routing";
@@ -21,19 +22,29 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  // Judul & deskripsi dapat diatur dari /admin/settings (fallback ke konstanta).
+  const settings = await getSiteSettings();
+  const siteTitle = readSetting(settings, "site_title", METADATA.creator);
+  const seoDescription = readSetting(
+    settings,
+    "seo_description",
+    METADATA.description,
+  );
+
+  return {
   metadataBase: new URL(
     process.env.NODE_ENV === "development"
       ? "http://localhost:3000"
       : process.env.DOMAIN || "https://www.ridhorobbipasi.my.id",
   ),
   title: {
-    default: METADATA.creator,
-    template: `%s ${METADATA.exTitle}`,
+    default: siteTitle,
+    template: `%s | ${siteTitle}`,
   },
-  description: METADATA.description,
+  description: seoDescription,
   keywords: METADATA.keyword,
-  creator: METADATA.creator,
+  creator: siteTitle,
   authors: {
     name: METADATA.creator,
     url: METADATA.openGraph.url,
@@ -41,14 +52,14 @@ export const metadata: Metadata = {
   openGraph: {
     images: METADATA.openGraph.image,
     url: METADATA.openGraph.url,
-    siteName: METADATA.openGraph.siteName,
+    siteName: siteTitle,
     locale: METADATA.openGraph.locale,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: METADATA.creator,
-    description: METADATA.description,
+    title: siteTitle,
+    description: seoDescription,
     images: [METADATA.openGraph.image],
   },
   icons: {
@@ -62,6 +73,20 @@ export const metadata: Metadata = {
     ],
   },
   manifest: "/manifest.json",
+  };
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // Keep zoom available for accessibility — do not lock pinch-to-zoom
+  maximumScale: 5,
+  // Extend content under iOS/Android notches; pair with safe-area utilities
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
+    { media: "(prefers-color-scheme: dark)", color: "#121212" },
+  ],
 };
 
 interface RootLayoutProps {

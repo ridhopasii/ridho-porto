@@ -2,5 +2,5 @@ import { redirect } from "next/navigation";
 
 export default async function FinancialPage(props: { params: Promise<{ locale: string }> }) {
   const { locale } = await props.params;
-  redirect(`/${locale}/admin/finance`);
+  redirect(`/${locale}/private-hub/dompet`);
 }

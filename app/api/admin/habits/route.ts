@@ -9,7 +9,7 @@ const supabase = createClient(
   (process.env.SUPABASE_SERVICE_ROLE_KEY || "placeholder"),
 );
 
-export async function GET() {
+export async function GET(req: Request) {
   const isAdmin = await checkAdminAuth();
   const isPrivate = await checkPrivateDashboardAuth();
   if (!isAdmin && !isPrivate) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -18,7 +18,10 @@ export async function GET() {
     const { data: habits, error: hError } = await supabase.from("HabitConfig").select("*").order("sortOrder");
     if (hError) throw hError;
 
-    const { data: trackers, error: tError } = await supabase.from("MonthlyTracker").select("*").order("date", { ascending: false }).limit(30);
+    const url = new URL(req.url);
+    const limit = parseInt(url.searchParams.get("limit") || "30");
+
+    const { data: trackers, error: tError } = await supabase.from("MonthlyTracker").select("*").order("date", { ascending: false }).limit(limit);
     if (tError) throw tError;
 
     return NextResponse.json({ habits: habits || [], trackers: trackers || [] });

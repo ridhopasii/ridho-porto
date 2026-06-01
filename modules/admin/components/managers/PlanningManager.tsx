@@ -2,6 +2,57 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { DndContext, DragOverlay, closestCorners, PointerSensor, useSensor, useSensors, DragStartEvent, DragEndEvent } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { useDroppable } from "@dnd-kit/core";
+import { TbEdit, TbTrash, TbPlus } from "react-icons/tb";
+import { ModalShell, FormFooter, inputCls, labelCls } from "../AdminFormUI";
+
+// Draggable Item Component
+function SortableItem({ id, plan, setEditPlan, deletePlan }: any) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 };
+  
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="bg-white dark:bg-neutral-800 p-3 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-sm cursor-grab active:cursor-grabbing mb-2 group touch-none">
+       <div className="flex justify-between items-start">
+         <p className="text-sm dark:text-white font-medium">{plan.item}</p>
+         <div className="hidden group-hover:flex gap-1 ml-2">
+            <button onPointerDown={(e) => { e.stopPropagation(); setEditPlan(plan); }} className="p-1 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded" title="Edit"><TbEdit size={16} /></button>
+            <button onPointerDown={(e) => { e.stopPropagation(); deletePlan(plan.id); }} className="p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded" title="Hapus"><TbTrash size={16} /></button>
+         </div>
+       </div>
+       <div className="flex justify-between items-center mt-2">
+         <span className="text-[10px] uppercase font-bold text-neutral-400">{plan.category || 'Tugas'}</span>
+         <span className="text-[10px] text-blue-500">{plan.progress}%</span>
+       </div>
+    </div>
+  );
+}
+
+// Droppable Column Component
+function Column({ id, title, items, setEditPlan, deletePlan, onClearDone }: any) {
+  const { setNodeRef } = useDroppable({ id });
+  return (
+    <div className="bg-neutral-50 dark:bg-neutral-900 rounded-xl p-4 min-h-[400px] border border-neutral-100 dark:border-neutral-800 flex-1 flex flex-col">
+       <h4 className="font-bold mb-4 dark:text-white flex justify-between items-center">
+         {title} 
+         <div className="flex gap-2 items-center">
+           {id === 'done' && items.length > 0 && (
+             <button onClick={onClearDone} className="text-xs bg-red-100 hover:bg-red-200 text-red-600 dark:bg-red-900/30 dark:text-red-400 px-2 py-1 rounded transition-colors" title="Bersihkan kartu yang sudah selesai">🧹 Sapu</button>
+           )}
+           <span className="text-xs font-medium bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 px-2 py-0.5 rounded-full">{items.length}</span>
+         </div>
+       </h4>
+       <div ref={setNodeRef} className="flex-1">
+         <SortableContext items={items.map((i: any) => i.id)} strategy={verticalListSortingStrategy}>
+           {items.map((item: any) => <SortableItem key={item.id} id={item.id} plan={item} setEditPlan={setEditPlan} deletePlan={deletePlan} />)}
+         </SortableContext>
+       </div>
+    </div>
+  );
+}
 
 export default function PlanningManager({
   activeTab = "rencana",
@@ -21,6 +72,85 @@ export default function PlanningManager({
   // Edit states
   const [editPlan, setEditPlan] = useState<any>(null);
   const [editTabungan, setEditTabungan] = useState<any>(null);
+
+  // Modal states
+  const [showPlanModal, setShowPlanModal] = useState(false);
+  const [showTabunganModal, setShowTabunganModal] = useState(false);
+
+  // Auto show modal when edit state is set
+  useEffect(() => {
+    if (editPlan) setShowPlanModal(true);
+  }, [editPlan]);
+
+  useEffect(() => {
+    if (editTabungan) setShowTabunganModal(true);
+  }, [editTabungan]);
+
+  // Dnd states
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    })
+  );
+
+  const columnsData = {
+    todo: plans.filter(p => p.progress === 0),
+    inProgress: plans.filter(p => p.progress > 0 && p.progress < 100),
+    done: plans.filter(p => p.progress === 100),
+  };
+
+  const activePlan = activeId ? plans.find(p => p.id === activeId) : null;
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    setActiveId(null);
+    const { active, over } = event;
+    if (!over) return;
+
+    const currentPlan = plans.find(p => p.id === active.id);
+    if (!currentPlan) return;
+
+    const overId = over.id;
+    let newProgress = currentPlan.progress;
+
+    if (overId === "todo") newProgress = 0;
+    else if (overId === "inProgress") newProgress = 50;
+    else if (overId === "done") newProgress = 100;
+    else {
+      const overPlan = plans.find(p => p.id === overId);
+      if (overPlan) {
+        if (overPlan.progress === 0) newProgress = 0;
+        else if (overPlan.progress > 0 && overPlan.progress < 100) newProgress = 50;
+        else if (overPlan.progress === 100) newProgress = 100;
+      }
+    }
+
+    if (newProgress !== currentPlan.progress) {
+      const updatedPlan = { ...currentPlan, progress: newProgress };
+      setPlans(plans.map(p => p.id === updatedPlan.id ? updatedPlan : p));
+
+      try {
+        const res = await fetch("/api/admin/planning", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "update_plan", payload: updatedPlan }),
+        });
+        if (!res.ok) throw new Error("Gagal menyimpan progress");
+        toast.success("Progress diperbarui");
+        onMutate?.();
+      } catch (e: any) {
+        toast.error(e.message);
+        fetchData();
+      }
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -63,6 +193,7 @@ export default function PlanningManager({
         toast.success("Berhasil ditambahkan", { id: toastId });
         setNewPlan({ year: new Date().getFullYear(), category: "", item: "", progress: 0 });
       }
+      setShowPlanModal(false);
       fetchData();
       onMutate?.();
     } catch (e: any) {
@@ -81,6 +212,22 @@ export default function PlanningManager({
       onMutate?.();
     } catch (e: any) {
       toast.error(e.message, { id: toastId });
+    }
+  };
+
+  const handleClearDone = async () => {
+    if (!window.confirm("Yakin ingin menghapus semua kartu yang sudah selesai (100%)?")) return;
+    const toastId = toast.loading("Menyapu papan...");
+    try {
+      const doneIds = columnsData.done.map(p => p.id);
+      for (const id of doneIds) {
+        await fetch(`/api/admin/planning?action=delete_plan&id=${id}`, { method: "DELETE" });
+      }
+      toast.success("Papan berhasil dibersihkan!", { id: toastId });
+      fetchData();
+      onMutate?.();
+    } catch (e: any) {
+      toast.error("Gagal membersihkan papan", { id: toastId });
     }
   };
 
@@ -106,6 +253,7 @@ export default function PlanningManager({
         toast.success("Berhasil ditambahkan", { id: toastId });
         setNewTabungan({ month: "", year: new Date().getFullYear(), category: "", amount: 0, target: 0, notes: "" });
       }
+      setShowTabunganModal(false);
       fetchData();
       onMutate?.();
     } catch (e: any) {
@@ -144,41 +292,45 @@ export default function PlanningManager({
   return (
     <div className="space-y-6">
       <div className="grid gap-6">
-        {/* YEARLY PLAN */}
+        {/* YEARLY PLAN / KANBAN */}
         {activeTab === "rencana" && (
-        <div className="space-y-4 rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
-          <h3 className="font-semibold dark:text-white">Yearly Plan 2026+</h3>
-          <div className="space-y-2">
-            {plans.map(p => (
-              <div key={p.id} className="group rounded border border-neutral-100 p-2 text-sm dark:border-neutral-800 dark:text-white">
-                <div className="flex justify-between font-medium">
-                  <span>{p.category}</span>
-                  <div className="flex items-center gap-3">
-                    <span>{p.progress}%</span>
-                    <div className="hidden gap-2 group-hover:flex">
-                      <button onClick={() => setEditPlan(p)} className="text-xs font-semibold text-blue-500">Edit</button>
-                      <button onClick={() => deletePlan(p.id)} className="text-xs font-semibold text-red-500">Del</button>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-neutral-500">{p.item}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 border-t border-neutral-100 pt-4 dark:border-neutral-800">
-            <h4 className="mb-2 text-sm font-medium dark:text-white">{editPlan ? "Edit Plan" : "Tambah Plan"}</h4>
-            <div className="grid gap-2">
-              <input type="text" placeholder="Kategori" value={editPlan ? editPlan.category : newPlan.category} onChange={e => editPlan ? setEditPlan({...editPlan, category: e.target.value}) : setNewPlan({...newPlan, category: e.target.value})} className="rounded border px-2 py-1 text-sm dark:border-neutral-700 dark:bg-transparent" />
-              <input type="text" placeholder="Item Plan" value={editPlan ? editPlan.item : newPlan.item} onChange={e => editPlan ? setEditPlan({...editPlan, item: e.target.value}) : setNewPlan({...newPlan, item: e.target.value})} className="rounded border px-2 py-1 text-sm dark:border-neutral-700 dark:bg-transparent" />
-              <div className="flex gap-2">
-                <input type="number" placeholder="Progress (%)" value={editPlan ? editPlan.progress : newPlan.progress} onChange={e => editPlan ? setEditPlan({...editPlan, progress: Number(e.target.value)}) : setNewPlan({...newPlan, progress: Number(e.target.value)})} className="w-1/3 rounded border px-2 py-1 text-sm dark:border-neutral-700 dark:bg-transparent" />
-                <button onClick={handlePlanSave} disabled={editPlan ? !editPlan.item : !newPlan.item} className="flex-1 rounded bg-blue-600 px-3 py-1 text-sm text-white disabled:opacity-50">
-                  {editPlan ? "Simpan Perubahan" : "Add"}
-                </button>
-                {editPlan && <button onClick={() => setEditPlan(null)} className="rounded bg-neutral-200 px-3 py-1 text-sm dark:bg-neutral-800 dark:text-white">Batal</button>}
-              </div>
+        <div className="space-y-6">
+          <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <div className="flex flex-col md:flex-row gap-4 overflow-x-auto pb-4">
+              <Column id="todo" title="💡 Ide / Rencana" items={columnsData.todo} setEditPlan={setEditPlan} deletePlan={deletePlan} />
+              <Column id="inProgress" title="⚙️ Sedang Dikerjakan" items={columnsData.inProgress} setEditPlan={setEditPlan} deletePlan={deletePlan} />
+              <Column id="done" title="✅ Selesai" items={columnsData.done} setEditPlan={setEditPlan} deletePlan={deletePlan} onClearDone={handleClearDone} />
             </div>
-          </div>
+            <DragOverlay>
+              {activePlan ? (
+                <div className="bg-white dark:bg-neutral-800 p-3 rounded-lg border-2 border-blue-500 shadow-xl opacity-80 rotate-2 cursor-grabbing">
+                  <p className="text-sm dark:text-white font-medium">{activePlan.item}</p>
+                  <div className="text-xs text-neutral-400 mt-2">{activePlan.category || 'Tugas'}</div>
+                </div>
+              ) : null}
+            </DragOverlay>
+          </DndContext>
+
+          <button onClick={() => { setEditPlan(null); setShowPlanModal(true); }} className="flex items-center gap-2 rounded-xl border-2 border-dashed border-neutral-300 p-4 w-full justify-center text-neutral-500 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-colors dark:border-neutral-700 dark:hover:border-blue-500 dark:hover:bg-blue-900/20">
+            <TbPlus size={20} />
+            <span className="font-semibold">Tambah Rencana Baru</span>
+          </button>
+
+          {showPlanModal && (
+            <ModalShell title={editPlan ? "✏️ Edit Rencana" : "✨ Tambah Rencana Baru"} onClose={() => { setShowPlanModal(false); setTimeout(() => setEditPlan(null), 200); }}>
+              <form onSubmit={e => { e.preventDefault(); handlePlanSave(); }} className="space-y-4">
+                <div>
+                  <label className={labelCls}>Kategori</label>
+                  <input type="text" placeholder="Misal: Pekerjaan, Pribadi" value={editPlan ? editPlan.category : newPlan.category} onChange={e => editPlan ? setEditPlan({...editPlan, category: e.target.value}) : setNewPlan({...newPlan, category: e.target.value})} className={inputCls} required />
+                </div>
+                <div>
+                  <label className={labelCls}>Nama Rencana / Tugas</label>
+                  <input type="text" placeholder="Detail rencana..." value={editPlan ? editPlan.item : newPlan.item} onChange={e => editPlan ? setEditPlan({...editPlan, item: e.target.value}) : setNewPlan({...newPlan, item: e.target.value})} className={inputCls} required />
+                </div>
+                <FormFooter loading={false} onClose={() => { setShowPlanModal(false); setTimeout(() => setEditPlan(null), 200); }} saveLabel={editPlan ? "Simpan Perubahan" : "Tambahkan"} />
+              </form>
+            </ModalShell>
+          )}
         </div>
         )}
 
@@ -186,40 +338,63 @@ export default function PlanningManager({
         {activeTab === "tabungan" && (
         <div className="space-y-4 rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
           <h3 className="font-semibold dark:text-white">Tabungan Tujuan</h3>
-          <div className="space-y-2">
-            {tabungan.map(t => (
-              <div key={t.id} className="group rounded border border-neutral-100 p-2 text-sm dark:border-neutral-800 dark:text-white">
-                <div className="flex justify-between font-medium">
-                  <span>{t.category} ({t.month} {t.year})</span>
+          <div className="space-y-3">
+            {tabungan.map(t => {
+              const isDone = t.target > 0 && t.amount >= t.target;
+              return (
+              <div key={t.id} className={`group rounded-xl border p-3 text-sm transition-all ${isDone ? 'border-yellow-300 bg-yellow-50/50 dark:border-yellow-600/50 dark:bg-yellow-900/20' : 'border-neutral-100 dark:border-neutral-800'} dark:text-white`}>
+                <div className="flex justify-between items-center font-medium mb-1">
+                  <span className="flex items-center gap-2">
+                    {t.category} ({t.month} {t.year})
+                    {isDone && <span className="animate-bounce inline-block text-lg" title="Target Tercapai!">🏆</span>}
+                  </span>
                   <div className="flex items-center gap-3">
-                    <span>Rp {t.amount.toLocaleString()} / Rp {t.target.toLocaleString()}</span>
+                    <span className={isDone ? "text-yellow-600 dark:text-yellow-500 font-bold" : ""}>Rp {t.amount.toLocaleString()} / Rp {t.target.toLocaleString()}</span>
                     <div className="hidden gap-2 group-hover:flex">
-                      <button onClick={() => setEditTabungan(t)} className="text-xs font-semibold text-blue-500">Edit</button>
-                      <button onClick={() => deleteTabungan(t.id)} className="text-xs font-semibold text-red-500">Del</button>
+                      <button onClick={() => setEditTabungan(t)} className="p-1 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded" title="Edit"><TbEdit size={16} /></button>
+                      <button onClick={() => deleteTabungan(t.id)} className="p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded" title="Hapus"><TbTrash size={16} /></button>
                     </div>
                   </div>
                 </div>
                 <p className="text-xs text-neutral-500">{t.notes}</p>
+                
+                {/* Progress Bar Mini */}
+                <div className="mt-2 w-full bg-neutral-100 dark:bg-neutral-800 rounded-full h-1.5 overflow-hidden">
+                  <div className={`h-1.5 rounded-full ${isDone ? 'bg-yellow-400' : 'bg-blue-500'}`} style={{ width: `${Math.min(100, (t.amount/t.target)*100)}%` }}></div>
+                </div>
               </div>
-            ))}
+            )})}
           </div>
-          <div className="mt-4 border-t border-neutral-100 pt-4 dark:border-neutral-800">
-            <h4 className="mb-2 text-sm font-medium dark:text-white">{editTabungan ? "Edit Tabungan" : "Tambah Tabungan"}</h4>
-            <div className="grid gap-2">
-              <input type="text" placeholder="Kategori (Misal: Umroh)" value={editTabungan ? editTabungan.category : newTabungan.category} onChange={e => editTabungan ? setEditTabungan({...editTabungan, category: e.target.value}) : setNewTabungan({...newTabungan, category: e.target.value})} className="rounded border px-2 py-1 text-sm dark:border-neutral-700 dark:bg-transparent" />
-              <div className="flex gap-2">
-                <input type="text" placeholder="Bulan (Misal: Jan)" value={editTabungan ? editTabungan.month : newTabungan.month} onChange={e => editTabungan ? setEditTabungan({...editTabungan, month: e.target.value}) : setNewTabungan({...newTabungan, month: e.target.value})} className="w-1/2 rounded border px-2 py-1 text-sm dark:border-neutral-700 dark:bg-transparent" />
-                <input type="number" placeholder="Nominal" value={editTabungan ? editTabungan.amount : newTabungan.amount} onChange={e => editTabungan ? setEditTabungan({...editTabungan, amount: Number(e.target.value)}) : setNewTabungan({...newTabungan, amount: Number(e.target.value)})} className="w-1/2 rounded border px-2 py-1 text-sm dark:border-neutral-700 dark:bg-transparent" />
-              </div>
-              <input type="number" placeholder="Target Dana" value={editTabungan ? editTabungan.target : newTabungan.target} onChange={e => editTabungan ? setEditTabungan({...editTabungan, target: Number(e.target.value)}) : setNewTabungan({...newTabungan, target: Number(e.target.value)})} className="w-full rounded border px-2 py-1 text-sm dark:border-neutral-700 dark:bg-transparent" />
-              <div className="flex gap-2">
-                <button onClick={handleTabunganSave} disabled={editTabungan ? !editTabungan.amount : !newTabungan.amount} className="flex-1 rounded bg-blue-600 px-3 py-2 text-sm font-medium text-white disabled:opacity-50">
-                  {editTabungan ? "Simpan Perubahan" : "Simpan Tabungan"}
-                </button>
-                {editTabungan && <button onClick={() => setEditTabungan(null)} className="rounded bg-neutral-200 px-4 py-2 text-sm font-medium dark:bg-neutral-800 dark:text-white">Batal</button>}
-              </div>
-            </div>
-          </div>
+          <button onClick={() => { setEditTabungan(null); setShowTabunganModal(true); }} className="mt-4 flex items-center gap-2 rounded-xl border-2 border-dashed border-neutral-300 p-4 w-full justify-center text-neutral-500 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-colors dark:border-neutral-700 dark:hover:border-blue-500 dark:hover:bg-blue-900/20">
+            <TbPlus size={20} />
+            <span className="font-semibold">Tambah Target Tabungan</span>
+          </button>
+
+          {showTabunganModal && (
+            <ModalShell title={editTabungan ? "✏️ Edit Tabungan" : "✨ Tambah Tabungan"} onClose={() => { setShowTabunganModal(false); setTimeout(() => setEditTabungan(null), 200); }}>
+              <form onSubmit={e => { e.preventDefault(); handleTabunganSave(); }} className="space-y-4">
+                <div>
+                  <label className={labelCls}>Kategori / Tujuan</label>
+                  <input type="text" placeholder="Misal: Umroh" value={editTabungan ? editTabungan.category : newTabungan.category} onChange={e => editTabungan ? setEditTabungan({...editTabungan, category: e.target.value}) : setNewTabungan({...newTabungan, category: e.target.value})} className={inputCls} required />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className={labelCls}>Bulan & Tahun (Opsional)</label>
+                    <input type="text" placeholder="Misal: Jan 2026" value={editTabungan ? editTabungan.month : newTabungan.month} onChange={e => editTabungan ? setEditTabungan({...editTabungan, month: e.target.value}) : setNewTabungan({...newTabungan, month: e.target.value})} className={inputCls} />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Uang Terkumpul (Rp)</label>
+                    <input type="number" placeholder="Nominal saat ini" value={editTabungan ? editTabungan.amount : newTabungan.amount} onChange={e => editTabungan ? setEditTabungan({...editTabungan, amount: Number(e.target.value)}) : setNewTabungan({...newTabungan, amount: Number(e.target.value)})} className={inputCls} required />
+                  </div>
+                </div>
+                <div>
+                  <label className={labelCls}>Target Dana (Rp)</label>
+                  <input type="number" placeholder="Target nominal" value={editTabungan ? editTabungan.target : newTabungan.target} onChange={e => editTabungan ? setEditTabungan({...editTabungan, target: Number(e.target.value)}) : setNewTabungan({...newTabungan, target: Number(e.target.value)})} className={inputCls} required />
+                </div>
+                <FormFooter loading={false} onClose={() => { setShowTabunganModal(false); setTimeout(() => setEditTabungan(null), 200); }} saveLabel={editTabungan ? "Simpan Perubahan" : "Tambahkan"} />
+              </form>
+            </ModalShell>
+          )}
         </div>
         )}
       </div>

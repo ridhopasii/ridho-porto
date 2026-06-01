@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { createClient } from "@/common/utils/client";
 
@@ -71,7 +71,17 @@ const ProfileHeader = ({ expandMenu, imageSize }: ProfileHeaderProps) => {
           <Link href="/" passHref className="hover:opacity-80 transition-opacity">
             <h2 className="flex items-center gap-1.5 text-base lg:text-lg font-bold text-neutral-900 dark:text-neutral-50 whitespace-nowrap">
               {fullName}
-              <VerifiedIcon className="text-[#1D9BF0] flex-shrink-0" size={16} />
+              <span
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.dispatchEvent(new CustomEvent("open-private-hub"));
+                }}
+                className="cursor-pointer transition-transform hover:scale-110 active:scale-95 flex items-center"
+                title="Private Hub"
+              >
+                <VerifiedIcon className="text-[#1D9BF0] flex-shrink-0" size={16} />
+              </span>
             </h2>
           </Link>
 

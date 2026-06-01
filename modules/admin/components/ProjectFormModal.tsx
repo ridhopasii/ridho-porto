@@ -3,12 +3,20 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import ImageUploader from "./ImageUploader";
+import { ModalShell, FormFooter, ToggleSwitch, Field, inputCls, labelCls } from "./AdminFormUI";
 
 interface ProjectFormModalProps {
   project?: any;
   onClose: () => void;
   onSuccess: () => void;
 }
+
+const PROJECT_CATEGORIES = [
+  { value: "project",    label: "Project" },
+  { value: "freelance",  label: "Freelance" },
+  { value: "experiment", label: "Experiment" },
+  { value: "open-source",label: "Open Source" },
+];
 
 export default function ProjectFormModal({ project, onClose, onSuccess }: ProjectFormModalProps) {
   const isEditing = !!project;
@@ -26,21 +34,18 @@ export default function ProjectFormModal({ project, onClose, onSuccess }: Projec
     imageUrl: project?.imageUrl || "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    if (type === "checkbox") {
-      const checked = (e.target as HTMLInputElement).checked;
-      setFormData((prev) => ({ ...prev, [name]: checked }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+  const set = (key: string, value: any) => setFormData(prev => ({ ...prev, [key]: value }));
+
+  // Auto-generate slug from title
+  const handleTitleChange = (val: string) => {
+    set("title", val);
+    if (!isEditing) set("slug", val.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const toastId = toast.loading(isEditing ? "Updating project..." : "Creating project...");
-
+    const toastId = toast.loading(isEditing ? "Memperbarui proyek..." : "Menyimpan proyek...");
     try {
       const payload = isEditing ? { id: project.id, ...formData } : formData;
       const res = await fetch("/api/admin/projects", {
@@ -48,10 +53,8 @@ export default function ProjectFormModal({ project, onClose, onSuccess }: Projec
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
       if (!res.ok) throw new Error(await res.text());
-
-      toast.success(isEditing ? "Project updated!" : "Project created!", { id: toastId });
+      toast.success(isEditing ? "Proyek diperbarui!" : "Proyek dibuat!", { id: toastId });
       onSuccess();
     } catch (error: any) {
       toast.error(error.message, { id: toastId });
@@ -61,86 +64,63 @@ export default function ProjectFormModal({ project, onClose, onSuccess }: Projec
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-neutral-900 w-full max-w-2xl rounded-xl p-6 shadow-xl relative my-8">
-        <button onClick={onClose} className="absolute top-4 right-4 text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200">
-          ✕
-        </button>
-        <h2 className="text-2xl font-bold mb-6">{isEditing ? "Edit Project" : "Add New Project"}</h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Title</label>
-              <input required name="title" value={formData.title} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Slug</label>
-              <input required name="slug" value={formData.slug} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-            </div>
-          </div>
+    <ModalShell title={isEditing ? "Edit Proyek" : "Tambah Proyek Baru"} onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Title" required>
+            <input required value={formData.title} onChange={e => handleTitleChange(e.target.value)} className={inputCls} placeholder="Nama proyek" />
+          </Field>
+          <Field label="Slug" required hint="Auto-generated dari title">
+            <input required value={formData.slug} onChange={e => set("slug", e.target.value)} className={inputCls} placeholder="nama-proyek" />
+          </Field>
+        </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Category</label>
-              <select name="category" value={formData.category} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent">
-                <option value="project">Project</option>
-                <option value="freelance">Freelance</option>
-                <option value="experiment">Experiment</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Tags (comma separated)</label>
-              <input name="tags" value={formData.tags} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" placeholder="React, Next.js, Tailwind" />
-            </div>
-          </div>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Kategori">
+            <select value={formData.category} onChange={e => set("category", e.target.value)} className={inputCls}>
+              {PROJECT_CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+            </select>
+          </Field>
+          <Field label="Tags" hint="Pisahkan dengan koma">
+            <input value={formData.tags} onChange={e => set("tags", e.target.value)} className={inputCls} placeholder="React, Next.js, Tailwind" />
+          </Field>
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Description</label>
-            <textarea name="description" value={formData.description} onChange={handleChange} rows={3} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-          </div>
+        <Field label="Deskripsi">
+          <textarea value={formData.description} onChange={e => set("description", e.target.value)} rows={3} className={inputCls} placeholder="Deskripsi proyek..." />
+        </Field>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Demo URL</label>
-              <input name="demoUrl" value={formData.demoUrl} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Repo URL</label>
-              <input name="repoUrl" value={formData.repoUrl} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-            </div>
-          </div>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Demo URL">
+            <input value={formData.demoUrl} onChange={e => set("demoUrl", e.target.value)} className={inputCls} placeholder="https://demo.example.com" />
+          </Field>
+          <Field label="Repository URL">
+            <input value={formData.repoUrl} onChange={e => set("repoUrl", e.target.value)} className={inputCls} placeholder="https://github.com/..." />
+          </Field>
+        </div>
 
-          <div>
-            <ImageUploader 
-              label="Project Thumbnail"
-              value={formData.imageUrl} 
-              onChange={(url) => setFormData({...formData, imageUrl: url})} 
-              path="projects"
-            />
-          </div>
+        <div>
+          <label className={labelCls}>Gambar Thumbnail</label>
+          <ImageUploader value={formData.imageUrl} onChange={url => set("imageUrl", url)} path="projects" />
+        </div>
 
-          <div className="flex gap-6 mt-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name="showOnHome" checked={formData.showOnHome} onChange={handleChange} className="w-4 h-4" />
-              <span className="text-sm">Show on Home</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name="featured" checked={formData.featured} onChange={handleChange} className="w-4 h-4" />
-              <span className="text-sm">Featured</span>
-            </label>
-          </div>
+        <div className="grid grid-cols-2 gap-3">
+          <ToggleSwitch
+            checked={formData.showOnHome}
+            onChange={v => set("showOnHome", v)}
+            label="Tampilkan di Beranda"
+            description="Muncul di section proyek"
+          />
+          <ToggleSwitch
+            checked={formData.featured}
+            onChange={v => set("featured", v)}
+            label="Unggulan (Featured)"
+            description="Highlight sebagai proyek utama"
+          />
+        </div>
 
-          <div className="flex justify-end gap-3 pt-6">
-            <button type="button" onClick={onClose} className="px-4 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800">
-              Cancel
-            </button>
-            <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
-              {loading ? "Saving..." : "Save Project"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <FormFooter onClose={onClose} loading={loading} saveLabel="Simpan Proyek" />
+      </form>
+    </ModalShell>
   );
 }

@@ -12,6 +12,8 @@ import {
   TbTools, TbLink, TbHistory,
   TbUserEdit, TbSettings, TbShieldLock,
   TbLogout, TbExternalLink, TbX,
+  TbWallet, TbListCheck, TbTarget, TbCalendarEvent,
+  TbFileText,
 } from "react-icons/tb";
 
 
@@ -26,6 +28,7 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
   const router = useRouter();
   const locale = (params?.locale as string) || "id";
   const base = `/${locale}/admin`;
+  const hubBase = `/${locale}/private-hub`;
 
   const isActive = useCallback(
     (href: string, exact = false) => {
@@ -41,6 +44,7 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
       items: [
         { icon: TbLayoutDashboard, label: "Overview", href: base, exact: true },
         { icon: TbHome, label: "Beranda", href: `${base}/home` },
+        { icon: TbFileText, label: "Konten Resume", href: `${base}/about` },
       ],
     },
     {
@@ -87,6 +91,16 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         { icon: TbUserEdit, label: "Profil & Identitas", href: `${base}/profile` },
         { icon: TbSettings, label: "Pengaturan Global", href: `${base}/settings` },
         { icon: TbShieldLock, label: "Keamanan", href: `${base}/security` },
+      ],
+    },
+    {
+      title: "AREA PRIBADI",
+      divider: true,
+      items: [
+        { icon: TbWallet, label: "Keuangan", href: `${hubBase}/dompet` },
+        { icon: TbListCheck, label: "Produktivitas", href: `${hubBase}/harian` },
+        { icon: TbTarget, label: "Habit & Tracker", href: `${hubBase}/tracker` },
+        { icon: TbCalendarEvent, label: "Perencanaan", href: `${hubBase}/rencana` },
       ],
     },
   ];

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import ImageUploader from "./ImageUploader";
+import { ModalShell, FormFooter, ToggleSwitch, Field, inputCls, labelCls } from "./AdminFormUI";
 
 interface ServiceFormModalProps {
   item?: any;
@@ -20,15 +21,12 @@ export default function ServiceFormModal({ item, onClose, onSuccess }: ServiceFo
     order: item?.order || 0,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const set = (key: string, value: any) => setFormData(prev => ({ ...prev, [key]: value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const toastId = toast.loading(isEditing ? "Updating..." : "Creating...");
-
+    const toastId = toast.loading(isEditing ? "Memperbarui..." : "Menyimpan...");
     try {
       const payload = isEditing ? { id: item.id, ...formData } : formData;
       const res = await fetch("/api/admin/services", {
@@ -36,10 +34,8 @@ export default function ServiceFormModal({ item, onClose, onSuccess }: ServiceFo
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
       if (!res.ok) throw new Error(await res.text());
-
-      toast.success(isEditing ? "Updated!" : "Created!", { id: toastId });
+      toast.success(isEditing ? "Diperbarui!" : "Dibuat!", { id: toastId });
       onSuccess();
     } catch (error: any) {
       toast.error(error.message, { id: toastId });
@@ -49,44 +45,36 @@ export default function ServiceFormModal({ item, onClose, onSuccess }: ServiceFo
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white dark:bg-neutral-900 w-full max-w-md rounded-xl p-6 shadow-xl relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200">✕</button>
-        <h2 className="text-xl font-bold mb-4">{isEditing ? "Edit Service" : "Add Service"}</h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Title</label>
-            <input required name="title" value={formData.title} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Description</label>
-            <textarea required name="description" value={formData.description} onChange={handleChange} rows={3} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Order (Position)</label>
-            <input type="number" name="order" value={formData.order} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Icon Name / URL</label>
-            <input name="icon" value={formData.icon} onChange={handleChange} placeholder="e.g. SiReact or https://..." className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-            <p className="text-xs text-neutral-500 mt-1">Can be a React Icon string or an image URL. Or upload below:</p>
-          </div>
-          <div>
-            <ImageUploader 
-              label="Upload Icon Image (Overrides URL)"
-              value={formData.icon?.startsWith("http") || formData.icon?.startsWith("/") ? formData.icon : ""} 
-              onChange={(url) => setFormData({...formData, icon: url})} 
-              path="services"
-            />
-          </div>
+    <ModalShell title={isEditing ? "Edit Layanan" : "Tambah Layanan"} maxWidth="max-w-lg" onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Field label="Title" required>
+          <input required value={formData.title} onChange={e => set("title", e.target.value)} className={inputCls} placeholder="e.g. Web Development" />
+        </Field>
 
-          <div className="flex justify-end gap-3 pt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">Save</button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <Field label="Description" required>
+          <textarea required value={formData.description} onChange={e => set("description", e.target.value)} rows={3} className={inputCls} placeholder="Deskripsi layanan..." />
+        </Field>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Icon Name / URL" hint="React icon string (SiReact) atau URL gambar">
+            <input value={formData.icon} onChange={e => set("icon", e.target.value)} className={inputCls} placeholder="e.g. SiReact" />
+          </Field>
+          <Field label="Order (Urutan)">
+            <input type="number" value={formData.order} onChange={e => set("order", Number(e.target.value))} className={inputCls} />
+          </Field>
+        </div>
+
+        <div>
+          <label className={labelCls}>Upload Icon Image (Override URL)</label>
+          <ImageUploader
+            value={formData.icon?.startsWith("http") || formData.icon?.startsWith("/") ? formData.icon : ""}
+            onChange={url => set("icon", url)}
+            path="services"
+          />
+        </div>
+
+        <FormFooter onClose={onClose} loading={loading} saveLabel="Simpan Layanan" />
+      </form>
+    </ModalShell>
   );
 }

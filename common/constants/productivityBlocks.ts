@@ -3,6 +3,8 @@ export type DayTypeConfig = {
   name: string;
   daysOfWeek: number[]; // 0=Sun, 1=Mon, etc.
   tasks: string[];
+  hideMorning?: boolean;
+  hideEvening?: boolean;
 };
 
 export type ProductivityConfig = {
@@ -98,9 +100,9 @@ export function getAllTasksForDay(dayTypeId: string, config: ProductivityConfig 
   const dtTasks = dt ? dt.tasks : [];
 
   return [
-    ...config.morningTasks,
+    ...(dt?.hideMorning ? [] : config.morningTasks),
     ...dtTasks,
-    ...config.eveningTasks,
+    ...(dt?.hideEvening ? [] : config.eveningTasks),
   ];
 }
 
@@ -109,8 +111,8 @@ export function getCategorizedTasksForDay(dayTypeId: string, config: Productivit
   const dtTasks = dt ? dt.tasks : [];
 
   return {
-    block1: config.morningTasks,
+    block1: dt?.hideMorning ? [] : config.morningTasks,
     block2: dtTasks,
-    block3: config.eveningTasks,
+    block3: dt?.hideEvening ? [] : config.eveningTasks,
   };
 }

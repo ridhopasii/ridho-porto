@@ -5,6 +5,7 @@ import { PageContentMap } from "@/common/libs/page-content";
 import HeroSection from "./HeroSection";
 import HomeSkills from "./HomeSkills";
 import Services from "./Services";
+import Testimonials from "./Testimonials";
 import ContactList from "@/modules/contact/components/ContactList";
 import FeaturedProjects from "./FeaturedProjects";
 import RecentPosts from "./RecentPosts";
@@ -78,6 +79,13 @@ const Home = ({ content }: HomeProps) => {
       <section className="pt-2">
         <Services />
       </section>
+
+      {/* Testimonials / Testimoni (otomatis tersembunyi bila belum ada data) */}
+      <Suspense fallback={null}>
+        <section className="pt-2">
+          <Testimonials />
+        </section>
+      </Suspense>
 
       {/* Featured Projects */}
       <Suspense

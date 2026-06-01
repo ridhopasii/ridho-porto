@@ -3,12 +3,23 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import ImageUploader from "./ImageUploader";
+import { ModalShell, FormFooter, Field, inputCls, labelCls } from "./AdminFormUI";
 
 interface UsesFormModalProps {
   item?: any;
   onClose: () => void;
   onSuccess: () => void;
 }
+
+const USES_CATEGORIES = [
+  { value: "Hardware",  emoji: "💻" },
+  { value: "Software",  emoji: "🖥️" },
+  { value: "Audio",     emoji: "🎧" },
+  { value: "Peripherals", emoji: "🖱️" },
+  { value: "Tools",     emoji: "🔧" },
+  { value: "Services",  emoji: "☁️" },
+  { value: "Other",     emoji: "📦" },
+];
 
 export default function UsesFormModal({ item, onClose, onSuccess }: UsesFormModalProps) {
   const isEditing = !!item;
@@ -21,15 +32,12 @@ export default function UsesFormModal({ item, onClose, onSuccess }: UsesFormModa
     iconUrl: item?.iconUrl || "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const set = (key: string, value: any) => setFormData(prev => ({ ...prev, [key]: value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const toastId = toast.loading(isEditing ? "Updating..." : "Creating...");
-
+    const toastId = toast.loading(isEditing ? "Memperbarui..." : "Menyimpan...");
     try {
       const payload = isEditing ? { id: item.id, ...formData } : formData;
       const res = await fetch("/api/admin/uses", {
@@ -37,10 +45,8 @@ export default function UsesFormModal({ item, onClose, onSuccess }: UsesFormModa
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
       if (!res.ok) throw new Error(await res.text());
-
-      toast.success(isEditing ? "Updated!" : "Created!", { id: toastId });
+      toast.success(isEditing ? "Diperbarui!" : "Dibuat!", { id: toastId });
       onSuccess();
     } catch (error: any) {
       toast.error(error.message, { id: toastId });
@@ -50,48 +56,47 @@ export default function UsesFormModal({ item, onClose, onSuccess }: UsesFormModa
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white dark:bg-neutral-900 w-full max-w-md rounded-xl p-6 shadow-xl relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200">✕</button>
-        <h2 className="text-xl font-bold mb-4">{isEditing ? "Edit Item" : "Add New Item"}</h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Name</label>
-            <input required name="name" value={formData.name} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Category</label>
-            <select name="category" value={formData.category} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent">
-              <option value="Hardware">Hardware</option>
-              <option value="Software">Software</option>
-              <option value="Audio">Audio</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Description</label>
-            <textarea name="description" value={formData.description} onChange={handleChange} rows={2} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">URL (Optional)</label>
-            <input name="url" value={formData.url} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-          </div>
-          <div>
-            <ImageUploader 
-              label="Item Icon/Image"
-              value={formData.iconUrl} 
-              onChange={(url) => setFormData({...formData, iconUrl: url})} 
-              path="uses"
-            />
-          </div>
+    <ModalShell title={isEditing ? "Edit Item Uses" : "Tambah Item Uses"} maxWidth="max-w-md" onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Field label="Nama Item" required>
+          <input required value={formData.name} onChange={e => set("name", e.target.value)} className={inputCls} placeholder="e.g. MacBook Pro M2" />
+        </Field>
 
-          <div className="flex justify-end gap-3 pt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-100">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">Save</button>
+        <Field label="Kategori">
+          <div className="grid grid-cols-4 gap-1.5">
+            {USES_CATEGORIES.map(cat => (
+              <button
+                key={cat.value}
+                type="button"
+                onClick={() => set("category", cat.value)}
+                className={`rounded-lg border px-2 py-2 text-center text-xs transition-all ${
+                  formData.category === cat.value
+                    ? "border-blue-500 bg-blue-50 font-semibold text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+                    : "border-neutral-200 bg-neutral-50 text-neutral-600 hover:border-blue-300 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400"
+                }`}
+              >
+                <div>{cat.emoji}</div>
+                <div className="mt-0.5">{cat.value}</div>
+              </button>
+            ))}
           </div>
-        </form>
-      </div>
-    </div>
+        </Field>
+
+        <Field label="Deskripsi">
+          <textarea value={formData.description} onChange={e => set("description", e.target.value)} rows={2} className={inputCls} placeholder="Keterangan singkat..." />
+        </Field>
+
+        <Field label="URL (opsional)">
+          <input value={formData.url} onChange={e => set("url", e.target.value)} className={inputCls} placeholder="https://..." />
+        </Field>
+
+        <div>
+          <label className={labelCls}>Icon / Gambar</label>
+          <ImageUploader value={formData.iconUrl} onChange={url => set("iconUrl", url)} path="uses" />
+        </div>
+
+        <FormFooter onClose={onClose} loading={loading} saveLabel="Simpan Item" />
+      </form>
+    </ModalShell>
   );
 }

@@ -79,7 +79,7 @@ export default function PrivateHubLayout({
   const segments = pathname.split("/");
   const lastSegment = segments[segments.length - 1];
   const currentTab = PAGE_TITLES[lastSegment] ? lastSegment : "harian";
-  const pageTitle = PAGE_TITLES[currentTab] ?? "Private Hub";
+  const pageTitle = PAGE_TITLES[currentTab] ?? "Area Pribadi";
 
   const handleTabClick = useCallback(
     (tab: string) => {
@@ -118,8 +118,8 @@ export default function PrivateHubLayout({
             <TbLayoutDashboard size={16} />
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="text-[13px] font-bold leading-tight text-neutral-900 dark:text-neutral-100">Private Hub</h1>
-            <p className="truncate text-[11px] font-medium text-neutral-500">Dashboard Pribadi</p>
+            <h1 className="text-[13px] font-bold leading-tight text-neutral-900 dark:text-neutral-100">Area Pribadi</h1>
+            <p className="truncate text-[11px] font-medium text-neutral-500">Catatan Saya</p>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -199,7 +199,7 @@ export default function PrivateHubLayout({
           </button>
 
           <nav className="flex items-center gap-1.5 text-[13px]">
-            <span className="font-medium text-neutral-500">Private Hub</span>
+            <span className="font-medium text-neutral-500">Area Pribadi</span>
             <TbChevronRight size={13} className="text-neutral-400 dark:text-neutral-700" />
             <span className="font-semibold text-neutral-800 dark:text-neutral-200">{pageTitle}</span>
           </nav>

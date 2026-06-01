@@ -42,6 +42,7 @@ const RecentPosts = async () => {
     .from("Article")
     .select("id, title, excerpt, imageUrl, slug, category, createdAt, tags")
     .eq("published", true)
+    .eq("showOnHome", true)
     .order("createdAt", { ascending: false })
     .limit(3);
 

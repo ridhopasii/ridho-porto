@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import ImageUploader from "./ImageUploader";
 import MarkdownEditor from "./MarkdownEditor";
+import { ModalShell, FormFooter, ToggleSwitch, Field, inputCls, labelCls } from "./AdminFormUI";
 
 interface EducationFormModalProps {
   education: any | null;
@@ -52,26 +53,25 @@ export default function EducationFormModal({ education, onClose, onSuccess }: Ed
     }
   }, [education]);
 
+  const set = (key: string, value: any) => setFormData(prev => ({ ...prev, [key]: value }));
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const toastId = toast.loading("Saving...");
-
+    const toastId = toast.loading("Menyimpan...");
     try {
       const payload = {
         ...formData,
         images: formData.images.filter(Boolean),
         slug: formData.institution.toLowerCase().replace(/\s+/g, '-'),
       };
-
       const res = await fetch("/api/admin/education", {
         method: education ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(education ? { id: education.id, ...payload } : payload),
       });
-
       if (res.ok) {
-        toast.success("Saved successfully!", { id: toastId });
+        toast.success("Berhasil disimpan!", { id: toastId });
         onSuccess();
       } else {
         const err = await res.json();
@@ -84,130 +84,95 @@ export default function EducationFormModal({ education, onClose, onSuccess }: Ed
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <h3 className="text-xl font-bold mb-4">{education ? "Edit Education" : "Add Education"}</h3>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+    <ModalShell title={education ? "Edit Pendidikan" : "Tambah Pendidikan"} maxWidth="max-w-2xl" onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Institution" required>
+            <input required value={formData.institution} onChange={e => set("institution", e.target.value)} className={inputCls} placeholder="e.g. Universitas Jambi" />
+          </Field>
+          <Field label="Major" required>
+            <input required value={formData.major} onChange={e => set("major", e.target.value)} className={inputCls} placeholder="e.g. Information Systems" />
+          </Field>
+          <Field label="Degree" required>
+            <input required value={formData.degree} onChange={e => set("degree", e.target.value)} className={inputCls} placeholder="e.g. Bachelor's degree" />
+          </Field>
+          <Field label="Location">
+            <input value={formData.location} onChange={e => set("location", e.target.value)} className={inputCls} placeholder="e.g. Jambi, Indonesia" />
+          </Field>
+          <Field label="Start Year" required>
+            <input type="number" required value={formData.start_year} onChange={e => set("start_year", Number(e.target.value))} className={inputCls} />
+          </Field>
+          <Field label="End Year" required>
+            <input type="number" required value={formData.end_year} onChange={e => set("end_year", Number(e.target.value))} className={inputCls} />
+          </Field>
+          <Field label="GPA">
+            <input value={formData.gpa} onChange={e => set("gpa", e.target.value)} className={inputCls} placeholder="e.g. 3.80/4.00" />
+          </Field>
+          <Field label="Website Link">
+            <input type="url" value={formData.link} onChange={e => set("link", e.target.value)} className={inputCls} placeholder="https://..." />
+          </Field>
+        </div>
+
+        <div>
+          <label className={labelCls}>Institution Logo</label>
+          <ImageUploader value={formData.logoUrl} onChange={url => set("logoUrl", url)} path="education" />
+        </div>
+
+        <div>
+          <label className={labelCls}>Description (Optional)</label>
+          <MarkdownEditor value={formData.description} onChange={val => set("description", val)} rows={4} placeholder="Detailed description of the education (Markdown supported)..." />
+        </div>
+
+        <div className="space-y-3 rounded-xl border border-dashed border-neutral-300 p-4 dark:border-neutral-700 mt-4 bg-neutral-50/50 dark:bg-neutral-800/20">
+          <div className="flex items-center justify-between gap-3">
             <div>
-              <label className="block text-sm font-medium mb-1">Institution</label>
-              <input required value={formData.institution} onChange={(e) => setFormData({...formData, institution: e.target.value})} className="w-full border rounded-md px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700" placeholder="e.g. Universitas Jambi" />
+              <p className="text-sm font-medium">Gallery Images</p>
+              <p className="text-xs text-neutral-500">Upload multiple supporting images for this education.</p>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Major</label>
-              <input required value={formData.major} onChange={(e) => setFormData({...formData, major: e.target.value})} className="w-full border rounded-md px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700" placeholder="e.g. Information Systems" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Degree</label>
-              <input required value={formData.degree} onChange={(e) => setFormData({...formData, degree: e.target.value})} className="w-full border rounded-md px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700" placeholder="e.g. Bachelor's degree" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Location</label>
-              <input value={formData.location} onChange={(e) => setFormData({...formData, location: e.target.value})} className="w-full border rounded-md px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700" placeholder="e.g. Jambi, Indonesia" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Start Year</label>
-              <input type="number" required value={formData.start_year} onChange={(e) => setFormData({...formData, start_year: Number(e.target.value)})} className="w-full border rounded-md px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">End Year</label>
-              <input type="number" required value={formData.end_year} onChange={(e) => setFormData({...formData, end_year: Number(e.target.value)})} className="w-full border rounded-md px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">GPA</label>
-              <input value={formData.gpa} onChange={(e) => setFormData({...formData, gpa: e.target.value})} className="w-full border rounded-md px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700" placeholder="e.g. 3.80/4.00" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Website Link</label>
-              <input type="url" value={formData.link} onChange={(e) => setFormData({...formData, link: e.target.value})} className="w-full border rounded-md px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700" placeholder="https://..." />
-            </div>
+            <button
+              type="button"
+              onClick={() => set("images", [...formData.images, ""])}
+              className="rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs font-medium hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+            >
+              + Add Image
+            </button>
           </div>
 
-          <div>
-            <ImageUploader 
-              label="Institution Logo"
-              value={formData.logoUrl} 
-              onChange={(url) => setFormData({...formData, logoUrl: url})} 
-              path="education"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Description (Optional)</label>
-            <MarkdownEditor
-              value={formData.description}
-              onChange={(val) => setFormData({...formData, description: val})}
-              rows={4}
-              placeholder="Detailed description of the education (Markdown supported)..."
-            />
-          </div>
-
-          <div className="space-y-3 rounded-xl border border-dashed border-neutral-300 p-4 dark:border-neutral-700 mt-4">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-medium">Gallery Images</p>
-                <p className="text-xs text-neutral-500">Upload multiple supporting images for this education.</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setFormData((prev) => ({ ...prev, images: [...prev.images, ""] }))}
-                className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
-              >
-                + Add Image
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {formData.images.map((imageUrl, index) => (
-                <div key={`education-image-${index}`} className="rounded-xl border border-neutral-200 p-3 dark:border-neutral-800">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-xs font-medium text-neutral-500">Image {index + 1}</span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setFormData((prev) => {
-                          const nextImages = prev.images.filter((_, imageIndex) => imageIndex !== index);
-                          return { ...prev, images: nextImages.length > 0 ? nextImages : [""] };
-                        })
-                      }
-                      className="text-xs font-medium text-red-600 hover:underline"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                  <ImageUploader
-                    label={`Upload Image ${index + 1}`}
-                    value={imageUrl}
-                    onChange={(url) =>
-                      setFormData((prev) => {
-                        const nextImages = [...prev.images];
-                        nextImages[index] = url;
-                        return { ...prev, images: nextImages };
-                      })
-                    }
-                    path="education"
-                  />
+          <div className="space-y-3">
+            {formData.images.map((imageUrl, index) => (
+              <div key={`education-image-${index}`} className="rounded-xl border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-xs font-medium text-neutral-500">Image {index + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextImages = formData.images.filter((_, i) => i !== index);
+                      set("images", nextImages.length > 0 ? nextImages : [""]);
+                    }}
+                    className="text-xs font-medium text-red-600 hover:underline"
+                  >
+                    Remove
+                  </button>
                 </div>
-              ))}
-            </div>
+                <ImageUploader value={imageUrl} onChange={url => {
+                  const nextImages = [...formData.images];
+                  nextImages[index] = url;
+                  set("images", nextImages);
+                }} path="education" />
+              </div>
+            ))}
           </div>
+        </div>
 
-          <div className="flex items-center gap-2 mt-2">
-            <input type="checkbox" id="showOnHome" checked={formData.showOnHome} onChange={(e) => setFormData({...formData, showOnHome: e.target.checked})} className="rounded text-blue-600" />
-            <label htmlFor="showOnHome" className="text-sm">Show on About Page</label>
-          </div>
+        <ToggleSwitch
+          checked={formData.showOnHome}
+          onChange={v => set("showOnHome", v)}
+          label="Tampilkan di Halaman Resume"
+          description="Muncul di timeline pendidikan"
+        />
 
-          <div className="flex justify-end gap-3 pt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-neutral-600 hover:bg-neutral-100 rounded-lg dark:text-neutral-300 dark:hover:bg-neutral-800">
-              Cancel
-            </button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
-              {loading ? "Saving..." : "Save"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <FormFooter onClose={onClose} loading={loading} saveLabel="Simpan Pendidikan" />
+      </form>
+    </ModalShell>
   );
 }

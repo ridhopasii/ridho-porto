@@ -2,19 +2,24 @@ import Link from "next/link";
 import Image from "next/image";
 import { HiArrowRight } from "react-icons/hi";
 import { BiLinkExternal, BiLogoGithub } from "react-icons/bi";
-import { supabaseServer } from "@/common/libs/supabase-server";
+import { getProjectsData } from "@/services/projects";
 import { ProjectItem } from "@/common/types/projects";
 
 const FeaturedProjects = async () => {
-  const { data: projects } = await supabaseServer
-    .from("Project")
-    .select("*")
-    .eq("is_show", true)
-    .eq("is_featured", true)
-    .order("id", { ascending: true })
-    .limit(4);
+  // getProjectsData memetakan kolom DB (imageUrl→image, featured→is_featured,
+  // showOnHome→is_show, tags→stacks, dst). Query mentah ke tabel tidak punya
+  // field-field tersebut, jadi wajib lewat service ini.
+  let all: ProjectItem[] = [];
+  try {
+    all = (await getProjectsData()) as ProjectItem[];
+  } catch {
+    return null;
+  }
 
-  const featuredProjects: ProjectItem[] = projects || [];
+  const featuredProjects: ProjectItem[] = all
+    .filter((p) => p.is_show && p.is_featured)
+    .sort((a, b) => (a.id ?? 0) - (b.id ?? 0))
+    .slice(0, 4);
 
   if (featuredProjects.length === 0) return null;
 

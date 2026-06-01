@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import ImageUploader from "./ImageUploader";
+import { ModalShell, FormFooter, Field, inputCls, labelCls } from "./AdminFormUI";
 
 interface TestimonialFormModalProps {
   item?: any;
@@ -21,15 +22,12 @@ export default function TestimonialFormModal({ item, onClose, onSuccess }: Testi
     rating: item?.rating || 5,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const set = (key: string, value: any) => setFormData(prev => ({ ...prev, [key]: value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const toastId = toast.loading(isEditing ? "Updating..." : "Creating...");
-
+    const toastId = toast.loading(isEditing ? "Memperbarui..." : "Menyimpan...");
     try {
       const payload = isEditing ? { id: item.id, ...formData } : formData;
       const res = await fetch("/api/admin/testimonials", {
@@ -37,10 +35,8 @@ export default function TestimonialFormModal({ item, onClose, onSuccess }: Testi
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
       if (!res.ok) throw new Error(await res.text());
-
-      toast.success(isEditing ? "Updated!" : "Created!", { id: toastId });
+      toast.success(isEditing ? "Diperbarui!" : "Dibuat!", { id: toastId });
       onSuccess();
     } catch (error: any) {
       toast.error(error.message, { id: toastId });
@@ -50,43 +46,46 @@ export default function TestimonialFormModal({ item, onClose, onSuccess }: Testi
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white dark:bg-neutral-900 w-full max-w-md rounded-xl p-6 shadow-xl relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200">✕</button>
-        <h2 className="text-xl font-bold mb-4">{isEditing ? "Edit Testimonial" : "Add Testimonial"}</h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Name</label>
-            <input required name="name" value={formData.name} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Role / Position</label>
-            <input required name="role" value={formData.role} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Message</label>
-            <textarea required name="message" value={formData.message} onChange={handleChange} rows={3} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Rating (1-5)</label>
-            <input type="number" min="1" max="5" required name="rating" value={formData.rating} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-          </div>
-          <div>
-            <ImageUploader 
-              label="Avatar Image"
-              value={formData.avatarUrl} 
-              onChange={(url) => setFormData({...formData, avatarUrl: url})} 
-              path="testimonials"
-            />
-          </div>
+    <ModalShell title={isEditing ? "Edit Testimonial" : "Tambah Testimonial"} maxWidth="max-w-lg" onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Nama" required>
+            <input required value={formData.name} onChange={e => set("name", e.target.value)} className={inputCls} placeholder="Nama pemberi testimoni" />
+          </Field>
+          <Field label="Role / Jabatan" required>
+            <input required value={formData.role} onChange={e => set("role", e.target.value)} className={inputCls} placeholder="e.g. CEO at Company" />
+          </Field>
+        </div>
 
-          <div className="flex justify-end gap-3 pt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800">Cancel</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">Save</button>
+        <Field label="Pesan Testimoni" required>
+          <textarea required value={formData.message} onChange={e => set("message", e.target.value)} rows={4} className={inputCls} placeholder="Isi testimoni..." />
+        </Field>
+
+        {/* Star rating picker */}
+        <div>
+          <label className={labelCls}>Rating</label>
+          <div className="flex gap-2">
+            {[1, 2, 3, 4, 5].map(star => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => set("rating", star)}
+                className={`text-2xl transition-transform hover:scale-110 ${star <= formData.rating ? "text-yellow-400" : "text-neutral-300 dark:text-neutral-600"}`}
+              >
+                ★
+              </button>
+            ))}
+            <span className="ml-2 self-center text-sm font-medium text-neutral-500">{formData.rating}/5</span>
           </div>
-        </form>
-      </div>
-    </div>
+        </div>
+
+        <div>
+          <label className={labelCls}>Foto Avatar</label>
+          <ImageUploader value={formData.avatarUrl} onChange={url => set("avatarUrl", url)} path="testimonials" />
+        </div>
+
+        <FormFooter onClose={onClose} loading={loading} saveLabel="Simpan Testimoni" />
+      </form>
+    </ModalShell>
   );
 }

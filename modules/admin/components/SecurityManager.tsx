@@ -91,7 +91,7 @@ export default function SecurityManager() {
   );
 
   return (
-    <div className="grid gap-5 lg:grid-cols-2">
+    <div className="grid gap-5 p-4 lg:grid-cols-2 lg:p-6">
       {renderField(
         passwordFields[0],
         adminPassword,

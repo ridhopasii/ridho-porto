@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { createClient } from "@/common/utils/client";
 
@@ -10,6 +10,14 @@ import { useAdminList } from "@/common/hooks/useAdminList";
 import AdminSearchBar from "../AdminSearchBar";
 import AdminPagination from "../AdminPagination";
 import AdminBulkBar from "../AdminBulkBar";
+
+/** Normalizes images field from DB — can be string, string[], or null */
+const normalizeImages = (images: unknown): string[] => {
+  if (!images) return [];
+  if (Array.isArray(images)) return images.filter((u): u is string => typeof u === "string" && !!u);
+  if (typeof images === "string" && images.trim()) return [images];
+  return [];
+};
 
 const PAGE_SIZE = 10;
 
@@ -36,7 +44,8 @@ export default function AwardManager() {
 
   const handleUpdateImage = async (id: number, newImageUrl: string) => {
     const toastId = toast.loading("Menyimpan gambar...");
-    const res = await fetch("/api/admin/awards", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, images: newImageUrl }) });
+    // certificateUrl is the primary image field used in the DB
+    const res = await fetch("/api/admin/awards", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, certificateUrl: newImageUrl }) });
     if (res.ok) { toast.success("Gambar diperbarui!", { id: toastId }); fetchData(); }
     else toast.error("Gagal memperbarui gambar", { id: toastId });
   };
@@ -97,7 +106,34 @@ export default function AwardManager() {
                 </div>
                 <div className="border-t border-neutral-100 pt-3 dark:border-neutral-800">
                   <p className="mb-1.5 text-xs font-semibold text-neutral-500">Bukti / Sertifikat</p>
-                  {award.images && <img src={award.images} alt={award.title} className="mb-2 h-28 w-full rounded-lg object-contain bg-neutral-50 dark:bg-neutral-800" />}
+                  {/* Primary thumbnail: certificateUrl */}
+                  {award.certificateUrl && (
+                    <img
+                      src={award.certificateUrl}
+                      alt={award.title}
+                      className="mb-2 h-28 w-full rounded-lg object-contain bg-neutral-50 dark:bg-neutral-800"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                    />
+                  )}
+                  {/* Secondary gallery images */}
+                  {normalizeImages(award.images).length > 0 && (
+                    <div className="mb-2 flex flex-wrap gap-2">
+                      {normalizeImages(award.images).map((imgUrl, idx) => (
+                        <img
+                          key={idx}
+                          src={imgUrl}
+                          alt={`${award.title} gallery #${idx + 1}`}
+                          className="h-20 w-24 rounded-lg object-contain bg-neutral-50 dark:bg-neutral-800"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  {!award.certificateUrl && !normalizeImages(award.images).length && (
+                    <div className="mb-2 flex h-20 items-center justify-center rounded-lg bg-neutral-50 text-xs text-neutral-400 dark:bg-neutral-800">
+                      Belum ada gambar
+                    </div>
+                  )}
                   <ImageUploader onChange={(url) => handleUpdateImage(award.id, url)} path="awards" />
                 </div>
               </div>

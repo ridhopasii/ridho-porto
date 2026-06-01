@@ -22,6 +22,7 @@ const OrganizationList = async ({ content }: OrganizationListProps) => {
     .select(
       "name, role, period, description, website, logoUrl, proofUrl, slug, order, showOnHome, images",
     )
+    .eq("showOnHome", true)
     .order("order", { ascending: true });
 
   const filteredOrganizations = (organizations || []) as OrganizationProps[];

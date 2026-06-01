@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import ImageUploader from "./ImageUploader";
 import MarkdownEditor from "./MarkdownEditor";
+import { ModalShell, FormFooter, ToggleSwitch, Field, inputCls, labelCls } from "./AdminFormUI";
 
 interface AwardFormModalProps {
   award?: any;
@@ -12,9 +13,18 @@ interface AwardFormModalProps {
 }
 
 const normalizeImages = (images: unknown): string[] => {
-  if (!Array.isArray(images)) return [];
-  return images.filter((url): url is string => typeof url === "string" && !!url);
+  if (!images) return [];
+  if (Array.isArray(images)) return images.filter((url): url is string => typeof url === "string" && !!url);
+  if (typeof images === "string" && images.trim()) return [images];
+  return [];
 };
+
+const AWARD_CATEGORIES = [
+  { value: "penghargaan", label: "Penghargaan" },
+  { value: "sertifikasi", label: "Sertifikasi" },
+  { value: "kompetisi",   label: "Kompetisi" },
+  { value: "lainnya",     label: "Lainnya" },
+];
 
 export default function AwardFormModal({ award, onClose, onSuccess }: AwardFormModalProps) {
   const isEditing = !!award;
@@ -33,21 +43,12 @@ export default function AwardFormModal({ award, onClose, onSuccess }: AwardFormM
     showOnHome: award?.showOnHome ?? true,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    if (type === "checkbox") {
-      const checked = (e.target as HTMLInputElement).checked;
-      setFormData((prev) => ({ ...prev, [name]: checked }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
+  const set = (key: string, value: any) => setFormData(prev => ({ ...prev, [key]: value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const toastId = toast.loading(isEditing ? "Updating achievement..." : "Creating achievement...");
-
+    const toastId = toast.loading(isEditing ? "Memperbarui pencapaian..." : "Menyimpan pencapaian...");
     try {
       const payload = isEditing ? { id: award.id, ...formData } : formData;
       payload.images = formData.images.filter(Boolean);
@@ -56,10 +57,8 @@ export default function AwardFormModal({ award, onClose, onSuccess }: AwardFormM
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
       if (!res.ok) throw new Error(await res.text());
-
-      toast.success(isEditing ? "Achievement updated!" : "Achievement created!", { id: toastId });
+      toast.success(isEditing ? "Pencapaian diperbarui!" : "Pencapaian dibuat!", { id: toastId });
       onSuccess();
     } catch (error: any) {
       toast.error(error.message, { id: toastId });
@@ -69,143 +68,102 @@ export default function AwardFormModal({ award, onClose, onSuccess }: AwardFormM
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-neutral-900 w-full max-w-2xl rounded-xl p-6 shadow-xl relative my-8">
-        <button onClick={onClose} className="absolute top-4 right-4 text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200">
-          ✕
-        </button>
-        <h2 className="text-2xl font-bold mb-6">{isEditing ? "Edit Achievement" : "Add New Achievement"}</h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Title</label>
-              <input required name="title" value={formData.title} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Slug</label>
-              <input required name="slug" value={formData.slug} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-            </div>
-          </div>
+    <ModalShell title={isEditing ? "Edit Pencapaian" : "Tambah Pencapaian Baru"} maxWidth="max-w-2xl" onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Title" required>
+            <input required value={formData.title} onChange={e => set("title", e.target.value)} className={inputCls} placeholder="Nama penghargaan..." />
+          </Field>
+          <Field label="Slug" required>
+            <input required value={formData.slug} onChange={e => set("slug", e.target.value)} className={inputCls} placeholder="e.g. juara-1-lomba" />
+          </Field>
+        </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Category</label>
-              <select name="category" value={formData.category} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent">
-                <option value="penghargaan">Penghargaan</option>
-                <option value="sertifikasi">Sertifikasi</option>
-                <option value="lainnya">Lainnya</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Organizer / Issuer</label>
-              <input name="organizer" value={formData.organizer} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-            </div>
-          </div>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Category">
+            <select value={formData.category} onChange={e => set("category", e.target.value)} className={inputCls}>
+              {AWARD_CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+            </select>
+          </Field>
+          <Field label="Organizer / Issuer">
+            <input value={formData.organizer} onChange={e => set("organizer", e.target.value)} className={inputCls} placeholder="Penyelenggara" />
+          </Field>
+        </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Date</label>
-              <input name="date" value={formData.date} onChange={handleChange} placeholder="Juni 2023" className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Credential ID</label>
-              <input name="credentialId" value={formData.credentialId} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-            </div>
-          </div>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Date" hint="e.g. Juni 2023">
+            <input value={formData.date} onChange={e => set("date", e.target.value)} className={inputCls} placeholder="Juni 2023" />
+          </Field>
+          <Field label="Credential ID">
+            <input value={formData.credentialId} onChange={e => set("credentialId", e.target.value)} className={inputCls} placeholder="ID Sertifikat" />
+          </Field>
+        </div>
 
+        <div>
+          <label className={labelCls}>Description</label>
+          <MarkdownEditor value={formData.description} onChange={val => set("description", val)} rows={4} placeholder="Description (Markdown supported)..." />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Description</label>
-            <MarkdownEditor
-              value={formData.description}
-              onChange={(val) => setFormData({...formData, description: val})}
-              rows={4}
-              placeholder="Description (Markdown supported)..."
-            />
+            <label className={labelCls}>Certificate Image</label>
+            <ImageUploader value={formData.certificateUrl} onChange={url => set("certificateUrl", url)} path="awards" />
+          </div>
+          <Field label="Proof URL">
+            <input value={formData.proofUrl} onChange={e => set("proofUrl", e.target.value)} className={inputCls} placeholder="https://..." />
+          </Field>
+        </div>
+
+        <div className="space-y-3 rounded-xl border border-dashed border-neutral-300 p-4 dark:border-neutral-700 mt-4 bg-neutral-50/50 dark:bg-neutral-800/20">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-medium">Gallery Images</p>
+              <p className="text-xs text-neutral-500">Upload multiple supporting images for this achievement.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => set("images", [...formData.images, ""])}
+              className="rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs font-medium hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+            >
+              + Add Image
+            </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <ImageUploader 
-                label="Certificate Image"
-                value={formData.certificateUrl} 
-                onChange={(url) => setFormData({...formData, certificateUrl: url})} 
-                path="awards"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Proof URL</label>
-              <input name="proofUrl" value={formData.proofUrl} onChange={handleChange} className="w-full p-2 border border-neutral-300 dark:border-neutral-700 rounded bg-transparent" />
-            </div>
-          </div>
-
-          <div className="space-y-3 rounded-xl border border-dashed border-neutral-300 p-4 dark:border-neutral-700 mt-4">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-medium">Gallery Images</p>
-                <p className="text-xs text-neutral-500">Upload multiple supporting images for this achievement.</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setFormData((prev) => ({ ...prev, images: [...prev.images, ""] }))}
-                className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
-              >
-                + Add Image
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {formData.images.map((imageUrl, index) => (
-                <div key={`award-image-${index}`} className="rounded-xl border border-neutral-200 p-3 dark:border-neutral-800">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-xs font-medium text-neutral-500">Image {index + 1}</span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setFormData((prev) => {
-                          const nextImages = prev.images.filter((_, imageIndex) => imageIndex !== index);
-                          return { ...prev, images: nextImages.length > 0 ? nextImages : [""] };
-                        })
-                      }
-                      className="text-xs font-medium text-red-600 hover:underline"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                  <ImageUploader
-                    label={`Upload Image ${index + 1}`}
-                    value={imageUrl}
-                    onChange={(url) =>
-                      setFormData((prev) => {
-                        const nextImages = [...prev.images];
-                        nextImages[index] = url;
-                        return { ...prev, images: nextImages };
-                      })
-                    }
-                    path="awards"
-                  />
+          <div className="space-y-3">
+            {formData.images.map((imageUrl, index) => (
+              <div key={`award-image-${index}`} className="rounded-xl border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-xs font-medium text-neutral-500">Image {index + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextImages = formData.images.filter((_, i) => i !== index);
+                      set("images", nextImages.length > 0 ? nextImages : [""]);
+                    }}
+                    className="text-xs font-medium text-red-600 hover:underline"
+                  >
+                    Remove
+                  </button>
                 </div>
-              ))}
-            </div>
+                <ImageUploader value={imageUrl} onChange={url => {
+                  const nextImages = [...formData.images];
+                  nextImages[index] = url;
+                  set("images", nextImages);
+                }} path="awards" />
+              </div>
+            ))}
           </div>
+        </div>
 
-          <div className="flex gap-6 mt-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name="showOnHome" checked={formData.showOnHome} onChange={handleChange} className="w-4 h-4" />
-              <span className="text-sm">Show on Home</span>
-            </label>
-          </div>
+        <ToggleSwitch
+          checked={formData.showOnHome}
+          onChange={v => set("showOnHome", v)}
+          label="Tampilkan di Beranda"
+          description="Muncul di section achievements"
+        />
 
-          <div className="flex justify-end gap-3 pt-6">
-            <button type="button" onClick={onClose} className="px-4 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800">
-              Cancel
-            </button>
-            <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
-              {loading ? "Saving..." : "Save Achievement"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <FormFooter onClose={onClose} loading={loading} saveLabel="Simpan Pencapaian" />
+      </form>
+    </ModalShell>
   );
 }
