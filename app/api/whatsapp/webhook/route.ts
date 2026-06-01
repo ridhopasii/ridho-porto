@@ -13,9 +13,8 @@ const supabase = createClient(
 
 const sendWhatsAppMessage = async (to: string, text: string) => {
   const token = process.env.WHATSAPP_TOKEN;
-  const phoneId = process.env.WHATSAPP_PHONE_ID;
-  if (!token || !phoneId) {
-    console.error("WhatsApp credentials are not defined in environment variables.");
+  if (!token) {
+    console.error("WhatsApp token (WHATSAPP_TOKEN) is not defined in environment variables.");
     return;
   }
 
@@ -27,26 +26,23 @@ const sendWhatsAppMessage = async (to: string, text: string) => {
     .trim();
 
   try {
-    const res = await fetch(`https://graph.facebook.com/v20.0/${phoneId}/messages`, {
+    const res = await fetch("https://gate.whapi.cloud/messages/text", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        messaging_product: "whatsapp",
-        recipient_type: "individual",
         to,
-        type: "text",
-        text: { body: cleanText }
+        body: cleanText
       })
     });
     if (!res.ok) {
       const errText = await res.text();
-      console.error("WhatsApp Send Message API Error details:", errText);
+      console.error("Whapi.cloud Send Message API Error details:", errText);
     }
   } catch (e) {
-    console.error("Failed to send WhatsApp message through Meta Cloud API:", e);
+    console.error("Failed to send WhatsApp message through Whapi.cloud Web Gateway API:", e);
   }
 };
 
@@ -104,24 +100,9 @@ async function ensureTodayProductivityRecord(supabaseClient: any) {
   return inserted;
 }
 
-// 1. GET: Webhook Verification handshake with Meta Developer App
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const mode = searchParams.get("hub.mode");
-  const token = searchParams.get("hub.verify_token");
-  const challenge = searchParams.get("hub.challenge");
-
-  const localVerifyToken = process.env.WHATSAPP_VERIFY_TOKEN;
-
-  if (mode && token) {
-    if (mode === "subscribe" && token === localVerifyToken) {
-      console.log("WhatsApp Webhook verified successfully via Meta handshake.");
-      return new Response(challenge, { status: 200 });
-    }
-    console.error("WhatsApp Webhook verification failed: Verify Token mismatch.");
-    return new Response("Forbidden", { status: 403 });
-  }
-  return new Response("Bad Request", { status: 400 });
+// 1. GET: Whapi.cloud doesn't strictly require handshake validation, but we keep it open for custom gateways
+export async function GET() {
+  return new Response("WhatsApp Webhook is active and listening for Whapi.cloud events.", { status: 200 });
 }
 
 // 2. POST: Message Processor (Gemini + Supabase integration)
@@ -129,28 +110,34 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    // Check if it is a WhatsApp status update (e.g. read/delivered receipt) and ignore
-    if (body.entry?.[0]?.changes?.[0]?.value?.statuses) {
-      return NextResponse.json({ ok: true });
-    }
-
-    const messageObj = body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+    const messageObj = body.messages?.[0];
     if (!messageObj) {
       return NextResponse.json({ ok: true });
     }
 
-    const from = messageObj.from; // Sender's WhatsApp number (e.g. "62895429126232")
+    // Strictly ignore messages sent by the bot/owner's own account to prevent loop triggers
+    if (messageObj.from_me) {
+      return NextResponse.json({ ok: true });
+    }
+
+    const chatId = messageObj.chat_id; // e.g. "62895429126232@s.whatsapp.net"
+    if (!chatId) {
+      return NextResponse.json({ ok: true });
+    }
+
+    // Extract raw digits of phone number
+    const from = chatId.split("@")[0];
     const allowedPhone = process.env.WHATSAPP_ALLOWED_PHONE;
 
     // Strict Security Guard: Only process messages from the owner's allowed phone number
     if (!allowedPhone || from !== allowedPhone) {
-      console.warn(`WhatsApp message ignored. Sender "${from}" is not allowed.`);
+      console.warn(`WhatsApp Web Gateway message ignored. Sender "${from}" is not allowed.`);
       return NextResponse.json({ ok: true });
     }
 
-    // Support only Text messages for now (Meta Cloud API has different structures for voice/media)
+    // Support only Text messages for now
     if (messageObj.type !== "text") {
-      await sendWhatsAppMessage(from, "⚠️ Maaf Bos Ridho, untuk integrasi WhatsApp saat ini saya baru mendukung perintah berbasis Teks.");
+      await sendWhatsAppMessage(chatId, "⚠️ Maaf Bos Ridho, saat ini saya baru bisa memproses perintah berupa teks melalui WhatsApp.");
       return NextResponse.json({ ok: true });
     }
 
@@ -161,14 +148,14 @@ export async function POST(req: Request) {
 
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
     if (!GEMINI_API_KEY) {
-      await sendWhatsAppMessage(from, "⚠️ Gagal memproses: GEMINI_API_KEY belum terkonfigurasi pada environment server.");
+      await sendWhatsAppMessage(chatId, "⚠️ Gagal memproses: GEMINI_API_KEY belum terkonfigurasi pada environment server.");
       return NextResponse.json({ ok: true });
     }
 
     // Command: Help/Intro
     if (text.toLowerCase() === "ping" || text.toLowerCase() === "halo" || text.toLowerCase() === "help") {
       await sendWhatsAppMessage(
-        from,
+        chatId,
         "👋 Halo Bos Ridho!\n\nAsisten AI Anda siap menerima perintah langsung dari WhatsApp. Kirim perintah senatural mungkin!\n\nContoh Perintah Teks:\n- `Tadi makan sate habis 30rb pake Gopay`\n- `Ubah mood jadi 🤩`\n- `Tambah tugas Belajar React`\n- `Audit langgananku`\n- `Analisis habitku`"
       );
       return NextResponse.json({ ok: true });
@@ -188,7 +175,7 @@ export async function POST(req: Request) {
     ]);
 
     if (!wallets || wallets.length === 0) {
-      await sendWhatsAppMessage(from, "⚠️ Error: Tidak ada Wallet yang ditemukan di Database. Buat dompet dulu di Private Hub.");
+      await sendWhatsAppMessage(chatId, "⚠️ Error: Tidak ada Wallet yang ditemukan di Database. Buat dompet dulu di Private Hub.");
       return NextResponse.json({ ok: true });
     }
 
@@ -441,7 +428,7 @@ Pesan/Media dari user: "${text}"`;
             const filteredTasks = currentTasks.filter((t: any) => !t.name.toLowerCase().includes(params.task_name.toLowerCase()));
             const deletedCount = currentTasks.length - filteredTasks.length;
             await supabase.from("Productivity").update({ tasks: JSON.stringify(filteredTasks) }).eq("id", todayItem.id);
-            reportMsg += `\n\n🗑️ *Aksi Database:* Berhasil menghapus ${deletedCount} tugas matching "${params.task_name}".`;
+            reportMsg += `\n\n🗑 *Aksi Database:* Berhasil menghapus ${deletedCount} tugas matching "${params.task_name}".`;
           }
           else if (command_action === "complete_task" && params?.task_name) {
             let updated = 0;
@@ -481,7 +468,7 @@ Pesan/Media dari user: "${text}"`;
             if (matchedWallet) {
               const { error: dErr } = await supabase.from("Wallets").delete().eq("id", matchedWallet.id);
               if (dErr) throw dErr;
-              reportMsg += `\n\n🗑️ *Aksi Database:* Dompet "${matchedWallet.name}" berhasil dihapus.`;
+              reportMsg += `\n\n🗑 *Aksi Database:* Dompet "${matchedWallet.name}" berhasil dihapus.`;
             } else {
               reportMsg += `\n\n⚠️ *Aksi Database Gagal:* Dompet dengan nama "${params.wallet_name}" tidak ditemukan.`;
             }
@@ -492,8 +479,8 @@ Pesan/Media dari user: "${text}"`;
       finalReportMsg += reportMsg + "\n";
     }
 
-    // Send final synthesized reply back to user via WhatsApp Business API
-    await sendWhatsAppMessage(from, finalReportMsg.trim());
+    // Send final synthesized reply back to user via WhatsApp Web Gateway API
+    await sendWhatsAppMessage(chatId, finalReportMsg.trim());
 
     return NextResponse.json({ ok: true });
   } catch (error: any) {
