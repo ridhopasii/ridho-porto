@@ -30,6 +30,7 @@ export async function GET() {
     token_len: (token || "").length,
     gemini_present: Boolean(gem),
     gemini_len: (gem || "").length,
+    gemini_masked: gem ? `${gem.slice(0, 4)}…${gem.slice(-4)}` : null,
     supabase_url_set: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL),
     walletCount,
     supaErr,
