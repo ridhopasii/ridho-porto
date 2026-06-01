@@ -284,12 +284,12 @@ Aturan Output:
        }
      * Jika "type" adalah "DATABASE_COMMAND":
        {
-         "command_action": "add_task" | "delete_task" | "complete_task" | "update_mood" | "update_goals" | "create_wallet" | "add_reminder"
+         "command_action": "add_task" | "delete_task" | "complete_task" | "update_mood" | "update_goals" | "create_wallet" | "delete_wallet" | "add_reminder"
          "params": {
            "task_name": nama tugas (untuk add_task / delete_task / complete_task)
            "mood": mood (untuk update_mood)
            "goals": ringkasan sasaran (untuk update_goals)
-           "wallet_name": nama dompet/bank baru (untuk create_wallet, misal "Bank BSI", "Gopay Kedua")
+           "wallet_name": nama dompet/bank (untuk create_wallet atau delete_wallet, misal "Bank BSI", "Gopay")
            "icon": satu ikon emoji kustom (untuk create_wallet, pilih emoji yang relevan misal "🕌" untuk BSI, "💳" untuk bank, "📱" untuk e-wallet, default "💳")
            "balance": saldo awal angka (untuk create_wallet, default 0)
            "reminder_text": isi pengingat (untuk add_reminder, misal "Beli susu di Indomaret", "Meeting dengan dosen")
@@ -483,6 +483,16 @@ Pesan/Media dari user: "${text}"`;
         
         if (wErr) throw wErr;
         reportMsg += `\n\n💳 **Aksi Database:** Dompet baru "${walletIcon} ${params.wallet_name}" berhasil dibuat dengan saldo awal Rp ${walletBalance.toLocaleString('id-ID')}!`;
+      }
+      else if (command_action === "delete_wallet" && params?.wallet_name) {
+        const matchedWallet = wallets.find((w: any) => w.name.toLowerCase().includes(params.wallet_name.toLowerCase()));
+        if (matchedWallet) {
+          const { error: dErr } = await supabase.from("Wallets").delete().eq("id", matchedWallet.id);
+          if (dErr) throw dErr;
+          reportMsg += `\n\n🗑️ **Aksi Database:** Dompet "${matchedWallet.name}" berhasil dihapus.`;
+        } else {
+          reportMsg += `\n\n⚠️ **Aksi Database Gagal:** Dompet dengan nama "${params.wallet_name}" tidak ditemukan.`;
+        }
       }
       else if (command_action === "add_reminder" && params?.reminder_text && params?.reminder_time) {
         const { data: exist } = await supabase
