@@ -1,5 +1,5 @@
 export async function sendWhatsAppMessage(phone: string, message: string) {
-  const baseUrl = process.env.WHATSAPP_SERVICE_URL;
+  const baseUrl = process.env.WHATSAPP_SERVICE_URL || "https://wa-baileys-service-production.up.railway.app";
 
   if (!baseUrl) {
     console.warn("WHATSAPP_SERVICE_URL is not defined in environment variables.");

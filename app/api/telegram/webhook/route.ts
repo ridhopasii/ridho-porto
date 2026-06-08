@@ -44,7 +44,7 @@ const sendMessage = async (chatId: string | number, text: string) => {
     }
   }
 
-  const waPhone = process.env.WHATSAPP_ALLOWED_PHONE;
+  const waPhone = process.env.WHATSAPP_ALLOWED_PHONE || "6282381118520";
   if (waPhone) {
     try {
       const waResult = await sendWhatsAppMessage(waPhone, text);
