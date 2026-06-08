@@ -61,6 +61,15 @@ const sendMessage = async (chatId: string | number, text: string) => {
     } catch (e: any) {
       console.error("Failed to send WA message", e);
     }
+  } else {
+    // Beri tahu Telegram jika waPhone tidak ada!
+    if (TELEGRAM_TOKEN) {
+      await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text: `⚠️ Debug: Vercel melewatkan WhatsApp karena WHATSAPP_ALLOWED_PHONE kosong / belum diset di Vercel!` })
+      });
+    }
   }
 };
 
