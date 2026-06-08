@@ -571,6 +571,9 @@ Pesan/Media dari user: "${text}"`;
     return NextResponse.json(isDebug ? { ok: true, debug: true, logs: debugLogs } : { ok: true });
   } catch (error: any) {
     console.error("Telegram Webhook Error:", error);
+    // Kirim pesan fallback agar user tahu kalau AI error/overload
+    await sendMessage("1674540875", "⚠️ Maaf, otak AI (Gemini) sedang mengalami gangguan atau kepenuhan server. Silakan coba beberapa menit lagi.");
+    
     if (isDebug) {
       return NextResponse.json({ ok: false, error: error.message, stack: error.stack, logs: debugLogs });
     }
