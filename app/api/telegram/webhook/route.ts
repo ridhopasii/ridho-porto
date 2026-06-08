@@ -47,8 +47,18 @@ const sendMessage = async (chatId: string | number, text: string) => {
   const waPhone = process.env.WHATSAPP_ALLOWED_PHONE;
   if (waPhone) {
     try {
-      await sendWhatsAppMessage(waPhone, text);
-    } catch (e) {
+      const waResult = await sendWhatsAppMessage(waPhone, text);
+      if (waResult?.status === "error") {
+        if (TELEGRAM_TOKEN) {
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: chatId, text: `⚠️ Debug: Gagal kirim ke WA. Alasan: ${waResult.message}` })
+          });
+        }
+      }
+
+    } catch (e: any) {
       console.error("Failed to send WA message", e);
     }
   }
