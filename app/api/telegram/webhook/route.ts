@@ -10,6 +10,8 @@ const supabase = createClient(
   (process.env.SUPABASE_SERVICE_ROLE_KEY || "placeholder"),
 );
 
+import { sendWhatsAppMessage } from "@/services/whatsapp";
+
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const ALLOWED_CHAT_ID = (process.env.TELEGRAM_ALLOWED_CHAT_ID && process.env.TELEGRAM_ALLOWED_CHAT_ID !== "undefined") ? process.env.TELEGRAM_ALLOWED_CHAT_ID : "1674540875";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
@@ -25,20 +27,30 @@ const stripMarkdown = (text: string): string => {
 };
 
 const sendMessage = async (chatId: string | number, text: string) => {
-  if (!TELEGRAM_TOKEN) return;
   const cleanText = stripMarkdown(text);
-  try {
-    const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text: cleanText })
-    });
-    if (!res.ok) {
-      const errorData = await res.text();
-      console.error("Telegram API Error Response:", errorData);
+  if (TELEGRAM_TOKEN) {
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text: cleanText })
+      });
+      if (!res.ok) {
+        const errorData = await res.text();
+        console.error("Telegram API Error Response:", errorData);
+      }
+    } catch (e) {
+      console.error("Failed to send telegram message", e);
     }
-  } catch (e) {
-    console.error("Failed to send telegram message", e);
+  }
+
+  const waPhone = process.env.WHATSAPP_ALLOWED_PHONE;
+  if (waPhone) {
+    try {
+      await sendWhatsAppMessage(waPhone, text);
+    } catch (e) {
+      console.error("Failed to send WA message", e);
+    }
   }
 };
 

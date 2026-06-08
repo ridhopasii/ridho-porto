@@ -2,21 +2,33 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { getWeeklySummary, getHistoricalExpenses } from "@/services/aiAnalysis";
 
+import { sendWhatsAppMessage } from "@/services/whatsapp";
+
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const ALLOWED_CHAT_ID = process.env.TELEGRAM_ALLOWED_CHAT_ID;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 const CRON_SECRET = process.env.CRON_SECRET;
 
 const sendMessage = async (chatId: string | number, text: string) => {
-  if (!TELEGRAM_TOKEN) return;
-  try {
-    await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text, parse_mode: "Markdown" }),
-    });
-  } catch (e) {
-    console.error("Failed to send telegram message", e);
+  if (TELEGRAM_TOKEN) {
+    try {
+      await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text, parse_mode: "Markdown" }),
+      });
+    } catch (e) {
+      console.error("Failed to send telegram message", e);
+    }
+  }
+
+  const waPhone = process.env.WHATSAPP_ALLOWED_PHONE;
+  if (waPhone) {
+    try {
+      await sendWhatsAppMessage(waPhone, text);
+    } catch (e) {
+      console.error("Failed to send WA message", e);
+    }
   }
 };
 
